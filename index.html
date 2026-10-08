@@ -1459,6 +1459,155 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* v19 · подпись режима на экране входа */
 .sbmode19{margin-top:10px;font-size:11.5px;color:var(--ink-3);text-align:center}
 </style>
+<style>
+/* ═══════════ v20 · ТЕЛЕФОН (ширина до 700 px) ═══════════
+   Шапка в одну строку, вместо ленты иконок — нижняя панель и меню «Ещё», списки и карточки в один столбец,
+   таблицы и фильтры прокручиваются вбок, окна — «шторкой» снизу, нажимаемые элементы не меньше 40 px.
+   Планшет (701–980 px) остаётся прежним. Кабинет клиента (body.client-ui) имеет свою нижнюю панель — его правила ниже не меняют. */
+#bnav,#msheet{display:none}
+@media (max-width:700px){
+  html,body{height:100%}
+  .app{height:100vh;height:100dvh}
+
+  /* шапка: логотип · тема · язык · колокольчик · аватар (имя, должность и «Выйти» — в меню «Ещё») */
+  body:not(.client-ui) .top{padding:8px 12px;gap:8px;flex-wrap:nowrap;min-height:0}
+  body:not(.client-ui) .top .mark{padding:4px 8px}
+  body:not(.client-ui) .top .mark img{height:24px}
+  body:not(.client-ui) .top .ttl{display:none}
+  body:not(.client-ui) .top .theme{margin-left:auto}
+  body:not(.client-ui) .ib.tb{width:38px;height:38px;padding:0;justify-content:center}
+  body:not(.client-ui) .tb .tbn{display:none}
+  body:not(.client-ui) .top .seg.lang button{padding:7px 10px;font-size:12px;min-height:30px}
+  body:not(.client-ui) #whoBox{gap:6px!important;flex:none}
+  body:not(.client-ui) #whoBox .who{padding:2px;gap:0;border:0;background:transparent}
+  body:not(.client-ui) #whoBox .who>div,body:not(.client-ui) #whoBox #outBtn{display:none}
+  body:not(.client-ui) #whoBox .who .av{width:36px;height:36px}
+
+  /* навигация: лента иконок скрыта, внизу — панель */
+  body:not(.client-ui) #side{display:none}
+  body:not(.client-ui) #viewPage{padding:14px 14px calc(84px + env(safe-area-inset-bottom,0px))}
+  body:not(.client-ui) #bnav.on{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:120;background:var(--side-bg,var(--surface));border-top:1px solid var(--side-line,var(--line));padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));gap:2px}
+  #bnav button{flex:1 1 0;min-width:0;min-height:54px;border:0;background:transparent;color:var(--side-ink,var(--ink-3));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:5px 2px;border-radius:10px;font:700 10px/1.15 "Manrope","Noto Sans SC",sans-serif;position:relative}
+  #bnav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  #bnav button .l{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center;max-width:100%;word-break:break-word}
+  #bnav button .l.sm{font-size:9px;letter-spacing:-.01em}
+  #bnav button.on{background:var(--side-on-bg,var(--surface2));color:var(--side-on-ink,var(--ink))}
+  #bnav button .nb,#msheet .nb{min-width:17px;height:17px;border-radius:999px;background:var(--red);color:#fff;font:800 10px/17px "Manrope",sans-serif;text-align:center;padding:0 5px}
+  #bnav button .nb{position:absolute;top:2px;left:calc(50% + 5px)}
+
+  /* меню «Ещё» */
+  #msheet.open{display:flex;position:fixed;inset:0;z-index:140;background:rgba(18,18,18,.5);align-items:flex-end}
+  #msheet .sh{background:var(--surface);color:var(--ink);width:100%;max-height:90vh;max-height:90dvh;overflow:auto;border-radius:18px 18px 0 0;padding:14px 14px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:var(--sh-3)}
+  #msheet .sh{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+  #msheet .list20{overflow:auto;flex:1 1 auto;min-height:0;-webkit-overflow-scrolling:touch}
+  #msheet .ft20{flex:none;padding:4px 0 calc(14px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--surface);margin-top:4px}
+  #msheet .ft20 .set20{border-top:0;margin-top:0}
+  #msheet .who20{display:flex;align-items:center;gap:12px;padding:4px 2px 12px;border-bottom:1px solid var(--line);margin-bottom:6px;width:100%;border-left:0;border-right:0;border-top:0;background:transparent;text-align:left;color:inherit}
+  #msheet .who20 .av{width:44px;height:44px;border-radius:999px;background:var(--ink);color:var(--on-ink);display:inline-flex;align-items:center;justify-content:center;font:800 13px "Manrope",sans-serif;overflow:hidden;flex:none}
+  #msheet .who20 .av img{width:100%;height:100%;object-fit:cover;display:block}
+  #msheet .who20 .tx{flex:1;min-width:0}
+  #msheet .who20 b{display:block;font:700 15px/1.2 "Manrope","Noto Sans SC",sans-serif}
+  #msheet .who20 small{display:block;color:var(--ink-3);font-size:12px;margin-top:2px}
+  #msheet .xs{width:40px;height:40px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);font-size:18px;line-height:1;flex:none}
+  #msheet .gt{font:800 10px "Manrope","Noto Sans SC",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:14px 4px 6px}
+  #msheet .row20{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:10px 10px;border:0;border-radius:10px;background:transparent;color:var(--ink);font:600 14.5px "Manrope","Noto Sans SC",sans-serif;text-align:left}
+  #msheet .row20 svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none;color:var(--ink-2)}
+  #msheet .row20 .nb{margin-left:auto}
+  #msheet .row20.on{background:var(--surface2)}
+  #msheet .row20:active{background:var(--surface2)}
+  #msheet .set20{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 4px 4px;border-top:1px solid var(--line);margin-top:10px}
+  #msheet .set20 .btn,#msheet .out20{min-height:44px}
+  #msheet .out20{width:100%;margin-top:10px;justify-content:center;color:var(--red);border-color:var(--red)}
+
+  /* страницы */
+  .cols>*,.cols3>*,.cols.eq>*,.dash>*,.dash2>*,.dash3>*,.grid2>*,.grid3>*{min-width:0}   /* иначе широкая таблица растягивает колонку и страницу */
+  .bigsearch .hint{display:none}
+  .crow{grid-template-columns:44px minmax(0,1fr);gap:8px 12px}
+  .crow .rt{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start}
+  .ph{align-items:flex-start;gap:10px;margin-bottom:12px}
+  .ph h2{font-size:22px}
+  .ph .acts{width:100%}
+  .ph .acts .btn{flex:1 1 auto;justify-content:center}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .tile{padding:10px 12px}
+  .tile b{font-size:22px}
+  .tile span{font-size:9.5px;letter-spacing:.06em}
+  .card{padding:14px}
+  .btn{min-height:40px;padding:8px 14px;font-size:13px}
+  .btn.sm{min-height:36px}
+  .fc{min-height:36px;padding:7px 14px;white-space:nowrap}
+  input,select,textarea{font-size:16px!important}   /* без этого iPhone приближает страницу при вводе */
+
+  /* список дел: номер, название и статусы — столбиком */
+  .mt{grid-template-columns:minmax(0,1fr);gap:6px;padding:12px}
+  .mt .tt{min-width:0}
+  .mt .rt{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:6px}
+
+  /* таблицы прокручиваются вбок внутри карточки, страница не «уезжает» */
+  .tbl,.emt{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl td,.tbl th,.emt td,.emt th{white-space:nowrap}
+  .tbl td .small,.tbl td small{white-space:normal}
+
+  /* панель разделов: поиск во всю ширину, быстрые кнопки и виды листаются вбок */
+  .bar17{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+  .bar17>*{min-width:0}
+  .bar17 .q17{grid-column:1/-1;height:44px;width:100%}
+  .bar17 .qfs17{grid-column:1/-1}
+  .bar17>[data-adv17]{grid-column:span 3;justify-content:center}
+  .bar17 .srt17{grid-column:span 3;display:flex;align-items:center;gap:6px;width:auto;font-size:11px;color:var(--ink-3)}
+  .bar17 .srt17 select{flex:1;min-width:0;height:40px;padding:0 8px}
+  .bar17>.btn.ghost{grid-column:span 2;justify-content:center;padding:8px 4px}
+  .qfs17{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px;scrollbar-width:none}
+  .qfs17::-webkit-scrollbar,.filters::-webkit-scrollbar,.ptabs::-webkit-scrollbar,.tabs::-webkit-scrollbar{display:none}
+  .qfs17 .qf17{flex:none;min-height:36px}
+  .filters{flex-wrap:nowrap;overflow-x:auto;margin-left:-14px;margin-right:-14px;padding:0 14px 6px;scrollbar-width:none}
+  .filters .fc{flex:none}
+  .sum11{gap:4px 14px}
+  .flt11{padding:10px}
+  .ptabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .ptabs button{flex:none;min-height:40px}
+
+  /* карточка дела */
+  .kvl{grid-template-columns:1fr;gap:1px}
+  .kvl dt{padding-top:8px}
+  .stline{display:flex;overflow-x:auto;gap:8px;scroll-snap-type:x proximity;padding-bottom:6px;scrollbar-width:none}
+  .stline .stp{flex:0 0 104px;scroll-snap-align:start}
+  .ccgrid{grid-template-columns:1fr}
+  .actions{flex-wrap:wrap}
+
+  /* календарь: неделя — списком по дням, месяц — компактная сетка */
+  .wk{grid-template-columns:1fr;gap:8px}
+  .wk .wd{min-height:0;padding:10px 12px}
+  .wk .wd .dh2{margin-bottom:6px;padding-bottom:4px}
+  .cal{gap:3px}
+  .cal .dc{min-height:54px;padding:3px 4px}
+  .cal .dc .dn{font-size:11px;margin-bottom:2px}
+  .cal .ce{font-size:9.5px;padding:1px 3px;margin-bottom:2px}
+  .calnav{flex-wrap:wrap;gap:8px}
+
+  /* окна — «шторка» снизу */
+  .ov{padding:0;align-items:flex-end}
+  .md,.md.narrow{width:100%!important;max-width:100%;max-height:92vh;max-height:92dvh;border-radius:18px 18px 0 0}
+  #mdN{height:92vh!important;height:92dvh!important}
+  #mdD.wide .form,#mdD.wide.w3 .form{grid-template-columns:1fr!important}
+  .md .mh{padding:14px 16px 0;gap:12px}
+  .md .mh h2{font-size:18px;padding-right:38px}
+  .md .mx{right:10px;top:10px}
+  .tabs{padding:10px 12px 0;overflow-x:auto;scrollbar-width:none}
+  .tabs button{flex:none;min-height:40px}
+  .mb2{padding:14px 14px calc(20px + env(safe-area-inset-bottom,0px))}
+  .mb2:has(>.actions){padding-bottom:0}
+  .md .actions{position:sticky;bottom:0;background:var(--surface);padding:10px 0 calc(8px + env(safe-area-inset-bottom,0px));margin-top:12px;border-top:1px solid var(--line);justify-content:stretch}
+  .md .actions .btn{flex:1 1 auto;justify-content:center}
+  .panel{width:100%;border-left:0;padding:18px 16px 32px}
+  .close{width:40px;height:40px}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px));max-width:calc(100vw - 24px);white-space:normal;text-align:center;border-radius:14px}
+}
+@media (max-width:400px){
+  .tile b{font-size:20px}
+  .sum11 b{font-size:14px}
+}
+</style>
 
 <!-- вход -->
 <div class="login" id="login">
@@ -9091,7 +9240,11 @@ Load17.of=function(emp){const mm=Calc20.all().map(migrateMatter11).filter(m=>m.p
 const _sbDocSetBrief20=SB19.docSet.bind(SB19);SB19.docSet=async function(name,id,obj){if(name==="matters"&&obj&&(obj._brief20||obj._fact20))return;return _sbDocSetBrief20(name,id,obj);};
 /* напоминания о сроках в режиме сервера: только по своим полным делам и задачам, которые этому сотруднику можно менять,
    — остальным напомнит тот, у кого есть право (иначе метку «напомнено» не сохранить и напоминание повторялось бы) */
-const _tick20=Remind17.tick.bind(Remind17);Remind17.tick=function(force){if(!Calc20.on()||!U()||isClient())return _tick20(force);
+/* сервер сам рассылает напоминания о сроках каждый день (миграция 0015): портал при входе узнаёт об этом и свои не рассылает */
+const _sbStartRm20=SB19.start.bind(SB19);SB19.start=async function(login){const r=await _sbStartRm20(login);
+  try{const st=this.kind!=="client"?await this.T.rpc("remind_status"):null;this.remindServer=!!(st&&st.on);}catch(e){this.remindServer=false;}return r;};
+const _sbResetRm20=SB19.reset.bind(SB19);SB19.reset=function(){this.remindServer=false;return _sbResetRm20();};
+const _tick20=Remind17.tick.bind(Remind17);Remind17.tick=function(force){if(Calc20.on()&&SB19.remindServer)return Promise.resolve();if(!Calc20.on()||!U()||isClient())return _tick20(force);
   const me=U(),keep=[];const hold=(o,k,v)=>{keep.push([o,k,Object.prototype.hasOwnProperty.call(o,k),o[k]]);o[k]=v;};
   Object.values(S.matters).forEach(m=>{if(m._brief20){hold(m,"remind17",m.deadline);hold(m,"invRemind17",m.invRemind17||"-");}});
   Object.values(S.tasks).forEach(t=>{if(t.due&&!(can("editTask",t.emp)||t.createdBy===me.emp||t.createdBy===me.login))hold(t,"remind17",t.due);});
@@ -9251,6 +9404,76 @@ Calc20.load=async function(){this.facts={};this.tasks={};if(!this.on())return;
   (facts||[]).forEach?.(f=>{if(f&&f.id)this.facts[f.id]=f;});
   (fm||[]).forEach?.(r=>{if(r&&r.id&&!S.matters[r.id])S.matters[r.id]=Object.assign({},r.data,{id:r.id,_brief20:true});});
   (ft||[]).forEach?.(t=>{if(t&&t.id)this.tasks[t.id]=t;});};
+
+
+/* ═══════════════════════════ v20 · ТЕЛЕФОН: нижняя панель и меню «Ещё» ═══════════════════════════
+   На ширине до 700 px боковая лента иконок скрыта (v20_mobile.html). Вместо неё внизу — до четырёх главных пунктов меню
+   (те же, что у роли в боковом меню) и кнопка «Ещё»: полное меню с группами, профиль, оформление, язык и «Выйти».
+   Пункты берутся из уже собранного #side — роли, счётчики и подсветка текущего раздела остаются теми же.
+   Кабинет клиента (isClient) не затрагивается: у него своя панель. Всё строится через DOM, без разметки из строк. */
+const Mob20={
+  mq:window.matchMedia("(max-width:700px)"),
+  el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!==undefined&&x!==null)e.textContent=x;return e;},
+  ico(d,w){const NS="http://www.w3.org/2000/svg",s=document.createElementNS(NS,"svg");s.setAttribute("viewBox","0 0 24 24");s.setAttribute("aria-hidden","true");const p=document.createElementNS(NS,"path");p.setAttribute("d",d);if(w)p.setAttribute("stroke-width",w);s.appendChild(p);return s;},
+  items(){if(!U()||isClient())return [];return [...document.querySelectorAll("#side [data-r]")];},
+  label(b){const s=[...b.children].find(x=>x.tagName==="SPAN"&&!x.classList.contains("nb"));return s?s.textContent.trim():"";},
+  badge(b){const n=b.querySelector(".nb");return n?n.textContent.trim():"";},
+  path(b){const p=b.querySelector("svg path");return p?p.getAttribute("d"):"";},
+  /* подпись в нижней панели: длинные слова не помещаются в 1/5 ширины — берём короткую форму */
+  short:{support:"Сопровожд.||顾问服务"},
+  barLabel(b){const k=this.short[b.dataset.r];return k?T1(k):this.label(b);},
+  btn(b){const x=this.el("button");x.type="button";x.dataset.r=b.dataset.r;if(b.classList.contains("on")){x.classList.add("on");x.setAttribute("aria-current","page");}
+    x.appendChild(this.ico(this.path(b)));const lt=this.barLabel(b),l=this.el("span","l",lt);if(lt.split(/s+/).some(w=>w.length>10))l.classList.add("sm");x.appendChild(l);const n=this.badge(b);if(n)x.appendChild(this.el("span","nb",n));
+    x.onclick=()=>Router.go(x.dataset.r);return x;},
+  bar(){let bar=document.getElementById("bnav");const list=this.items();
+    if(!list.length){if(bar){bar.classList.remove("on");bar.replaceChildren();}return;}
+    if(!bar){bar=this.el("nav");bar.id="bnav";bar.setAttribute("aria-label",T1("Основное меню||主菜单"));document.body.appendChild(bar);}
+    bar.replaceChildren();
+    const few=list.length<=5,main=few?list:list.slice(0,4),rest=few?[]:list.slice(4);
+    main.forEach(b=>bar.appendChild(this.btn(b)));
+    if(rest.length){const m=this.el("button");m.type="button";m.id="bnavMore";m.setAttribute("aria-haspopup","dialog");
+      if(rest.some(b=>b.classList.contains("on")))m.classList.add("on");
+      m.appendChild(this.ico("M5 12h.01M12 12h.01M19 12h.01","3.2"));m.appendChild(this.el("span","l",T1("Ещё||更多")));
+      const sum=rest.reduce((s,b)=>s+(parseInt(this.badge(b),10)||0),0);if(sum)m.appendChild(this.el("span","nb",String(sum)));
+      m.onclick=()=>this.open();bar.appendChild(m);}
+    bar.classList.add("on");},
+  close(){const s=document.getElementById("msheet");if(s)s.remove();},
+  open(){this.close();const s=this.el("div","open");s.id="msheet";s.setAttribute("role","dialog");s.setAttribute("aria-modal","true");s.setAttribute("aria-label",T1("Меню||菜单"));
+    s.onclick=e=>{if(e.target===s)this.close();};
+    const sh=this.el("div","sh");s.appendChild(sh);
+    /* кто вошёл: аватар, имя, должность; нажатие открывает профиль, как аватар в шапке */
+    const who=document.querySelector("#whoBox .who"),nm=who&&who.querySelector(".wn"),rl=who&&who.querySelector(".wr"),av=document.getElementById("whoAv");
+    const head=this.el("div");head.style.cssText="display:flex;align-items:center;gap:8px";
+    const wb=this.el("button","who20");wb.type="button";wb.style.cssText="flex:1;min-width:0";
+    const a=this.el("span","av");if(av){[...av.childNodes].forEach(n=>a.appendChild(n.cloneNode(true)));}wb.appendChild(a);
+    const tx=this.el("span","tx");tx.appendChild(this.el("b","",nm?nm.textContent:""));tx.appendChild(this.el("small","",rl?rl.textContent:""));wb.appendChild(tx);
+    wb.onclick=()=>{this.close();if(av)av.click();};head.appendChild(wb);
+    const x=this.el("button","xs","✕");x.type="button";x.setAttribute("aria-label",T1("Закрыть||关闭"));x.onclick=()=>this.close();head.appendChild(x);sh.appendChild(head);
+    /* меню по группам, в том же порядке, что в боковом меню; список прокручивается, нижняя часть закреплена */
+    const list=this.el("div","list20");sh.appendChild(list);
+    [...document.querySelectorAll("#side > *")].forEach(n=>{
+      if(n.classList.contains("grp")){list.appendChild(this.el("div","gt",n.textContent.trim()));}
+      else if(n.dataset&&n.dataset.r){const r=this.el("button","row20");r.type="button";if(n.classList.contains("on"))r.classList.add("on");
+        r.appendChild(this.ico(this.path(n)));r.appendChild(this.el("span","",this.label(n)));const b=this.badge(n);if(b)r.appendChild(this.el("span","nb",b));
+        r.onclick=()=>{this.close();Router.go(n.dataset.r);};list.appendChild(r);}});
+    const ft=this.el("div","ft20");sh.appendChild(ft);
+    /* оформление и язык — те же переключатели, что в шапке */
+    const set=this.el("div","set20");
+    const th=document.getElementById("themeBtn");if(th){const tb=this.el("button","btn");tb.type="button";const ti=document.getElementById("themeIco"),tl=document.getElementById("themeLbl");
+      if(ti&&ti.firstChild){const c=ti.firstChild.cloneNode(true);c.style.cssText="width:18px;height:18px";tb.appendChild(c);}tb.appendChild(this.el("span","",(tl&&tl.textContent)||T1("Оформление||外观")));
+      tb.onclick=()=>{th.click();setTimeout(()=>this.open(),60);};set.appendChild(tb);}
+    const seg=this.el("div","seg lang");[["ru","RU"],["zh","中文"]].forEach(([k,t])=>{const b=this.el("button","",t);b.type="button";b.setAttribute("aria-pressed",String(lang===k));
+      b.onclick=()=>{const src=document.querySelector(`#langSeg [data-lang="${k}"]`);if(src)src.click();setTimeout(()=>this.open(),80);};seg.appendChild(b);});set.appendChild(seg);ft.appendChild(set);
+    const out=this.el("button","btn out20",T1(UI.logout));out.type="button";out.onclick=()=>{this.close();const o=document.getElementById("outBtn");if(o)o.click();};ft.appendChild(out);
+    document.body.appendChild(s);}
+};
+(()=>{
+  const _rs=renderSide;renderSide=function(){const r=_rs.apply(this,arguments);try{Mob20.bar();}catch(e){console.error("Mob20",e);}return r;};
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.getElementById("msheet")){Mob20.close();e.stopPropagation();}},true);
+  window.addEventListener("hashchange",()=>Mob20.close());
+  const off=()=>{if(!Mob20.mq.matches)Mob20.close();};
+  if(Mob20.mq.addEventListener)Mob20.mq.addEventListener("change",off);else if(Mob20.mq.addListener)Mob20.mq.addListener(off);
+})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
