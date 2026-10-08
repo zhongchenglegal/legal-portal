@@ -9206,6 +9206,31 @@ const _rrNt20=Router.render.bind(Router);Router.render=function(){const r=_rrNt2
 if(typeof renderWho==="function"){const _rwNt20=renderWho;renderWho=function(){const r=_rwNt20.apply(this,arguments);ensureNtBtn20();return r;};}
 
 
+/* ═══════════════════════════ v20 · СКОРОСТЬ ЗАГРУЗКИ В РЕЖИМЕ СЕРВЕРА ═══════════════════════════
+   Замер (tests/perf20.js): при входе ~90 запросов в 29 «волнах» ожидания; раздел кабинета (CAB.reload) читал 9 коллекций строго
+   по очереди — при входе и при КАЖДОМ переходе на главную, в дело, клиента, жалобы, кабинет; у сотрудников набор читался дважды.
+   • CAB.reload — все коллекции одновременно;
+   • в режиме сервера после загрузки коллекции с мгновенными обновлениями (Realtime) при переходах не перечитываются —
+     перечитываются только те, у которых подписки нет (учётки клиентов, авансы), и не чаще раза в минуту;
+   • данные для расчётов (факты, дела и сроки задач для финансовых ролей) — одновременно. В демо-режиме — как раньше. */
+const SPEED20={RT:new Set(["clientMessages","clientAcceptance","complaints","clientRequests","svcCatalog","svcFaq","pricing","calendar"]),last:0,
+  on(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T;}};
+CAB.reload=async function(keys){if(!S.db||this.busy)return false;
+  let list=keys||CA_KEYS10;
+  if(!keys&&SPEED20.on()&&SB19.loaded){if(Date.now()-SPEED20.last<60000)return false;list=list.filter(k=>!SPEED20.RT.has(k));}
+  this.busy=true;
+  try{await Promise.all(list.map(async k=>{try{const s=await S.db.collection(k).get();const m=S[k]||(S[k]={});const seen=new Set();
+      (s.docs||[]).forEach(d=>{seen.add(d.id);m[d.id]=clone(d.data());});Object.keys(m).forEach(id=>{if(!seen.has(id))delete m[id];});}catch(e){}}));
+    SPEED20.last=Date.now();}
+  finally{this.busy=false;}return true;};
+Calc20.load=async function(){this.facts={};this.tasks={};if(!this.on())return;
+  const fin=typeof SB19!=="undefined"&&SB19.kind==="staff";
+  const [facts,fm,ft]=await Promise.all([SB19.T.rpc("matter_facts").catch(()=>null),fin?SB19.T.rpc("finance_matters").catch(()=>null):null,fin?SB19.T.rpc("finance_tasks").catch(()=>null):null]);
+  (facts||[]).forEach?.(f=>{if(f&&f.id)this.facts[f.id]=f;});
+  (fm||[]).forEach?.(r=>{if(r&&r.id&&!S.matters[r.id])S.matters[r.id]=Object.assign({},r.data,{id:r.id,_brief20:true});});
+  (ft||[]).forEach?.(t=>{if(t&&t.id)this.tasks[t.id]=t;});};
+
+
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
    «Престиж» — светлая тема по умолчанию, «Тёмная» — её тёмная версия.
    Тема = запись здесь + набор переменных в CSS (:root — Престиж, :root[data-theme="dark"] — Тёмная). */
