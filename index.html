@@ -1623,6 +1623,10 @@ button{font:inherit;color:inherit;cursor:pointer}
     <div class="themes" id="lgThemes"></div>
   </form>
 </div>
+<!-- v20: заставка «Загрузка…» вместо формы входа, пока проверяется сохранённый вход (см. v20_boot.js) -->
+<style>.bootSpin20{width:28px;height:28px;border:3px solid rgba(128,128,128,.3);border-top-color:#C8102E;border-radius:50%;animation:bs20 .8s linear infinite}@keyframes bs20{to{transform:rotate(360deg)}}</style>
+<div id="bootSplash20" style="display:none;position:fixed;inset:0;z-index:199;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:var(--canvas,#fff);color:var(--ink-3,#666);font:14px system-ui,sans-serif"><div class="bootSpin20"></div><div>Загрузка… · 加载中…</div></div>
+<script>(function(){try{if(location.search.indexOf("demo")<0&&localStorage.getItem("zc_sb_auth")){document.getElementById("login").style.display="none";document.getElementById("bootSplash20").style.display="flex";}}catch(e){}})();</script>
 
 <!-- профиль сотрудника -->
 <div class="ov" id="ovP"><div class="md" id="mdP"></div></div>
@@ -8999,7 +9003,7 @@ const SB19={
   on:(()=>{try{return !new URLSearchParams(location.search).has("demo");}catch(e){return true;}})(),
   T:null,verified:null,kind:null,login:null,subs:[],notifKnown:{},loaded:false,
   MAP:{accounts:"staff_accounts",clientAccounts:"app_users",notif:"notifications",auditLog:"audit_log",unitGoals:"unit_goals",clientMessages:"client_messages",
-    clientAcceptance:"client_acceptance",clientRequests:"client_requests",svcCatalog:"svc_catalog",svcFaq:"svc_faq"},
+    clientAcceptance:"client_acceptance",clientRequests:"client_requests",svcCatalog:"svc_catalog",svcFaq:"svc_faq",assignments:"assign"},
   NOWRITE:new Set(["accounts","clientAccounts","audit","filesMem"]),
   table(n){return this.MAP[n]||String(n).replace(/[A-Z]/g,c=>"_"+c.toLowerCase());},
   /* транспорт по умолчанию — supabase-js; тесты подменяют SB19.T своим (локальная база PGlite с теми же правилами) */
@@ -9488,6 +9492,48 @@ const Mob20={
   window.addEventListener("hashchange",()=>Mob20.close());
   const off=()=>{if(!Mob20.mq.matches)Mob20.close();};
   if(Mob20.mq.addEventListener)Mob20.mq.addEventListener("change",off);else if(Mob20.mq.addListener)Mob20.mq.addListener(off);
+})();
+
+
+/* ═══════════════════════════ v20 · «ДОСТУПНА НОВАЯ ВЕРСИЯ» ═══════════════════════════
+   Портал — один файл; после выкладки новой сборки открытая вкладка продолжает работать на старой, пока её не обновят.
+   Теперь портал сам раз в 10 минут и при возвращении на вкладку смотрит на сайте номер сборки; если он другой, внизу
+   появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
+   набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
+Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
+const ZC_BUILD="67a6e2b20a4a";
+const Upd20={
+  id:ZC_BUILD,shown:false,last:0,
+  async check(){
+    if(this.shown||/^__/.test(this.id)||location.protocol==="file:")return;
+    const now=Date.now();if(now-this.last<120000)return;this.last=now;
+    try{const r=await fetch(location.origin+location.pathname+"?_="+now,{cache:"no-store"});if(!r.ok)return;
+      const m=/const ZC_BUILD="([0-9a-f]{12})"/.exec(await r.text());if(m&&m[1]!==this.id)this.show();}catch(e){}
+  },
+  show(){
+    this.shown=true;const d=document.createElement("div");d.id="updBar20";d.setAttribute("role","status");
+    d.style.cssText="position:fixed;left:50%;transform:translateX(-50%);bottom:"+(window.innerWidth<700?"76px":"18px")+";z-index:9999;background:#1b1f24;color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.35);display:flex;gap:12px;align-items:center;font:14px system-ui,sans-serif;max-width:92vw";
+    const t=document.createElement("span");t.textContent=T1(UI.upd20);
+    const b=document.createElement("button");b.type="button";b.className="btn sm";b.textContent=T1(UI.updBtn20);b.onclick=()=>location.reload();
+    const x=document.createElement("button");x.type="button";x.className="btn sm ghost";x.textContent=T1(UI.updLater20);x.onclick=()=>{d.remove();};
+    d.append(t,b,x);document.body.appendChild(d);
+  }
+};
+setTimeout(()=>Upd20.check(),30000);setInterval(()=>Upd20.check(),600000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")Upd20.check();});
+
+
+/* ═══════════════════════════ v20 · ЗАГРУЗКА БЕЗ «МИГАНИЯ» ЭКРАНА ВХОДА ═══════════════════════════
+   При обновлении страницы портал сначала проверяет сохранённый вход и загружает данные (1–2 секунды). Раньше всё это время
+   был виден экран с логином и паролем, а потом портал сам открывался — казалось, что вход сбросился. Теперь, если в браузере
+   есть сохранённый вход, вместо формы показывается «Загрузка…» (заставка в разметке, см. v4_body_extra.html); форма входа
+   появляется только если входа нет или он недействителен. Если загрузка зависла дольше 20 секунд, заставка убирается и
+   показывается форма входа. */
+(()=>{
+  const off=()=>{const s=document.getElementById("bootSplash20");if(s)s.style.display="none";};
+  const _h=hideLogin;hideLogin=function(){off();return _h.apply(this,arguments);};
+  const _s=showLogin;showLogin=function(){const r=_s.apply(this,arguments);off();return r;};
+  setTimeout(()=>{const s=document.getElementById("bootSplash20");if(s&&s.style.display!=="none"){off();try{if(!U())showLogin();}catch(e){}}},20000);
 })();
 
 
