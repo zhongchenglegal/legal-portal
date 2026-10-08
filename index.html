@@ -9144,8 +9144,16 @@ const _sbDocGetFs20=SB19.docGet.bind(SB19);SB19.docGet=async function(name,id){c
   if(name!=="files"||!r.exists)return r;const d=r.data();if(!d||!d.path||d.data||!FS20.on())return r;
   let data=null;try{data=await FS20.dataUrl(await this.T.signedUrl(d.path,60));}catch(e){data=null;}
   if(!data)return {exists:false,id,data:()=>undefined};const out=Object.assign({},d,{data});return {exists:true,id,data:()=>out};};
+/* уже открытые файлы — в памяти до выхода (не больше 20): повторное открытие без запросов к серверу */
+FS20.cache=new Map();
+const _sbDocGetFsC20=SB19.docGet.bind(SB19);SB19.docGet=async function(name,id){
+  if(name==="files"&&FS20.on()&&FS20.cache.has(id)){const d=FS20.cache.get(id);return {exists:true,id,data:()=>d};}
+  const r=await _sbDocGetFsC20(name,id);
+  if(name==="files"&&FS20.on()&&r.exists){const d=r.data();if(d&&d.path&&typeof d.data==="string"){FS20.cache.set(id,d);if(FS20.cache.size>20)FS20.cache.delete(FS20.cache.keys().next().value);}}
+  return r;};
+const _sbResetFs20=SB19.reset.bind(SB19);SB19.reset=function(){FS20.cache.clear();return _sbResetFs20();};
 /* удаление: сначала файл в хранилище (право проверяется по описанию), затем описание */
-const _sbDocDelFs20=SB19.docDel.bind(SB19);SB19.docDel=async function(name,id){
+const _sbDocDelFs20=SB19.docDel.bind(SB19);SB19.docDel=async function(name,id){if(name==="files")FS20.cache.delete(id);
   if(name==="files"&&FS20.on()){let p=null;try{const r=await _sbDocGetFs20("files",id);p=r.exists&&r.data()&&r.data().path;}catch(e){}if(p)await this.T.removeFile(p);}
   return _sbDocDelFs20(name,id);};
 /* КП в пакетах услуг: в хранилище — одним файлом, без деления на части */
@@ -9223,9 +9231,23 @@ CAB.reload=async function(keys){if(!S.db||this.busy)return false;
       (s.docs||[]).forEach(d=>{seen.add(d.id);m[d.id]=clone(d.data());});Object.keys(m).forEach(id=>{if(!seen.has(id))delete m[id];});}catch(e){}}));
     SPEED20.last=Date.now();}
   finally{this.busy=false;}return true;};
+/* вход одним запросом (portal_bootstrap, миграция 0013): пока идёт загрузка после входа, чтение таблиц берётся из ответа;
+   после загрузки — как обычно (мгновенные обновления и запросы). Нет функции на сервере или ошибка — читается по-старому. */
+SPEED20.COLS=["accounts","profiles","tasks","auditLog","photos","agendas","assign","goals","finance","chats","notif","matters","clients","events","corr",
+  "requests","vacancies","intern","partners","notes","units","payments","payroll","settings","unitGoals","exams","clientAccounts","clientMessages",
+  "clientAcceptance","complaints","clientRequests","pricing","calendar","advances","svcCatalog","svcFaq"];
+SPEED20.boot=null;
+const _sbStartSp20=SB19.start.bind(SB19);SB19.start=async function(login){
+  SPEED20.boot=this.T.rpc("portal_bootstrap",{tables:[...new Set(SPEED20.COLS.map(c=>this.table(c)))]}).then(b=>b&&typeof b==="object"&&!Array.isArray(b)?b:null).catch(()=>null);
+  try{return await _sbStartSp20(login);}finally{SPEED20.boot=null;}};
+const _sbRowsSp20=SB19.rows.bind(SB19);SB19.rows=async function(name){
+  if(SPEED20.boot){const b=await SPEED20.boot;const t=this.table(name);
+    if(b&&Array.isArray(b[t])){let r=b[t];if(name==="clientAccounts")r=r.filter(x=>x.kind==="client");return r.map(x=>Object.assign({},x));}}
+  return _sbRowsSp20(name);};
 Calc20.load=async function(){this.facts={};this.tasks={};if(!this.on())return;
-  const fin=typeof SB19!=="undefined"&&SB19.kind==="staff";
-  const [facts,fm,ft]=await Promise.all([SB19.T.rpc("matter_facts").catch(()=>null),fin?SB19.T.rpc("finance_matters").catch(()=>null):null,fin?SB19.T.rpc("finance_tasks").catch(()=>null):null]);
+  const fin=typeof SB19!=="undefined"&&SB19.kind==="staff";const b=SPEED20.boot?await SPEED20.boot:null;
+  const from=(k,fn,want)=>b&&Array.isArray(b[k])?b[k]:(want?SB19.T.rpc(fn).catch(()=>null):null);
+  const [facts,fm,ft]=await Promise.all([from("_matter_facts","matter_facts",true),from("_finance_matters","finance_matters",fin&&!b),from("_finance_tasks","finance_tasks",fin&&!b)]);
   (facts||[]).forEach?.(f=>{if(f&&f.id)this.facts[f.id]=f;});
   (fm||[]).forEach?.(r=>{if(r&&r.id&&!S.matters[r.id])S.matters[r.id]=Object.assign({},r.data,{id:r.id,_brief20:true});});
   (ft||[]).forEach?.(t=>{if(t&&t.id)this.tasks[t.id]=t;});};
