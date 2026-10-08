@@ -9332,6 +9332,12 @@ Object.assign(UI,{
   ntTgLink20:"Подключить Telegram||绑定 Telegram",ntTgUnlink20:"Отключить Telegram||解绑 Telegram",
   ntTgNoBot20:"Бот фирмы ещё не создан — его подключает владелец портала||律所机器人尚未创建——由门户管理员配置",
   ntTgGo20:"Откройте ссылку в Telegram и нажмите «Start» (действует 15 минут), затем снова откройте «Уведомления».||请在 Telegram 中打开链接并点击“Start”（15分钟内有效），然后重新打开“通知”。",
+  ntQuiet20:"Тихие часы в Telegram (по Ташкенту)||Telegram 免打扰时段（塔什干时间）",ntQuietOn20:"Включены: сообщения ждут утра||开启：消息待次日发送",ntQuietOff20:"Выключены||关闭",
+  ntFrom20:"С какого часа||起始时间",ntTo20:"До какого часа||结束时间",
+  ntMode20:"Как присылать в Telegram||Telegram 发送方式",ntModeNow20:"Сразу, по одному||即时逐条发送",ntModeDigest20:"Сводкой: один список в 08:00 и 14:00||汇总：每天 08:00 和 14:00 各一份",
+  ntTypes20:"Что дублировать в Telegram||同步到 Telegram 的内容",
+  ntTyTask20:"Задачи и дела||任务与案件",ntTyClient20:"Клиенты и обращения||客户与咨询",ntTyAssign20:"Поручения||指派",ntTyReport20:"Отчёты||报告",ntTyMsg20:"Сообщения чата||聊天消息",ntTyFaq20:"Вопросы по услугам||服务问答",ntTyAccept20:"Приёмка||验收",
+  ntMuted20:"Пауза до||暂停至",
   ntSaved20:"Настройки уведомлений сохранены||通知设置已保存",ntEmailBad20:"Проверьте адрес почты||请检查邮箱地址"
 });
 /* уведомления о сообщениях — с полным текстом (решение владельца 08.10.2026): в Telegram уходит сообщение целиком,
@@ -9339,6 +9345,8 @@ Object.assign(UI,{
 NTPL18.chatMsg="Сообщение от {who}: {text}||来自 {who} 的消息：{text}";
 const _ntRender20=NT18.render.bind(NT18);NT18.render=function(k,p,L){if(k==="chatMsg"&&!(p&&p.text))return withLang18(L||lang,()=>T1("Сообщение от||来自")+" "+NT18.val((p||{}).who)+T1("||的消息"));return _ntRender20(k,p,L);};
 (()=>{const st=document.createElement("style");st.textContent=".ev .et,.reqrow>span:last-child{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}";document.head.appendChild(st);})();
+const NT_TYPES20=[["task","ntTyTask20"],["client","ntTyClient20"],["assign","ntTyAssign20"],["report","ntTyReport20"],["msg","ntTyMsg20"],["faq","ntTyFaq20"],["accept","ntTyAccept20"]];
+const NT_HOURS20=Array.from({length:24},(_,h)=>[String(h),String(h).padStart(2,"0")+":00"]);
 const Ntf20={
   on(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&!!U();},
   async open(){let s;try{s=await SB19.T.rpc("notify_settings");}catch(e){toast(Acc20.msg(e));return;}s=s||{channels:[],detail:"short"};
@@ -9346,9 +9354,15 @@ const Ntf20={
     const tg=`<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b id="ntTgSt20">${esc(T1(s.telegram?UI.ntTgOn20:UI.ntTgOff20))}</b>`+
       (s.telegram?`<button type="button" class="btn sm ghost" id="ntTgOff20">${esc(T1(UI.ntTgUnlink20))}</button>`
         :bot?`<button type="button" class="btn sm" id="ntTgOn20">${esc(T1(UI.ntTgLink20))}</button>`:`<span style="font-size:12px;color:var(--ink-3)">${esc(T1(UI.ntTgNoBot20))}</span>`)+`</div>`;
+    const nq=s.quiet!==undefined;   /* сервер знает тихие часы и сводку (миграция 0019) */
     const p=Dlg.ask({title:T1(UI.ntTitle20),fields:[{type:"html",html:tg},
       {k:"channels",label:T1(UI.ntChannels20),type:"multi",value:s.channels||[],options:[["telegram","Telegram"],["email",T1("Почта||邮件")]]},
       {k:"detail",label:T1(UI.ntDetail20),type:"select",value:s.detail||"full",options:[["full",T1(UI.ntFull20)],["short",T1(UI.ntShort20)]]},
+      ...(nq?[{k:"types",label:T1(UI.ntTypes20),type:"multi",value:NT_TYPES20.map(x=>x[0]).filter(k=>!(s.skip||[]).includes(k)),options:NT_TYPES20.map(x=>[x[0],T1(UI[x[1]])])},
+      {k:"mode",label:T1(UI.ntMode20),type:"select",value:s.mode||"instant",options:[["instant",T1(UI.ntModeNow20)],["digest",T1(UI.ntModeDigest20)]]},
+      {k:"quiet",label:T1(UI.ntQuiet20),type:"select",value:s.quiet===false?"0":"1",options:[["1",T1(UI.ntQuietOn20)],["0",T1(UI.ntQuietOff20)]]},
+      {k:"qfrom",label:T1(UI.ntFrom20),type:"select",value:String(s.quietFrom==null?21:s.quietFrom),options:NT_HOURS20},
+      {k:"qto",label:T1(UI.ntTo20),type:"select",value:String(s.quietTo==null?8:s.quietTo),options:NT_HOURS20}]:[]),
       {k:"email",label:T1(UI.ntEmail20),value:s.email||"",type:"email",hint:s.emailEnabled?"":T1(UI.ntEmailOff20),
         check:v=>!v.email||/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)?null:T1(UI.ntEmailBad20)}]});
     const close=()=>{const n=document.getElementById("dlgNo");if(n)n.click();};
@@ -9357,7 +9371,8 @@ const Ntf20={
       Dlg.ask({title:T1(UI.ntTgLink20),fields:[{type:"html",html:`<p style="margin:0 0 10px">${esc(T1(UI.ntTgGo20))}</p><p style="margin:0"><a href="${esc(url)}" target="_blank" rel="noopener" id="ntTgUrl20">${esc(url)}</a></p>`}],okText:"ОК||确定"});};
     const off=document.getElementById("ntTgOff20");if(off)off.onclick=async()=>{try{await SB19.T.rpc("tg_unlink");}catch(e){toast(Acc20.msg(e));return;}close();toast(T1(UI.ntTgOff20));};
     const v=await p;if(!v)return;
-    try{await SB19.T.rpc("notify_set",{channels:v.channels||[],detail:v.detail||"full",email:v.email||null});toast(T1(UI.ntSaved20));}catch(e){toast(Acc20.msg(e));}}
+    try{await SB19.T.rpc("notify_set",{channels:v.channels||[],detail:v.detail||"full",email:v.email||null});
+      if(nq)await SB19.T.rpc("notify_quiet_set",{quiet_on:v.quiet!=="0",quiet_from:+v.qfrom,quiet_to:+v.qto,mode:v.mode==="digest"?"digest":"instant",skip:NT_TYPES20.map(x=>x[0]).filter(k=>!(v.types||[]).includes(k))});toast(T1(UI.ntSaved20));}catch(e){toast(Acc20.msg(e));}}
 };
 const ensureNtBtn20=()=>{if(!Acc20.on()||!U())return;const pw=document.getElementById("pwBtn20");if(!pw||document.getElementById("ntBtn20"))return;
   const b=document.createElement("button");b.id="ntBtn20";b.type="button";b.className=pw.className;b.textContent=T1(UI.ntBtn20);b.title=T1(UI.ntTitle20);
