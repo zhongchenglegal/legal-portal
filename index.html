@@ -9791,7 +9791,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="304e76fe187b";
+const ZC_BUILD="a19af5c0978f";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -9976,16 +9976,22 @@ const Staff21={
   ROLE:{advocate:"Адвокат||律师",senior:"Старший юрист||高级法务",lawyer:"Юрист||法务专员",junior:"Младший юрист||初级法务",assistant:"Помощник юриста||法务助理",
     intern:"Стажёр||实习律师",cnlawyer:"Китайский юрист||中国法务",translator:"Переводчик||翻译",coo:"Операционный директор||运营总监",accountant:"Бухгалтер||会计",
     hr:"HR-менеджер||人力资源经理",office:"Офис-менеджер||行政主管",clerk:"Делопроизводитель||文员",marketing:"Маркетолог||市场专员",it:"IT-специалист||IT专员"},
+  GENERIC:{adv:"Адвокат||律师",jur:"Юрист||法务专员",int:"Стажёр||实习律师"},
   founders(){return new Set((typeof FOUNDERS!=="undefined"?FOUNDERS:[]).map(f=>f.id));},
-  restore(){Object.entries(this.orig).forEach(([id,o])=>{if(ALL[id])Object.assign(ALL[id],o);if(ALL[id]&&!("vac" in o))delete ALL[id].vac;});
+  restore(){Object.entries(this.orig).forEach(([id,o])=>{if(ALL[id])Object.keys(o).forEach(k=>{if(o[k]===undefined)delete ALL[id][k];else ALL[id][k]=o[k];});if(ALL[id]&&!("vac" in o))delete ALL[id].vac;});
     this.added.forEach(id=>{delete ALL[id];});this.orig={};this.added=[];},
   apply(){if(!this.on())return;this.restore();
     const real=new Map();Object.values(S.accounts||{}).forEach(a=>{if(a&&a.emp)real.set(a.emp,a);});
     const fnd=this.founders();
-    /* демо-люди → вакансии своих позиций */
-    Object.keys(ALL).forEach(id=>{const d=ALL[id];if(!d||d.members||id==="council"||d.vac||fnd.has(id)||real.has(id))return;
-      this.orig[id]={name:d.name};if("vac" in d)this.orig[id].vac=d.vac;
-      d.vac=1;if(d.role)d.name=d.role;});
+    /* демо-люди → вакансии своих позиций; у всех вакансий — подписи без имён демо-людей и их наставников */
+    const named=/наставник|адвоката [А-ЯЁ]|юриста [А-ЯЁ]|(тест)/;
+    Object.keys(ALL).forEach(id=>{const d=ALL[id];if(!d||d.members||id==="council"||fnd.has(id)||real.has(id))return;
+      const wasVac=!!d.vac,g=this.GENERIC[d.type]||d.role||d.name;
+      const bad=k=>d[k]&&named.test(T1(d[k]));
+      if(wasVac&&!bad("role")&&!bad("name")&&!bad("pos"))return;
+      this.orig[id]={name:d.name,role:d.role,short:d.short,pos:d.pos,demo:d.demo};if("vac" in d)this.orig[id].vac=d.vac;
+      d.vac=1;if(!wasVac||bad("name"))d.name=g;if(bad("role"))d.role=g;d.short=d.role;
+      if(!wasVac||bad("pos"))d.pos="";delete d.demo;});
     /* сотрудники из базы, которых нет в оргсхеме */
     real.forEach((a,emp)=>{if(ALL[emp]&&!ALL[emp].vac)return;
       const nm=String(a.name||emp);const role=this.ROLE[a.pos]||a.role||"";
@@ -9997,6 +10003,14 @@ const Staff21={
 /* после входа и загрузки данных; при выходе — исходная оргсхема */
 const _sbStartSt21=SB19.start.bind(SB19);SB19.start=async function(login){const r=await _sbStartSt21(login);try{Staff21.apply();}catch(e){console.warn("Staff21",e);}return r;};
 const _sbResetSt21=SB19.reset.bind(SB19);SB19.reset=function(){try{Staff21.restore();}catch(e){}return _sbResetSt21();};
+/* «Финансы → Обзор»: раньше без данных бухгалтерии показывались встроенные демо-цифры (S.finance || DEMO_FINANCE).
+   В рабочем режиме демо-цифры не показываются: пока нет данных — пустой обзор с пояснением; демо-режим — как раньше. */
+Object.assign(UI,{finEmpty21:"Обзор финансов появится, когда бухгалтерия начнёт вносить данные. Поступления и зарплаты — на соседних вкладках.||财务概览将在财务部门录入数据后显示。收款和工资见相邻标签页。"});
+const _finHtml21=Finance.html.bind(Finance);Finance.html=function(){
+  if(Staff21.on()&&!(S.finance&&Array.isArray(S.finance.months)&&S.finance.months.length>1)){
+    if(!canCouncil("finance"))return `<div class="locked">${T1(UI.finLocked)}</div>`;
+    return `<div class="fin"><div class="card"><div class="empty2" style="font-size:14px;padding:18px 4px">${T1(UI.finEmpty21)}</div></div></div>`;}
+  return _finHtml21();};
 /* «Создать учётку» сотрудника (режим сервера): ФИО, должность, подразделение — новый человек, а не выбор из демо-людей.
    Сервер сам заводит его в таблице сотрудников (миграция 20261010000100). Доступ: сотрудник / руководитель подразделения /
    COO / HR / учредитель — как раньше. */
