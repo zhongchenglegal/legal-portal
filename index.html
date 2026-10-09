@@ -9791,7 +9791,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="a19af5c0978f";
+const ZC_BUILD="dd9a4943bbdf";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10012,8 +10012,8 @@ const _finHtml21=Finance.html.bind(Finance);Finance.html=function(){
     return `<div class="fin"><div class="card"><div class="empty2" style="font-size:14px;padding:18px 4px">${T1(UI.finEmpty21)}</div></div></div>`;}
   return _finHtml21();};
 /* «Создать учётку» сотрудника (режим сервера): ФИО, должность, подразделение — новый человек, а не выбор из демо-людей.
-   Сервер сам заводит его в таблице сотрудников (миграция 20261010000100). Доступ: сотрудник / руководитель подразделения /
-   COO / HR / учредитель — как раньше. */
+   Сервер сам заводит его в таблице сотрудников (миграция 20261010000100). Поля «Доступ» нет: виды доступа
+   владелец вводит постепенно, пока новый сотрудник создаётся без особых прав. */
 Object.assign(UI,{
   nsName21:"ФИО (рус)||姓名（俄文）",nsNameZh21:"ФИО (кит), если есть||姓名（中文，可选）",nsPos21:"Должность||职位",nsUnit21:"Подразделение||部门",
   nsAccess21:"Доступ||权限",nsHint21:"Сотрудник появится в структуре, кадрах и расчёте зарплаты сразу после создания||创建后员工立即出现在架构、人事和工资核算中"
@@ -10025,12 +10025,11 @@ if(typeof Acc20!=="undefined"){const _newStaff21=Acc20.newStaff.bind(Acc20);Acc2
     {k:"name",label:T1(UI.nsName21),required:true},{k:"nameZh",label:T1(UI.nsNameZh21)},
     {k:"pos",label:T1(UI.nsPos21),type:"select",value:"lawyer",options:Object.entries(Staff21.ROLE).map(([k,r])=>[k,T1(r)])},
     {k:"unit",label:T1(UI.nsUnit21),type:"select",value:"",options:[["","—"],...units.map(u=>[u.id,T1((u.nameRu||u.id)+"||"+(u.nameZh||u.nameRu||u.id))])]},
-    {k:"role",label:T1(UI.nsAccess21),type:"select",value:"staff",options:[["staff",T1(UI.rStaff)],["head",T1(UI.rHead)],["coo",T1(UI.rCoo)],["hr",T1(UI.rHr)],["founder",T1(UI.rFounder)]]},
     {k:"login",label:T1(UI.aLogin),required:true,hint:T1("латиница, цифры, точка||拉丁字母、数字、点")},
     {k:"pw",label:T1(UI.lgP),value:genPw(),required:true,check:x=>Acc20.pwCheck(x.pw,x.login)}]});
   if(!v)return;const login=String(v.login).trim().toLowerCase();
-  const pos=v.role==="coo"?"coo":v.role==="hr"?"hr":v.pos;
-  const funcs=v.role==="founder"?["founder"]:v.role==="head"&&v.unit?["head:"+v.unit]:[];
+  /* поле «Доступ» убрано (решение владельца 10.10.2026): виды доступа вводятся постепенно; новый сотрудник — без особых прав */
+  v.role="staff";const pos=v.pos,funcs=[];
   const unit=units.find(u=>u.id===v.unit);const name=v.nameZh?v.name+"||"+v.nameZh:v.name;
   try{await this.rpc("admin_create_account",{acc:{kind:"staff",login,emp:null,pos,funcs,unitId:v.unit||null,entity:unit?unit.entity:null,lang:"ru",
       data:{name,nameZh:v.nameZh||undefined,role:v.role}},pw:v.pw});}
@@ -10038,6 +10037,12 @@ if(typeof Acc20!=="undefined"){const _newStaff21=Acc20.newStaff.bind(Acc20);Acc2
   await this.reload();await this.showOnce(login,v.pw);Cabinet.render&&Cabinet.render();};}
 /* после создания или изменения учётки сотрудника — сразу в структуре, кадрах и расчёте */
 if(typeof Acc20!=="undefined"){const _accReload21=Acc20.reload.bind(Acc20);Acc20.reload=async function(){const r=await _accReload21();try{Staff21.apply();}catch(e){}return r;};}
+/* «Матрица прав» (версия 1.0, решение владельца 10.10.2026): все прежние виды доступа убраны, остаётся один —
+   управляющий адвокат, у него доступ ко всему. Остальные виды доступа владелец вводит постепенно. Демо-режим — как раньше. */
+Object.assign(UI,{rMp21:"Управляющий адвокат||管理律师",rightsNote21:"Остальные виды доступа будут добавлены по решению управляющего адвоката.||其他权限类型将由管理律师决定后添加。"});
+const _cabRights21=Cabinet.rights.bind(Cabinet);Cabinet.rights=function(){if(!Staff21.on())return _cabRights21();
+  const cols=[UI.mOwn,UI.mOthersC,UI.mOthersP,UI.mWork,UI.mSal,UI.mRem,UI.mTaskAll,UI.mAssign,UI.mCab,UI.mAcc];
+  return `<div class="card"><h4>${T1(UI.cRights)}</h4><div style="overflow-x:auto"><table class="tbl matrix"><thead><tr><th>${T1(UI.aRole)}</th>${cols.map(c=>`<th>${T1(c)}</th>`).join("")}</tr></thead><tbody><tr><td><b>${T1(UI.rMp21)}</b></td>${cols.map(()=>`<td class="y">✓</td>`).join("")}</tr></tbody></table></div><p style="font-size:12px;color:var(--ink-3);margin-top:10px">${T1(UI.rightsNote21)}</p></div>`;};
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
