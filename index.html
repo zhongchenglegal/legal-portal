@@ -9325,7 +9325,7 @@ const SB19={
     };},
   /* ── строки базы → документы портала ── */
   docOf(name,row){
-    if(name==="accounts")return {id:row.login,data:{login:row.login,name:row.name||"",role:row.role||"",emp:row.emp,active:row.active!==false,pos:row.pos,funcs:row.funcs||[],unitId:row.unit_id,entity:row.entity}};
+    if(name==="accounts")return {id:row.login,data:{login:row.login,name:row.name||"",role:row.role||"",emp:row.emp,active:row.active!==false,pos:row.pos,funcs:row.funcs||[],unitId:row.unit_id,entity:row.entity,slot:row.slot||null}};
     if(name==="clientAccounts"){const d=row.data||{};return {id:row.login,data:{id:row.login,login:row.login,clientId:row.client_id,level:row.level||"full",lang:row.lang||"zh",name:d.name||"",nameZh:d.nameZh||"",role:d.role||"",basis:d.basis||"",active:row.active!==false}};}
     if(name==="auditLog")return {id:String(row.seq),data:{id:String(row.seq),at:String(row.at||"").slice(0,16).replace(" ","T"),by:row.login,what:row.action,ref:row.ref,hash:row.hash}};
     if(name==="units")return {id:row.id,data:Object.assign({},row.data||{},{id:row.id,parent:row.parent||(row.data||{}).parent||null,entity:row.entity})};
@@ -9791,7 +9791,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="dd9a4943bbdf";
+const ZC_BUILD="8dfd8880bb8c";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10024,15 +10024,18 @@ if(typeof Acc20!=="undefined"){const _newStaff21=Acc20.newStaff.bind(Acc20);Acc2
   const v=await Dlg.ask({title:T1(UI.aCreate),text:T1(UI.nsHint21),fields:[
     {k:"name",label:T1(UI.nsName21),required:true},{k:"nameZh",label:T1(UI.nsNameZh21)},
     {k:"pos",label:T1(UI.nsPos21),type:"select",value:"lawyer",options:Object.entries(Staff21.ROLE).map(([k,r])=>[k,T1(r)])},
+    {k:"slot",label:T1("Позиция в «Структуре» (кому подчиняется)||架构职位（上级）"),type:"select",value:"",options:[["",T1("— без позиции —||— 无职位 —")],...(typeof Slot21!=="undefined"?Slot21.free():[])]},
     {k:"unit",label:T1(UI.nsUnit21),type:"select",value:"",options:[["","—"],...units.map(u=>[u.id,T1((u.nameRu||u.id)+"||"+(u.nameZh||u.nameRu||u.id))])]},
     {k:"login",label:T1(UI.aLogin),required:true,hint:T1("латиница, цифры, точка||拉丁字母、数字、点")},
     {k:"pw",label:T1(UI.lgP),value:genPw(),required:true,check:x=>Acc20.pwCheck(x.pw,x.login)}]});
   if(!v)return;const login=String(v.login).trim().toLowerCase();
   /* поле «Доступ» убрано (решение владельца 10.10.2026): виды доступа вводятся постепенно; новый сотрудник — без особых прав */
   v.role="staff";const pos=v.pos,funcs=[];
+  /* позиция в «Структуре»: подразделение — то, где эта позиция */
+  if(v.slot&&ALL[v.slot]&&ALL[v.slot].unit)v.unit=ALL[v.slot].unit;
   const unit=units.find(u=>u.id===v.unit);const name=v.nameZh?v.name+"||"+v.nameZh:v.name;
   try{await this.rpc("admin_create_account",{acc:{kind:"staff",login,emp:null,pos,funcs,unitId:v.unit||null,entity:unit?unit.entity:null,lang:"ru",
-      data:{name,nameZh:v.nameZh||undefined,role:v.role}},pw:v.pw});}
+      data:{name,nameZh:v.nameZh||undefined,role:v.role,slot:v.slot||undefined}},pw:v.pw});}
   catch(e){toast(this.msg(e));return;}
   await this.reload();await this.showOnce(login,v.pw);Cabinet.render&&Cabinet.render();};}
 /* после создания или изменения учётки сотрудника — сразу в структуре, кадрах и расчёте */
@@ -10043,6 +10046,203 @@ Object.assign(UI,{rMp21:"Управляющий адвокат||管理律师",ri
 const _cabRights21=Cabinet.rights.bind(Cabinet);Cabinet.rights=function(){if(!Staff21.on())return _cabRights21();
   const cols=[UI.mOwn,UI.mOthersC,UI.mOthersP,UI.mWork,UI.mSal,UI.mRem,UI.mTaskAll,UI.mAssign,UI.mCab,UI.mAcc];
   return `<div class="card"><h4>${T1(UI.cRights)}</h4><div style="overflow-x:auto"><table class="tbl matrix"><thead><tr><th>${T1(UI.aRole)}</th>${cols.map(c=>`<th>${T1(c)}</th>`).join("")}</tr></thead><tbody><tr><td><b>${T1(UI.rMp21)}</b></td>${cols.map(()=>`<td class="y">✓</td>`).join("")}</tr></tbody></table></div><p style="font-size:12px;color:var(--ink-3);margin-top:10px">${T1(UI.rightsNote21)}</p></div>`;};
+
+
+/* ═══════════════════════════ v21 · ПОРУЧЕНИЯ РУКОВОДИТЕЛЯ (версия 1.0) ═══════════════════════════
+   Решение владельца 10.10.2026. У сотрудника нет «задач» вне дел: есть дела (разовые услуги, судебные дела, сопровождение)
+   и поручения от руководителя. Задачи внутри дела остаются частью дела.
+   • Кто чей руководитель — по «Структуре»: должность с прямым руководителем (under) подчиняется ему; иначе — руководителю
+     подразделения; руководитель подразделения — руководителю вышестоящего; наверху — управляющий адвокат.
+     Пустые позиции (вакансии) пропускаются — поручение даёт ближайший занятый руководитель выше.
+   • Давать поручения может руководитель всем, кто ниже его по этой цепочке; управляющий адвокат — всем.
+   • Поручение: что сделать, описание, срок. «Новое» → «Принять в работу» → «Отчитаться» → «Принять отчёт» / «Вернуть».
+     На каждом шаге — уведомление второй стороне. Хранится в S.assign (kind:"direct"), рядом с поручениями совета.
+   • Справа вверху вместо одного колокольчика — три кнопки: «Поручения», «Сообщения», «События», у каждой свой счётчик;
+     каждая открывает только свой раздел. Вкладка «Задания» в карточке сотрудника — теперь «Поручения»;
+     страница «Задачи» без фильтра — теперь «Поручения» (с фильтром из плиток главной — задачи по делам, как раньше).
+   • Позиция сотрудника в «Структуре» (slot): задаётся при создании учётки или в его карточке (управляющий адвокат);
+     сотрудник занимает вакансию на схеме и получает её место в подчинении. */
+Object.assign(UI,{
+  po21:"Поручения||指令",po21Msgs:"Сообщения||消息",po21Ev:"События||事件",
+  po21Mine:"Мне поручено||交给我的",po21Given:"Я поручил||我下达的",po21Others:"Остальные поручения||其他指令",
+  po21New:"+ Поручение||+ 指令",po21None:"Поручений нет||暂无指令",po21Boss:"Мой руководитель||我的上级",po21BossOf:"Руководитель||上级",
+  po21Slot:"Позиция в структуре||架构职位",po21NoSlot:"— без позиции —||— 无职位 —",po21Change:"Изменить||修改",po21Council:"Совет||理事会",
+  po21Cancel:"Отменить поручение||撤销指令",po21CancelQ:"Исполнитель ещё не принял поручение — его можно отменить.||执行人尚未接受，可以撤销。",
+  po21To:"Кому||执行人",po21Note:"Поручение руководителя — внутреннее задание сотруднику, не дело и не задача по делу.||上级指令——给员工的内部工作，不是案件，也不是案件任务。",
+  po21Top:"подчиняется только совету учредителей||仅向创始人委员会负责",po21Nobody:"Подчинённых пока нет — поручение можно дать тем, кто ниже вас в «Структуре».||暂无下属——可向“组织架构”中您下级的员工下达指令。"
+});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{asNewD21:"Поручение от {who}: «{title}» — срок {d}||{who} 下达指令：“{title}”——期限 {d}"});
+
+/* ── подчинённость по «Структуре» ── */
+const Org21={
+  isMP(){return isFounder()||hasF("managing");},
+  mp(){const acc=Object.values(S.accounts||{}).filter(a=>a&&a.active!==false&&a.emp);
+    const a=acc.find(a=>(a.funcs||[]).includes("managing"))||acc.find(a=>(a.funcs||[]).includes("founder"));return a?a.emp:null;},
+  occ(id){const d=ALL[id];if(!d)return null;if(d.occ21)return d.occ21;return isPerson(id)?id:null;},
+  pos(emp){const d=ALL[emp];return d&&d.slot&&ALL[d.slot]?d.slot:emp;},
+  parentOf(u){return u.parent||((typeof unit9==="function"&&unit9(u.id))||{}).parent||null;},
+  headOf(u,self){const meta=typeof unit9==="function"?unit9(u.id):null;
+    if(meta&&meta.head&&ALL[meta.head]&&isPerson(meta.head)&&ALL[meta.head]!==self)return meta.head;
+    const h=(u.members||[]).find(m=>m&&m.head&&m!==self);return h?h.id:null;},
+  /* позиция выше данной (или null — выше только управляющий адвокат) */
+  up(id){const d=ALL[id];if(!d)return null;if(d.under&&ALL[d.under])return d.under;
+    let u=d.unit?ALL[d.unit]:null,skip=!!d.head,n=0;
+    while(u&&n++<10){if(!skip){const h=this.headOf(u,d);if(h)return h;}skip=false;const p=this.parentOf(u);u=p?ALL[p]:null;}
+    return null;},
+  boss(emp){if(!emp)return null;const mp=this.mp();if(emp===mp)return null;let p=this.pos(emp);const seen=new Set();
+    while(p&&!seen.has(p)&&seen.size<30){seen.add(p);p=this.up(p);if(!p)break;const o=this.occ(p);if(o&&o!==emp)return o;}
+    return mp&&mp!==emp?mp:null;},
+  chain(emp){const r=[];let e=emp;for(let i=0;i<20;i++){e=this.boss(e);if(!e||r.includes(e))break;r.push(e);}return r;},
+  canGive(to){const me=U();if(!me||!me.emp||!to||to===me.emp||!isPerson(to)||isClient())return false;if(this.isMP())return true;return this.chain(to).includes(me.emp);},
+  subs(){return staffIds().filter(e=>this.canGive(e));}
+};
+
+/* ── позиция в «Структуре»: сотрудник из базы занимает вакансию на схеме (режим сервера) ── */
+const Slot21={undo:[],
+  apply(){Object.values(S.accounts||{}).forEach(a=>{if(!a||!a.emp||!a.slot||a.active===false)return;const v=ALL[a.slot],p=ALL[a.emp];
+      if(!v||!p||p===v||!v.unit||v.occ21)return;const u=ALL[v.unit];if(!u||!u.members)return;const i=u.members.indexOf(v);if(i<0)return;
+      const keys=["unit","under","head","pos","goals","funcs","st","ent","type","slot"],keep={};keys.forEach(k=>keep[k]=p[k]);
+      this.undo.push({u,i,v,p,keep});
+      ["unit","under","head","pos","goals","funcs","st","ent"].forEach(k=>{if(v[k]!==undefined)p[k]=v[k];else delete p[k];});
+      if(v.type)p.type=v.type;p.slot=a.slot;v.occ21=a.emp;u.members[i]=p;});},
+  restore(){this.undo.reverse().forEach(({u,i,v,p,keep})=>{if(u.members[i]===p)u.members[i]=v;delete v.occ21;Object.keys(keep).forEach(k=>{if(keep[k]===undefined)delete p[k];else p[k]=keep[k];});});this.undo=[];},
+  label(id){const v=ALL[id];if(!v)return "";const u=v.unit?ALL[v.unit]:null;const un=u?T1(u.num||u.name||""):"";
+    const nm=T1(v.name||v.role||id),rl=v.role?T1(v.role):"";return (un?un+" — ":"")+nm+(rl&&rl!==nm?" · "+rl:"");},
+  free(cur){const r=[];UNITS.forEach(u=>(u.members||[]).forEach(m=>{if(m&&(m.vac||m.id===cur)&&(!m.occ21||m.id===cur))r.push([m.id,this.label(m.id)]);}));return r;}
+};
+if(typeof Staff21!=="undefined"){
+  const _stRestore21=Staff21.restore.bind(Staff21);Staff21.restore=function(){try{Slot21.restore();}catch(e){}return _stRestore21();};
+  const _stApply21=Staff21.apply.bind(Staff21);Staff21.apply=function(){const r=_stApply21();if(this.on()){try{Slot21.apply();}catch(e){console.warn("Slot21",e);}}return r;};
+}
+
+/* ── список поручений (окно «Поручения» справа вверху, страница, карточка сотрудника) ── */
+const Poruch21={
+  stLabel(a){return T1(a.status==="new"?UI.asNew:a.status==="progress"?UI.asProg:a.status==="reported"?UI.asRep:UI.asAcc);},
+  late(a){return !!a.deadline&&a.status!=="accepted"&&a.deadline<todayS();},
+  sort(l){return l.sort((a,b)=>(a.status==="accepted")-(b.status==="accepted")||(a.deadline||"9").localeCompare(b.deadline||"9"));},
+  card(a){const late=this.late(a);
+    return `<div class="asg" data-po21="${esc(a.id)}"><div class="at">${a.kind==="direct"?"":`<span class="tg" style="margin-right:6px">${T1(UI.po21Council)}</span>`}${esc(a.title)}</div><span class="st ${esc(a.status)}"><i></i>${this.stLabel(a)}</span>
+      <div class="am"><span>${T1(UI.asTo)}: <b>${dispName(a.to)}</b></span><span>${T1(UI.asFrom)}: <b>${esc(accName(a.from))}</b></span><span style="${late?"color:var(--red);font-weight:600":""}">${T1(UI.asDeadline)}: <b>${a.deadline?fmtD(a.deadline):"—"}</b></span>${a.reports&&a.reports.length?`<span>${T1(UI.asReports)}: <b>${a.reports.length}</b></span>`:""}</div></div>`;},
+  sec(title,list){return `<h4 class="po21h">${T1(title)} · ${list.length}</h4><div class="agl">${list.map(a=>this.card(a)).join("")||`<div class="empty2">${T1(UI.po21None)}</div>`}</div>`;},
+  bossLine(emp,mine){const b=Org21.boss(emp);
+    return `<div class="po21b">${T1(mine?UI.po21Boss:UI.po21BossOf)}: <b>${b?dispName(b):T1(UI.po21Top)}</b></div>`;},
+  all(){return Object.values(S.assign||{});},
+  /* мои: «Мне поручено», «Я поручил», у управляющего адвоката — остальные */
+  html(){const me=U();if(!me)return "";const all=this.all();
+    const mine=this.sort(all.filter(a=>a.to===me.emp)),given=this.sort(all.filter(a=>a.from===me.login&&a.to!==me.emp));
+    const others=Org21.isMP()?this.sort(all.filter(a=>a.to!==me.emp&&a.from!==me.login)):[];const subs=Org21.subs();
+    return `<div class="po21top"><span class="po21n">${T1(UI.po21Note)}</span>${subs.length?`<button class="btn pri sm" data-po21new="">${T1(UI.po21New)}</button>`:""}</div>
+      ${me.emp?this.bossLine(me.emp,true):""}${this.sec(UI.po21Mine,mine)}
+      ${given.length||subs.length?this.sec(UI.po21Given,given):""}${others.length?this.sec(UI.po21Others,others):""}`;},
+  /* карточка сотрудника: его руководитель, позиция, поручения ему */
+  prof(emp){const list=this.sort(this.all().filter(a=>a.to===emp)),acc=accByEmp(emp);
+    const slotOk=Org21.isMP()&&acc&&typeof Staff21!=="undefined"&&Staff21.on()&&!(acc.funcs||[]).includes("founder");
+    const slot=ALL[emp]&&ALL[emp].slot;
+    return `<div class="po21top"><span class="po21n">${T1(UI.po21Note)}</span>${Org21.canGive(emp)?`<button class="btn pri sm" data-po21new="${esc(emp)}">${T1(UI.po21New)}</button>`:""}</div>
+      ${this.bossLine(emp,U()&&U().emp===emp)}
+      ${slotOk?`<div class="po21b">${T1(UI.po21Slot)}: <b>${slot?esc(Slot21.label(slot)):T1(UI.po21NoSlot)}</b> <button class="btn sm ghost" data-po21slot="${esc(acc.login)}">${T1(UI.po21Change)}</button></div>`:""}
+      <div class="agl">${list.map(a=>this.card(a)).join("")||`<div class="empty2">${T1(UI.po21None)}</div>`}</div>`;},
+  bind(root,after){if(!root)return;
+    root.querySelectorAll("[data-po21]").forEach(el=>el.onclick=()=>Assign.open(el.dataset.po21));
+    root.querySelectorAll("[data-po21new]").forEach(el=>el.onclick=e=>{e.stopPropagation();Dir21.create(el.dataset.po21new||null);});
+    root.querySelectorAll("[data-po21slot]").forEach(el=>el.onclick=e=>{e.stopPropagation();Dir21.setSlot(el.dataset.po21slot);});},
+  badge(){const me=U();if(!me)return 0;return this.all().filter(a=>(a.to===me.emp&&a.status==="new")||(a.from===me.login&&a.to!==me.emp&&a.status==="reported")).length;},
+  refresh(){try{Notif.rerender();Notif.badge();}catch(e){}try{Profile.rerender&&Profile.rerender();}catch(e){}try{if(Router.cur==="tasks")Router.render();}catch(e){}}
+};
+
+/* ── поручение руководителя: выдача, окно, шаги ── */
+const Dir21={
+  async create(to){const subs=Org21.subs();if(!subs.length){toast(T1(UI.po21Nobody));return;}
+    const v=await Dlg.ask({title:T1(UI.po21),text:T1(UI.po21Note),fields:[
+      {k:"to",label:T1(UI.po21To),type:"select",value:to&&subs.includes(to)?to:subs[0],options:subs.map(e=>[e,dispName(e)+(ALL[e]&&ALL[e].role?" — "+T1(ALL[e].role):"")])},
+      {k:"title",label:T1(UI.kTitle),required:true},{k:"desc",label:T1(UI.kDesc),type:"textarea"},
+      {k:"deadline",label:T1(UI.asDeadline),type:"date",value:addDays(todayS(),3),required:true}],okText:UI.kSend});
+    if(!v)return;if(!Org21.canGive(v.to)){toast(T1("Этому сотруднику вы поручение дать не можете||您不能向该员工下达指令"));return;}
+    const me=U(),title=String(v.title).trim(),id=uid("as");
+    const a={id,kind:"direct",title,desc:v.desc||"",to:v.to,from:me.login,createdAt:nowS(),deadline:v.deadline,status:"new",reports:[],history:[{at:nowS(),by:me.login,what:"Поручение выдано"}]};
+    await saveAssign(a);const acc=accByEmp(v.to);if(acc)notify(acc.login,"assign",nt18("asNewD21",{who:{a:me.login},title:title.slice(0,60),d:{d:v.deadline}}),id);
+    audit(`Поручение → ${dispName(v.to)}: «${title.slice(0,50)}»`);toast(T1(UI.saved));Poruch21.refresh();},
+  async setSlot(login){const acc=S.accounts[login];if(!acc)return;const cur=(ALL[acc.emp]&&ALL[acc.emp].slot)||acc.slot||"";
+    const v=await Dlg.ask({title:T1(UI.po21Slot),text:dispName(acc.emp),fields:[{k:"slot",label:T1(UI.po21Slot),type:"select",value:cur,options:[["",T1(UI.po21NoSlot)],...Slot21.free(cur)]}]});
+    if(!v)return;const s=v.slot||"";const unitId=s&&ALL[s]?ALL[s].unit:acc.unitId;
+    try{await Acc20.rpc("admin_update_account",{target:login,patch:{unitId:unitId||null,data:{slot:s||null}}});}catch(e){toast(Acc20.msg?Acc20.msg(e):String(e&&e.message||e));return;}
+    await Acc20.reload();toast(T1(UI.saved));Poruch21.refresh();try{render();}catch(e){}},
+  render(a){
+    const md=document.getElementById("mdA"),me=U(),mine=me.emp===a.to,author=me.login===a.from,boss=author||Org21.isMP();
+    md.innerHTML=`<button class="close mx" id="aClose"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="mh" style="padding-bottom:14px;border-bottom:1px solid var(--line)"><div class="avwrap">${photo(a.to)?`<img class="avph" src="${photo(a.to)}" alt="" style="width:64px;height:64px;border-radius:14px">`:`<div class="avx">${initials(dispName(a.to))}</div>`}</div>
+        <div style="flex:1"><div class="tags"><span class="tg">${T1(UI.po21)}</span><span class="st ${esc(a.status)}"><i></i>${Poruch21.stLabel(a)}</span></div><h2 style="font-size:18px;margin-top:6px">${esc(a.title)}</h2>
+        <div class="mr2">${T1(UI.asTo)}: <b>${dispName(a.to)}</b> · ${T1(UI.asFrom)}: ${esc(accName(a.from))} · ${T1(UI.asDeadline)}: <b style="${Poruch21.late(a)?"color:var(--red)":""}">${a.deadline?fmtD(a.deadline):"—"}</b></div></div></div>
+      <div class="mb2"><div class="grid2">
+        <div class="card span"><h4>${T1(UI.kDesc)}</h4><p style="white-space:pre-wrap;margin:0">${esc(a.desc||"—")}</p>
+          <div class="actions" style="justify-content:flex-start">
+            ${mine&&a.status==="new"?`<button class="btn pri" data-act="take">${T1(UI.asTake)}</button>`:""}
+            ${mine&&(a.status==="progress"||a.status==="new")?`<button class="btn" data-act="report">${T1(UI.asReport)}</button>`:""}
+            ${boss&&!mine&&a.status==="reported"?`<button class="btn pri" data-act="accept">✓ ${T1(UI.asAccept)}</button><button class="btn" data-act="return">${T1(UI.asReturn)}</button>`:""}
+            ${(author||Org21.isMP())&&a.status==="new"?`<button class="btn ghost" data-act="cancel">${T1(UI.po21Cancel)}</button>`:""}
+          </div></div>
+        <div class="card"><h4>${T1(UI.asReports)} · ${(a.reports||[]).length}</h4>${(a.reports||[]).slice().reverse().map(r=>`<div class="rep"><div class="rm">${fmtDT(r.at)} · <b>${esc(accName(r.by))}</b></div>${esc(r.text)}</div>`).join("")||`<span style="font-size:12.5px;color:var(--ink-3)">—</span>`}
+          ${mine&&a.status!=="accepted"?`<div class="addrow"><input class="fi" id="repIn" placeholder="${T1(UI.asReportAsk)}"><button class="btn pri sm" data-act="report2">${T1(UI.kSend)}</button></div>`:""}</div>
+        <div class="card"><h4>${T1(UI.agHistory)}</h4><ul class="hist">${(a.history||[]).slice().reverse().map(h=>`<li><span class="ht">${fmtDT(h.at)}</span><b>${esc(accName(h.by))}</b> · ${esc(h.what)}</li>`).join("")}</ul></div>
+      </div></div>`;
+    md.querySelector("#aClose").onclick=()=>Assign.close();
+    const act=(k,fn)=>{const el=md.querySelector(`[data-act="${k}"]`);if(el)el.onclick=fn;};
+    const done=()=>{Assign.render();Poruch21.refresh();};
+    const toLogin=()=>{const acc=accByEmp(a.to);return acc&&acc.login;};
+    act("take",async()=>{a.status="progress";a.history.push({at:nowS(),by:me.login,what:"Принято в работу"});await saveAssign(a);if(a.from!==me.login)notify(a.from,"assign",nt18("asTaken",{who:{a:me.login},title:a.title.slice(0,50)}),a.id);done();});
+    const doReport=async t=>{if(!t)return;a.reports=a.reports||[];a.reports.push({at:nowS(),by:me.login,text:t});a.status="reported";a.history.push({at:nowS(),by:me.login,what:"Отчёт направлен"});await saveAssign(a);
+      if(a.from!==me.login)notify(a.from,"report",nt18("asReport",{who:{a:me.login},title:a.title.slice(0,50)}),a.id);done();};
+    act("report",async()=>{const v=await Dlg.ask({title:T1(UI.asReport),fields:[{k:"t",label:T1(UI.asReportAsk),type:"textarea",required:true}],okText:UI.kSend});if(v)doReport(v.t);});
+    act("report2",()=>doReport(md.querySelector("#repIn").value.trim()));
+    act("accept",async()=>{a.status="accepted";a.history.push({at:nowS(),by:me.login,what:"Отчёт принят"});await saveAssign(a);const l=toLogin();if(l)notify(l,"accept",nt18("asAccepted",{title:a.title.slice(0,50)}),a.id);audit(`Принят отчёт по поручению: ${dispName(a.to)} — «${a.title.slice(0,40)}»`);done();});
+    act("return",async()=>{const v=await Dlg.ask({title:T1(UI.asReturn),fields:[{k:"why",label:T1(UI.kDesc),type:"textarea"}],okText:UI.asReturn});if(!v)return;const why=v.why;
+      a.status="progress";a.history.push({at:nowS(),by:me.login,what:"Возвращено на доработку"+(why?": "+why:"")});await saveAssign(a);const l=toLogin();if(l)notify(l,"assign",nt18("asReturned",{title:a.title.slice(0,50),why:why?": "+why:""}),a.id);done();});
+    act("cancel",async()=>{if(!await Dlg.confirm(T1(UI.po21Cancel),T1(UI.po21CancelQ),true))return;delete S.assign[a.id];await dbWrite(db=>db.doc("assignments/"+a.id).delete());
+      audit(`Отменено поручение: ${dispName(a.to)} — «${a.title.slice(0,40)}»`);Assign.close();Poruch21.refresh();});
+  }
+};
+const _asRender21=Assign.render.bind(Assign);Assign.render=function(){const a=S.assign[this.id];if(a&&a.kind==="direct")return Dir21.render(a);return _asRender21();};
+
+/* ── окно уведомлений: один раздел без вкладок; «Поручения» — новый список ── */
+const PO21_TITLE={assign:UI.po21,msgs:UI.po21Msgs,events:UI.po21Ev};
+Notif.assignHtml=function(){return Poruch21.html();};
+const _ntRender21=Notif.render.bind(Notif);Notif.render=function(){_ntRender21();const md=document.getElementById("mdN");if(!md||isClient())return;
+  const tabs=md.querySelector(".tabs");if(tabs)tabs.remove();const h=md.querySelector(".mh h2");if(h)h.textContent=T1(PO21_TITLE[this.tab]||UI.nTitle);};
+const _ntBind21=Notif.bind.bind(Notif);Notif.bind=function(b){_ntBind21(b);Poruch21.bind(b);};
+const _ntBadge21=Notif.badge.bind(Notif);Notif.badge=function(){if(!document.getElementById("po21Btn"))return _ntBadge21();if(!U())return;
+  const set=(id,n)=>{const el=document.getElementById(id);if(!el)return;el.textContent=n;el.style.display=n?"inline-flex":"none";};
+  set("po21Bd",Poruch21.badge());set("ms21Bd",this.unreadMsgs());set("bellBadge",this.unreadEv());};
+
+/* ── шапка: три кнопки вместо одного колокольчика ── */
+const PO21_ICO={assign:"M9 4h6v3H9zM9 5H6v16h12V5h-3M9 12h6M9 16h4",msgs:"M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.3A8 8 0 1 1 21 12z",events:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"};
+const _rwPo21=renderWho;renderWho=function(){const r=_rwPo21.apply(this,arguments);try{
+  const bell=document.getElementById("bellBtn");if(!bell||!U()||isClient()||document.getElementById("po21Btn"))return r;
+  const b=(id,bd,tab)=>`<button class="bell hb21" id="${id}" data-nt21="${tab}" title="${T1(PO21_TITLE[tab])}" aria-label="${T1(PO21_TITLE[tab])}"><svg viewBox="0 0 24 24"><path d="${PO21_ICO[tab]}"/></svg><span class="bd" id="${bd}" style="display:none">0</span></button>`;
+  bell.insertAdjacentHTML("beforebegin",b("po21Btn","po21Bd","assign")+b("ms21Btn","ms21Bd","msgs"));
+  bell.classList.add("hb21");bell.dataset.nt21="events";const t=T1(PO21_TITLE.events);bell.title=t;bell.setAttribute("aria-label",t);
+  document.querySelectorAll("#whoBox [data-nt21]").forEach(x=>x.onclick=e=>{e.stopPropagation();Notif.open(x.dataset.nt21);});
+  Notif.badge();}catch(e){console.warn("po21",e);}return r;};
+(()=>{const st=document.createElement("style");st.textContent=`
+#whoBox .hb21+.hb21{margin-left:6px}#whoBox .hb21{flex:0 0 auto}
+.po21h{font-family:Montserrat,Manrope,sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin:16px 0 10px}
+.po21top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 8px}.po21n{flex:1 1 240px;min-width:0;font-size:12.5px;color:var(--ink-3)}
+.po21b{font-size:13px;color:var(--ink-2);margin:4px 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+@media (max-width:700px){#whoBox .hb21+.hb21{margin-left:2px}}`;document.head.appendChild(st);})();
+
+/* ── карточка сотрудника: вкладка «Задания» → «Поручения» ── */
+const _profRender21=Profile.render.bind(Profile);
+Profile.render=function(){_profRender21();const id=this.id,md=document.getElementById("mdP");if(!md||!id||isClient())return;
+  const all=Poruch21.all().filter(a=>a.to===id),open=all.filter(a=>a.status!=="accepted").length;
+  const tb=md.querySelector('[data-tab="tasks"]');if(tb)tb.innerHTML=`${T1(UI.po21)} <span class="cnt">${open}/${all.length}</span>`;
+  if(this.tab!=="tasks")return;const body=md.querySelector("#pBody");if(!body)return;body.innerHTML=Poruch21.prof(id);Poruch21.bind(body);};
+
+/* ── страница «Задачи» без фильтра → «Поручения»; с фильтром из плиток главной — задачи по делам, как раньше ── */
+const _tasksPage21=Pages.tasks;Pages.tasks=function(arg){
+  if(arg&&typeof Pre17!=="undefined"){const p=Pre17.parse(arg);if(p.p&&Pre17.tPred[p.p])return _tasksPage21.call(this,arg);}
+  if(isClient())return _tasksPage21.call(this,arg);
+  const me=U(),n=Poruch21.all().filter(a=>(a.to===me.emp||a.from===me.login)&&a.status!=="accepted").length;
+  return F.hdr(T1(UI.po21),`${n}`,"")+`<div class="card">${Poruch21.html()}</div>`;};
+const _pbind21=Pages.bind;Pages.bind=function(vp){_pbind21.call(this,vp);if(Router.cur==="tasks"&&!isClient())Poruch21.bind(vp);};
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
