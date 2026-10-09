@@ -9791,7 +9791,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="0016668a520f";
+const ZC_BUILD="304e76fe187b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -9958,6 +9958,72 @@ const Who21={
 const _side21w=renderSide;renderSide=function(){const r=_side21w.apply(this,arguments);try{Who21.place();}catch(e){}return r;};
 const _side21s=renderSide;renderSide=function(){const r=_side21s.apply(this,arguments);try{Set21.place();}catch(e){}return r;};
 try{ensureLogos21();Side21.ensure();Set21.ensure();}catch(e){}
+
+
+/* ═══════════════════════════ v21 · СОТРУДНИКИ — ИЗ БАЗЫ (рабочая версия 1.0) ═══════════════════════════
+   Оргсхема фирмы (подразделения, позиции, вакансии, совет учредителей) зашита в код (v4_data.js) и остаётся как есть.
+   Но в коде на части позиций стояли демо-люди (Дилмурод, Огабек, Алишер…) — они попадали в «Кадры», «Структуру» и расчёт
+   зарплаты, хотя в базе их нет; а реальный сотрудник, заведённый через «Доступы», наоборот, в расчёт не попадал.
+   В режиме сервера после входа:
+   • человек на позиции, которого нет в базе (нет учётки сотрудника), становится вакансией этой позиции — позиция остаётся;
+   • сотрудник из базы, которого нет в оргсхеме, добавляется как человек (имя, должность, подразделение — из его учётки);
+   • учредители (совет учредителей) — часть структуры, не трогаются.
+   При выходе оргсхема возвращается в исходный вид. В демо-режиме (?demo) всё как раньше. */
+const Staff21={
+  orig:{},added:[],
+  on(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T;},
+  TYPE:{advocate:"adv",senior:"jur",lawyer:"jur",junior:"jur",assistant:"jur",intern:"int"},
+  ROLE:{advocate:"Адвокат||律师",senior:"Старший юрист||高级法务",lawyer:"Юрист||法务专员",junior:"Младший юрист||初级法务",assistant:"Помощник юриста||法务助理",
+    intern:"Стажёр||实习律师",cnlawyer:"Китайский юрист||中国法务",translator:"Переводчик||翻译",coo:"Операционный директор||运营总监",accountant:"Бухгалтер||会计",
+    hr:"HR-менеджер||人力资源经理",office:"Офис-менеджер||行政主管",clerk:"Делопроизводитель||文员",marketing:"Маркетолог||市场专员",it:"IT-специалист||IT专员"},
+  founders(){return new Set((typeof FOUNDERS!=="undefined"?FOUNDERS:[]).map(f=>f.id));},
+  restore(){Object.entries(this.orig).forEach(([id,o])=>{if(ALL[id])Object.assign(ALL[id],o);if(ALL[id]&&!("vac" in o))delete ALL[id].vac;});
+    this.added.forEach(id=>{delete ALL[id];});this.orig={};this.added=[];},
+  apply(){if(!this.on())return;this.restore();
+    const real=new Map();Object.values(S.accounts||{}).forEach(a=>{if(a&&a.emp)real.set(a.emp,a);});
+    const fnd=this.founders();
+    /* демо-люди → вакансии своих позиций */
+    Object.keys(ALL).forEach(id=>{const d=ALL[id];if(!d||d.members||id==="council"||d.vac||fnd.has(id)||real.has(id))return;
+      this.orig[id]={name:d.name};if("vac" in d)this.orig[id].vac=d.vac;
+      d.vac=1;if(d.role)d.name=d.role;});
+    /* сотрудники из базы, которых нет в оргсхеме */
+    real.forEach((a,emp)=>{if(ALL[emp]&&!ALL[emp].vac)return;
+      const nm=String(a.name||emp);const role=this.ROLE[a.pos]||a.role||"";
+      if(ALL[emp]&&ALL[emp].vac){this.orig[emp]=Object.assign(this.orig[emp]||{},{name:ALL[emp].name,vac:ALL[emp].vac});delete ALL[emp].vac;ALL[emp].name=nm.includes("||")?nm:nm+"||"+nm;return;}
+      ALL[emp]={id:emp,name:nm.includes("||")?nm:nm+"||"+nm,role,short:role,type:this.TYPE[a.pos]||"sup",st:0,ent:a.entity==="llc"?"ooo":"firm",unit:a.unitId||null,pos:"",goals:[],funcs:[]};
+      this.added.push(emp);});
+  }
+};
+/* после входа и загрузки данных; при выходе — исходная оргсхема */
+const _sbStartSt21=SB19.start.bind(SB19);SB19.start=async function(login){const r=await _sbStartSt21(login);try{Staff21.apply();}catch(e){console.warn("Staff21",e);}return r;};
+const _sbResetSt21=SB19.reset.bind(SB19);SB19.reset=function(){try{Staff21.restore();}catch(e){}return _sbResetSt21();};
+/* «Создать учётку» сотрудника (режим сервера): ФИО, должность, подразделение — новый человек, а не выбор из демо-людей.
+   Сервер сам заводит его в таблице сотрудников (миграция 20261010000100). Доступ: сотрудник / руководитель подразделения /
+   COO / HR / учредитель — как раньше. */
+Object.assign(UI,{
+  nsName21:"ФИО (рус)||姓名（俄文）",nsNameZh21:"ФИО (кит), если есть||姓名（中文，可选）",nsPos21:"Должность||职位",nsUnit21:"Подразделение||部门",
+  nsAccess21:"Доступ||权限",nsHint21:"Сотрудник появится в структуре, кадрах и расчёте зарплаты сразу после создания||创建后员工立即出现在架构、人事和工资核算中"
+});
+if(typeof Acc20!=="undefined"){const _newStaff21=Acc20.newStaff.bind(Acc20);Acc20.newStaff=async function(){if(!Staff21.on())return _newStaff21();
+  if(!(isFounder()||hasF("managing"))){toast(T1(UI.caOnlyFounder));return;}
+  const units=unitsAll().filter(u=>u&&u.id);
+  const v=await Dlg.ask({title:T1(UI.aCreate),text:T1(UI.nsHint21),fields:[
+    {k:"name",label:T1(UI.nsName21),required:true},{k:"nameZh",label:T1(UI.nsNameZh21)},
+    {k:"pos",label:T1(UI.nsPos21),type:"select",value:"lawyer",options:Object.entries(Staff21.ROLE).map(([k,r])=>[k,T1(r)])},
+    {k:"unit",label:T1(UI.nsUnit21),type:"select",value:"",options:[["","—"],...units.map(u=>[u.id,T1((u.nameRu||u.id)+"||"+(u.nameZh||u.nameRu||u.id))])]},
+    {k:"role",label:T1(UI.nsAccess21),type:"select",value:"staff",options:[["staff",T1(UI.rStaff)],["head",T1(UI.rHead)],["coo",T1(UI.rCoo)],["hr",T1(UI.rHr)],["founder",T1(UI.rFounder)]]},
+    {k:"login",label:T1(UI.aLogin),required:true,hint:T1("латиница, цифры, точка||拉丁字母、数字、点")},
+    {k:"pw",label:T1(UI.lgP),value:genPw(),required:true,check:x=>Acc20.pwCheck(x.pw,x.login)}]});
+  if(!v)return;const login=String(v.login).trim().toLowerCase();
+  const pos=v.role==="coo"?"coo":v.role==="hr"?"hr":v.pos;
+  const funcs=v.role==="founder"?["founder"]:v.role==="head"&&v.unit?["head:"+v.unit]:[];
+  const unit=units.find(u=>u.id===v.unit);const name=v.nameZh?v.name+"||"+v.nameZh:v.name;
+  try{await this.rpc("admin_create_account",{acc:{kind:"staff",login,emp:null,pos,funcs,unitId:v.unit||null,entity:unit?unit.entity:null,lang:"ru",
+      data:{name,nameZh:v.nameZh||undefined,role:v.role}},pw:v.pw});}
+  catch(e){toast(this.msg(e));return;}
+  await this.reload();await this.showOnce(login,v.pw);Cabinet.render&&Cabinet.render();};}
+/* после создания или изменения учётки сотрудника — сразу в структуре, кадрах и расчёте */
+if(typeof Acc20!=="undefined"){const _accReload21=Acc20.reload.bind(Acc20);Acc20.reload=async function(){const r=await _accReload21();try{Staff21.apply();}catch(e){}return r;};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
