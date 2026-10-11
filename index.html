@@ -3954,7 +3954,7 @@ const Task={id:null,draft:null,
       if(isNew){this.id=t.id;} this.render(); Profile.rerender();
     };
     if(q("#tDel"))q("#tDel").onclick=async()=>{if(!await Dlg.confirm(T1(UI.kDelete)+"?",t.title,true))return;await deleteTask(t.id);audit(`Удалена задача «${t.title.slice(0,40)}»`);this.close();Profile.rerender();};
-    if(q("#chatSend")){const send=async()=>{const v=q("#chatIn").value.trim();if(!v)return;const live=S.tasks[t.id]||t;live.messages=live.messages||[];live.messages.push({by:Auth.user.login,name:Auth.user.name,at:ymdhmL(new Date()),text:v});if(live.messages.length>500)live.messages=live.messages.slice(-500);this.draft.messages=live.messages;await saveTask(live);this.render();const cb=q("#chatBox");if(cb)cb.scrollIntoView({block:"end"});};q("#chatSend").onclick=send;q("#chatIn").onkeydown=e=>{if(e.key==="Enter")send();};}
+    if(q("#chatSend")){const send=async()=>{const v=q("#chatIn").value.trim();if(!v)return;const live=S.tasks[t.id]||t;live.messages=live.messages||[];live.messages.push({by:Auth.user.login,name:Auth.user.name,at:ymdhmL(new Date()),text:v});if(live.messages.length>500)live.messages=live.messages.slice(-500);this.draft.messages=live.messages;await saveTask(live);if(typeof onTaskComment21==="function")try{onTaskComment21(live,v);}catch(e){}this.render();const cb=q("#chatBox");if(cb)cb.scrollIntoView({block:"end"});};q("#chatSend").onclick=send;q("#chatIn").onkeydown=e=>{if(e.key==="Enter")send();};}
     const cb=q("#chatBox"); if(cb) cb.lastElementChild?.scrollIntoView?.({block:"nearest"});
   }
 };
@@ -4037,7 +4037,7 @@ document.getElementById("loginForm").onsubmit=async e=>{
   if(!ok){err.textContent=T1(UI.lgErr);return;}
   document.getElementById("lgP").value=""; hideLogin(); render(); initial();
 };
-document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{if(e.target===o){o.classList.remove("open");if(o.id==="ovP")Profile.close();if(o.id==="ovT")Task.close();}}));
+document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{if(e.target===o&&o.id!=="ovD"){o.classList.remove("open");if(o.id==="ovP")Profile.close();if(o.id==="ovT")Task.close();}}));
 document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
 zIn.onclick=()=>setZoom(zoom+.1,true); zOut.onclick=()=>setZoom(zoom-.1,true); zFit.onclick=fitAll; fsBtn.onclick=toggleFS;
@@ -9393,7 +9393,8 @@ const SB19={
       async del(t,match){let q=c.from(t).delete();for(const [k,v] of Object.entries(match))q=Array.isArray(v)?q.in(k,v):q.eq(k,v);chk(await q);},
       async rpc(fn,args){return chk(await c.rpc(fn,args||{}));},
       /* v20: файлы — в закрытой корзине хранилища; открываются по ссылке ограниченного срока */
-      async upload(path,dataUrl,type){const b=await (await fetch(dataUrl)).blob();chk(await c.storage.from("portal-files").upload(path,b,{contentType:type||b.type||"application/octet-stream",upsert:false}));},
+      async uploadBlob(path,b,type){chk(await c.storage.from("portal-files").upload(path,b,{contentType:type||b.type||"application/octet-stream",upsert:false}));},
+    async upload(path,dataUrl,type){const b=await (await fetch(dataUrl)).blob();chk(await c.storage.from("portal-files").upload(path,b,{contentType:type||b.type||"application/octet-stream",upsert:false}));},
       async signedUrl(path,sec){return chk(await c.storage.from("portal-files").createSignedUrl(path,sec||60)).signedUrl;},
       async removeFile(path){chk(await c.storage.from("portal-files").remove([path]));},
       /* v20: второй фактор входа (TOTP) — для учредителей и УП */
@@ -9873,7 +9874,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="9703a65fc205";
+const ZC_BUILD="10177d0ff6d7";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10469,7 +10470,7 @@ const _rightsAdv21=Cabinet.rights.bind(Cabinet);Cabinet.rights=function(){if(typ
    внизу — переключатель «Русский · 中文» (меняет язык всего портала). Экран ожидания — золотые весы: при входе
    («Проверяем доступ…» → «Загружаем данные…») и при обновлении страницы с сохранённым входом (заставка bootSplash20).
    Анимация работает только пока экран входа виден. Стили — v21_login.html. */
-Object.assign(UI,{lgT:"Вход в портал||登录门户",lg21Check:"Проверяем доступ…||正在验证权限…",lg21Load:"Загружаем данные…||正在加载数据…",lg21Prep:"Готовим рабочий стол…||正在准备工作台…"});
+Object.assign(UI,{lgT:"Вход в систему||登录系统",lg21Check:"Проверяем доступ…||正在验证权限…",lg21Load:"Загружаем данные…||正在加载数据…",lg21Prep:"Готовим рабочий стол…||正在准备工作台…"});
 const Login21={
   on:false,W:0,H:0,ow:0,oh:0,img:null,odd:0,t:0,px:0,py:0,tx:0,ty:0,motes:[],raf:0,
   P:(()=>{const P=new Uint8Array(512),p=[];for(let i=0;i<256;i++)p[i]=i;for(let i=255;i>0;i--){const j=Math.random()*(i+1)|0;const q=p[i];p[i]=p[j];p[j]=q;}for(let i=0;i<512;i++)P[i]=p[i&255];return P;})(),
@@ -10532,6 +10533,113 @@ const _setLang21=setLang;setLang=function(l){const r=_setLang21.apply(this,argum
   f.onsubmit=async function(e){Login21.wait("lg21Check");try{return await _os.call(this,e);}finally{if(!U())Login21.done();}};})();
 if(typeof SB19!=="undefined"){const _st21=SB19.start.bind(SB19);SB19.start=async function(){try{if(document.getElementById("lg21load")&&document.getElementById("lg21load").classList.contains("on"))Login21.wait("lg21Load");}catch(e){}return _st21.apply(this,arguments);};}
 try{Login21.ensure();if(document.getElementById("login").style.display!=="none")Login21.start();}catch(e){console.warn("Login21",e);}
+
+
+/* ═══════════════════════════ v21 · ЭТАП 1: БЫСТРЫЕ ИСПРАВЛЕНИЯ (версия 1.0) ═══════════════════════════
+   План версии 1.0, утверждён владельцем 12.10.2026.
+   • Окна: щелчок по фону окно не закрывает (закрывают «Сохранить», «Отмена», Esc); введённое сохраняется черновиком в браузере —
+     если окно пропало (обновление страницы, сбой), при следующем открытии: «Есть черновик — восстановить?».
+   • Обновление страницы (F5) — остаётся та же страница: адрес открывается, когда данные пришли с сервера.
+   • Сообщения: пишутся на сервере одной операцией (chat_send) и приходят собеседнику сразу (живые обновления, миграция
+     20261012000100); набранный текст не стирается при обновлении окна; считаются только на кнопке «Сообщения» — в «Событиях» их нет.
+     В «События» приходят комментарии к задачам (новое), сообщения и файлы клиента по делам — как раньше.
+   • Поля ввода без подсказок старых значений браузера.
+   • Файлы до 100 МБ (на сервере — без перекодирования в текст).
+   • Заявки — по вкладкам «Новые · В работе · Выполнены». */
+Object.assign(UI,{
+  dr21Found:"Есть несохранённый черновик этого окна||此窗口有未保存的草稿",dr21Restore:"Восстановить||恢复",dr21Drop:"Удалить черновик||删除草稿",
+  up21Big:"Загружаем файл…||正在上传文件…",up21Done:"Файл загружен||文件已上传",up21Limit:"Файл больше 100 МБ||文件超过100 MB",
+  rq21New:"Новые||新的",rq21Prog:"В работе||处理中",rq21Done:"Выполнены||已完成"
+});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{taskCmt21:"{who} — комментарий к задаче «{title}»: {text}||{who} 在任务“{title}”中评论：{text}"});
+const SRV21=()=>typeof SB19!=="undefined"&&SB19.on&&!!SB19.T;
+
+/* ── окна: без закрытия по фону; черновики ── */
+const Draft21={KEY:"zc_dlg_drafts21",TTL:7*86400e3,
+  all(){try{return JSON.parse(localStorage.getItem(this.KEY)||"{}")||{};}catch(e){return {};}},
+  put(all){try{const ks=Object.keys(all).sort((a,b)=>(all[b].at||0)-(all[a].at||0));ks.slice(30).forEach(k=>delete all[k]);localStorage.setItem(this.KEY,JSON.stringify(all));}catch(e){}},
+  get(k){const a=this.all(),d=a[k];if(d&&Date.now()-(d.at||0)>this.TTL){delete a[k];this.put(a);return null;}return d||null;},
+  set(k,vals){const a=this.all();a[k]={at:Date.now(),vals};this.put(a);},
+  drop(k){const a=this.all();if(a[k]){delete a[k];this.put(a);}}};
+const _askFix21=Dlg.ask.bind(Dlg);
+Dlg.ask=function(o){o=o||{};const p=_askFix21(o);const ov=document.getElementById("ovD"),md=document.getElementById("mdD");if(ov)ov.onclick=null;
+  const flds=(o.fields||[]).filter(x=>x&&x.k&&!["section","html","files","password"].includes(x.type)&&!/(^|_)(pw|pass|password)/i.test(x.k));
+  if(o.danger||flds.length<3||!md)return p;
+  const key=[(U()||{}).login||"",o.title||"",flds.map(x=>x.k).join(",")].join("|");
+  const read=()=>{const v={};flds.forEach(x=>{const el=md.querySelector("#dlg_"+x.k);if(!el)return;v[x.k]=x.type==="multi"?[...el.querySelectorAll("input:checked")].map(i=>i.value):el.value;});return v;};
+  const write=vals=>{flds.forEach(x=>{const el=md.querySelector("#dlg_"+x.k);if(!el||!(x.k in vals))return;
+    if(x.type==="multi")el.querySelectorAll("input[type=checkbox]").forEach(i=>{i.checked=(vals[x.k]||[]).includes(i.value);});else el.value=vals[x.k];});};
+  const start=JSON.stringify(read());
+  const d=Draft21.get(key);
+  if(d&&JSON.stringify(d.vals)!==start){const bar=document.createElement("div");bar.className="dlgwarn dr21";bar.setAttribute("role","status");
+    bar.innerHTML=`${T1(UI.dr21Found)} · ${esc(fmtDT(ymdhmL(new Date(d.at))))} <button type="button" class="btn sm pri" data-dr21="r">${T1(UI.dr21Restore)}</button> <button type="button" class="btn sm ghost" data-dr21="d">${T1(UI.dr21Drop)}</button>`;
+    const form=md.querySelector(".form");if(form)form.before(bar);
+    bar.querySelector('[data-dr21="r"]').onclick=()=>{write(d.vals);bar.remove();};
+    bar.querySelector('[data-dr21="d"]').onclick=()=>{Draft21.drop(key);bar.remove();};}
+  let tm=null;const save=()=>{clearTimeout(tm);tm=setTimeout(()=>{if(!md.isConnected||!ov.classList.contains("open"))return;const v=read();if(JSON.stringify(v)===start)return;Draft21.set(key,v);},400);};
+  md.addEventListener("input",save);md.addEventListener("change",save);
+  /* окно закрыто кнопкой или Esc — черновик больше не нужен (сохранено или отменено намеренно) */
+  return p.then(v=>{clearTimeout(tm);md.removeEventListener("input",save);md.removeEventListener("change",save);Draft21.drop(key);return v;});};
+
+/* ── F5: страница из адреса открывается, когда данные пришли ── */
+if(typeof Route17!=="undefined"){const _openFix21=Route17.open.bind(Route17);
+  Route17.open=function(r,push){const need=r&&((r.cur==="matter"&&r.arg&&!S.matters[r.arg])||(r.cur==="client"&&r.arg&&!S.clients[r.arg]));
+    if(!need||!U())return _openFix21(r,push);
+    let n=0;const wait=()=>{const ok=(r.cur==="matter"?S.matters:S.clients)[r.arg];if(ok||n++>40||!U())return _openFix21(r,push);setTimeout(wait,200);};wait();};}
+
+/* ── сообщения ── */
+const _ntRenderFix21=Notif.render.bind(Notif);
+Notif.render=function(){const inp=document.getElementById("msgIn");const keep=inp&&this.tab==="msgs"?{v:inp.value,f:document.activeElement===inp,s:inp.selectionStart,e:inp.selectionEnd,peer:this.peer}:null;
+  const r=_ntRenderFix21.apply(this,arguments);
+  if(keep&&keep.peer===this.peer){const n=document.getElementById("msgIn");if(n){n.value=keep.v;if(keep.f){n.focus();try{n.setSelectionRange(keep.s,keep.e);}catch(e){}}}}
+  return r;};
+/* сообщения — только на кнопке «Сообщения»; в «Событиях» их нет (уведомление остаётся для Telegram и ответа из бота) */
+Notif.unreadEv=function(){const d=S.notif[(U()||{}).login];return d?(d.items||[]).filter(i=>!i.read&&i.type!=="msg").length:0;};
+const _evHtmlFix21=Notif.eventsHtml.bind(Notif);
+Notif.eventsHtml=function(){const d=S.notif[(U()||{}).login];if(!d||!Array.isArray(d.items))return _evHtmlFix21();const all=d.items;d.items=all.filter(i=>i.type!=="msg");try{return _evHtmlFix21();}finally{d.items=all;}};
+/* отправка и «прочитано» в режиме сервера — одной операцией на сервере, без перезаписи переписки */
+const chatApply21=data=>{if(data&&data.id){S.chats[data.id]=data;}};
+/* миграция 20261012000100 ещё не выполнена (функции нет на сервере) — сообщения пишутся прежним способом */
+let chatSrv21=true;const noFn21=e=>/PGRST202|Could not find the function|chat_(send|read)/i.test(String((e&&(e.message||e.code))||e));
+const _ntBindFix21=Notif.bind.bind(Notif);
+Notif.bind=function(b){_ntBindFix21(b);if(!SRV21()||!chatSrv21)return;const me=(U()||{}).login,send=b.querySelector("#msgSend"),inp=b.querySelector("#msgIn");if(!send||!inp)return;
+  let busy=false;const go=async()=>{const v=inp.value.trim(),peer=this.peer;if(!v||!peer||busy)return;busy=true;send.disabled=true;
+    try{chatApply21(await SB19.T.rpc("chat_send",{peer,body:v}));inp.value="";notify(peer,"msg",nt18("chatMsg",{who:{a:me},text:v}),me);}
+    catch(e){if(noFn21(e)){chatSrv21=false;busy=false;send.disabled=false;_ntBindFix21(b);const s2=b.querySelector("#msgSend");if(s2)s2.click();return;}toast(String((e&&e.message)||e).replace(/^.*?ERROR:\s*/,""));}
+    finally{busy=false;send.disabled=false;}this.render();};
+  send.onclick=go;inp.onkeydown=e=>{if(e.key==="Enter")go();};};
+const _ntReadFix21=Notif.markRead.bind(Notif);
+Notif.markRead=async function(){if(!SRV21()||!chatSrv21)return _ntReadFix21();const me=(U()||{}).login,id=this.chatId(me,this.peer),c=S.chats[id];if(!c)return;
+  const un=(c.msgs||[]).some(m=>m.by!==me&&m.at>((c.lastRead||{})[me]||""));if(!un)return;
+  c.lastRead=Object.assign({},c.lastRead||{},{[me]:nowS()});this.badge();try{chatApply21(await SB19.T.rpc("chat_read",{peer:this.peer}));}catch(e){if(noFn21(e)){chatSrv21=false;return _ntReadFix21();}}this.badge();};
+/* комментарий к задаче — в «События» исполнителю и автору (кроме себя) */
+function onTaskComment21(t,text){const me=(U()||{}).login;const to=new Set();const a=t&&accByEmp(t.emp);if(a)to.add(a.login);if(t&&t.createdBy){const c=S.accounts[t.createdBy]?t.createdBy:(accByEmp(t.createdBy)||{}).login;if(c)to.add(c);}
+  to.delete(me);to.forEach(l=>notify(l,"task",nt18("taskCmt21",{who:{a:me},title:String(t.title||"").slice(0,50),text:String(text).slice(0,200)}),t.id));}
+
+/* ── поля ввода без подсказок старых значений (кроме входа) ── */
+document.addEventListener("focusin",e=>{const t=e.target;if(t&&t.tagName==="INPUT"&&!t.closest("#loginForm")&&!t.hasAttribute("autocomplete")&&!["checkbox","radio","file","date","number","password"].includes(t.type))t.setAttribute("autocomplete","off");},true);
+
+/* ── файлы до 100 МБ ── */
+const FILE_MAX21=100*1024*1024;
+const _fupFix21=Files.upload.bind(Files);
+Files.upload=function(cb){if(!(SRV21()&&typeof FS20!=="undefined"&&FS20.on()&&typeof SB19.T.uploadBlob==="function"))return _fupFix21(cb);
+  const inp=document.getElementById("fileIn");inp.value="";
+  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;if(f.size>FILE_MAX21){toast(T1(UI.up21Limit));return;}
+    const id="f"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const meta={id,name:f.name,type:f.type||"",size:f.size,by:Auth.user.login,at:ymdhmL(new Date()),path:FS20.path(id,f.name),store:"sb"};
+    const big=f.size>5*1024*1024;if(big)toast(T1(UI.up21Big));
+    try{await SB19.docSet("files",id,meta);try{await SB19.T.uploadBlob(meta.path,f,meta.type);}catch(e){try{await SB19.T.del("files",{id});}catch(_){}throw e;}}
+    catch(e){toast(T1(UI.fsErr20)+(e&&e.message?": "+e.message:""));return;}
+    if(big)toast(T1(UI.up21Done));cb({id,name:f.name,type:meta.type,size:f.size});};
+  inp.click();};
+
+/* ── заявки по вкладкам ── */
+Pages.req=function(){const all=Object.values(S.requests).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));this._rqt=this._rqt||"new";
+  const tabs=[["new",UI.rq21New],["progress",UI.rq21Prog],["done",UI.rq21Done]];const cnt=k=>all.filter(r=>(r.status||"new")===k).length;
+  const list=all.filter(r=>(r.status||"new")===this._rqt);
+  return F.hdr(T1(UI.nReq),`${cnt("new")+cnt("progress")} ${T1(UI.kOpen).toLowerCase()}`,`<button class="btn pri" data-act="newReq">+ ${T1(UI.rNew)}</button>`)+
+    `<div class="ptabs">${tabs.map(([k,l])=>`<button class="${this._rqt===k?"on":""}" data-rqt="${k}">${T1(l)} <span class="cnt">${cnt(k)}</span></button>`).join("")}</div>`+this.reqList(list);};
+const _pbindFix21=Pages.bind;Pages.bind=function(vp){_pbindFix21.call(this,vp);vp.querySelectorAll("[data-rqt]").forEach(el=>el.onclick=()=>{Pages._rqt=el.dataset.rqt;Router.render();});};
+try{applyUI();}catch(e){}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
