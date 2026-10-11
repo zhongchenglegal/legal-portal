@@ -9365,6 +9365,12 @@ Object.assign(UI,{
   sbBad19:"Неверный логин или пароль||登录名或密码错误",sbNoRight20:"Нет права изменять эту запись||无权修改此记录",sbBanned19:"Учётная запись заблокирована — обратитесь к управляющему партнёру||账户已停用——请联系管理合伙人",sbDown19:"Сервер недоступен — проверьте интернет и попробуйте ещё раз||服务器不可用——请检查网络后重试",
   sbLoading19:"Загружаем ваши данные с сервера…||正在从服务器加载您的数据……",sbMode19:"Сервер: защищённая база фирмы||服务器：律所安全数据库",sbDemo19:"Демо-режим: встроенные данные, без сервера||演示模式：内置数据，无服务器"
 });
+/* время, которое ставит сама база (журнал, уведомления), хранится в UTC — показываем по Ташкенту, как и остальное время сервера
+   (to_char(now() at time zone 'Asia/Tashkent') в функциях). Раньше UTC выводился как есть: в журнале было на 5 часов меньше. */
+const tsFirm19=v=>{if(v==null||v==="")return "";let d=v instanceof Date?v:new Date(String(v).trim().replace(" ","T").replace(/([+-]dd)$/,"$1:00"));
+  if(isNaN(d))return String(v).slice(0,16).replace(" ","T");
+  try{const p={};new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Tashkent",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(d).forEach(x=>p[x.type]=x.value);
+    return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}`;}catch(e){d=new Date(d.getTime()+5*3600e3);return d.toISOString().slice(0,16);}};
 const SB19={
   on:(()=>{try{return !new URLSearchParams(location.search).has("demo");}catch(e){return true;}})(),
   T:null,verified:null,kind:null,login:null,subs:[],notifKnown:{},loaded:false,
@@ -9403,10 +9409,10 @@ const SB19={
   docOf(name,row){
     if(name==="accounts")return {id:row.login,data:{login:row.login,name:row.name||"",role:row.role||"",emp:row.emp,active:row.active!==false,pos:row.pos,funcs:row.funcs||[],unitId:row.unit_id,entity:row.entity,slot:row.slot||null,access:row.access||""}};
     if(name==="clientAccounts"){const d=row.data||{};return {id:row.login,data:{id:row.login,login:row.login,clientId:row.client_id,level:row.level||"full",lang:row.lang||"zh",name:d.name||"",nameZh:d.nameZh||"",role:d.role||"",basis:d.basis||"",active:row.active!==false}};}
-    if(name==="auditLog")return {id:String(row.seq),data:{id:String(row.seq),at:String(row.at||"").slice(0,16).replace(" ","T"),by:row.login,what:row.action,ref:row.ref,hash:row.hash}};
+    if(name==="auditLog")return {id:String(row.seq),data:{id:String(row.seq),at:tsFirm19(row.at),by:row.login,what:row.action,ref:row.ref,hash:row.hash}};
     if(name==="units")return {id:row.id,data:Object.assign({},row.data||{},{id:row.id,parent:row.parent||(row.data||{}).parent||null,entity:row.entity})};
     return {id:row.id,data:row.data||{}};},
-  notifItem(r){return {id:r.id,at:String(r.at||"").slice(0,16).replace(" ","T"),type:r.type,tpl:r.tpl||undefined,p:r.p||{},text:r.text||"",ref:r.ref||null,read:!!r.read};},
+  notifItem(r){return {id:r.id,at:tsFirm19(r.at),type:r.type,tpl:r.tpl||undefined,p:r.p||{},text:r.text||"",ref:r.ref||null,read:!!r.read};},
   snap(docs,changes){const D=docs.map(d=>({id:d.id,exists:true,data:()=>d.data}));const C=(changes||docs.map(d=>({type:"added",doc:d}))).map(c=>({type:c.type,doc:{id:c.doc.id,exists:c.type!=="removed",data:()=>c.doc.data}}));
     return {docs:D,empty:!D.length,size:D.length,forEach:fn=>D.forEach(fn),docChanges:()=>C};},
   async rows(name){const t=this.table(name);try{let r=await this.T.select(t);if(name==="clientAccounts")r=r.filter(x=>x.kind==="client");return r;}catch(e){console.warn("sb19 select",t,e&&e.message);return [];}},
@@ -9867,7 +9873,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="eedabc79fe5e";
+const ZC_BUILD="9703a65fc205";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
