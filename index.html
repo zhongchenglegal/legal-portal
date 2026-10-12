@@ -9874,7 +9874,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="47495fff003a";
+const ZC_BUILD="16f12f50cd75";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10804,7 +10804,7 @@ const _saveDocReg21=saveDoc;saveDoc=function(col,obj){
 const _ctFReg21=Contract11.fields.bind(Contract11);Contract11.fields=function(m){const f=_ctFReg21(m);const k=(m&&m.contract)||{};const rec=Reg21.rec(m);
   if(!rec||k.mode==="framework")return f;
   f.forEach(x=>{if(!x)return;if(x.k==="mode"){x.type="hidden";x.value="existing";x.label="";delete x.options;}
-    if(x.k==="existingId"){x.type="hidden";x.value=rec.id;x.label="";delete x.options;delete x.check;}
+    if(x.k==="existingId"){x.type="hidden";x.value=rec.id;x.label="";delete x.options;delete x.check;delete x.hint;}
     if(x.k==="no"){x.type="hidden";x.value=rec.no;x.label="";}if(x.k==="party"){x.type="hidden";x.value=rec.party||m.entity||"legal";x.label="";delete x.options;}});
   f.unshift({k:"rg21no",type:"html",html:`<div class="rg21no"><b>${esc(T1(UI.rg21NoT).replace("{no}",rec.no))}</b> · ${esc(m.no||"")} · <span class="entbadge ${rec.party||"legal"}">${T1(ENTITY_S[rec.party||"legal"])}</span><br><small>${T1(UI.rg21Fixed)}</small></div>`});return f;};
 const _ctEReg21=Contract11.edit.bind(Contract11);Contract11.edit=async function(id){const r=await _ctEReg21(id);const m=matter(id);const rec=Reg21.rec(m);
@@ -10837,14 +10837,14 @@ Pages.contracts21=function(){if(!Reg21.mp())return `<div class="locked">${T1(UI.
   const rows=list.map(r=>`<tr><td><b>${esc(r.k.no)}</b>${r.k.kind==="framework"?`<br><small>${T1(UI.rg21Fw)}</small>`:""}</td><td>${r.k.date?fmtD(r.k.date):"—"}</td><td data-go="client:${esc(r.c.id)}" style="cursor:pointer">${esc(clientName(r.c))}</td>
     <td><span class="entbadge ${r.ent}">${T1(ENTITY_S[r.ent])}</span></td><td>${r.k.svc?svcLabel11(r.k.svc):(r.m0?svcLabel11(r.m0.svc):"—")}</td><td>${esc(String(r.k.subject||(r.m0&&mT18(r.m0))||"").slice(0,60))}</td>
     <td>${r.mm.map(m=>`<span class="lnk17" data-matter="${esc(m.id)}">${esc(m.no)}</span>`).join("<br>")||"—"}</td>
-    <td class="num">${r.sum?fmtN(r.sum)+" "+cur(r.cur):"—"}</td><td>${esc((r.m0&&r.m0.payOrder)||"—")}</td><td>${r.m0?`<span class="pay11 ${r.m0.paymentStatus}">${payLabel(r.m0.paymentStatus)}</span>`:"—"}</td>
+    <td class="num">${r.sum?fmtN(r.sum)+" "+cur(r.cur):"—"}</td><td>${esc((r.m0&&(typeof payOrderLabel21==="function"?payOrderLabel21(r.m0):r.m0.payOrder))||"—")}</td><td>${r.m0?`<span class="pay11 ${r.m0.paymentStatus}">${payLabel(r.m0.paymentStatus)}</span>`:"—"}</td>
     <td><span class="rg21st ${r.st}">${Reg21.stLabel(r.st)}</span></td><td>${r.file?`<span class="chipf" data-rg21file="${esc(r.k.id)}">${esc(r.file.name||"файл")}</span>`:"—"}</td></tr>`).join("");
   return F.hdr(T1(UI.reg21),`${list.length}`,`<button class="btn" data-rg21csv="1">${T1(UI.rg21Csv)}</button>`)+
     `<div class="filters">${sel("y",[["",T1(UI.rg21Year)+": "+T1(UI.rg21All)],...years.map(y=>[y,y])])}${sel("e",[["",T1(UI.rg21Ent)+": "+T1(UI.rg21All)],["legal",T1(ENTITY_S.legal)],["llc",T1(ENTITY_S.llc)]])}${sel("s",[["",T1(UI.rg21St)+": "+T1(UI.rg21All)],["draft",T1(UI.rg21Draft)],["signed",T1(UI.rg21Signed)],["done",T1(UI.rg21Done)],["lost",T1(UI.rg21Lost)]])}</div>
     <div class="card">${list.length?`<div style="overflow-x:auto"><table class="tbl reg21"><thead><tr><th>№</th><th>${T1(UI.ctDate)}</th><th>${T1(UI.rg21Client)}</th><th>${T1(UI.rg21Ent)}</th><th>${T1(UI.rg21Kind)}</th><th>${T1(UI.rg21Subj)}</th><th>${T1(UI.rg21Matters)}</th><th class="num">${T1(UI.rg21Sum)}</th><th>${T1(UI.rg21PayO)}</th><th>${T1(UI.rg21Pay)}</th><th>${T1(UI.rg21St)}</th><th>${T1(UI.rg21File)}</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="empty2">${T1(UI.rg21Empty)}</div>`}</div>`;};
 Reg21.csv=function(){const f=Pages._rg21||{};const list=Reg21.rows().filter(r=>(!f.y||r.year===f.y)&&(!f.e||r.ent===f.e)&&(!f.s||r.st===f.s));
   const q=s=>`"${String(s==null?"":s).replace(/"/g,'""')}"`;const head=["№","Дата","Клиент","Организация","Вид","Предмет","Дела","Стоимость","Валюта","Порядок оплаты","Оплата","Статус"];
-  const lines=[head.map(q).join(";"),...list.map(r=>[r.k.no,r.k.date||"",clientName(r.c),T1(ENTITY_S[r.ent]),r.k.svc?svcLabel11(r.k.svc):(r.m0?svcLabel11(r.m0.svc):""),r.k.subject||"",r.mm.map(m=>m.no).join(", "),r.sum||"",r.cur||"",(r.m0&&r.m0.payOrder)||"",r.m0?payLabel(r.m0.paymentStatus):"",Reg21.stLabel(r.st)].map(q).join(";"))];
+  const lines=[head.map(q).join(";"),...list.map(r=>[r.k.no,r.k.date||"",clientName(r.c),T1(ENTITY_S[r.ent]),r.k.svc?svcLabel11(r.k.svc):(r.m0?svcLabel11(r.m0.svc):""),r.k.subject||"",r.mm.map(m=>m.no).join(", "),r.sum||"",r.cur||"",(r.m0&&(typeof payOrderLabel21==="function"?payOrderLabel21(r.m0):r.m0.payOrder))||"",r.m0?payLabel(r.m0.paymentStatus):"",Reg21.stLabel(r.st)].map(q).join(";"))];
   const blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`Реестр договоров ${todayS()}.csv`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);};
 Object.assign(Router.extra,{contracts21:()=>Pages.contracts21()});
 const _navReg21=navFor;navFor=function(){const g=_navReg21();if(!U()||isClient()||!Reg21.mp())return g;const adm=g[g.length-1][1];if(adm.some(x=>x[0]==="contracts21"))return g;
@@ -10857,6 +10857,294 @@ const _pbindReg21=Pages.bind;Pages.bind=function(vp){_pbindReg21.call(this,vp);
 .rg21st{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:rgba(124,137,160,.15);color:var(--ink-2)}
 .rg21st.signed{background:rgba(63,135,104,.14);color:#2f6f53}.rg21st.done{background:rgba(58,90,140,.14);color:#2f4a74}.rg21st.lost{background:rgba(185,87,75,.14);color:#9a4237}
 table.reg21 td{vertical-align:top}table.reg21 td:first-child b,table.reg21 .lnk17,table.reg21 .pay11,table.reg21 .rg21st{white-space:nowrap}`;document.head.appendChild(st);})();
+
+
+/* ═══════════════════════════ v21 · ЭТАП 4: АДВОКАТ ВЕДЁТ РАЗОВУЮ УСЛУГУ САМ (версия 1.0) ═══════════════════════════
+   План версии 1.0, утверждён владельцем 12.10.2026 (пункты 8, 10, 11, 16). Сервер — миграция 20261012000300.
+   • Стадии дела — свой список у каждого дела (m.stages21). Обязательные: «В работе», «На согласовании», «Результат готов»,
+     «Принят клиентом», «Архив». Остальные («Назначена команда», «Проверка перевода», «Подтверждение китайского юриста», свои
+     этапы) ведущий добавляет или убирает сам. «Проверка старшего адвоката» обязательна, только если над ведущим в «Структуре»
+     стоит адвокат (не управляющий) — он и проверяющий. Команда, переводчик, китайский юрист — по желанию ведущего.
+   • «Договор подписан» ставит ведущий сам: с файлом договора, заполненными реквизитами и выбранным порядком оплаты;
+     управляющему адвокату файл не обязателен. УП получает уведомление и может «Отменить подписание», пока нет поступлений.
+   • Порядок оплаты — из списка: 100 % предоплата · предоплата N % · оплата после результата · поэтапно · ежемесячно.
+     Статус оплаты считается по поступлениям. Поступление вносит ведущий сам — «на проверке», с подтверждающим документом;
+     УП подтверждает (в карточке дела или при отправке в архив). Непроверенные поступления в зарплату не идут.
+   • Пока условия не выполнены (нет договора, порядка оплаты, предоплаты) — работа не начинается: стадия «В работе» и задачи
+     по делу закрыты, в карточке — что не хватает. После подписания стоимость и порядок оплаты меняет только УП
+     («Попросить изменить стоимость» — уведомление УП). При оплате после результата — предупреждение перед «Результат готов»:
+     без полной оплаты дело не закрыть и не отправить в архив, в зарплату не войдёт.
+   • «Принят клиентом» ставит ведущий с основанием (акт, скриншот переписки — файл обязателен; УП — без файла); дело остаётся
+     открытым. «Архив» — только УП, с окном проверки (договор, поступления, приёмка); в архиве дело закрыто. */
+Object.assign(UI,{
+  st10_21:"Архив||归档",st21Stages:"Этапы||阶段",st21StagesHint:"Обязательные этапы менять нельзя. Дополнительные — по усмотрению ведущего.||必选阶段不可更改。可选阶段由主办律师决定。",
+  st21Optional:"Дополнительные этапы||可选阶段",st21Custom:"Свои этапы (по одному в строке, между «В работе» и «На согласовании»)||自定义阶段（每行一个，位于“办理中”与“审批中”之间）",st21CustomHint:"До 10 этапов||最多10个阶段",
+  st21File:"Приложить договор||附加合同",st21FileRe:"Заменить файл договора||替换合同文件",st21NeedFile:"Приложите файл договора||请附加合同文件",st21NeedPayOrder:"Выберите порядок оплаты в «Договоре и стоимости»||请在“合同与费用”中选择付款方式",
+  plOnlyMp21:"«Договор подписан» ставит ведущий дела или управляющий адвокат||“合同已签署”由主办律师或管理律师标记",st21SignHint:"Чтобы отметить «Договор подписан»||标记“合同已签署”前需要",
+  st21SignT:"Договор подписан?||确认合同已签署？",st21SignQ:"Договор № {no} на сумму {sum}. После подписания стоимость и порядок оплаты меняет только управляющий адвокат.||合同编号 {no}，金额 {sum}。签署后费用和付款方式仅可由管理律师更改。",
+  st21Unsign:"Отменить подписание||撤销签署",st21UnsignWhy:"Причина отмены||撤销原因",st21UnsignNo:"По делу уже есть поступления — отменить подписание нельзя||该案件已有收款，无法撤销签署",
+  st21AskCost:"Попросить изменить стоимость||申请修改费用",st21NewCost:"Предлагаемая стоимость||建议费用",st21Why:"Обоснование||理由",st21Asked:"Запрос отправлен управляющему адвокату||已发送给管理律师",
+  st21NotStarted:"Работа не начата||尚未开始办理",st21TasksBlocked:"Задачи по делу откроются, когда можно будет начать работу||案件任务将在可以开始办理后开放",
+  st21PayOrder:"Порядок оплаты||付款方式",po21full:"100 % предоплата||100% 预付款",po21prepay:"Предоплата N % + остаток по результату||预付 N% + 余款在成果后支付",po21postpay:"Оплата после результата||成果后付款",
+  po21stages:"Поэтапно||分阶段付款",po21monthly:"Ежемесячно (сопровождение)||按月（常年顾问）",po21pct:"Предоплата, %||预付比例 %",po21first:"Сумма первого этапа||第一阶段金额",po21pick:"— выберите —||— 请选择 —",
+  po21ErrPct:"Укажите процент предоплаты от 1 до 99||请填写1–99的预付比例",po21ErrFirst:"Укажите сумму первого этапа||请填写第一阶段金额",po21ErrMonthly:"«Ежемесячно» — только для сопровождения||“按月”仅适用于常年顾问",
+  g21NoPayOrder:"не выбран порядок оплаты||未选择付款方式",g21Full:"ждём 100 % предоплату — получено {x} %||等待100%预付款——已收 {x}%",g21Prepay:"ждём предоплату {n} % — получено {x} %||等待预付 {n}%——已收 {x}%",
+  g21Stages:"ждём оплату первого этапа ({s}) — получено {p}||等待第一阶段付款（{s}）——已收 {p}",g21Monthly:"ждём оплату первого месяца||等待首月付款",
+  st21PostpayT:"Оплата после результата||成果后付款",st21Postpay:"По этому делу оплата — после результата. Вы можете передать результат клиенту. Но пока оплата не поступит полностью, дело нельзя будет закрыть и отправить в архив, и оно не войдёт в расчёт вашей зарплаты.||本案件为成果后付款。您可以向客户交付成果。但在款项全部到账前，案件无法结案归档，也不会计入您的工资核算。",
+  st21AcceptFile:"Основание: акт или скриншот переписки||依据：验收单或沟通截图",st21AcceptNeedFile:"Приложите акт или скриншот переписки с клиентом||请附加验收单或与客户的沟通截图",
+  pay21Add:"Поступление||收款",pay21Proof:"Подтверждающий документ (платёжка, выписка)||付款凭证（付款单、对账单）",pay21Pending:"на проверке||待核实",pay21Pend:"Поступления на проверке||待核实的收款",
+  pay21Confirm:"Подтвердить||确认",pay21Confirmed:"Поступление подтверждено||收款已确认",pay21Auto:"по поступлениям||按收款",pay21ManualNote:"Статус оплаты изменён вручную — до следующего поступления||付款状态已手动更改——直至下一笔收款",
+  ar21T:"Отправить в архив||归档",ar21Check:"Проверьте перед отправкой в архив||归档前请核对",ar21ByAdv:"Договор подписан и поступления внесены ведущим — проверьте файл договора и документы по оплате.||合同由主办律师签署、收款由其录入——请核对合同文件和付款凭证。",
+  ar21Contract:"Договор||合同",ar21Pays:"Поступления||收款",ar21Accept:"Приёмка||验收",ar21ConfirmAll:"Подтвердить все поступления на проверке||确认所有待核实收款",ar21Block:"Нельзя отправить в архив||无法归档",
+  ar21NoPay:"оплата получена не полностью||款项未全部到账",ar21Pend:"есть поступления на проверке: {n}||有待核实的收款：{n}",ar21NoAcc:"результат не принят клиентом||客户尚未验收",ar21Done:"Дело отправлено в архив||案件已归档",
+  ar21NoFile:"файла договора нет||无合同文件",pay21Reason:"поступление на проверке||收款待核实",st21ReviewBy:"Проверяющий||审核人"
+});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{
+  ctSignedAdv21:"{who} отметил «Договор подписан» по делу {no} на сумму {sum} — проверьте файл договора||{who} 已标记案件 {no} “合同已签署”，金额 {sum}——请核对合同文件",
+  ctCancel21:"Подписание договора по делу {no} отменено управляющим адвокатом: {why}||案件 {no} 的合同签署已被管理律师撤销：{why}",
+  payAdv21:"{who} внёс поступление {sum} по делу {no} — на проверке||{who} 录入案件 {no} 的收款 {sum}——待核实",
+  payConfirmed21:"Поступление {sum} по делу {no} подтверждено||案件 {no} 的收款 {sum} 已确认",
+  costAsk21:"{who} просит изменить стоимость по делу {no}: {sum} — {why}||{who} 申请修改案件 {no} 的费用：{sum}——{why}",
+  acceptAdv21:"{who} отметил «Принят клиентом» по делу {no}||{who} 已标记案件 {no} “客户已验收”",
+  archived21:"Дело {no} отправлено в архив||案件 {no} 已归档",startOk21:"По делу {no} условия оплаты выполнены — можно начинать работу||案件 {no} 的付款条件已满足——可以开始办理",
+  reviewAsk21:"Дело {no} направлено вам на проверку||案件 {no} 已提交给您审核"
+});
+const PAYO21={full:UI.po21full,prepay:UI.po21prepay,postpay:UI.po21postpay,stages:UI.po21stages,monthly:UI.po21monthly};
+const payOrderLabel21=m=>{if(!m||!m.payOrder)return "";if(PAYO21[m.payOrder]){let l=T1(PAYO21[m.payOrder]);if(m.payOrder==="prepay")l=l.replace("N",String(+m.payPct21||0));if(m.payOrder==="stages"&&+m.payFirst21)l+=" · "+fmtN(m.payFirst21)+" "+(m.currency||"UZS");return l;}return String(m.payOrder);};
+const Svc21={mp(){return isFounder()||hasF("managing");},lead(m){const u=U();return !!(u&&m&&m.lead===u.emp);},
+  mpLogins(){return typeof mgmtLogins10==="function"?mgmtLogins10():[];},
+  async askCost(id){const m=matter(id);if(!m||!this.lead(m)||this.mp())return;
+    const v=await Dlg.ask({title:T1(UI.st21AskCost)+" · "+m.no,fields:[{k:"cost",label:T1(UI.st21NewCost),type:"number",value:m.cost||0,required:true},{k:"why",label:T1(UI.st21Why),type:"textarea",required:true}]});if(!v)return;
+    m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:`Запрос изменить стоимость: ${fmtN(v.cost)} ${m.currency||"UZS"} — ${v.why}`});await saveDoc("matters",m);
+    this.mpLogins().forEach(l=>notify(l,"task",nt18("costAsk21",{who:{a:U().login},no:m.no,sum:fmtN(v.cost)+" "+(m.currency||"UZS"),why:String(v.why).slice(0,120)}),m.id));
+    audit(`${m.no}: запрос изменить стоимость — ${fmtN(v.cost)}`);toast(T1(UI.st21Asked));Router.render();}
+};
+if(!STAGES10.some(x=>x[0]==="archive"))STAGES10.push(["archive",UI.st10_21]);
+
+/* ── стадии дела ── */
+const St21={
+  reviewRequired(m){if(typeof Org21==="undefined"||!m||!m.lead)return false;const b=Org21.boss(m.lead);return !!b&&b!==Org21.mp()&&(typeof Adv21!=="undefined"?Adv21.isAdvEmp(b):posOf(b)==="advocate");},
+  build(m,o){const l=["received"];if(o.team)l.push("team");l.push("work");(o.custom||[]).forEach(c=>l.push(c.id));l.push("approval");if(o.review)l.push("review");if(o.translation)l.push("translation");if(o.cn)l.push("cn");l.push("ready","accepted","archive");return l;},
+  register(m){Object.entries((m&&m.stageNames21)||{}).forEach(([id,l])=>{const x=STAGES10.find(y=>y[0]===id);if(x)x[1]=l;else STAGES10.push([id,l]);});},
+  registerAll(){Object.values(S.matters||{}).forEach(m=>{if(m&&m.stageNames21)this.register(m);});},
+  defaults(m){const cur=m.stage||"received";return this.build(m,{team:cur==="team",review:this.reviewRequired(m)||cur==="review",translation:!!m.translator||cur==="translation",cn:!!(m.cnLawyer&&m.cnLawyer!=="-")||cur==="cn",custom:[]});},
+  ensure(m){if(!m)return [];const ro=typeof isClient==="function"&&isClient();
+    if(!Array.isArray(m.stages21)||!m.stages21.length){if(ro){const l=this.defaults(m);this.register(m);return l;}const cur=m.stage||"received";
+      m.stages21=this.build(m,{team:cur==="team",review:this.reviewRequired(m)||cur==="review",translation:!!m.translator||cur==="translation",cn:!!(m.cnLawyer&&m.cnLawyer!=="-")||cur==="cn",custom:[]});}   /* переводчик и китайский юрист — только если назначены в самом деле */
+    if(!m.stages21.includes("archive")){if(ro){this.register(m);return [...m.stages21,"archive"];}m.stages21.push("archive");}this.register(m);return m.stages21;},
+  list(m){return this.ensure(m);},
+  label(id){const x=STAGES10.find(y=>y[0]===id);return x?T1(x[1]):String(id||"");},
+  idx(m,s){const l=this.list(m);s=s||m.stage||"received";let i=l.indexOf(s);if(i>=0)return i;
+    if(/^c_/.test(s))return l.indexOf("work");const o=STAGES10.map(x=>x[0]),oi=o.indexOf(s);i=0;l.forEach((k,j)=>{if(o.indexOf(k)>=0&&o.indexOf(k)<=oi)i=j;});return i;},
+  next(m){const l=this.list(m);return l[this.idx(m)+1]||null;},
+  reached(m,s){const l=this.list(m);const j=l.indexOf(s);return j>=0&&this.idx(m)>=j;},
+  before(m,s){return !this.reached(m,s);},
+  custom(m){return this.list(m).filter(k=>/^c_/.test(k)).map(k=>({id:k,label:((m.stageNames21||{})[k])||k}));},
+  async edit(id){const m=matter(id);if(!m||m.status==="closed")return;const MP=Svc21.mp();if(!(MP||Svc21.lead(m))){toast(T1(UI.stNoRight));return;}const l=this.ensure(m);const reqRev=this.reviewRequired(m);
+    const opts=[["team",T1(UI.st2)],...(reqRev?[]:[["review",T1(UI.st5)]]),["translation",T1(UI.st6)],["cn",T1(UI.st7)]];
+    const v=await Dlg.ask({title:T1(UI.st21Stages)+" · "+m.no,text:T1(UI.st21StagesHint)+(reqRev?" "+T1(UI.st5)+" — "+T1("обязательна||必选")+".":""),fields:[
+      {k:"opt",label:T1(UI.st21Optional),type:"multi",value:opts.map(o=>o[0]).filter(k=>l.includes(k)),options:opts},
+      {k:"custom",label:T1(UI.st21Custom),type:"textarea",value:this.custom(m).map(c=>T1(c.label)).join("\n"),hint:T1(UI.st21CustomHint)}]});if(!v)return;
+    const names=String(v.custom||"").split("\n").map(s=>s.trim()).filter(Boolean).slice(0,10);const old=this.custom(m);m.stageNames21=m.stageNames21||{};
+    const custom=names.map(n=>{const ex=old.find(c=>T1(c.label)===n);const cid=ex?ex.id:"c_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);m.stageNames21[cid]=n;return {id:cid};});
+    Object.keys(m.stageNames21).forEach(k=>{if(!custom.some(c=>c.id===k))delete m.stageNames21[k];});
+    const sel=v.opt||[];m.stages21=this.build(m,{team:sel.includes("team"),review:reqRev||sel.includes("review"),translation:sel.includes("translation"),cn:sel.includes("cn"),custom});
+    if(!m.stages21.includes(m.stage))m.stage=m.stages21[Math.max(0,this.idx(m))];
+    this.register(m);m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:"Этапы: "+m.stages21.map(k=>this.label(k)).join(" → ")});await saveDoc("matters",m);audit(`${m.no}: этапы изменены`);Router.render();}
+};
+const _rrSt21=Router.render.bind(Router);Router.render=function(){try{St21.registerAll();}catch(e){}return _rrSt21.apply(this,arguments);};
+
+/* ── оплата: порядок, статус по поступлениям, ворота ── */
+const Pay21={
+  cur(m){return m.currency||"UZS";},
+  paidC(m){return (+m.paid||0)/(typeof Money17!=="undefined"?Money17.rate(this.cur(m)):1);},
+  pct(m){const c=+m.cost||0;return c>0?Math.min(999,Math.round(this.paidC(m)/c*100)):0;},
+  list(m){return Object.values(S.payments||{}).filter(p=>p&&p.matterId===m.id);},
+  pending(m){return this.list(m).filter(p=>p.pending);},
+  thresholdMet(m){const c=+m.cost||0,p=this.paidC(m);switch(m.payOrder){case "prepay":return c>0&&p/c*100>=(+m.payPct21||0)-0.01;case "stages":return p>=(+m.payFirst21||0)-0.005&&(+m.payFirst21||0)>0;case "monthly":return p>0;default:return false;}},
+  recompute(m){if(!m||m.svc==="support"||m.payManual21||(m.paymentStatus==="cancelled"&&m.invoiceDisputed))return false;const c=+m.cost||0;if(c<=0)return false;
+    const p=this.paidC(m);const st=p>=c-0.005?"paid":p>0?(this.thresholdMet(m)?"prepaid":"partial"):"unpaid";if(st===m.paymentStatus)return false;
+    m.paymentStatus=st;m.paymentLog=m.paymentLog||[];m.paymentLog.push({at:nowS(),by:(U()||{}).login||"system",status:st,note:T1(UI.pay21Auto)});return true;},
+  async add(id){const m=matter(id);if(!m||!Svc21.lead(m)||m.status==="closed")return;migrateMatter11(m);const st=paySettings();const cur=this.cur(m);
+    const pr=Dlg.ask({title:T1(UI.pay21Add)+" · "+m.no,fields:[{k:"date",label:T1(UI.eDate),type:"date",value:todayS(),required:true},{k:"amount",label:T1(UI.pAmount||"Сумма||金额"),type:"number",value:"",required:true},
+      {k:"currency",label:T1(UI.ctCur),type:"select",value:cur,options:CURS},{k:"rate",label:T1(UI.pRate||"Курс||汇率"),type:"number",value:typeof Money17!=="undefined"?Money17.rate(cur):1},
+      {k:"note",label:T1(UI.crqComment)},{k:"files",label:T1(UI.pay21Proof),type:"files",required:true}]});
+    setTimeout(()=>{const md=document.getElementById("mdD");const cu=md&&md.querySelector("#dlg_currency"),ra=md&&md.querySelector("#dlg_rate");if(cu&&ra)cu.onchange=()=>{ra.value=cu.value==="USD"?st.usdRate:cu.value==="CNY"?st.cnyRate:1;};},60);
+    const v=await pr;if(!v)return;const amount=+v.amount||0;if(amount<=0){toast(T1(UI.po21ErrFirst));return;}const proof=(v.files||[])[0];if(!proof){toast(T1(UI.pay21Proof));return;}
+    const p={id:uid("p"),by:U().emp,at:nowS(),matterId:m.id,clientId:m.clientId||"",date:v.date,kind:"legal",amount,currency:v.currency,rate:v.currency==="UZS"?1:(+v.rate||1),usdRate:st.usdRate,transit:0,transitNote:"",viaFirm:true,withVat:false,translator:"",note:v.note||"",entity:m.entity,unitId:m.unitId,pending:true,proof};
+    try{await saveDoc("payments",p);}catch(e){toast(String((e&&e.message)||e));return;}
+    await Payment.syncMatter(p,+1);audit(`${m.no}: поступление ${fmtN(amount)} ${p.currency} внесено ведущим — на проверке`);
+    Svc21.mpLogins().forEach(l=>{if(l!==U().login)notify(l,"task",nt18("payAdv21",{who:{a:U().login},sum:fmtN(amount)+" "+p.currency,no:m.no}),m.id);});Router.render();},
+  async confirm(id){const p=S.payments[id];if(!p||!p.pending||!can("payments"))return;p.pending=false;p.wasPending21=true;p.confirmedBy=U().login;p.confirmedAt=nowS();await saveDoc("payments",p);
+    const m=p.matterId&&S.matters[p.matterId];audit(`${m?m.no+": ":""}поступление ${fmtN(p.amount)} ${p.currency} подтверждено`);const a=accByEmp(p.by);if(a&&a.login!==U().login)notify(a.login,"task",nt18("payConfirmed21",{sum:fmtN(p.amount)+" "+p.currency,no:m?m.no:""}),m?m.id:null);Router.render();},
+  pendHtml(list){const pend=(list||[]).filter(p=>p&&p.pending);if(!pend.length)return "";const fin=can("payments");
+    return `<div class="pend21"><div class="lbl9">${T1(UI.pay21Pend)} · ${pend.length}</div>${pend.map(p=>`<div class="reqrow"><span class="tm">${fmtD(p.date)}</span><span><b>${fmtN(p.amount)} ${esc(p.currency)}</b> · ${dispName(p.by)}${p.note?" · "+esc(p.note):""}${p.proof?` · <span class="chipf" data-pay21file="${esc(p.id)}">${esc(p.proof.name||"документ")}</span>`:""}</span>${fin?`<button class="btn sm pri" data-pay21ok="${esc(p.id)}">${T1(UI.pay21Confirm)}</button>`:`<span class="rt open">${T1(UI.pay21Pending)}</span>`}</div>`).join("")}</div>`;}
+};
+const Gate21={
+  start(m){if(!m||m.pipeline!=="contract"||m.payUnblock)return [];const out=[];const po=m.payOrder;
+    if(!PAYO21[po])return [T1(UI.g21NoPayOrder)];const x=Pay21.pct(m);
+    if(po==="full"&&m.paymentStatus!=="paid")out.push(T1(UI.g21Full).replace("{x}",x));
+    if(po==="prepay"&&!(m.paymentStatus==="paid"||Pay21.thresholdMet(m)))out.push(T1(UI.g21Prepay).replace("{n}",+m.payPct21||0).replace("{x}",x));
+    if(po==="stages"&&!(m.paymentStatus==="paid"||Pay21.thresholdMet(m)))out.push(T1(UI.g21Stages).replace("{s}",fmtN(m.payFirst21)+" "+Pay21.cur(m)).replace("{p}",fmtN(Pay21.paidC(m))+" "+Pay21.cur(m)));
+    if(po==="monthly"&&!(m.svc==="support"?Object.values(m.monthsPaid||{}).some(v=>v==="paid")||Pay21.paidC(m)>0:Pay21.paidC(m)>0))out.push(T1(UI.g21Monthly));
+    return out;},
+  postpayWarn(m){return !!m&&m.payOrder==="postpay"&&m.paymentStatus!=="paid"&&!m.payUnblock;},
+  archive(m){const out=[];if(m.svc==="support"){if(payBlock11(m))out.push(T1(UI.payBlockM));}else if(m.paymentStatus!=="paid"&&!m.payUnblock)out.push(T1(UI.ar21NoPay));
+    const n=Pay21.pending(m).length;if(n)out.push(T1(UI.ar21Pend).replace("{n}",n));if(m.stage!=="accepted")out.push(T1(UI.ar21NoAcc));
+    if(typeof Close12!=="undefined"&&Close12.gate)Close12.gate(m).forEach(x=>out.push(x));return out;}
+};
+/* блокировка «Результат готов»: при оплате после результата её нет; остальное — как раньше */
+const _pb21=payBlock11;payBlock11=function(m){if(!m)return null;if(m.payUnblock)return null;if(m.svc==="support")return _pb21(m);if(m.payOrder==="postpay")return null;return m.paymentStatus==="paid"?null:"full";};
+/* статус оплаты — после каждого поступления; выполненное условие — уведомление ведущему */
+const _syncPay21=Payment.syncMatter.bind(Payment);Payment.syncMatter=async function(p,sign){const m=p&&p.matterId&&S.matters[p.matterId];const wasBlocked=m?Gate21.start(m).length>0:false;
+  const r=await _syncPay21(p,sign);if(!m)return r;if(sign>0)delete m.payManual21;
+  if(Pay21.recompute(m)){await saveDoc("matters",m);}
+  if(wasBlocked&&!Gate21.start(m).length&&St21.before(m,"work")){const a=accByEmp(m.lead);if(a&&a.login!==(U()||{}).login)notify(a.login,"task",nt18("startOk21",{no:m.no}),m.id);}
+  return r;};
+const _paySet21=Pay11.set.bind(Pay11);Pay11.set=async function(id){const m=matter(id);const was=m&&m.paymentStatus;await _paySet21(id);if(m&&m.paymentStatus!==was){m.payManual21={by:U().login,at:nowS()};await saveDoc("matters",m);}};
+/* непроверенные поступления в зарплату не идут */
+if(typeof Pay!=="undefined"&&Pay.eligibility){Pay.REASONS=Object.assign({},Pay.REASONS,{pending:"pay21Reason"});const _elig21=Pay.eligibility.bind(Pay);Pay.eligibility=function(p){if(p&&p.pending)return "pending";return _elig21(p);};}
+const _ptable21=Payment.table.bind(Payment);Payment.table=function(list,opts){return _ptable21(list,opts)+Pay21.pendHtml(list);};
+
+/* ── договор: порядок оплаты из списка; после подписания стоимость меняет только УП ── */
+const _ctF21=Contract11.fields.bind(Contract11);Contract11.fields=function(m){const f=_ctF21(m);m=m||{};const MP=Svc21.mp();const locked=!!m.contractSigned&&!MP;
+  const i=f.findIndex(x=>x&&x.k==="payOrder");const legacy=m.payOrder&&!PAYO21[m.payOrder]?String(m.payOrder):"";
+  const po={k:"payOrder",label:T1(UI.st21PayOrder),type:"select",value:PAYO21[m.payOrder]?m.payOrder:"",options:[["",T1(UI.po21pick)],...Object.entries(PAYO21).filter(([k])=>k!=="monthly"||m.svc==="support").map(([k,l])=>[k,T1(l)])],hint:legacy?T1("ранее||此前")+": "+legacy:"",
+    check:v=>{if(v.payOrder==="prepay"&&!(+v.payPct21>=1&&+v.payPct21<=99))return T1(UI.po21ErrPct);if(v.payOrder==="stages"&&!(+v.payFirst21>0))return T1(UI.po21ErrFirst);if(v.payOrder==="monthly"&&m.svc!=="support")return T1(UI.po21ErrMonthly);return "";}};
+  const extra=[{k:"payPct21",label:T1(UI.po21pct),type:"number",value:m.payPct21||"",min:1,max:99},{k:"payFirst21",label:T1(UI.po21first),type:"number",value:m.payFirst21||"",min:0}];
+  if(i>=0)f.splice(i,1,po,...extra);else f.push(po,...extra);
+  if(locked){f.forEach(x=>{if(x&&["cost","currency","noVat","payOrder","payPct21","payFirst21"].includes(x.k)){x.type="hidden";x.label="";delete x.options;delete x.check;if(x.k==="cost")x.value=m.cost||0;if(x.k==="currency")x.value=m.currency||"UZS";if(x.k==="noVat")x.value=m.noVat?"1":"0";if(x.k==="payOrder")x.value=m.payOrder||"";}});
+    const j=f.findIndex(x=>x&&x.k==="cost");f.splice(j>=0?j:f.length,0,{k:"lock21",type:"html",html:`<div class="rg21no"><b>${T1(UI.ctCost)}: ${fmtN(m.cost)} ${esc(m.currency||"UZS")}</b> · ${esc(payOrderLabel21(m))}<br><small>${T1(UI.st21SignQ).split("||").map(s=>s.split(". ").slice(1).join(". ")).join("||")?T1("После подписания стоимость и порядок оплаты меняет только управляющий адвокат — кнопка «Попросить изменить стоимость» в карточке дела||签署后费用和付款方式仅由管理律师更改——案件卡片中有“申请修改费用”按钮"):""}</small></div>`});}
+  return f;};
+const _ctE21=Contract11.edit.bind(Contract11);Contract11.edit=async function(id){const orig=Dlg.ask;let got=null;Dlg.ask=async function(o){const v=await orig.call(Dlg,o);if(v&&o&&(o.fields||[]).some(x=>x&&x.k==="payPct21"))got=v;return v;};
+  try{await _ctE21(id);}finally{Dlg.ask=orig;}const m=matter(id);if(!got||!m)return;
+  const MP=Svc21.mp();if(!(m.contractSigned&&!MP)){m.payPct21=got.payOrder==="prepay"?Math.max(1,Math.min(99,+got.payPct21||0)):undefined;m.payFirst21=got.payOrder==="stages"?(+got.payFirst21||0):undefined;if(m.payPct21===undefined)delete m.payPct21;if(m.payFirst21===undefined)delete m.payFirst21;}
+  Pay21.recompute(m);await saveDoc("matters",m);Router.render();};
+const _ctH21=Contract11.html.bind(Contract11);Contract11.html=function(m){if(!m||!m.payOrder||!PAYO21[m.payOrder])return _ctH21(m);const po=m.payOrder;m.payOrder=payOrderLabel21(m);try{return _ctH21(m);}finally{m.payOrder=po;}};
+
+/* ── «Договор подписан»: ведущий — с файлом и порядком оплаты; УП — как раньше; отмена подписания — УП ── */
+const _pipeSet21=Pipe.set.bind(Pipe);
+Pipe.set=async function(id,step){const m=matter(id);if(!m||step!=="contract")return _pipeSet21(id,step);migrateMatter11(m);
+  if(!PAYO21[m.payOrder]&&SRV21()){toast(T1(UI.st21NeedPayOrder));return;}
+  if(Svc21.mp())return _pipeSet21(id,step);
+  if(!Svc21.lead(m)){toast(T1(UI.plOnlyMp21));return;}
+  if(m.lostPending){toast(T1(UI.stNoRight));return;}if(typeof KPV17!=="undefined"&&KPV17.expired&&KPV17.expired(m)){toast(T1(UI.kpExpired17));return;}
+  if(typeof FW17!=="undefined"&&FW17.isOrder(m)){const e=FW17.needs(m);if(e){toast(e);return;}}else if(!Pipe.ready(m)){toast(T1(UI.plNeedContract));return;}
+  if(!(m.contract&&m.contract.file)){toast(T1(UI.st21NeedFile));return;}
+  if(m.svc==="court"&&!isLicensed(m.lead)){toast(T1(UI.crLeadLic));return;}
+  if(m.svc==="oneoff"&&typeof Conflict17!=="undefined"){const c=await Conflict17.run(m);if(c&&["possible","confirmed"].includes(c.status)){await saveDoc("matters",m);toast(T1(UI.cfBlock17));Router.render();return;}}
+  if(!await Dlg.confirm(T1(UI.st21SignT),T1(UI.st21SignQ).replace("{no}",(m.contract&&m.contract.no)||m.no).replace("{sum}",fmtN(m.cost)+" "+(m.currency||"UZS"))))return;
+  const from=m.pipeline;m.pipeline="contract";m.pipelineHistory=m.pipelineHistory||[];m.pipelineHistory.push({step:"contract",at:nowS(),by:U().emp,from});
+  m.contractSigned=true;m.contractSignedAt=nowS();m.contractSignedBy=U().login;m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:"Воронка: "+T1(UI.plContract)+" — ведущий, файл "+String(m.contract.file.name||"")});
+  St21.ensure(m);try{if(m.offer&&typeof KP!=="undefined"&&KP.onPipe)KP.onPipe(m,"contract");}catch(e){}
+  try{await saveDoc("matters",m);}catch(e){m.pipeline=from;m.contractSigned=false;delete m.contractSignedAt;delete m.contractSignedBy;toast(String((e&&e.message)||e));return;}
+  audit(`${m.no}: договор подписан ведущим (${dispName(U().emp)}), файл ${m.contract.file.name||""}`);
+  Svc21.mpLogins().forEach(l=>{if(l!==U().login)notify(l,"task",nt18("ctSignedAdv21",{who:{a:U().login},no:m.no,sum:fmtN(m.cost)+" "+(m.currency||"UZS")}),m.id);});
+  notifyClients(m,"client",nt18("status",{no:m.no,st:L2(()=>status11(m,true).l)}));Router.render();};
+Pipe.unsign21=async function(id){const m=matter(id);if(!m||!Svc21.mp()||!m.contractSigned||m.status==="closed")return;if(Pay21.list(m).length){toast(T1(UI.st21UnsignNo));return;}
+  const v=await Dlg.ask({title:T1(UI.st21Unsign)+" · "+m.no,fields:[{k:"why",label:T1(UI.st21UnsignWhy),type:"textarea",required:true}],okText:UI.st21Unsign,danger:true});if(!v)return;
+  m.pipeline="negotiation";m.contractSigned=false;delete m.contractSignedAt;const by=m.contractSignedBy;delete m.contractSignedBy;m.contractCancel21={by:U().login,at:nowS(),reason:v.why};
+  m.pipelineHistory=m.pipelineHistory||[];m.pipelineHistory.push({step:"negotiation",at:nowS(),by:U().emp,from:"contract",note:T1(UI.st21Unsign)+": "+v.why});
+  if(St21.reached(m,"work"))m.stage="received";m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:`${T1(UI.st21Unsign)}: ${v.why}`});
+  await saveDoc("matters",m);audit(`${m.no}: подписание отменено — ${v.why.slice(0,60)}`);const a=accByEmp(m.lead);if(a&&a.login!==U().login)notify(a.login,"task",nt18("ctCancel21",{no:m.no,why:v.why.slice(0,100)}),m.id);Router.render();};
+
+/* ── переходы по стадиям ── */
+Stage.next=function(m){const u=U();if(!u||isClient()||!m)return [];migrateMatter11(m);if(m.status==="closed"||m.pipeline!=="contract"||m.paused||m.pipeline==="lost")return [];
+  const me=u.emp,F=Svc21.mp(),lead=m.lead===me||execsOf(m).some(x=>x.emp===me),head=headUnits().some(h=>sameFamily(h,m.unitId)),ok=c=>c||F;const s=m.stage,nx=St21.next(m),out=[];if(!nx)return out;
+  if(s==="review"){if(!lead&&ok(m.reviewer===me||head||posOf(me)==="senior")){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
+  if(s==="translation"){if(!lead&&ok(m.translator===me||posOf(me)==="translator")){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
+  if(s==="cn"){if(!lead&&ok(cnLawyerOf(m)===me||posOf(me)==="cnlawyer")){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
+  if(s==="ready"){if(nx==="accepted"&&ok(lead||head))out.push({to:"accepted",label:UI.stAcceptOff,offline:true});return out;}
+  if(s==="accepted"){if(nx==="archive"&&F)out.push({to:"archive",label:UI.ar21T,archive:true});return out;}
+  if(s==="archive")return out;
+  if(ok(lead||head))out.push({to:nx,label:St21.label(nx)});return out;};
+Stage.set=async function(id,to,ret){const m=matter(id);if(!m)return;migrateMatter11(m);St21.ensure(m);
+  const act=this.next(m).find(a=>a.to===to&&!!a.ret===!!ret);
+  if(!act){if(m.pipeline!=="contract"){toast(T1(UI.plBlocked));return;}const me=(U()||{}).emp;const self=m.lead===me||execsOf(m).some(x=>x.emp===me);toast(T1(self&&["review","translation","cn"].includes(m.stage)?UI.stSelfReview:UI.stNoRight));return;}
+  if(leadViolation(m)){toast(T1(UI.crLeadFix));return;}
+  if(to==="archive")return Archive21.run(m);
+  if(to==="accepted"&&!ret)return this.acceptOffline(m);
+  if(to==="team"){migrateMatter9b(m);if(!execsOf(m).length){toast(T1(UI.stTeamNeedExec));return;}}
+  const l=St21.list(m);if(!ret&&l.indexOf(to)>=l.indexOf("work")&&St21.before(m,"work")){const g=Gate21.start(m);if(g.length){toast(T1(UI.st21NotStarted)+": "+g.join(" · "));return;}}
+  if(to==="ready"&&!ret){const b=payBlock11(m);if(b){toast(T1(b==="month"?UI.payBlockM:UI.payBlock8));return;}if(Gate21.postpayWarn(m)&&!await Dlg.confirm(T1(UI.st21PostpayT),T1(UI.st21Postpay)))return;}
+  let note="";if(ret){const v=await Dlg.ask({title:T1(UI.stReturn),fields:[{k:"why",label:T1(UI.stReturnWhy),type:"textarea",required:true}]});if(!v)return;note=v.why;}
+  const from=m.stage;m.stage=to;m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:to,at:nowS(),by:U().emp,from,returned:!!ret,note,internal:!!ret});
+  if(to==="review"&&!m.reviewer){const me=U().emp;const self=m.lead===me||execsOf(m).some(x=>x.emp===me);if(headUnits().length&&!self)m.reviewer=me;else if(typeof Org21!=="undefined"){const b=Org21.boss(m.lead);if(b&&b!==me)m.reviewer=b;}}
+  if(from==="review"&&!ret)m.reviewPassed=true;
+  if(to==="ready"){m.readyAt=nowS();if(!l.includes("review"))m.reviewPassed=true;}
+  m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:(ret?"Возврат на доработку с этапа «"+St21.label(from)+"»":"Этап: "+St21.label(to))});
+  await saveDoc("matters",m);audit(`${m.no}: ${ret?"возврат на доработку":"этап «"+St21.label(to)+"»"}`);
+  notifyClients(m,"client",nt18("stage",{no:m.no,st:L2(()=>stLabel(to,true,m))}));
+  if(to==="ready"){const acc=accByEmp(m.lead);if(acc&&acc.login!==U().login)notify(acc.login,"task",nt18("st8NotPub",{no:m.no}),m.id);try{if(typeof Late13!=="undefined"&&Late13.detectMatter)await Late13.detectMatter(m);}catch(e){}}
+  if(to==="review"&&m.reviewer){const a=accByEmp(m.reviewer);if(a&&a.login!==U().login)notify(a.login,"task",nt18("reviewAsk21",{no:m.no}),m.id);}
+  if(ret){const acc=accByEmp(m.lead);if(acc&&acc.login!==U().login)notify(acc.login,"task",nt18("stReturn",{no:m.no,text:note.slice(0,80)}),m.id);}
+  Router.render();};
+/* приёмка: ведущий — с основанием и файлом; дело остаётся открытым до архива */
+Stage.acceptOffline=async function(m){if(m.stage!=="ready")return;const u=U();const MP=Svc21.mp();
+  const v=await Dlg.ask({title:T1(UI.stAcceptOffT)+" · "+m.no,fields:[{k:"basis",label:T1(UI.stAcceptBasis),type:"select",value:"paper",options:[["paper",T1(UI.stAbPaper)],["msg",T1(UI.stAbMsg)],["mail",T1(UI.stAbMail)],["court",T1(UI.stAbCourt)],["other",T1(UI.stAbOther)]]},
+    {k:"date",label:T1(UI.stAcceptDate),type:"date",value:todayS()},{k:"note",label:T1(UI.stAcceptNote),type:"textarea",required:true},{k:"files",label:T1(UI.st21AcceptFile),type:"files",required:!MP,hint:MP?"":T1(UI.st21AcceptNeedFile)}]});if(!v)return;
+  const file=(v.files||[])[0]||null;if(!MP&&!file){toast(T1(UI.st21AcceptNeedFile));return;}
+  const basisL={paper:UI.stAbPaper,msg:UI.stAbMsg,mail:UI.stAbMail,court:UI.stAbCourt,other:UI.stAbOther}[v.basis]||UI.stAbOther;
+  const a={id:uid("acc"),matterId:m.id,clientId:m.clientId,byLogin:u.login,byName:u.name,at:nowS(),result:"accepted",text:v.note,offline:true,basis:v.basis,basisDate:v.date||todayS(),file};S.clientAcceptance[a.id]=a;await dbWrite(db=>db.doc("clientAcceptance/"+a.id).set(a));
+  if(file){m.files=m.files||[];m.files.push(Object.assign({},file,{by:u.emp,at:nowS(),kind:"acceptance21"}));}
+  m.stage="accepted";m.acceptedAt=nowS();m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:"accepted",at:nowS(),by:u.emp,byName:u.name,offline:true,note:T1(basisL)+": "+v.note});
+  m.history=m.history||[];m.history.push({at:nowS(),by:u.emp,what:"Результат принят клиентом ("+P(basisL)[0]+"): "+v.note.slice(0,120)+(file?" · "+file.name:"")});await saveDoc("matters",m);
+  audit(`${m.no}: приёмка — ${P(basisL)[0]}${file?", "+file.name:""}`);[accByEmp(m.lead),accByEmp(cnLawyerOf(m))].filter(Boolean).filter(x=>x.login!==u.login).forEach(x=>notify(x.login,"task",nt18("acceptOff",{no:m.no}),m.id));
+  if(!MP)Svc21.mpLogins().forEach(l=>{if(l!==u.login)notify(l,"task",nt18("acceptAdv21",{who:{a:u.login},no:m.no}),m.id);});
+  notifyClients(m,"client",nt18("stage",{no:m.no,st:L2(()=>stLabel("accepted",true,m))}));toast(T1(UI.stAcceptOff));Router.render();};
+Stage.line=function(m,forClient){St21.ensure(m);const l=St21.list(m);const cur=St21.idx(m);const hist=m.stageHistory||[];const last=s=>hist.slice().reverse().find(h=>h.stage===s);const rework=forClient&&isRework(m);
+  return `<div class="stline">${l.map((k,i)=>{const h=last(k);const st=i<cur?"done":i===cur?"cur":"todo";const lbl=(k==="work"&&rework)?T1(UI.stRework):St21.label(k);return `<div class="stp ${st}"><i>${i<cur?"✓":i+1}</i><div class="stt">${lbl}${h&&(i<=cur)?`<small>${h.skipped?T1(UI.stSkipped):`${fmtDT(h.at)}${h.byName?" · "+esc(h.byName):(h.by?" · "+dispName(h.by):"")}`}</small>`:""}</div></div>`;}).join("")}</div>`;};
+const _ccHtml21=ClientCard.html.bind(ClientCard);ClientCard.html=function(m){let h=_ccHtml21(m);if(!h)return h;const nx=St21.next(m);
+  const re=/<div style="font-size:12px;color:var\(--ink-3\);margin-top:8px">[^<]*<\/div>/;if(re.test(h))h=h.replace(re,nx&&m.status!=="closed"?`<div style="font-size:12px;color:var(--ink-3);margin-top:8px">${T1(UI.stNext)}: ${St21.label(nx)} · ${T1(UI.stNoRight)}</div>`:"");return h;};
+/* принято клиентом из кабинета или по ЭСФ — дело остаётся открытым до архива */
+if(typeof CP!=="undefined"&&CP.accept){const _cpAcc21=CP.accept.bind(CP);CP.accept=async function(m){const r=await _cpAcc21(m);const x=S.matters[m.id];if(x&&x.stage==="accepted"&&x.status==="closed"){x.status="progress";delete x.closed;await saveDoc("matters",x);}return r;};}
+if(typeof Close12!=="undefined"&&Close12.acceptByEsf){const _esf21=Close12.acceptByEsf.bind(Close12);Close12.acceptByEsf=async function(m){const r=await _esf21(m);if(m.stage==="accepted"&&m.status==="closed"){m.status="progress";delete m.closed;await saveDoc("matters",m);}return r;};}
+if(typeof CP!=="undefined"&&CP.files){const _cpF21=CP.files.bind(CP);CP.files=function(m){if(this.cat(m)!=="oneoff")return _cpF21(m);St21.ensure(m);if(!St21.reached(m,"ready"))return [];if(payBlock11(m)&&!["accepted","archive"].includes(m.stage)&&m.status!=="closed")return [];return (m.files||[]).filter(f=>f.clientVisible);};}
+if(typeof restore11==="function"){const _rs21=restore11;restore11=async function(id){await _rs21(id);const m=matter(id);if(m&&m.stage==="archive"&&m.status!=="closed"){m.stage="accepted";await saveDoc("matters",m);Router.render();}};}
+
+/* ── архив: только УП, с проверкой ── */
+const Archive21={
+  async run(m){if(!Svc21.mp()||!m||m.status==="closed")return;St21.ensure(m);const pend=Pay21.pending(m),pays=Pay21.list(m),k=m.contract||{};
+    const byAdv=(m.contractSignedBy&&!Svc21.mpLogins().includes(m.contractSignedBy))||pays.some(p=>p.pending||p.wasPending21);
+    const acc=Object.values(S.clientAcceptance||{}).filter(x=>x.matterId===m.id&&x.result==="accepted").sort((a,b)=>b.at.localeCompare(a.at))[0];
+    const basisL={paper:UI.stAbPaper,msg:UI.stAbMsg,mail:UI.stAbMail,court:UI.stAbCourt,other:UI.stAbOther};
+    const g=Gate21.archive(m).filter(x=>!(pend.length&&x===T1(UI.ar21Pend).replace("{n}",pend.length)));
+    const html=`<div class="ar21">${byAdv?`<div class="reqonly warn11">⚠ ${T1(UI.ar21ByAdv)}</div>`:""}
+      <div class="lbl9">${T1(UI.ar21Contract)}</div><div>${esc(k.no||m.no)}${k.date?" · "+fmtD(k.date):""} · ${fmtN(m.cost)} ${esc(m.currency||"UZS")} · ${esc(payOrderLabel21(m)||"—")}${k.file?` · <span class="chipf" data-ar21file="ct">${esc(k.file.name||"договор")}</span>`:` · <span style="color:var(--red)">${T1(UI.ar21NoFile)}</span>`}${m.contractSignedBy?`<br><small>${T1(UI.plContract)}: ${esc(accName(m.contractSignedBy))}${m.contractSignedAt?" · "+fmtDT(m.contractSignedAt):""}</small>`:""}</div>
+      <div class="lbl9" style="margin-top:8px">${T1(UI.ar21Pays)} · ${payLabel(m.paymentStatus)} · ${fmtN(Pay21.paidC(m))} / ${fmtN(m.cost)} ${esc(m.currency||"UZS")}</div>${pays.length?pays.map(p=>`<div class="reqrow"><span class="tm">${fmtD(p.date)}</span><span>${fmtN(p.amount)} ${esc(p.currency)} · ${dispName(p.by)}${p.proof?` · <span class="chipf" data-ar21file="${esc(p.id)}">${esc(p.proof.name||"документ")}</span>`:""}</span>${p.pending?`<span class="rt open">${T1(UI.pay21Pending)}</span>`:""}</div>`).join(""):`<div class="empty2">${T1(UI.noData)}</div>`}
+      <div class="lbl9" style="margin-top:8px">${T1(UI.ar21Accept)}</div><div>${acc?`${fmtDT(acc.at)} · ${esc(acc.byName||"")}${acc.basis?" · "+T1(basisL[acc.basis]||UI.stAbOther):""}${acc.text?" · "+esc(acc.text).slice(0,120):""}${acc.file?` · <span class="chipf" data-ar21file="acc">${esc(acc.file.name||"файл")}</span>`:""}`:`<span style="color:var(--red)">${T1(UI.ar21NoAcc)}</span>`}</div>
+      ${g.length?`<div class="reqonly warn11" style="margin-top:8px">⛔ ${T1(UI.ar21Block)}: ${g.map(esc).join(" · ")}</div>`:""}</div>`;
+    const fields=[{k:"h",type:"html",html}];if(pend.length)fields.push({k:"confirm",label:T1(UI.ar21ConfirmAll)+` (${pend.length})`,type:"select",value:"1",options:[["1",T1("Да||是")],["0",T1("Нет||否")]]});
+    const pr=Dlg.ask({title:T1(UI.ar21T)+" · "+m.no,text:T1(UI.ar21Check),fields,wide:true,okText:UI.ar21T});
+    setTimeout(()=>{const md=document.getElementById("mdD");if(!md)return;md.querySelectorAll("[data-ar21file]").forEach(el=>el.onclick=()=>{const key=el.dataset.ar21file;const f=key==="ct"?k.file:key==="acc"?(acc&&acc.file):(S.payments[key]||{}).proof;if(f)Files.open(f);});},60);
+    const v=await pr;if(!v)return;
+    if(pend.length&&v.confirm==="1"){for(const p of pend){p.pending=false;p.wasPending21=true;p.confirmedBy=U().login;p.confirmedAt=nowS();await saveDoc("payments",p);}audit(`${m.no}: подтверждены поступления на проверке (${pend.length})`);}
+    const g2=Gate21.archive(m);if(g2.length){toast(T1(UI.ar21Block)+": "+g2.join(" · "));Router.render();return;}
+    m.stage="archive";m.status="closed";m.closed=m.closed||todayS();m.archivedAt=nowS();m.archivedBy=U().login;m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:"archive",at:nowS(),by:U().emp,byName:U().name});
+    m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.ar21Done)});await saveDoc("matters",m);
+    if(m.status!=="closed"){m.stage="accepted";await saveDoc("matters",m);Router.render();return;}
+    audit(`${m.no}: в архив`);const a=accByEmp(m.lead);if(a&&a.login!==U().login)notify(a.login,"task",nt18("archived21",{no:m.no}),m.id);toast(T1(UI.ar21Done));Router.render();}
+};
+
+/* ── карточка услуги: кнопки и плашки ── */
+const _svcCard21=svcCard11;svcCard11=function(m){let h=_svcCard21(m);try{St21.ensure(m);const MP=Svc21.mp(),closed=m.status==="closed",lead=Svc21.lead(m),ed=Pipe.can(m);const btns=[],w=[];
+  if(!closed&&ed)btns.push(`<button class="btn sm ghost" data-act="ctFile21">${T1(m.contract&&m.contract.file?UI.st21FileRe:UI.st21File)}</button>`);
+  if(!closed&&(lead||MP))btns.push(`<button class="btn sm ghost" data-act="stages21">${T1(UI.st21Stages)}</button>`);
+  if(!closed&&m.pipeline==="contract"&&lead&&!can("payments"))btns.push(`<button class="btn sm" data-act="payAdd21">+ ${T1(UI.pay21Add)}</button>`);
+  if(!closed&&MP&&m.contractSigned&&!Pay21.list(m).length)btns.push(`<button class="btn sm ghost" data-act="unsign21" style="color:var(--red)">${T1(UI.st21Unsign)}</button>`);
+  if(!closed&&!MP&&lead&&m.contractSigned)btns.push(`<button class="btn sm ghost" data-act="askCost21">${T1(UI.st21AskCost)}</button>`);
+  const A='<div class="actions" style="justify-content:flex-start;margin:10px 0 0">';if(btns.length){if(h.includes(A))h=h.replace(A,A+btns.join(""));else h=h.replace('<div class="ccgrid" style="margin-top:10px">',A+btns.join("")+'</div><div class="ccgrid" style="margin-top:10px">');}
+  if(!closed&&m.pipeline==="contract"&&St21.before(m,"work")){const g=Gate21.start(m);if(g.length){w.push(`<div class="reqonly warn11 gate21">⛔ ${T1(UI.st21NotStarted)}: ${g.map(esc).join(" · ")}</div>`);const old=h.match(/<div class="reqonly warn11">⚠ [^<]*<\/div>/g)||[];old.forEach(x=>{if(x.includes(T1(UI.payBlock8)))h=h.replace(x,"");});}}
+  if(!closed&&m.pipeline!=="contract"&&m.pipeline!=="lost"&&!MP&&lead){const need=[];if(!Pipe.ready(m))need.push(T1(UI.plNeedContract));if(!PAYO21[m.payOrder])need.push(T1(UI.st21NeedPayOrder));if(!(m.contract&&m.contract.file))need.push(T1(UI.st21NeedFile));if(need.length)w.push(`<div class="reqonly" style="margin-top:8px">${T1(UI.st21SignHint)}: ${need.join(" · ")}</div>`);}
+  if(!closed&&m.contractCancel21&&!m.contractSigned)w.push(`<div class="reqonly warn11">${T1(UI.st21Unsign)}: ${esc(m.contractCancel21.reason)} · ${esc(accName(m.contractCancel21.by))}</div>`);
+  if(w.length)h=h.replace('<div class="ccgrid" style="margin-top:10px">',w.join("")+'<div class="ccgrid" style="margin-top:10px">');}catch(e){console.warn("svc21",e);}return h;};
+const _pbindSvc21=Pages.bind;Pages.bind=function(vp){_pbindSvc21.call(this,vp);if(isClient())return;const id=Router.arg;const act=(k,fn)=>{const el=vp.querySelector(`[data-act="${k}"]`);if(el)el.onclick=fn;};
+  act("ctFile21",()=>Contract11.file(id));act("stages21",()=>St21.edit(id));act("payAdd21",()=>Pay21.add(id));act("unsign21",()=>Pipe.unsign21(id));act("askCost21",()=>Svc21.askCost(id));
+  vp.querySelectorAll("[data-pay21ok]").forEach(el=>el.onclick=e=>{e.stopPropagation();Pay21.confirm(el.dataset.pay21ok);});
+  vp.querySelectorAll("[data-pay21file]").forEach(el=>el.onclick=e=>{e.stopPropagation();const p=S.payments[el.dataset.pay21file];if(p&&p.proof)Files.open(p.proof);});
+  /* задачи по делу — после того, как можно начать работу */
+  const nt=vp.querySelector('[data-act="newTaskM"]');if(nt&&Router.cur==="matter"){const orig=nt.onclick;nt.onclick=e=>{const m=matter(Router.arg);if(m&&m.status!=="closed"){if(m.pipeline!=="contract"){toast(T1(UI.plBlocked));return;}const g=Gate21.start(m);if(g.length&&St21.before(m,"work")){toast(T1(UI.st21TasksBlocked)+": "+g.join(" · "));return;}}if(orig)orig.call(nt,e);};}};
+(()=>{const st=document.createElement("style");st.textContent=`.gate21{font-weight:600}.pend21{margin-top:10px}.pend21 .reqrow{align-items:center}.pend21 .rt.open{margin-left:auto}.ar21 .reqrow{align-items:center}.ar21 .rt.open{margin-left:auto}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
