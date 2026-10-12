@@ -9874,7 +9874,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="7b012745a842";
+const ZC_BUILD="47495fff003a";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10722,6 +10722,141 @@ const _ctHtml21=Contract11.html.bind(Contract11);Contract11.html=function(m){con
   const t=k.term;k.term=fmtD(t);try{return _ctHtml21(m);}finally{k.term=t;}};
 (()=>{const st=document.createElement("style");st.textContent=".card .ctl button.ev21new{background:var(--pri,#3A5A8C);color:#fff;margin-left:6px}.card .ctl button.ev21new:hover{filter:brightness(1.08)}";document.head.appendChild(st);})();
 try{applyUI();}catch(e){}
+
+
+/* ═══════════════════════════ v21 · ЭТАП 3: НОМЕРА ДОГОВОРОВ И «РЕЕСТР ДОГОВОРОВ» (версия 1.0) ═══════════════════════════
+   План версии 1.0, утверждён владельцем 12.10.2026 (пункт 2).
+   • Номер договора присваивает система при создании дела: ZCL-26-101 (адвокатская фирма), ZCLF-26-101 (ООО); 26 — год;
+     у каждой организации свой счёт, каждый год заново со 101. Номер выдаёт сервер (reserve_contract_no, миграция 20261012000200).
+   • По одному договору может быть несколько дел: при создании дела — «Новый договор» или договор клиента из списка.
+     Номер дела — номер договора и порядковый номер дела по нему: ZCL-26-101/1, ZCL-26-101/2. Заказы по рамочному договору —
+     так же (/1, /2 …); рамочный договор получает номер из того же счёта.
+   • В окне «Договор и стоимость» номер договора и организация не меняются (видны текстом).
+   • «Реестр договоров» — раздел управляющего партнёра в «Администрировании»: все договоры с делами, суммой, порядком и статусом
+     оплаты, статусом договора («Не подписан», «Подписан», «Исполнен», «Не заключён»), файлом; фильтры; выгрузка в Excel (CSV).
+   • Записи реестра хранятся в карточке клиента (contracts[], отметка reg21) и не теряются при правке клиента. */
+Object.assign(UI,{
+  reg21:"Реестр договоров||合同登记册",rg21Field:"Договор||合同",rg21New:"Новый договор — номер присвоит система||新合同——系统自动编号",
+  rg21Hint:"Несколько дел по одному договору — выберите договор клиента; номер дела будет /2, /3…||同一合同下的多个案件——请选择客户的合同；案件编号为 /2、/3…",
+  rg21Other:"Этот договор другого клиента||该合同属于其他客户",rg21NoNum:"Не удалось получить номер договора с сервера||无法从服务器获取合同编号",
+  rg21NoT:"Договор № {no}||合同编号 {no}",rg21Fixed:"Номер и организация договора присвоены системой и не меняются||合同编号和签约主体由系统分配，不可更改",
+  rg21Draft:"Не подписан||未签署",rg21Signed:"Подписан||已签署",rg21Done:"Исполнен||已履行",rg21Lost:"Не заключён||未签订",
+  rg21Year:"Год||年份",rg21Ent:"Организация||主体",rg21St:"Статус||状态",rg21All:"Все||全部",rg21Csv:"Выгрузить в Excel||导出Excel",
+  rg21Client:"Клиент||客户",rg21Matters:"Дела||案件",rg21Sum:"Стоимость||金额",rg21PayO:"Порядок оплаты||付款方式",rg21Pay:"Оплата||付款",rg21File:"Файл||文件",
+  rg21Subj:"Предмет||标的",rg21Kind:"Вид||类型",rg21Fw:"Рамочный||框架",rg21Empty:"Договоров пока нет — номер появится при создании первого дела||暂无合同——创建第一个案件时将自动编号",
+  rg21FwAuto:"Номер присвоит система при сохранении||保存时系统自动编号"
+});
+const Reg21={
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T;},
+  mp(){return isFounder()||hasF("managing");},
+  prefix(ent){return ent==="llc"?"ZCLF":"ZCL";},
+  /* номер договора: с сервера (без повторов); в демо — следующий по записям в браузере */
+  async reserve(ent){if(this.srv()){let n=null;try{n=await SB19.T.rpc("reserve_contract_no",{ent:ent||"legal"});}
+      catch(e){/* миграция 20261012000200 ещё не выполнена — номер по видимым записям (до её выполнения) */if(!/PGRST202|Could not find the function|reserve_contract_no/i.test(String((e&&(e.message||e.code))||e)))throw e;}
+      if(n)return String(n);}
+    const p=this.prefix(ent),yy=todayS().slice(2,4),re=new RegExp(`^${p}-${yy}-(\\d+)`);let n=100;
+    Object.values(S.clients).forEach(c=>(c.contracts||[]).forEach(k=>{const r=re.exec(k.no||"");if(r)n=Math.max(n,+r[1]);}));
+    Object.values(S.matters).forEach(m=>{const r=re.exec(m.no||"");if(r)n=Math.max(n,+r[1]);});return `${p}-${yy}-${n+1}`;},
+  of(cid){const c=client(cid);return ((c&&c.contracts)||[]).filter(k=>k&&k.reg21);},
+  rec(m){const k=m&&m.contract;if(!k||!k.existingId)return null;return this.of(m.clientId).find(x=>x.id===k.existingId)||null;},
+  /* все договоры для выбора при создании дела (клиенты, которых видит сотрудник) */
+  opts(cid){const list=[];Object.values(S.clients).forEach(c=>{if(cid&&c.id!==cid)return;(c.contracts||[]).forEach(k=>{if(k&&k.reg21)list.push([k.id,`${k.no} · ${c.name}${k.subject?" · "+String(k.subject).slice(0,40):""}`]);});});
+    return [["new",T1(UI.rg21New)],...list.sort((a,b)=>b[1].localeCompare(a[1]))];},
+  owner(id){for(const c of Object.values(S.clients)){if((c.contracts||[]).some(k=>k&&k.id===id))return c;}return null;},
+  /* номер нового дела: заказ по рамочному — номер рамочного/№ заказа; иначе — новый договор или выбранный */
+  async number(m){const k0=m.contract||{};const cn=m._cn21||"new";delete m._cn21;
+    if(k0.mode==="framework"&&k0.no&&k0.orderNo){m.no=`${k0.no}/${k0.orderNo}`;return null;}
+    const c=client(m.clientId);let rec=cn!=="new"&&c?(c.contracts||[]).find(k=>k&&k.id===cn&&k.reg21):null;let isNew=false;
+    if(!rec){const no=await this.reserve(m.entity||"legal");rec={id:uid("ct"),no,reg21:true,party:m.entity||"legal",svc:m.svc||"",subject:m.title||"",date:"",status:"active",matterIds:[],createdAt:nowS(),createdBy:(U()||{}).emp};isNew=true;}
+    m.no=`${rec.no}/${(rec.matterIds||[]).length+1}`;
+    m.contract=Object.assign({},k0,{mode:"existing",existingId:rec.id,no:rec.no,party:rec.party},rec.date&&!k0.date?{date:rec.date}:{},rec.subject&&!k0.subject?{subject:rec.subject}:{},rec.until&&!k0.term?{term:rec.until}:{});
+    return {rec,isNew};},
+  /* после записи дела — запись договора в карточке клиента (найденный «по названию» клиент сначала загружается целиком) */
+  async link(m,info){if(!info)return;let c=client(m.clientId);if(!c)return;
+    if(c._stub21&&this.srv()){try{const r=await SB19.docGet("clients",c.id);if(r&&r.exists){S.clients[c.id]=Object.assign({},r.data(),{id:c.id});c=S.clients[c.id];}}catch(e){}}
+    if(c._stub21)return;migrateClient11(c);c.contracts=c.contracts||[];let rr=c.contracts.find(k=>k&&k.id===info.rec.id);if(!rr){rr=info.rec;c.contracts.push(rr);}
+    rr.matterIds=[...new Set([...(rr.matterIds||[]),m.id])];await saveDoc("clients",c);},
+  matters(k){return MMall().filter(m=>(k.matterIds||[]).includes(m.id)||(k.kind==="framework"&&m.contract&&m.contract.frameworkId===k.id)||(k.matterId&&k.matterId===m.id));},
+  status(k){if(k.kind==="framework")return typeof FW17!=="undefined"&&FW17.valid(k)?"signed":"done";
+    const mm=this.matters(k);if(!mm.length)return k.reg21?"draft":(k.status==="active"?"signed":"done");
+    if(mm.every(m=>m.pipeline==="lost"||m.closeReason==="lost"))return "lost";
+    if(mm.some(m=>m.contractSigned||m.pipeline==="contract"))return mm.every(m=>m.status==="closed")?"done":"signed";return "draft";},
+  stLabel(s){return T1({draft:UI.rg21Draft,signed:UI.rg21Signed,done:UI.rg21Done,lost:UI.rg21Lost}[s]||UI.rg21Draft);},
+  year(k){const r=/^ZCLF?-(\d{2})-/.exec(k.no||"");return r?"20"+r[1]:String(k.date||k.createdAt||"").slice(0,4);},
+  rows(){const out=[];Object.values(S.clients).forEach(c=>{migrateClient11(c);(c.contracts||[]).forEach(k=>{if(!k||!k.no)return;const mm=this.matters(k);const m0=mm[0]||null;
+      const cur=m0?(m0.currency||"UZS"):"";const sum=mm.filter(m=>m.pipeline!=="lost").reduce((s,m)=>s+((m.currency||"UZS")===cur?(+m.cost||0):0),0);
+      const file=(mm.find(m=>m.contract&&m.contract.file)||{contract:{}}).contract.file||k.file||null;
+      out.push({k,c,mm,m0,cur,sum,file,st:this.status(k),year:this.year(k),ent:k.party||(m0&&m0.entity)||"legal"});});});
+    return out.sort((a,b)=>String(b.k.no).localeCompare(String(a.k.no),"ru",{numeric:true}));}
+};
+/* ── создание дела: поле «Договор» (новый или договор клиента) ── */
+const _mfReg21=Matter.fields;Matter.fields=function(m){const f=_mfReg21.apply(this,arguments);if(m&&m.id)return f;const cid=(m&&m.clientId)||(f.find(x=>x&&x.k==="clientId")||{}).value||"";
+  const fld={k:"cn21",label:T1(UI.rg21Field),type:"select",value:"new",options:Reg21.opts(typeof Adv21!=="undefined"&&Adv21.on()&&cid?cid:null),hint:T1(UI.rg21Hint),
+    check:v=>{if(!v.cn21||v.cn21==="new"||v.fw17)return "";const ow=Reg21.owner(v.cn21);const c2=v.clientId||cid;return ow&&c2&&ow.id!==c2?T1(UI.rg21Other):"";}};
+  const at=f.findIndex(x=>x&&x.k==="clientId");f.splice(at>=0?at+1:0,0,fld);return f;};
+const _maReg21=Matter.apply.bind(Matter);Matter.apply=function(m,v){const isNew=!m.no&&!S.matters[m.id];const r=_maReg21(m,v);if(isNew)m._cn21=v.cn21||"new";return r;};
+/* ── номер присваивается при первой записи нового дела (создание, передача в суд и т. п.) ── */
+const _saveDocReg21=saveDoc;saveDoc=function(col,obj){
+  if(col!=="matters"||!obj||!obj.id||S.matters[obj.id]||obj._num21||obj._fact20||obj._brief20||(typeof isClient==="function"&&isClient()))return _saveDocReg21(col,obj);
+  return (async()=>{obj._num21=true;let info=null;try{info=await Reg21.number(obj);}catch(e){delete obj._num21;toast(String((e&&e.message)||e));throw e;}
+    delete obj._num21;const r=await _saveDocReg21(col,obj);try{await Reg21.link(obj,info);}catch(e){console.warn("Reg21.link",e);}return r;})();};
+/* ── «Договор и стоимость»: номер и организация договора — не меняются ── */
+const _ctFReg21=Contract11.fields.bind(Contract11);Contract11.fields=function(m){const f=_ctFReg21(m);const k=(m&&m.contract)||{};const rec=Reg21.rec(m);
+  if(!rec||k.mode==="framework")return f;
+  f.forEach(x=>{if(!x)return;if(x.k==="mode"){x.type="hidden";x.value="existing";x.label="";delete x.options;}
+    if(x.k==="existingId"){x.type="hidden";x.value=rec.id;x.label="";delete x.options;delete x.check;}
+    if(x.k==="no"){x.type="hidden";x.value=rec.no;x.label="";}if(x.k==="party"){x.type="hidden";x.value=rec.party||m.entity||"legal";x.label="";delete x.options;}});
+  f.unshift({k:"rg21no",type:"html",html:`<div class="rg21no"><b>${esc(T1(UI.rg21NoT).replace("{no}",rec.no))}</b> · ${esc(m.no||"")} · <span class="entbadge ${rec.party||"legal"}">${T1(ENTITY_S[rec.party||"legal"])}</span><br><small>${T1(UI.rg21Fixed)}</small></div>`});return f;};
+const _ctEReg21=Contract11.edit.bind(Contract11);Contract11.edit=async function(id){const r=await _ctEReg21(id);const m=matter(id);const rec=Reg21.rec(m);
+  if(m&&rec){const k=m.contract||{};const was=JSON.stringify([rec.date,rec.subject,rec.until,rec.penaltyRate]);Object.assign(rec,{date:k.date||rec.date||"",subject:k.subject||rec.subject||"",until:k.term||rec.until||"",penaltyRate:k.penaltyRate??rec.penaltyRate});
+    if(JSON.stringify([rec.date,rec.subject,rec.until,rec.penaltyRate])!==was){const c=client(m.clientId);if(c&&!c._stub21)await saveDoc("clients",c);}}
+  return r;};
+/* ── карточка клиента: записи реестра не попадают в текстовое поле договоров и не теряются при сохранении ── */
+const _cliFReg21=Cli.fields.bind(Cli);Cli.fields=function(c){const f=_cliFReg21(c);const t=f.find(x=>x&&x.k==="contracts");if(t&&c)t.value=((c.contracts||[]).filter(k=>k&&k.kind!=="framework"&&!k.reg21)).map(k=>`${k.no}|${k.date||""}|${k.subject||""}`).join("\n");return f;};
+const _cliAReg21=Cli.apply.bind(Cli);Cli.apply=function(c,v){const keep=((c&&c.contracts)||[]).filter(k=>k&&k.reg21);const r=_cliAReg21(c,v);c.contracts=c.contracts||[];keep.forEach(k=>{if(!c.contracts.includes(k))c.contracts.push(k);});return r;};
+/* ── рамочный договор: номер из того же счёта (новый — присваивается при сохранении; у существующего — не меняется) ── */
+if(typeof FW17!=="undefined"){const _fwEditReg21=FW17.edit.bind(FW17);
+  FW17.edit=async function(clientId,id){if(!this.can()){toast(T1(UI.fwOnly17));return;}const c=client(clientId);if(!c)return;migrateClient11(c);const fw=id?this.get(c,id):null;if(id&&!fw)return;const o=fw||{};
+    const v=await Dlg.ask({title:T1(UI.fwEditT17)+" · "+c.name,fields:[{k:"nohtml",type:"html",html:`<div class="rg21no">${o.no?`<b>${esc(T1(UI.rg21NoT).replace("{no}",o.no))}</b>`:T1(UI.rg21FwAuto)}</div>`},
+      {k:"date",label:T1(UI.fwDate17),type:"date",value:o.date||todayS(),required:true},
+      {k:"validTo",label:T1(UI.fwUntil17),type:"date",value:o.validTo||addDays(todayS(),365),required:true},{k:"party",label:T1(UI.ctParty),type:"select",value:o.party||"legal",options:[["legal",T1(ENTITY_S.legal)],["llc",T1(ENTITY_S.llc)]]},
+      {k:"penaltyRate",label:T1(UI.ctPenalty),type:"number",value:o.penaltyRate??"0.1",min:0},{k:"currency",label:T1(UI.ctCur),type:"select",value:o.currency||"UZS",options:CURS},
+      {k:"subject",label:T1(UI.fwNote17),value:o.subject||T1(UI.fwNoteDef17),check:x=>{if(x.validTo<=x.date)return T1(UI.fwErrUntil17);if(x.penaltyRate===""||x.penaltyRate===undefined||isNaN(+x.penaltyRate))return T1(UI.fwErrPen17);
+        if(fw&&(+fw.orders||0)>0&&x.party!==fw.party)return T1(UI.fwErrPartyOrders17);if(fw&&fw.no&&/^ZCLF?-/.test(fw.no)&&x.party!==fw.party)return T1(UI.rg21Fixed);return "";}}]});
+    if(!v||!this.can())return;let no=o.no||"";if(!no){try{no=await Reg21.reserve(v.party);}catch(e){toast(T1(UI.rg21NoNum));return;}}
+    const now=nowS(),me=U().emp;const data={no,date:v.date,validTo:v.validTo,party:v.party,penaltyRate:String(v.penaltyRate),currency:v.currency,subject:v.subject||""};
+    let rec=fw;if(!rec){rec=Object.assign({id:uid("ct"),kind:"framework",svc:"oneoff",status:"active",orders:0,createdBy:me,createdAt:now,log:[]},data);c.contracts.push(rec);}else Object.assign(rec,data);
+    (rec.log=rec.log||[]).push({at:now,by:me,what:fw?"изменён":"создан"});await saveDoc("clients",c);
+    audit(`Клиент ${c.name}: рамочный договор №${rec.no} ${fw?"изменён":"создан"} (${rec.party}, до ${rec.validTo})`);toast(T1(fw?UI.fwSaved17:UI.fwCreated17).replace("{no}",rec.no));Router.render();};}
+/* ── раздел «Реестр договоров» (управляющий партнёр) ── */
+Pages.contracts21=function(){if(!Reg21.mp())return `<div class="locked">${T1(UI.noAccess17||"Нет доступа||无权限")}</div>`;
+  const f=this._rg21||(this._rg21={y:"",e:"",s:""});const all=Reg21.rows();const years=[...new Set(all.map(r=>r.year).filter(Boolean))].sort().reverse();
+  const list=all.filter(r=>(!f.y||r.year===f.y)&&(!f.e||r.ent===f.e)&&(!f.s||r.st===f.s));
+  const sel=(k,opts)=>`<select class="search" data-rg21f="${k}" style="max-width:220px">${opts.map(([v,l])=>`<option value="${esc(v)}"${f[k]===v?" selected":""}>${esc(l)}</option>`).join("")}</select>`;
+  const cur=c=>c==="USD"?"$":c==="CNY"?"¥":T1(UI.sum);
+  const rows=list.map(r=>`<tr><td><b>${esc(r.k.no)}</b>${r.k.kind==="framework"?`<br><small>${T1(UI.rg21Fw)}</small>`:""}</td><td>${r.k.date?fmtD(r.k.date):"—"}</td><td data-go="client:${esc(r.c.id)}" style="cursor:pointer">${esc(clientName(r.c))}</td>
+    <td><span class="entbadge ${r.ent}">${T1(ENTITY_S[r.ent])}</span></td><td>${r.k.svc?svcLabel11(r.k.svc):(r.m0?svcLabel11(r.m0.svc):"—")}</td><td>${esc(String(r.k.subject||(r.m0&&mT18(r.m0))||"").slice(0,60))}</td>
+    <td>${r.mm.map(m=>`<span class="lnk17" data-matter="${esc(m.id)}">${esc(m.no)}</span>`).join("<br>")||"—"}</td>
+    <td class="num">${r.sum?fmtN(r.sum)+" "+cur(r.cur):"—"}</td><td>${esc((r.m0&&r.m0.payOrder)||"—")}</td><td>${r.m0?`<span class="pay11 ${r.m0.paymentStatus}">${payLabel(r.m0.paymentStatus)}</span>`:"—"}</td>
+    <td><span class="rg21st ${r.st}">${Reg21.stLabel(r.st)}</span></td><td>${r.file?`<span class="chipf" data-rg21file="${esc(r.k.id)}">${esc(r.file.name||"файл")}</span>`:"—"}</td></tr>`).join("");
+  return F.hdr(T1(UI.reg21),`${list.length}`,`<button class="btn" data-rg21csv="1">${T1(UI.rg21Csv)}</button>`)+
+    `<div class="filters">${sel("y",[["",T1(UI.rg21Year)+": "+T1(UI.rg21All)],...years.map(y=>[y,y])])}${sel("e",[["",T1(UI.rg21Ent)+": "+T1(UI.rg21All)],["legal",T1(ENTITY_S.legal)],["llc",T1(ENTITY_S.llc)]])}${sel("s",[["",T1(UI.rg21St)+": "+T1(UI.rg21All)],["draft",T1(UI.rg21Draft)],["signed",T1(UI.rg21Signed)],["done",T1(UI.rg21Done)],["lost",T1(UI.rg21Lost)]])}</div>
+    <div class="card">${list.length?`<div style="overflow-x:auto"><table class="tbl reg21"><thead><tr><th>№</th><th>${T1(UI.ctDate)}</th><th>${T1(UI.rg21Client)}</th><th>${T1(UI.rg21Ent)}</th><th>${T1(UI.rg21Kind)}</th><th>${T1(UI.rg21Subj)}</th><th>${T1(UI.rg21Matters)}</th><th class="num">${T1(UI.rg21Sum)}</th><th>${T1(UI.rg21PayO)}</th><th>${T1(UI.rg21Pay)}</th><th>${T1(UI.rg21St)}</th><th>${T1(UI.rg21File)}</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="empty2">${T1(UI.rg21Empty)}</div>`}</div>`;};
+Reg21.csv=function(){const f=Pages._rg21||{};const list=Reg21.rows().filter(r=>(!f.y||r.year===f.y)&&(!f.e||r.ent===f.e)&&(!f.s||r.st===f.s));
+  const q=s=>`"${String(s==null?"":s).replace(/"/g,'""')}"`;const head=["№","Дата","Клиент","Организация","Вид","Предмет","Дела","Стоимость","Валюта","Порядок оплаты","Оплата","Статус"];
+  const lines=[head.map(q).join(";"),...list.map(r=>[r.k.no,r.k.date||"",clientName(r.c),T1(ENTITY_S[r.ent]),r.k.svc?svcLabel11(r.k.svc):(r.m0?svcLabel11(r.m0.svc):""),r.k.subject||"",r.mm.map(m=>m.no).join(", "),r.sum||"",r.cur||"",(r.m0&&r.m0.payOrder)||"",r.m0?payLabel(r.m0.paymentStatus):"",Reg21.stLabel(r.st)].map(q).join(";"))];
+  const blob=new Blob(["﻿"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`Реестр договоров ${todayS()}.csv`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);};
+Object.assign(Router.extra,{contracts21:()=>Pages.contracts21()});
+const _navReg21=navFor;navFor=function(){const g=_navReg21();if(!U()||isClient()||!Reg21.mp())return g;const adm=g[g.length-1][1];if(adm.some(x=>x[0]==="contracts21"))return g;
+  const i=adm.findIndex(x=>x[0]==="corr");adm.splice(i>=0?i+1:adm.length,0,["contracts21",UI.reg21,"corr"]);return g;};
+const _pbindReg21=Pages.bind;Pages.bind=function(vp){_pbindReg21.call(this,vp);
+  vp.querySelectorAll("[data-rg21f]").forEach(el=>el.onchange=()=>{Pages._rg21=Pages._rg21||{};Pages._rg21[el.dataset.rg21f]=el.value;Router.render();});
+  const csv=vp.querySelector("[data-rg21csv]");if(csv)csv.onclick=()=>Reg21.csv();
+  vp.querySelectorAll("[data-rg21file]").forEach(el=>el.onclick=e=>{e.stopPropagation();const r=Reg21.rows().find(x=>x.k.id===el.dataset.rg21file);if(r&&r.file)Files.open(r.file);});};
+(()=>{const st=document.createElement("style");st.textContent=`.rg21no{padding:10px 12px;border-radius:10px;background:var(--surface-2,rgba(58,90,140,.07));margin-bottom:4px;line-height:1.5}
+.rg21st{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:rgba(124,137,160,.15);color:var(--ink-2)}
+.rg21st.signed{background:rgba(63,135,104,.14);color:#2f6f53}.rg21st.done{background:rgba(58,90,140,.14);color:#2f4a74}.rg21st.lost{background:rgba(185,87,75,.14);color:#9a4237}
+table.reg21 td{vertical-align:top}table.reg21 td:first-child b,table.reg21 .lnk17,table.reg21 .pay11,table.reg21 .rg21st{white-space:nowrap}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
