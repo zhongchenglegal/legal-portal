@@ -9874,7 +9874,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="10177d0ff6d7";
+const ZC_BUILD="7b012745a842";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10370,8 +10370,8 @@ const _navAdv21=navFor;navFor=function(){const g=_navAdv21();if(!Adv21.on())retu
   const def={home:["home",UI.nHome,"home"],oneoff:["oneoff",UI.nOneoff,"tasks"],court:["court",UI.nCourt11,"matters"],support:["support",UI.nSupport11,"cab"],creq:["creq",UI.nCReq,"req"],
     archive:["archive",UI.nArchive11,"arch"],cal:["cal",UI.nCal,"cal"],corr:["corr",UI.nCorr,"corr"],fin:["fin",UI.nFin,"fin"],req:["req",UI.nReq,"req"],price:["price",UI.nPrice,"pay"]};
   const pick=k=>have[k]||def[k];
-  return [[UI.gWork,["home","oneoff","court","support","creq","archive","cal"].map(pick)],[UI.nAdmin,["corr","fin","req","price"].map(pick)]];};
-const ADV21_DENY=["chart","team","matters","clients","manage","goals","hr","kpstats","overdues","complaints","myincome","ugoals","exams","tpl","intern","pay"];
+  return [[UI.gWork,["home","oneoff","court","support","creq","archive"].map(pick)],[UI.nAdmin,["corr","fin","req","price"].map(pick)]];};
+const ADV21_DENY=["cal","chart","team","matters","clients","manage","goals","hr","kpstats","overdues","complaints","myincome","ugoals","exams","tpl","intern","pay"];
 if(typeof Route17!=="undefined"){const _nkAdv21=Route17.navKeys.bind(Route17);Route17.navKeys=function(){const s=_nkAdv21();if(!Adv21.on())return s;ADV21_DENY.forEach(k=>s.delete(k));s.add("client");s.add("tasks");return s;};}
 const _goAdv21=Router.go.bind(Router);Router.go=function(r,arg){if(Adv21.on()){if(r==="pay")r="fin";if(ADV21_DENY.includes(r)){r="home";arg=null;}if(r==="client"&&arg&&!S.clients[arg]){r="home";arg=null;}}return _goAdv21(r,arg);};
 /* ── права действий ── */
@@ -10639,6 +10639,88 @@ Pages.req=function(){const all=Object.values(S.requests).sort((a,b)=>String(b.da
   return F.hdr(T1(UI.nReq),`${cnt("new")+cnt("progress")} ${T1(UI.kOpen).toLowerCase()}`,`<button class="btn pri" data-act="newReq">+ ${T1(UI.rNew)}</button>`)+
     `<div class="ptabs">${tabs.map(([k,l])=>`<button class="${this._rqt===k?"on":""}" data-rqt="${k}">${T1(l)} <span class="cnt">${cnt(k)}</span></button>`).join("")}</div>`+this.reqList(list);};
 const _pbindFix21=Pages.bind;Pages.bind=function(vp){_pbindFix21.call(this,vp);vp.querySelectorAll("[data-rqt]").forEach(el=>el.onclick=()=>{Pages._rqt=el.dataset.rqt;Router.render();});};
+try{applyUI();}catch(e){}
+
+
+/* ═══════════════════════════ v21 · ЭТАП 2: КАЛЕНДАРЬ И ДЕДЛАЙНЫ (версия 1.0) ═══════════════════════════
+   План версии 1.0, утверждён владельцем 12.10.2026 (пункты 1 и 3).
+   • У адвоката «Календарь» — первым в меню; на главной — «План на день» (события, дедлайны дел, задания сопровождения,
+     поручения и задачи на выбранный день).
+   • В календаре (неделя, месяц) и в «Плане на день» — все дедлайны: разовые услуги (дедлайн обязателен), задания юридического
+     сопровождения (у сопровождения — только задания), поручения, задачи.
+   • «Срок» в окне договора — дата с календарём «Дедлайн»; она же становится дедлайном дела и видна в календаре.
+   • Слово «Срок» в подписях дедлайнов заменено на «Дедлайн». */
+Object.assign(UI,{mDeadline:"Дедлайн||截止日期",etDeadline:"Дедлайн||截止日期",asDue:"Дедлайн||截止日期",asDeadline:"Дедлайн||截止日期",kDue:"Дедлайн||截止日期",
+  ctTerm:"Дедлайн||截止日期",fDue:"Дедлайн||截止日期",plDeadline:"Дедлайн по делу||案件截止日期",
+  cal21Ev:"Событие||事件",cal21Asg:"Задание сопровождения||法律顾问任务",cal21Po:"Поручение||指令",cal21DlReq:"Укажите дедлайн разовой услуги||请填写单项服务截止日期"});
+const ISO21=/^\d{4}-\d{2}-\d{2}$/;
+const Cal21={
+  /* задания сопровождения и поручения на дату d (подходящие под выбор календаря fit) */
+  extra(d,fit){const out=[];
+    MM().forEach(m=>{if(m.status==="closed"||m.svc!=="support")return;(m.assignments||[]).forEach(a=>{if(!a||a.status==="done"||a.deadline!==d)return;if(fit&&!fit({emp:a.emp,matterId:m.id}))return;
+      out.push({k:"asg",html:`<b>${T1(UI.cal21Asg)}</b>${esc(a.title||"")}<small>${esc(m.no||"")} · ${dispName(a.emp)}</small>`,attr:`data-matter="${esc(m.id)}"`,title:a.title||"",sub:`${esc(m.no||"")} · ${dispName(a.emp)}`,short:(m.no||"")+" · "+(a.title||"")});});});
+    const me=(U()||{}).login;
+    Object.values(S.assign||{}).forEach(a=>{if(!a||a.status==="accepted"||String(a.deadline||"").slice(0,10)!==d)return;
+      if(fit&&!(fit({emp:a.to})||a.from===me))return;
+      out.push({k:"po",html:`<b>${T1(UI.cal21Po)}</b>${esc(a.title||"")}<small>${dispName(a.to)}</small>`,attr:`data-po21cal="${esc(a.id)}"`,title:a.title||"",sub:`${T1(UI.asFrom)}: ${esc(accName(a.from))}`,short:a.title||""});});
+    return out;},
+  /* HTML календаря дополняется после построения: неделя — колонки по порядку дней, месяц — 42 клетки от начала сетки */
+  week(html,days,fit){const box=document.createElement("div");box.innerHTML=html;const cols=box.querySelectorAll(".wk .wd");
+    cols.forEach((c,i)=>{const d=days[i];if(!d)return;Cal21.extra(d,fit).forEach(x=>{c.insertAdjacentHTML("beforeend",`<span class="we deadline cal21-${x.k}" ${x.attr}>${x.html}</span>`);});});return box.innerHTML;},
+  month(html,ym,fit){const [y,mo]=ym.split("-").map(Number);const first=new Date(y,mo-1,1),start=new Date(first);start.setDate(1-((first.getDay()+6)%7));
+    const box=document.createElement("div");box.innerHTML=html;const cells=box.querySelectorAll(".cal .dc");
+    cells.forEach((c,i)=>{const dt=new Date(start);dt.setDate(start.getDate()+i);const d=ymdL(dt);Cal21.extra(d,fit).forEach(x=>{c.insertAdjacentHTML("beforeend",`<span class="ce deadline cal21-${x.k}" ${x.attr} title="${esc(x.title)}">${esc(x.short)}</span>`);});});return box.innerHTML;}
+};
+/* неделя и месяц */
+const _calPg21=Pages.cal;Pages.cal=function(){const html=_calPg21.apply(this,arguments);const sel=this._ce;const fit=x=>calFit17(sel,x);
+  if(this._cvw==="month")return Cal21.month(html,this._cm||todayS().slice(0,7),fit);
+  const days=[];for(let i=0;i<7;i++)days.push(addDays(this._cwk,i));return Cal21.week(html,days,fit);};
+/* «План на день»: дни с заданиями/поручениями отмечаются, на выбранный день — в списке */
+if(typeof Dash!=="undefined"&&Dash.planner){const _plan21=Dash.planner.bind(Dash);Dash.planner=function(scope){const html=_plan21(scope);const st=Pages._dp||{sel:todayS(),m:todayS().slice(0,7)};
+  const box=document.createElement("div");box.innerHTML=html;
+  box.querySelectorAll("[data-dp]").forEach(b=>{if(Cal21.extra(b.dataset.dp,scope).length)b.classList.add("has");});
+  const it=Cal21.extra(st.sel,scope);const lst=box.querySelector(".lst");
+  if(lst&&it.length){const em=lst.querySelector(".empty2");if(em)em.remove();
+    it.forEach(x=>lst.insertAdjacentHTML("beforeend",`<div class="it dl" ${x.attr}><span class="tm">${T1(x.k==="po"?"поруч.||指令":"задание||任务")}</span><span class="tt"><b>${esc(x.title)}</b><small>${T1(x.k==="po"?UI.cal21Po:UI.cal21Asg)} · ${x.sub}</small></span><span class="evt deadline">${T1(UI.etDeadline)}</span></div>`));}
+  /* «+ Событие» прямо в «Плане на день» — на выбранный день (решение владельца 12.10.2026) */
+  const ctl=box.querySelector("h4 .ctl");if(ctl&&U()&&!isClient()&&can("eventsEdit"))ctl.insertAdjacentHTML("beforeend",`<button class="ev21new" data-ev21new="${esc(st.sel)}" title="${T1(UI.eNew)}">+ ${T1(UI.cal21Ev)}</button>`);
+  /* дедлайн дела: слева «дедлайн» вместо «срок» */
+  box.querySelectorAll(".lst .it.dl .tm").forEach(s=>{if(/^(срок|期限)$/i.test(s.textContent.trim()))s.textContent=T1("дедлайн||截止");});
+  return box.innerHTML;};}
+/* Решение владельца 12.10.2026: раздел «Календарь» в меню — только у управляющего партнёра (там планы всех); у адвоката и других
+   сотрудников календарь — «План на день» на главной; на главной управляющего партнёра «План на день» — только его планы.
+   Действует в режиме сервера (рабочая система); демо-режим — как раньше. */
+const Cal21Role={on(){return typeof Staff21!=="undefined"&&Staff21.on()&&!!U()&&!isClient();},mp(){return isFounder()||hasF("managing");},
+  mine(){const me=(U()||{}).emp;return x=>x.emp===me||(x.matterId&&mine(matter(x.matterId)||{}));}};
+const _navCal21=navFor;navFor=function(){const g=_navCal21();if(!Cal21Role.on()||Cal21Role.mp())return g;return g.map(([t,items])=>[t,(items||[]).filter(it=>it[0]!=="cal")]);};
+if(typeof Route17!=="undefined"){const _nkCal21=Route17.navKeys.bind(Route17);Route17.navKeys=function(){const s=_nkCal21();if(Cal21Role.on()&&!Cal21Role.mp())s.delete("cal");return s;};}
+const _goCal21=Router.go.bind(Router);Router.go=function(r,arg){if(r==="cal"&&Cal21Role.on()&&!Cal21Role.mp()){r="home";arg=null;}return _goCal21(r,arg);};
+/* главная: у сотрудников — «План на день» (свои планы) первым в левой колонке; у УП в «Плане на день» — только его планы */
+const _plRole21=Dash.planner.bind(Dash);Dash.planner=function(scope){if(!scope&&Cal21Role.on()&&Cal21Role.mp()&&Router.cur==="home")scope=Cal21Role.mine();return _plRole21(scope);};
+const _homeHtml21=Home.html.bind(Home);Home.html=function(){let html=_homeHtml21.apply(this,arguments);if(!Cal21Role.on()||Cal21Role.mp())return html;
+  html=html.replace(/<button class="more" data-go="cal">[^<]*<\/button>/g,"");if(html.includes('class="dayp"'))return html;
+  const plan=Dash.planner(Cal21Role.mine());const key='<div class="cols"><div style="display:grid;gap:14px">';
+  return html.includes(key)?html.replace(key,key+plan):html+`<div style="margin-top:14px">${plan}</div>`;};
+/* поручение из календаря — его окно */
+const _pbindCal21=Pages.bind;Pages.bind=function(vp){_pbindCal21.call(this,vp);vp.querySelectorAll("[data-po21cal]").forEach(el=>el.onclick=e=>{e.stopPropagation();Assign.open(el.dataset.po21cal);});
+  vp.querySelectorAll("[data-ev21new]").forEach(el=>el.onclick=e=>{e.stopPropagation();Ev.create({date:el.dataset.ev21new,emp:(U()||{}).emp});});};
+
+/* ── дедлайн разовой услуги обязателен ── */
+const _mfCal21=Matter.fields;Matter.fields=function(m){const pre=Matter._svc;const f=_mfCal21.apply(this,arguments);const sv=(f.find(x=>x&&x.k==="svc")||{}).value;const isOne=(m&&m.id)?m.svc==="oneoff":(pre==="oneoff"||sv==="oneoff");
+  /* обязателен при создании разовой услуги и у дел, где дедлайн уже был указан (старые дела без даты сохраняются как есть) */
+  const need=isOne&&(!(m&&m.id)||!!m.deadline);
+  f.forEach(x=>{if(x&&x.k==="deadline"){x.type="date";if(need){x.required=true;x.hint=x.hint||T1(UI.cal21DlReq);}}});return f;};
+
+/* ── договор: «Срок» → дата «Дедлайн», она же дедлайн дела ── */
+const _ctFields21=Contract11.fields.bind(Contract11);Contract11.fields=function(m){const f=_ctFields21(m);const k=(m&&m.contract)||{};
+  f.forEach(x=>{if(x&&x.k==="term"){x.type="date";x.label=T1(UI.ctTerm);x.value=ISO21.test(String(k.term||""))?k.term:(m&&m.deadline)||"";}});return f;};
+const _ctEdit21=Contract11.edit.bind(Contract11);Contract11.edit=async function(id){const r=await _ctEdit21(id);const m=matter(id);
+  if(m&&m.contract&&ISO21.test(String(m.contract.term||""))&&m.deadline!==m.contract.term){const was=m.deadline;m.deadline=m.contract.term;m.history=m.history||[];
+    m.history.push({at:nowS(),by:U().emp,what:`${T1(UI.mDeadline)}: ${was?fmtD(was)+" → ":""}${fmtD(m.deadline)}`});await saveDoc("matters",m);Router.render();}
+  return r;};
+const _ctHtml21=Contract11.html.bind(Contract11);Contract11.html=function(m){const k=m&&m.contract;if(!k||!ISO21.test(String(k.term||"")))return _ctHtml21(m);
+  const t=k.term;k.term=fmtD(t);try{return _ctHtml21(m);}finally{k.term=t;}};
+(()=>{const st=document.createElement("style");st.textContent=".card .ctl button.ev21new{background:var(--pri,#3A5A8C);color:#fff;margin-left:6px}.card .ctl button.ev21new:hover{filter:brightness(1.08)}";document.head.appendChild(st);})();
 try{applyUI();}catch(e){}
 
 
