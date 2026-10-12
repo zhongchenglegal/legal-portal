@@ -9874,7 +9874,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="b5d1733c7b9b";
+const ZC_BUILD="83e9998e92ba";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10388,7 +10388,7 @@ const _mCreateAdv21=Matter.create;Matter.create=async function(clientId){if(!Adv
     let rows=[];try{rows=(await SB19.T.rpc("find_client",{q:w.q}))||[];}catch(e){}if(!rows.length){toast(T1(UI.adv21NotFound));return;}
     let pick=rows[0];if(rows.length>1){const x=await Dlg.ask({title:T1(UI.mClient),fields:[{k:"c",label:T1(UI.mClient),type:"select",value:rows[0].id,options:rows.map(r=>[r.id,r.name])}]});if(!x)return;pick=rows.find(r=>r.id===x.c)||rows[0];}
     if(!S.clients[pick.id])S.clients[pick.id]={id:pick.id,name:pick.name,_stub21:true};cid=pick.id;}
-  else{const w=await Dlg.ask({title:T1(UI.cNew),fields:Cli.fields()});if(!w)return;const c={id:uid("c"),since:todayS(),createdBy:U().emp};Cli.apply(c,w);await saveDoc("clients",c);audit(`Новый клиент: ${c.name}`);cid=c.id;}
+  else{/* этап 6: короткая форма — минимум для дела, остальное позже в «Клиенты» */const c=await Cli21.quickNew();if(!c)return;cid=c.id;}
   const r=await Matter.create(cid);
   /* найденный клиент теперь «свой» (есть его дело) — карточка загружается целиком */
   if(S.clients[cid]&&S.clients[cid]._stub21){try{const list=await SB19.colDocs("clients");list.forEach(d=>{S.clients[d.id]=d.data;});if(S.clients[cid]&&S.clients[cid]._stub21&&!Object.values(S.matters).some(m=>m.clientId===cid))delete S.clients[cid];}catch(e){}}
@@ -11251,6 +11251,144 @@ const _myincFin21=Pages.myincome;Pages.myincome=function(){const h=_myincFin21.a
 .fin21note{font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.45}
 .fin21split{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-bottom:12px;background:var(--line-2)}.fin21split i{display:block;height:100%}
 .fin21 .paytbl td{vertical-align:top}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.0 · этап 6 · КЛИЕНТЫ И КОРРЕСПОНДЕНЦИЯ ═══════════════════════════
+   Клиенты:
+   • минимум при создании дела: физлицо — ФИО; компания — название, ИНН, ФИО руководителя (новое поле company.director).
+     Только в рабочей системе (на сервере; демо-клиенты заведены без этих полей). Если чего-то нет, перед созданием дела (или сразу после, если клиент выбран в окне дела) открывается короткое окно,
+     данные сохраняются в карточке клиента. Новый клиент из «+ Дело» адвоката — короткая форма, остальное позже в «Клиенты»;
+   • полнота карточки — для УП: пометка «не заполнена» в списке, фильтр «Неполные», в карточке — чего не хватает и «Заполнить».
+     Полный набор: компания — название, ИНН, руководитель, адрес, банк, счёт, МФО, контактное лицо, телефон;
+     физлицо — ФИО, ПИНФЛ, паспорт (номер, дата, кем выдан, срок), адрес, телефон;
+   • реквизиты видны в карточке клиента (раньше — только в окне редактирования).
+   Корреспонденция:
+   • статусы «Черновик → Ожидает отправки → Отправлено / Получено»; файл письма прикрепляется прямо в окне и обязателен
+     для всех статусов, кроме черновика (то же правило в базе — миграция 20261012000500);
+   • адвокат меняет черновик и письмо, ожидающее отправки; отправленное и полученное — нет (можно только приложить файл, если его не было);
+   • в списке — фильтр по статусу и колонка «Файл». */
+Object.assign(UI,{
+  cli21Director:"ФИО руководителя||负责人姓名", cli21DirHint:"для компании||公司客户填写", cli21Min:"Минимальные данные клиента||客户最低必填信息",
+  cli21MinText:"Без них дело не создать. Остальное можно внести позже в «Клиенты».||缺少这些信息无法建立案件。其余信息可稍后在“客户”中补充。",
+  cli21MinLater:"Дело создано, но данные клиента не заполнены — заполните их в «Клиенты»||案件已建立，但客户信息未填写——请在“客户”中补充",
+  cli21NeedName:"Укажите название компании или ФИО||请填写公司名称或姓名", cli21NeedInn:"Для компании нужен ИНН||公司客户须填写税号", cli21NeedDir:"Для компании нужно ФИО руководителя||公司客户须填写负责人姓名",
+  cli21NeedFio:"Укажите ФИО клиента||请填写客户姓名", cli21NameQ:"Название компании или ФИО||公司名称或姓名", cli21Fio:"ФИО||姓名", cli21Pass:"паспорт (номер, дата, кем выдан, срок)||护照（号码、签发日期、签发机关、有效期）",
+  cli21Inc:"Карточка заполнена не полностью||客户资料不完整", cli21IncShort:"не заполнена||不完整", cli21IncNo:"Нет: {l}||缺少：{l}", cli21Fill:"Заполнить||补充", cli21FInc:"Неполные||不完整",
+  corr21Pending:"Ожидает отправки||待发送", corr21File:"Файл письма||信函文件", corr21NeedFile:"Без файла письмо можно сохранить только черновиком||无文件的信函只能保存为草稿",
+  corr21HasFile:"Сейчас: {n}. Чтобы заменить, прикрепите новый||当前：{n}。如需替换请附加新文件", corr21AllSt:"Все статусы||全部状态", corr21FileCol:"Файл||文件",
+  corr21Locked:"Отправленное или полученное письмо не меняется.||已发送或已收到的信函不能修改。", corr21AttachOnly:"Можно приложить файл, если его ещё нет.||如尚无文件，可附加文件。"
+});
+const Cli21={
+  mp(){return !isClient()&&(isFounder()||hasF("managing"));},
+  req(c){return (c&&c.requisites)||{};},
+  inn(c){return (this.req(c).inn||(c.company||{}).inn||"").trim();},
+  director(c){return ((c.company||{}).director||"").trim();},
+  fio(c){return ((c.person||{}).fio||(c.type==="person"?c.name:"")||"").trim();},
+  /* минимум для дела */
+  minMissing(c){if(!c||c._stub21||!SRV21())return [];if(c.type==="person")return this.fio(c)?[]:[T1(UI.cli21Fio)];
+    const out=[];if(!(c.name||"").trim())out.push(T1(UI.fName));if(!this.inn(c))out.push(T1(UI.rqInn));if(!this.director(c))out.push(T1(UI.cli21Director));return out;},
+  /* полный набор — для пометки у УП */
+  fullMissing(c){if(!c||c._stub21||c.status==="lead")return [];if(typeof migrateClient11==="function")migrateClient11(c);const r=this.req(c),K=c.contacts||{},P=c.person||{},pp=P.passport||{};const out=[];
+    const addr=r.address||K.address||(c.company||{}).address,phone=r.phone||(K.phones||[])[0];
+    if(c.type==="person"){if(!this.fio(c))out.push(T1(UI.cli21Fio));if(!r.pinfl)out.push(T1(UI.rqPinfl));if(!(pp.no&&pp.issued&&pp.issuedBy&&pp.expires))out.push(T1(UI.cli21Pass));if(!addr)out.push(T1(UI.rqAddr));if(!phone)out.push(T1(UI.rqPhone));return out;}
+    if(!(c.name||"").trim())out.push(T1(UI.fName));if(!this.inn(c))out.push(T1(UI.rqInn));if(!this.director(c))out.push(T1(UI.cli21Director));if(!addr)out.push(T1(UI.rqAddr));
+    if(!r.bank)out.push(T1(UI.rqBank));if(!r.account)out.push(T1(UI.rqAcc));if(!r.mfo)out.push(T1(UI.rqMfo));if(!(r.contact||P.fio))out.push(T1(UI.rqContact));if(!phone)out.push(T1(UI.rqPhone));return out;},
+  /* короткое окно: только недостающий минимум; данные — в карточку клиента */
+  async fillMin(c,after){const comp=c.type!=="person";
+    const f=comp?[{k:"name",label:T1(UI.fName),value:c.name||"",check:v=>(v.name||"").trim()?"":T1(UI.cli21NeedName)},{k:"inn",label:T1(UI.rqInn),value:this.inn(c),check:v=>(v.inn||"").trim()?"":T1(UI.cli21NeedInn)},{k:"director",label:T1(UI.cli21Director),value:this.director(c),check:v=>(v.director||"").trim()?"":T1(UI.cli21NeedDir)}]
+      :[{k:"fio",label:T1(UI.cli21Fio),value:this.fio(c),check:v=>(v.fio||"").trim()?"":T1(UI.cli21NeedFio)}];
+    const v=await Dlg.ask({title:T1(UI.cli21Min)+" · "+clientName(c),text:T1(UI.cli21MinText),fields:f});
+    if(!v){if(after)toast(T1(UI.cli21MinLater));return false;}
+    if(typeof migrateClient11==="function")migrateClient11(c);
+    if(comp){c.name=v.name.trim();c.company=Object.assign({},c.company||{},{name:c.company&&c.company.name?c.company.name:c.name,inn:v.inn.trim(),director:v.director.trim()});c.requisites=Object.assign({},c.requisites||{},{inn:v.inn.trim()});}
+    else{c.person=Object.assign({},c.person||{},{fio:v.fio.trim()});if(!c.name)c.name=v.fio.trim();}
+    await saveDoc("clients",c);audit(`Клиент ${clientName(c)}: внесён минимум данных для дела`);return true;},
+  /* новый клиент из «+ Дело»: короткая форма */
+  async quickNew(){const v=await Dlg.ask({title:T1(UI.cNew),text:T1(UI.cli21MinText),fields:[
+      {k:"type",label:T1(UI.cType),type:"select",value:"company",options:[["company",T1(UI.cCompany)],["person",T1(UI.cPerson)]]},
+      {k:"name",label:T1(UI.cli21NameQ),required:true},
+      {k:"inn",label:T1(UI.rqInn),hint:T1(UI.cli21DirHint),check:v=>v.type==="company"&&!(v.inn||"").trim()?T1(UI.cli21NeedInn):""},
+      {k:"director",label:T1(UI.cli21Director),hint:T1(UI.cli21DirHint),check:v=>v.type==="company"&&!(v.director||"").trim()?T1(UI.cli21NeedDir):""},
+      {k:"phones",label:T1(UI.fPhones)}]});if(!v)return null;
+    const base={};Cli.fields().forEach(x=>{if(x&&x.k)base[x.k]=Array.isArray(x.value)?x.value.slice():x.value;});
+    const name=v.name.trim(),comp=v.type==="company";
+    Object.assign(base,{type:v.type,name,inn:comp?v.inn.trim():"",rq_inn:comp?v.inn.trim():"",director:comp?v.director.trim():"",fio:comp?"":name,phones:v.phones||"",managers:[U().emp]});
+    const c={id:uid("c"),since:todayS(),createdBy:U().emp};Cli.apply(c,base);await saveDoc("clients",c);audit(`Новый клиент: ${c.name}`);return c;}
+};
+/* поле «ФИО руководителя» в карточке клиента */
+const _cliFCli21=Cli.fields.bind(Cli);Cli.fields=function(c){const f=_cliFCli21(c);const i=f.findIndex(x=>x&&x.k==="inn");
+  f.splice(i>=0?i+1:f.length,0,{k:"director",label:T1(UI.cli21Director),value:((c&&c.company)||{}).director||"",hint:T1(UI.cli21DirHint)});return f;};
+const _cliACli21=Cli.apply.bind(Cli);Cli.apply=function(c,v){const old=((c&&c.company)||{}).director;const r=_cliACli21(c,v);c.company=c.company||{};
+  c.company.director=v.director!==undefined?String(v.director||"").trim():(old||"");return r;};
+/* минимум при создании дела */
+const _mcCli21=Matter.create;Matter.create=async function(clientId){if(isClient())return _mcCli21.apply(this,arguments);
+  const c=clientId&&client(clientId);if(c&&Cli21.minMissing(c).length){if(!await Cli21.fillMin(c,false))return;}
+  const before=new Set(Object.keys(S.matters));const r=await _mcCli21.apply(this,arguments);
+  const nm=Object.values(S.matters).find(m=>m&&!before.has(m.id)&&!m._fact20);const c2=nm&&client(nm.clientId);
+  if(c2&&Cli21.minMissing(c2).length)await Cli21.fillMin(c2,true);return r;};
+/* список клиентов: пометка и фильтр «Неполные» (УП) */
+const _clistCli21=Pages.clientList;Pages.clientList=function(list){if(Cli21._only)list=list.filter(c=>Cli21.fullMissing(c).length);Cli21._n=list.length;let h=_clistCli21.call(this,list);if(!Cli21.mp())return h;
+  list.forEach(c=>{const miss=Cli21.fullMissing(c);if(!miss.length)return;const i=h.indexOf(`data-client="${c.id}"`);if(i<0)return;const j=h.indexOf('<div class="rt">',i);if(j<0)return;const k=j+'<div class="rt">'.length;
+    h=h.slice(0,k)+`<span class="pill inc21" title="${esc(T1(UI.cli21IncNo).replace("{l}",miss.join(", ")))}">${T1(UI.cli21IncShort)}</span>`+h.slice(k);});return h;};
+const _clientsCli21=Pages.clients;Pages.clients=function(){const mp=Cli21.mp();const inc=mp&&this._cf==="incomplete";if(inc){this._cf="all";Cli21._only=true;}
+  let h;try{h=_clientsCli21.apply(this,arguments);}finally{if(inc){this._cf="incomplete";Cli21._only=false;}}
+  if(!mp||(this._ct||"list")!=="list")return h;const n=CC().filter(c=>c.status!=="lead"&&Cli21.fullMissing(c).length).length;
+  if(inc){h=h.replace(/(<button class="fc) on(" data-cf="[a-z]+")/g,"$1$2");h=h.replace(/(<span style="margin-left:auto;font-size:12px;color:var\(--ink-3\)">)\d+(<\/span>)/,"$1"+Cli21._n+"$2");}
+  const chip=`<button class="fc${inc?" on":""}" data-cf="incomplete">${T1(UI.cli21FInc)} · ${n}</button>`;const a='data-cf="all">';const i=h.indexOf(a);if(i<0)return h;const j=h.indexOf("</button>",i)+9;return h.slice(0,j)+chip+h.slice(j);};
+/* карточка клиента: чего не хватает (УП) и реквизиты */
+const _clientCli21=Pages.client;Pages.client=function(id){let out=_clientCli21.call(this,id);const c=client(id);if(!c||isClient()||(this._cp||"over")!=="over")return out;
+  const i=out.indexOf('<div class="ptabs">');if(i<0)return out;const k=out.indexOf('</div>',i)+6;const miss=Cli21.mp()?Cli21.fullMissing(c):[];
+  const warn=miss.length?`<div class="warn11 inc21b">⚠ <b>${T1(UI.cli21Inc)}.</b> ${esc(T1(UI.cli21IncNo).replace("{l}",miss.join(", ")))}${can("clientsEdit")?` <button class="btn sm" data-cli21fill="${esc(c.id)}" style="margin-left:8px">${T1(UI.cli21Fill)}</button>`:""}</div>`:"";
+  if(typeof migrateClient11==="function")migrateClient11(c);const r=Cli21.req(c),K=c.contacts||{},person=c.type==="person";
+  const rows=[[person?UI.rqPinfl:UI.rqInn,person?r.pinfl:Cli21.inn(c)],...(person?[]:[[UI.cli21Director,Cli21.director(c)]]),[UI.rqAddr,r.address||K.address||(c.company||{}).address],[UI.rqBank,r.bank],[UI.rqAcc,r.account],[UI.rqMfo,r.mfo],[UI.rqContact,r.contact||(c.person||{}).fio],[UI.rqPhone,r.phone||(K.phones||[])[0]],[UI.rqEmail,r.email||(K.emails||[])[0]]];
+  const card=`<div class="card rq21"><h4>${T1(UI.rqTitle)}</h4><dl class="kvl">${rows.map(([l,v])=>`<dt>${T1(l)}</dt><dd>${v?esc(v):`<span style="color:var(--ink-3)">—</span>`}</dd>`).join("")}</dl></div>`;
+  return out.slice(0,k)+warn+card+out.slice(k);};
+/* ── корреспонденция ── */
+const CORR21=[["draft",UI.ksDraft,"new"],["pending",UI.corr21Pending,"progress"],["sent",UI.ksSent,"progress"],["delivered",UI.ksDelivered,"accepted"]];
+const corrSt21=k=>CORR21.find(x=>x[0]===(k&&k.status))||CORR21[3];
+const corrStHtml21=k=>{const s=corrSt21(k);return `<span class="st ${s[2]}${s[0]==="pending"?" pend21":""}"><i></i>${T1(s[1])}</span>`;};
+const Corr21={
+  opts(){return CORR21.map(([k,l])=>[k,T1(l)]);},
+  fileField(k){return {k:"files",label:T1(UI.corr21File),type:"files",span:true,hint:k&&k.file?T1(UI.corr21HasFile).replace("{n}",k.file.name||"файл"):"",check:v=>v.status!=="draft"&&!(v.files||[]).length&&!(k&&k.file)?T1(UI.corr21NeedFile):""};},
+  editable(k){return !Adv21.on()||["draft","pending"].includes(k.status);}
+};
+Corr.create=async function(){if(!can("corrEdit"))return;const adv=Adv21.on();const ms=adv?matterSel().filter(o=>o[0]):matterSel();if(adv&&!ms.length){toast(T1(UI.adv21NoMatters));return;}
+  const curM=Router.cur==="matter"&&Router.arg&&ms.some(o=>o[0]===Router.arg)?Router.arg:(adv?ms[0][0]:"");
+  const f=[{k:"dir",label:T1(UI.kDir),type:"select",value:"in",options:[["in",T1(UI.kIn)],["out",T1(UI.kOut)]]},{k:"date",label:T1(UI.eDate),type:"date",value:todayS(),required:true},
+    {k:"no",label:T1(UI.kNo),value:"",required:true},{k:"from",label:T1(UI.kFrom),value:""},{k:"to",label:T1(UI.kTo),value:""},{k:"subject",label:T1(UI.kSubj),value:"",required:true},
+    {k:"matterId",label:T1(UI.eMatter),type:"select",value:curM,options:ms},...(adv?[]:[{k:"emp",label:T1(UI.eWho),type:"select",value:U().emp,options:empSel()}]),
+    {k:"status",label:T1(UI.mStatus),type:"select",value:"draft",options:this===Corr?Corr21.opts():Corr21.opts()},Corr21.fileField(null)];
+  const v=await Dlg.ask({title:T1(UI.kReg),fields:f});if(!v)return;const file=(v.files||[])[0]||null;
+  const k={id:uid("k"),dir:v.dir,date:v.date,no:v.no,from:v.from,to:v.to,subject:v.subject,matterId:v.matterId||"",emp:adv?U().emp:(v.emp||U().emp),status:v.status,createdBy:U().emp};if(file)k.file=file;
+  await saveDoc("corr",k);audit(`Корреспонденция ${k.no}: зарегистрирована (${T1(corrSt21(k)[1])})`);
+  const acc=accByEmp(k.emp);if(acc&&acc.login!==U().login)notify(acc.login,"task",nt18("corr",{dir:{t:k.dir==="in"?UI.kIn:UI.kOut},no:k.no,text:k.subject.slice(0,60)}),null);Router.render();};
+const _corrOpenCli21=Corr.open.bind(Corr);Corr.open=async function(id){const k=S.corr[id];if(!k||!can("corrEdit"))return _corrOpenCli21(id);
+  if(!Corr21.editable(k)){const v=await Dlg.ask({title:k.no+" · "+k.subject,text:`${fmtD(k.date)} · ${esc(k.dir==="in"?k.from||"":k.to||"")} · ${dispName(k.emp)} · ${T1(corrSt21(k)[1])}. ${T1(UI.corr21Locked)}${k.file?"":" "+T1(UI.corr21AttachOnly)}`,fields:k.file?[]:[{k:"files",label:T1(UI.corr21File),type:"files",span:true}],okText:"ОК||确定"});
+    const f=v&&(v.files||[])[0];if(f&&!k.file){k.file=f;await saveDoc("corr",k);audit(`Корреспонденция ${k.no}: приложен файл`);Router.render();}return;}
+  const adv=Adv21.on();const ms=adv?matterSel().filter(o=>o[0]):matterSel();
+  const f=[{k:"status",label:T1(UI.mStatus),type:"select",value:k.status||"delivered",options:Corr21.opts()},{k:"subject",label:T1(UI.kSubj),value:k.subject,required:true},{k:"matterId",label:T1(UI.eMatter),type:"select",value:k.matterId||(adv&&ms[0]?ms[0][0]:""),options:ms},
+    ...(adv?[]:[{k:"emp",label:T1(UI.eWho),type:"select",value:k.emp,options:empSel()},{k:"org",label:T1("Орган / организация||机关/机构"),value:k.org||""},{k:"summary",label:T1("Краткое содержание (видит клиент)||内容摘要（客户可见）"),type:"textarea",value:k.summary||""},{k:"clientVisible",label:T1(UI.ccCorrVis),type:"select",value:k.clientVisible?"1":"0",options:[["0","—"],["1","✓"]]}]),
+    Corr21.fileField(k),...(adv&&k.status==="draft"?[{k:"act",label:T1(UI.adv21Act),type:"select",value:"save",options:[["save",T1(UI.adv21Save)],["del",T1(UI.adv21DelDraft)]]}]:[])];
+  const v=await Dlg.ask({title:k.no,fields:f});if(!v)return;
+  if(v.act==="del"){delete S.corr[id];await dbWrite(db=>db.doc("corr/"+id).delete());audit(`Корреспонденция ${k.no}: черновик удалён`);Router.render();return;}
+  const from=k.status;Object.assign(k,{status:v.status,subject:v.subject,matterId:v.matterId||""});if(!adv)Object.assign(k,{emp:v.emp,org:v.org,summary:v.summary,clientVisible:v.clientVisible==="1"});
+  const file=(v.files||[])[0];if(file)k.file=file;await saveDoc("corr",k);if(from!==k.status)audit(`Корреспонденция ${k.no}: ${T1((CORR21.find(x=>x[0]===from)||CORR21[3])[1])} → ${T1(corrSt21(k)[1])}`);Router.render();};
+/* список писем: статус, файл, фильтр по статусу */
+Pages.corrTable=function(list){return `<div style="overflow-x:auto"><table class="tbl reg"><thead><tr><th>${T1(UI.kNo)}</th><th>${T1(UI.eDate)}</th><th>${T1(UI.kDir)}</th><th>${T1(UI.kFrom)} / ${T1(UI.kTo)}</th><th>${T1(UI.kSubj)}</th><th>${T1(UI.eMatter)}</th><th>${T1(UI.corr21FileCol)}</th><th>${T1(UI.mStatus)}</th></tr></thead><tbody>${list.map(k=>`<tr data-corr="${k.id}"><td><b>${esc(k.no)}</b></td><td>${fmtD(k.date)}</td><td class="${k.dir==="in"?"dirin":"dirout"}">${T1(k.dir==="in"?UI.kIn:UI.kOut)}</td><td>${esc(k.dir==="in"?k.from||"":k.to||"")}</td><td>${esc(k.subject)}</td><td>${k.matterId&&matter(k.matterId)?esc(matter(k.matterId).no):"—"}</td><td>${k.file?`<span class="chipf" data-kfile21="${k.id}">📎 ${esc((k.file.name||"").slice(0,28))}</span>`:`<span style="color:var(--ink-3)">—</span>`}</td><td>${corrStHtml21(k)}</td></tr>`).join("")}</tbody></table></div>`;};
+const _corrPageCli21=Pages.corr;Pages.corr=function(){const ks=this._ks21||"all";const all=Object.values(S.corr);
+  let h;if(ks==="all")h=_corrPageCli21.apply(this,arguments);else{const keep=S.corr;S.corr=Object.fromEntries(Object.entries(keep).filter(([,k])=>(k.status||"delivered")===ks));try{h=_corrPageCli21.apply(this,arguments);}finally{S.corr=keep;}}
+  const cnt=s=>all.filter(k=>(k.status||"delivered")===s).length;
+  const chips=`<span style="width:8px"></span>${[["all",UI.corr21AllSt]].concat(CORR21.map(x=>[x[0],x[1]])).map(([s,l])=>`<button class="fc${ks===s?" on":""}" data-ks21="${s}">${T1(l)}${s!=="all"?" · "+cnt(s):""}</button>`).join("")}`;
+  const i=h.indexOf('<div class="filters">');if(i<0)return h;const j=h.indexOf("</div>",i);return h.slice(0,j)+chips+h.slice(j);};
+if(F&&typeof F.corr==="function")F.corr=(list,n)=>list.length?`<div class="evl">${list.slice(0,n||8).map(k=>`<div class="evi" data-corr="${k.id}"><div class="tm" style="font-size:11px">${esc(k.no)}<small>${fmtD(k.date)}</small></div><div class="tt">${esc(k.subject)}<small><span class="${k.dir==="in"?"dirin":"dirout"}">${T1(k.dir==="in"?UI.kIn:UI.kOut)}</span> · ${esc(k.dir==="in"?k.from||"":k.to||"")}${k.matterId&&matter(k.matterId)?" · "+esc(matter(k.matterId).no):""}${k.file?" · 📎":""}</small></div>${corrStHtml21(k)}</div>`).join("")}</div>`:`<div class="empty2">${T1(UI.noData)}</div>`;
+const _pbindCli21=Pages.bind;Pages.bind=function(vp){_pbindCli21.call(this,vp);
+  vp.querySelectorAll("[data-ks21]").forEach(el=>el.onclick=()=>{Pages._ks21=el.dataset.ks21;Router.render();});
+  vp.querySelectorAll("[data-kfile21]").forEach(el=>el.onclick=e=>{e.stopPropagation();const k=S.corr[el.dataset.kfile21];if(k&&k.file){audit(`Открыт файл корреспонденции ${k.no}`);Files.open(k.file);}});
+  vp.querySelectorAll("[data-cli21fill]").forEach(el=>el.onclick=()=>Cli.edit(el.dataset.cli21fill));};
+(function(){const st=document.createElement("style");st.textContent=`
+.pill.inc21{background:var(--warn-soft);color:var(--warn-d);border-color:transparent}
+.inc21b{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:0 0 14px}
+.rq21{margin-bottom:14px}.rq21 .kvl dd{overflow-wrap:anywhere}
+.st.pend21{color:var(--warn-d)}.st.pend21 i{background:var(--warn)}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
