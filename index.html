@@ -9392,6 +9392,8 @@ const SB19={
       async update(t,vals,match){let q=c.from(t).update(vals);for(const [k,v] of Object.entries(match))q=Array.isArray(v)?q.in(k,v):q.eq(k,v);return chk(await q.select());},
       async del(t,match){let q=c.from(t).delete();for(const [k,v] of Object.entries(match))q=Array.isArray(v)?q.in(k,v):q.eq(k,v);chk(await q);},
       async rpc(fn,args){return chk(await c.rpc(fn,args||{}));},
+      /* версия 1.0, этап 7: серверные функции (ИИ-ассистент) — текст ошибки из ответа функции */
+      async invoke(fn,body){const r=await c.functions.invoke(fn,{body});if(r.error){let msg=r.error.message,st=0,code="";try{const res=r.error.context;st=(res&&res.status)||0;const j=await res.json();msg=j.error||j.message||msg;code=j.code||"";}catch(e){}const er=new Error(msg);er.status=st;er.code=code;throw er;}return r.data;},
       /* v20: файлы — в закрытой корзине хранилища; открываются по ссылке ограниченного срока */
       async uploadBlob(path,b,type){chk(await c.storage.from("portal-files").upload(path,b,{contentType:type||b.type||"application/octet-stream",upsert:false}));},
     async upload(path,dataUrl,type){const b=await (await fetch(dataUrl)).blob();chk(await c.storage.from("portal-files").upload(path,b,{contentType:type||b.type||"application/octet-stream",upsert:false}));},
@@ -9874,7 +9876,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="83e9998e92ba";
+const ZC_BUILD="9e8545a34308";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11389,6 +11391,198 @@ const _pbindCli21=Pages.bind;Pages.bind=function(vp){_pbindCli21.call(this,vp);
 .inc21b{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin:0 0 14px}
 .rq21{margin-bottom:14px}.rq21 .kvl dd{overflow-wrap:anywhere}
 .st.pend21{color:var(--warn-d)}.st.pend21 i{background:var(--warn)}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.0 · этап 7 · ТЕКСТ РАЗДЕЛА «ПОМОЩЬ» ═══════════════════════════
+   Только данные: руководство по ролям и «Что нового» (строки «русский||中文»). Отсюда же собирается текст для ИИ-ассистента
+   (backend/supabase/functions/assistant/index.ts — скрипт backend/tools/build-assistant.mjs). После правки текста — пересобрать функцию. */
+const HELP21={
+ ver:"1.0.7",
+ roles:{
+  advocate:[
+   {id:"login",t:"Вход и работа с окнами||登录与窗口操作",b:[
+    "Вход — на странице «Вход в систему» по логину и паролю, которые выдал управляющий адвокат. Свой пароль меняется кнопкой «Пароль» рядом с «Выйти».||在“登录系统”页面使用管理合伙人发放的账号和密码登录。可通过“退出”旁的“密码”按钮修改本人密码。",
+    "После обновления страницы (F5) система остаётся на той же странице.||刷新页面（F5）后系统停留在原页面。",
+    "Окна не закрываются щелчком мимо них. Всё, что вы ввели, сохраняется как черновик: при следующем открытии окно предложит «Есть черновик — восстановить?».||点击窗口外部不会关闭窗口。已输入内容自动保存为草稿：下次打开时会提示“有草稿——是否恢复？”。",
+    "Файлы прикрепляются кнопкой «Прикрепить файл», размер — до 100 МБ.||使用“附加文件”按钮上传文件，单个文件最大100 MB。"]},
+   {id:"home",t:"Главная и «План на день»||首页与“今日计划”",b:[
+    "На главной — «План на день»: ваши события, дедлайны дел, задания сопровождения, задачи и поручения на выбранный день.||首页显示“今日计划”：所选日期的事件、案件截止日、顾问任务、任务与指派事项。",
+    "«+ Событие» добавляет встречу, заседание или звонок в ваш план. Дедлайны дел попадают в план сами.||“+ 事件”可将会议、庭审或电话加入计划。案件截止日自动显示。",
+    "Вверху справа три кнопки: «Поручения», «Сообщения», «События» (уведомления). Число на кнопке — непрочитанное.||右上角有三个按钮：“指派”“消息”“事件”（通知）。按钮上的数字为未读数量。"]},
+   {id:"newmatter",t:"Новое дело и клиент||新建案件与客户",b:[
+    "«+ Дело» в разделе услуги. Клиент: «свой» (из ваших дел), «найти» (по точному названию или ИНН среди клиентов фирмы) или «новый».||在服务栏目点击“+ 案件”。客户可选“我的客户”“查找”（按准确名称或税号在全所客户中查找）或“新客户”。",
+    "Для дела нужен минимум данных клиента: физлицо — ФИО; компания — название, ИНН и ФИО руководителя. Если чего-то нет, система попросит заполнить это в коротком окне и сохранит в карточке клиента. Остальное (банк, паспорт, адрес) можно внести позже в «Клиенты».||建案须有客户最低信息：个人——姓名；公司——名称、税号、负责人姓名。缺少时系统会弹出简短窗口要求填写并保存到客户资料。其余信息（银行、护照、地址）可稍后在“客户”中补充。",
+    "Номер договора присваивается системой: ZCL-26-101 — адвокатская фирма, ZCLF-26-101 — ООО. Номер дела — номер договора с /1, /2 (несколько дел по одному договору или заказы по рамочному).||合同编号由系统自动生成：律师事务所为ZCL-26-101，有限公司为ZCLF-26-101。案件编号为合同编号加/1、/2（同一合同下多个案件或框架合同订单）。",
+    "Дедлайн разовой услуги обязателен — выбирается датой в календаре.||一次性服务必须填写截止日，在日历中选择日期。",
+    "Перед работой система проверяет конфликт интересов по всей фирме; вы увидите только число совпадений.||开始工作前系统会在全所范围检查利益冲突；您只能看到匹配数量。"]},
+   {id:"contract",t:"Договор, порядок оплаты и подписание||合同、付款方式与签署",b:[
+    "«Договор и стоимость»: дата, предмет, дедлайн, ставка пени, стоимость, валюта и порядок оплаты из списка: 100 % предоплата; предоплата N % + остаток по результату; оплата после результата; поэтапно; ежемесячно (только сопровождение).||“合同与费用”：日期、事项、截止日、违约金费率、费用、币种及付款方式（列表选择）：100%预付；预付N%+结果后付余款；结果后付款；分阶段；按月（仅顾问服务）。",
+    "«Договор подписан» вы ставите сами, когда заполнены реквизиты, приложен файл договора («Приложить договор») и выбран порядок оплаты. Управляющий адвокат получит уведомление и может отменить подписание.||当合同信息完整、已附合同文件（“附加合同”）并选定付款方式后，您可自行标记“合同已签署”。管理合伙人会收到通知并可撤销签署。",
+    "После подписания стоимость и порядок оплаты меняет только управляющий адвокат. Если нужно изменить — «Попросить изменить стоимость» с обоснованием.||签署后费用和付款方式只能由管理合伙人修改。如需修改，请点击“申请修改费用”并说明理由。"]},
+   {id:"pay",t:"Поступления и начало работы||收款与开始工作",b:[
+    "Поступление вносите сами: «+ Поступление» в карточке дела — сумма, дата, валюта и обязательно подтверждающий документ (платёжка или выписка). Поступление получает пометку «на проверке», управляющий адвокат подтверждает его.||收款由您自行录入：在案件卡片点击“+ 收款”，填写金额、日期、币种并必须附上付款凭证（付款单或对账单）。收款标记为“待核对”，由管理合伙人确认。",
+    "Статус оплаты считается по поступлениям автоматически.||付款状态根据收款自动计算。",
+    "Работа не начинается, пока не выполнено условие оплаты: при 100 % предоплате — полная оплата, при предоплате N % — эта часть. В карточке красная плашка «Работа не начата» объясняет, чего ждём. Когда условие выполнено, вы получите уведомление «можно начинать работу».||未满足付款条件前不能开始工作：100%预付需全额到账，预付N%需该部分到账。案件卡片中红色提示“工作未开始”说明原因。条件满足后您会收到“可以开始工作”的通知。",
+    "При оплате после результата «Результат готов» можно поставить сразу, но без полной оплаты дело не закрыть и не отправить в архив, и оно не войдёт в расчёт зарплаты.||结果后付款时可直接标记“结果已完成”，但未全额付款的案件不能结案或归档，也不计入工资核算。",
+    "Непроверенные поступления в зарплату не идут, пока управляющий адвокат их не подтвердит.||未经管理合伙人确认的收款不计入工资。"]},
+   {id:"stages",t:"Стадии дела||案件阶段",b:[
+    "Обязательные стадии: «В работе», «На согласовании», «Результат готов», «Принят клиентом», «Архив». Остальные — команда, переводчик, китайский юрист, свои этапы — добавляете, переименовываете и удаляете сами (кнопка «Этапы»).||必经阶段：“进行中”“待确认”“结果已完成”“客户已接受”“归档”。其他阶段（团队、翻译、中国法务、自定义阶段）可通过“阶段”按钮自行添加、重命名或删除。",
+    "Команда, переводчик и китайский юрист — по вашему решению; без них можно идти дальше.||团队、翻译和中国法务由您决定是否添加，不添加也可继续。",
+    "«Проверка старшего адвоката» обязательна, только если над вами в «Структуре» есть другой адвокат (не управляющий).||仅当“组织架构”中您的上级是另一位律师（非管理合伙人）时，“资深律师审核”为必经阶段。",
+    "«Принят клиентом» ставится с основанием и файлом: акт или скриншот переписки. Дело после этого остаётся открытым.||“客户已接受”需填写依据并附文件：验收单或聊天截图。之后案件仍保持开启。",
+    "В «Архив» отправляет только управляющий адвокат после проверки договора, поступлений и приёмки.||只有管理合伙人在核对合同、收款和验收后才能将案件归档。"]},
+   {id:"tasks",t:"Поручения и задачи||指派与任务",b:[
+    "Поручения даёт руководитель сотруднику по «Структуре». Принять, отчитаться и закрыть поручение можно из кнопки «Поручения» вверху.||指派由上级按“组织架构”下达给员工。可通过顶部“指派”按钮接受、汇报和完成。",
+    "Задачи по делу создаются внутри дела; комментарии к задаче приходят участникам в «События».||案件任务在案件内创建；任务评论会通过“事件”通知参与者。"]},
+   {id:"msg",t:"Сообщения и уведомления||消息与通知",b:[
+    "Сообщения коллегам приходят сразу, без обновления страницы, и считаются только в «Сообщениях».||同事消息即时送达，无需刷新页面，仅计入“消息”。",
+    "В «События» попадают события по делам и задачам, сообщения и файлы клиента, комментарии к задачам.||“事件”中显示案件与任务事件、客户消息与文件、任务评论。",
+    "Уведомления можно получать в Telegram: кнопка «Уведомления» рядом с «Выйти» → «Подключить Telegram».||可接收Telegram通知：点击“退出”旁的“通知”→“绑定 Telegram”。"]},
+   {id:"corr",t:"Корреспонденция||函件",b:[
+    "Письмо регистрируется по вашему делу: направление, дата, номер, от кого / кому, содержание, статус и файл письма.||函件须登记在您的案件下：方向、日期、编号、发件方/收件方、内容、状态及函件文件。",
+    "Статусы: «Черновик» → «Ожидает отправки» → «Отправлено» или «Получено». Без файла письмо можно сохранить только черновиком.||状态：“草稿”→“待发送”→“已发出”或“已收到”。无文件的函件只能保存为草稿。",
+    "Черновик и письмо, ожидающее отправки, можно менять; отправленное и полученное — только просмотр (файл можно приложить, если его не было). Удалить можно только черновик.||草稿和待发送函件可修改；已发出和已收到的函件只能查看（如无文件可补充附件）。只能删除草稿。"]},
+   {id:"fin",t:"Финансы: обзор, мой доход, мои ставки||财务：概览、我的收入、我的费率",b:[
+    "«Обзор»: поступления по вашим делам и заработок по месяцам, самые доходные дела (заработок по делу — оценка: база × ваш процент), долги клиентов, КП → договоры, сроки.||“概览”：按月显示您案件的收款与收入、收入最高的案件（按案件收入为估算：基数×您的比例）、客户欠款、报价→合同、期限。",
+    "«Мой доход»: текущий месяц (предварительно), история утверждённых выплат, аванс.||“我的收入”：本月（预估）、已批准发放记录、预支。",
+    "«Мои ставки»: процент от базы, гарантированный минимум, налоги и курс — по данным управляющего адвоката.||“我的费率”：基数比例、保底、税费与汇率——以管理合伙人设定为准。",
+    "База — поступления по вашим делам без НДС и транзитных сумм, по вашей доле в деле.||基数为您案件的收款（不含增值税与代收代付），按您在案件中的份额计算。"]},
+   {id:"clients",t:"Клиенты||客户",b:[
+    "В карточке клиента на «Обзоре» видны реквизиты: ИНН или ПИНФЛ, руководитель, адрес, банк, счёт, МФО, контакт, телефон.||客户资料“概览”中显示开票信息：税号或个人识别号、负责人、地址、银行、账号、MFO、联系人、电话。",
+    "Вы видите клиентов своих дел и тех, кого создали сами.||您可以看到自己案件的客户以及自己创建的客户。"]},
+   {id:"assist",t:"ИИ-ассистент||AI助手",b:[
+    "Ассистент отвечает на вопросы о работе в системе по этому руководству. Юридических консультаций по делам он не даёт.||AI助手依据本指南回答系统使用问题，不提供案件法律意见。",
+    "Не вставляйте в вопрос данные клиентов: имена, паспорта, суммы, номера дел.||提问时请勿填写客户信息：姓名、护照、金额、案件编号。",
+    "До 30 вопросов в день. Если ответа нет — «Написать УП».||每天最多30个问题。如未找到答案，请点击“联系管理合伙人”。"]}
+  ],
+  mp:[
+   {id:"acc",t:"Учётки и доступы||账号与权限",b:[
+    "«Управление» → «Доступы и журнал» → вкладка «Доступы» → «+ Создать аккаунт»: логин, ФИО, должность, подразделение и роль доступа: «Управляющий адвокат» или «Адвокат». Пароль — без символов l, I, O, 0, 1.||“管理”→“权限与日志”→“账号权限”标签→“+ 创建账号”：登录名、姓名、职位、部门及权限角色：“管理合伙人”或“律师”。密码中不要使用l、I、O、0、1。",
+    "«Изменить доступ» меняет роль. Матрица прав показывает, какие разделы видит каждая роль.||“修改权限”可更改角色。权限矩阵显示各角色可见的栏目。",
+    "Адвокат видит только свои дела (где он участник), их клиентов, корреспонденцию и свои финансы.||律师只能看到自己参与的案件、其客户、函件及本人财务。"]},
+   {id:"cal",t:"Календарь||日历",b:[
+    "Пункт меню «Календарь» — только у управляющего адвоката: планы всех сотрудников, дедлайны дел, задания, поручения. У вас на главной — свой «План на день».||“日历”菜单仅管理合伙人可见：全体员工计划、案件截止日、任务、指派。首页显示您自己的“今日计划”。"]},
+   {id:"reg",t:"Реестр договоров||合同登记簿",b:[
+    "«Реестр договоров» в «Администрировании»: номер, дата, клиент, организация, вид услуги, ведущий, стоимость, порядок и статус оплаты, файл. Фильтры по году, организации и статусу, выгрузка в Excel.||“管理”中的“合同登记簿”：编号、日期、客户、主体、服务类型、主办律师、费用、付款方式与状态、文件。可按年份、主体、状态筛选并导出Excel。",
+    "Номера: ZCL-26-101 (адвокатская фирма) и ZCLF-26-101 (ООО), отдельный счёт для каждой, с нового года снова со 101. Сорвавшаяся сделка остаётся в реестре с пометкой «не заключён».||编号：ZCL-26-101（律师事务所）与ZCLF-26-101（有限公司），分别计数，每年从101重新开始。未成交的仍保留在登记簿并标记“未签订”。"]},
+   {id:"control",t:"Контроль дел адвокатов||律师案件监督",b:[
+    "Когда адвокат ставит «Договор подписан», вам приходит уведомление. «Отменить подписание» с причиной — пока нет поступлений.||律师标记“合同已签署”时您会收到通知。在尚无收款前可填写理由“撤销签署”。",
+    "Поступления адвокатов приходят «на проверке» с документом. Подтвердить можно в карточке дела или при отправке в архив.||律师录入的收款为“待核对”并附凭证。可在案件卡片或归档时确认。",
+    "Запрос «Попросить изменить стоимость» приходит вам с обоснованием; стоимость после подписания меняете только вы.||“申请修改费用”会附理由发给您；签署后的费用只能由您修改。",
+    "«Архив»: окно проверки показывает договор и файл, поступления с документами и приёмку; отдельно выделено, если договор подписал и поступления внёс адвокат. Без полной оплаты и приёмки в архив не отправить.||“归档”：核对窗口显示合同及文件、带凭证的收款和验收；律师自行签署合同或录入收款时会单独标出。未全额付款或未验收不能归档。"]},
+   {id:"cl",t:"Клиенты: полнота карточки||客户：资料完整性",b:[
+    "В списке клиентов — пометка «не заполнена» и фильтр «Неполные». В карточке — чего не хватает и кнопка «Заполнить».||客户列表中标记“不完整”并可用“不完整”筛选。客户资料中显示缺少项及“补充”按钮。",
+    "Полный набор: компания — название, ИНН, руководитель, адрес, банк, счёт, МФО, контактное лицо, телефон; физлицо — ФИО, ПИНФЛ, паспорт, адрес, телефон.||完整信息：公司——名称、税号、负责人、地址、银行、账号、MFO、联系人、电话；个人——姓名、个人识别号、护照、地址、电话。"]},
+   {id:"fin",t:"Финансы и зарплата||财务与工资",b:[
+    "Параметры оплаты (проценты, минимумы, налоги, курс) задаёт управляющий адвокат в «Финансах». Адвокат видит свои ставки в «Мой доход» и «Обзоре».||付款参数（比例、保底、税费、汇率）由管理合伙人在“财务”中设定。律师可在“我的收入”和“概览”中查看本人费率。",
+    "Расчёт зарплаты утверждается после проверки; система пересчитывает его по данным сервера и не даёт утвердить, если числа не совпадают.||工资核算须核对后批准；系统会按服务器数据重新计算，数据不一致时无法批准。"]},
+   {id:"assist",t:"ИИ-ассистент: журнал и ключ||AI助手：记录与密钥",b:[
+    "Вкладка «Вопросы» в «Помощи» — все вопросы сотрудников и ответы: видно, что непонятно в системе.||“帮助”中的“提问记录”显示员工所有提问与回答，可了解系统中不清楚的地方。",
+    "Ассистент работает через функцию Supabase «assistant» и ключ Anthropic в секретах Supabase (ANTHROPIC_API_KEY). Лимит расходов задаётся в консоли Anthropic. Ключ никому не пересылайте.||AI助手通过Supabase函数“assistant”运行，Anthropic密钥保存在Supabase机密（ANTHROPIC_API_KEY）中。费用上限在Anthropic控制台设置。请勿将密钥发给任何人。"]}
+  ]
+ },
+ news:[
+  {id:"s7",d:"2026-10-12",t:"Раздел «Помощь» и ИИ-ассистент||“帮助”栏目与AI助手",b:["Руководство по ролям на русском и китайском, «Что нового», ИИ-ассистент (до 30 вопросов в день), журнал вопросов для управляющего адвоката.||按角色的中俄文使用指南、“更新内容”、AI助手（每天最多30个问题）、管理合伙人可查看提问记录。"]},
+  {id:"s6",d:"2026-10-12",t:"Клиенты и корреспонденция||客户与函件",b:["Минимум данных клиента для дела, поле «ФИО руководителя», пометка неполных карточек, реквизиты в карточке.||建案所需客户最低信息、“负责人姓名”字段、不完整资料标记、资料中显示开票信息。","Корреспонденция: «Черновик → Ожидает отправки → Отправлено / Получено», файл обязателен, кроме черновика.||函件：“草稿→待发送→已发出/已收到”，除草稿外必须附文件。"]},
+  {id:"s5",d:"2026-10-12",t:"Финансы адвоката||律师财务",b:["Вкладка «Обзор» с графиками; «Мои ставки»; доход считается по ставкам управляющего адвоката; история выплат загружается.||带图表的“概览”；“我的费率”；收入按管理合伙人费率计算；发放记录可正常加载。"]},
+  {id:"s4",d:"2026-10-12",t:"Адвокат ведёт разовую услугу сам||律师独立办理一次性服务",b:["Свои стадии дела, подписание договора с файлом, порядок оплаты из списка, поступления с документом, приёмка с файлом, архив с проверкой.||自定义案件阶段、附文件签署合同、列表选择付款方式、附凭证录入收款、附文件验收、核对后归档。"]},
+  {id:"s3",d:"2026-10-12",t:"Номера договоров и «Реестр договоров»||合同编号与“合同登记簿”",b:["Номера ZCL-26-101 / ZCLF-26-101 присваиваются автоматически; реестр с фильтрами и выгрузкой в Excel.||自动生成ZCL-26-101 / ZCLF-26-101编号；登记簿支持筛选和导出Excel。"]},
+  {id:"s2",d:"2026-10-12",t:"Календарь и дедлайны||日历与截止日",b:["«План на день» на главной, «+ Событие», все дедлайны в календаре, «Срок» → «Дедлайн» датой.||首页“今日计划”、“+ 事件”、所有截止日显示在日历中，“期限”改为日期“截止日”。"]},
+  {id:"s1",d:"2026-10-12",t:"Быстрые исправления||快速修复",b:["«Вход в систему», черновики окон, F5 на той же странице, сообщения без обновления, файлы до 100 МБ, заявки по вкладкам.||“登录系统”、窗口草稿、刷新后停留原页面、消息即时送达、文件最大100 MB、申请按标签分类。"]}
+ ]
+};
+
+/* ═══════════════════════════ версия 1.0 · этап 7 · РАЗДЕЛ «ПОМОЩЬ» И ИИ-АССИСТЕНТ ═══════════════════════════
+   • «Помощь» в меню у всех сотрудников: «Руководство» (по роли, RU/ZH, поиск), «Ассистент», «Что нового», у УП — «Вопросы».
+   • Ассистент: функция Supabase «assistant» → Claude (ключ — секрет ANTHROPIC_API_KEY в Supabase, в браузер не попадает).
+     До 30 вопросов в день; предупреждение не вставлять данные клиентов; «Написать УП» открывает переписку с управляющим адвокатом.
+     Журнал вопросов (assist_log): сотрудник видит свои, УП — все (вкладка «Вопросы»).
+   • «Что нового»: полоса на главной, пока сотрудник не открыл список (запоминается в браузере).
+   Текст руководства — help_guide21.js; ассистент получает тот же текст (backend/tools/build-assistant.mjs). */
+Object.assign(UI,{
+  nHelp21:"Помощь||帮助", hlp21Guide:"Руководство||使用指南", hlp21Assist:"Ассистент||AI助手", hlp21News:"Что нового||更新内容", hlp21Log:"Вопросы||提问记录",
+  hlp21Search:"Поиск по руководству||搜索指南", hlp21NoHit:"Ничего не найдено — спросите ассистента||未找到——请询问AI助手",
+  hlp21ForMp:"Для управляющего адвоката||管理合伙人专用", hlp21Common:"Работа в системе||系统操作",
+  hlp21Warn:"Не вставляйте данные клиентов: имена, паспорта, суммы, номера дел. Ассистент отвечает только о работе в системе и может ошибаться — важное проверяйте в руководстве или у управляющего адвоката.||请勿填写客户信息：姓名、护照、金额、案件编号。AI助手仅回答系统使用问题，可能出错——重要事项请对照指南或询问管理合伙人。",
+  hlp21Q:"Ваш вопрос||您的问题", hlp21Ph:"Например: как внести поступление по делу?||例如：如何录入案件收款？", hlp21Ask:"Спросить||提问", hlp21Asking:"Ассистент думает…||AI助手思考中…",
+  hlp21Left:"Осталось вопросов сегодня: {n} из 30||今日剩余提问：{n}/30", hlp21WriteMp:"Написать УП||联系管理合伙人", hlp21Mine:"Мои вопросы||我的提问",
+  hlp21Off:"Ассистент работает в рабочей системе (на сервере)||AI助手仅在正式系统（服务器）中可用", hlp21NotYet:"Ассистент ещё не подключён — управляющий адвокат должен добавить ключ в Supabase||AI助手尚未接入——需由管理合伙人在Supabase中添加密钥",
+  hlp21Err:"Не удалось получить ответ||未能获取回答", hlp21Who:"Кто||提问人", hlp21Ans:"Ответ||回答", hlp21Tok:"токены||令牌", hlp21Today:"сегодня||今天", hlp21D30:"за 30 дней||30天内",
+  hlp21NewBar:"Новое в системе||系统更新", hlp21Open:"Открыть||查看", hlp21NoMp:"Управляющий адвокат не найден||未找到管理合伙人", hlp21St:{ok:"ответ||已回答",error:"ошибка||错误",refused:"отказ||拒绝",pending:"в работе||处理中"}
+});
+ICON.help="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01";
+const Help21={
+  srv(){return SRV21();},
+  mp(){return !isClient()&&(isFounder()||hasF("managing"));},
+  key(){return "zc_news21_"+((U()||{}).login||"");},
+  seen(){try{return localStorage.getItem(this.key())||"";}catch(e){return "";}},
+  markSeen(){try{localStorage.setItem(this.key(),HELP21.news[0].id);}catch(e){}},
+  unseen(){return !isClient()&&HELP21.news.length&&this.seen()!==HELP21.news[0].id;},
+  tabs(){return [["guide",UI.hlp21Guide],["assist",UI.hlp21Assist],["news",UI.hlp21News],...(this.mp()&&this.srv()?[["log",UI.hlp21Log]]:[])];},
+  sec(s){return `<details class="hlp21s" data-hs="${esc(s.id)}"><summary>${esc(T1(s.t))}</summary><ul>${s.b.map(x=>`<li>${esc(T1(x))}</li>`).join("")}</ul></details>`;},
+  guide(){const mp=this.mp();const R=HELP21.roles;
+    return `<div class="card hlp21g"><div class="bigsearch"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hlp21q" placeholder="${esc(T1(UI.hlp21Search))}" value="${esc(this._q||"")}"></div>
+      ${mp?`<h4>${T1(UI.hlp21ForMp)}</h4>${R.mp.map(s=>this.sec(s)).join("")}<h4 style="margin-top:16px">${T1(UI.hlp21Common)}</h4>`:""}${R.advocate.map(s=>this.sec(s)).join("")}
+      <div class="empty2" id="hlp21none" hidden>${T1(UI.hlp21NoHit)}</div></div>`;},
+  filter(root){const q=(this._q||"").trim().toLowerCase();let any=false;root.querySelectorAll(".hlp21s").forEach(d=>{const hit=!q||d.textContent.toLowerCase().includes(q);d.hidden=!hit;if(hit)any=true;if(q&&hit)d.open=true;});
+    root.querySelectorAll(".hlp21g h4").forEach(h=>{let n=h.nextElementSibling,vis=false;while(n&&n.tagName!=="H4"){if(n.classList.contains("hlp21s")&&!n.hidden)vis=true;n=n.nextElementSibling;}h.hidden=!vis;});
+    const no=root.querySelector("#hlp21none");if(no)no.hidden=any;},
+  at(x){const v=x&&x.at;if(!v)return "";try{const s=tsFirm19(v instanceof Date?v.toISOString():String(v));return s||"";}catch(e){return String(v).slice(0,16);}},
+  who(x){const a=(x.emp&&typeof accByEmp==="function"&&accByEmp(x.emp))||S.accounts[x.login];return (a&&a.name)||(x.emp?dispName(x.emp):x.login);},
+  fmt(t){return esc(String(t||"").replace(/\*\*/g,"")).replace(/\n/g,"<br>");},
+  assist(){if(!this.srv())return `<div class="card"><div class="empty2">${T1(UI.hlp21Off)}</div></div>`;
+    const mine=(this._mine||[]).slice(0,10);
+    return `<div class="cols hlp21a"><div style="display:grid;gap:14px;min-width:0"><div class="card"><div class="warn11 hlp21w">⚠ ${esc(T1(UI.hlp21Warn))}</div>
+      <label class="lbl9" for="hlp21in">${T1(UI.hlp21Q)}</label><textarea id="hlp21in" rows="4" maxlength="2000" autocomplete="off" placeholder="${esc(T1(UI.hlp21Ph))}">${esc(this._draft||"")}</textarea>
+      <div class="hlp21act"><button class="btn pri" id="hlp21ask"${this._busy?" disabled":""}>${T1(this._busy?UI.hlp21Asking:UI.hlp21Ask)}</button><button class="btn" id="hlp21mp">${T1(UI.hlp21WriteMp)}</button><span class="hlp21left" id="hlp21left">${this._left===undefined?"":esc(T1(UI.hlp21Left).replace("{n}",this._left))}</span></div>
+      ${this._err?`<div class="warn11" style="margin-top:12px">${esc(this._err)}</div>`:""}${this._ans?`<div class="hlp21ans"><b>${T1(UI.hlp21Ans)}</b><div>${this.fmt(this._ans)}</div></div>`:""}</div></div>
+      <div style="min-width:0"><div class="card"><h4>${T1(UI.hlp21Mine)}</h4>${mine.length?mine.map(x=>`<details class="hlp21s"><summary><span class="tm">${fmtDT(Help21.at(x))}</span> ${esc(String(x.question).slice(0,80))}</summary><div class="hlp21ansb">${this.fmt(x.answer||T1(UI.hlp21St[x.status]||x.status))}</div></details>`).join(""):`<div class="empty2">${T1(UI.noData)}</div>`}</div></div></div>`;},
+  news(){return `<div class="card">${HELP21.news.map(n=>`<div class="hlp21n"><div class="hlp21nd">${fmtD(n.d)}</div><div><b>${esc(T1(n.t))}</b><ul>${n.b.map(x=>`<li>${esc(T1(x))}</li>`).join("")}</ul></div></div>`).join("")}</div>`;},
+  log(){const L=(this._all||[]).slice().sort((a,b)=>this.at(b).localeCompare(this.at(a)));const t=todayS();const d30=addDays(t,-30);
+    const day=x=>Help21.at(x).slice(0,10);const today=L.filter(x=>day(x)===t).length,m=L.filter(x=>day(x)>=d30).length;
+    return `<div class="tiles">${F.tile(today,UI.hlp21Today,"blue")}${F.tile(m,UI.hlp21D30,"")}${F.tile(new Set(L.filter(x=>day(x)>=d30).map(x=>x.login)).size,UI.hlp21Who,"green")}</div>
+      <div class="card"><h4>${T1(UI.hlp21Log)}</h4>${L.length?`<div style="overflow-x:auto"><table class="tbl reg"><thead><tr><th>${T1(UI.eDate)}</th><th>${T1(UI.hlp21Who)}</th><th>${T1(UI.hlp21Q)}</th><th>${T1(UI.mStatus)}</th><th class="num">${T1(UI.hlp21Tok)}</th></tr></thead><tbody>${L.slice(0,200).map(x=>`<tr><td style="white-space:nowrap">${fmtDT(Help21.at(x))}</td><td>${esc(Help21.who(x))}</td><td><details class="hlp21s"><summary>${esc(String(x.question).slice(0,120))}</summary><div class="hlp21ansb">${this.fmt(x.answer||"")}</div></details></td><td>${T1(UI.hlp21St[x.status]||x.status)}</td><td class="num">${(+x.in_tok||0)+(+x.out_tok||0)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.noData)}</div>`}</div>`;},
+  page(){const tabs=this.tabs();if(!tabs.some(t=>t[0]===this._t))this._t="guide";if(this._t==="news")this.markSeen();
+    const body=this._t==="assist"?this.assist():this._t==="news"?this.news():this._t==="log"?this.log():this.guide();
+    if((this._t==="assist"&&!this._loaded)||(this._t==="log"&&!this._loadedAll))setTimeout(()=>this.load(),0);
+    return F.hdr(T1(UI.nHelp21),T1((tabs.find(t=>t[0]===this._t)||tabs[0])[1]))+`<div class="ptabs">${tabs.map(([k,l])=>`<button class="${this._t===k?"on":""}" data-hl21="${k}">${T1(l)}</button>`).join("")}</div>`+body;},
+  async load(){if(!this.srv())return;const me=(U()||{}).login;
+    try{if(this._t==="assist"&&!this._loaded){this._loaded=true;const [n,rows]=await Promise.all([SB19.T.rpc("assist_left").catch(()=>undefined),SB19.T.select("assist_log").catch(()=>[])]);
+        this._left=typeof n==="number"?n:(Array.isArray(n)?n[0]:undefined);this._mine=(rows||[]).filter(x=>x.login===me).sort((a,b)=>this.at(b).localeCompare(this.at(a)));}
+      if(this._t==="log"&&!this._loadedAll){this._loadedAll=true;this._all=(await SB19.T.select("assist_log").catch(()=>[]))||[];}}catch(e){}
+    if(Router.cur==="help")Router.render();},
+  async ask(){const el=document.getElementById("hlp21in");const q=(el&&el.value||"").trim();if(!q||this._busy)return;this._draft=q;this._busy=true;this._err="";this._ans="";Router.render();
+    try{if(!SB19.T.invoke)throw Object.assign(new Error(T1(UI.hlp21NotYet)),{status:404});const r=await SB19.T.invoke("assistant",{q,lang:lang==="zh"?"zh":"ru"});
+      this._ans=(r&&r.answer)||"";if(r&&typeof r.left==="number")this._left=r.left;this._draft="";this._loaded=false;this._loadedAll=false;}
+    catch(e){const st=e&&e.status;this._err=st===404||(e&&e.code==="no_key")?T1(UI.hlp21NotYet):String((e&&e.message)||T1(UI.hlp21Err));if(st===429)this._left=0;}
+    finally{this._busy=false;}
+    if(Router.cur==="help"){Router.render();if(!this._loaded)this.load();}},
+  writeMp(){const me=(U()||{}).login;const l=(typeof Svc21!=="undefined"?Svc21.mpLogins():[]).find(x=>x&&x!==me);if(!l){toast(T1(UI.hlp21NoMp));return;}Notif.open("msgs",l);}
+};
+Router.extra=Object.assign(Router.extra||{},{help:()=>Help21.page()});
+/* меню: «Помощь» последним пунктом у сотрудников */
+const _navHelp21=navFor;navFor=function(){const g=_navHelp21.apply(this,arguments);if(!U()||isClient()||!g.length)return g;const last=g[g.length-1][1];if(Array.isArray(last)&&!last.some(x=>x[0]==="help"))last.push(["help",UI.nHelp21,"help"]);return g;};
+/* главная: полоса «Что нового», пока список не открыт */
+const _homeHelp21=Home.html;Home.html=function(){const h=_homeHelp21.apply(this,arguments);if(!Help21.unseen())return h;const n=HELP21.news[0];
+  return `<div class="hlp21bar"><b>${T1(UI.hlp21NewBar)}:</b> <span>${esc(T1(n.t))}</span><button class="btn sm" data-hl21news="1">${T1(UI.hlp21Open)}</button><button class="lnk" data-hl21close="1" aria-label="✕">✕</button></div>`+h;};
+const _pbindHelp21=Pages.bind;Pages.bind=function(vp){_pbindHelp21.call(this,vp);
+  vp.querySelectorAll("[data-hl21]").forEach(el=>el.onclick=()=>{Help21._t=el.dataset.hl21;Router.render();});
+  const nb=vp.querySelector("[data-hl21news]");if(nb)nb.onclick=()=>{Help21._t="news";Router.go("help");};
+  const nc=vp.querySelector("[data-hl21close]");if(nc)nc.onclick=()=>{Help21.markSeen();Router.render();};
+  const q=vp.querySelector("#hlp21q");if(q){q.oninput=()=>{Help21._q=q.value;Help21.filter(vp);};Help21.filter(vp);}
+  const inp=vp.querySelector("#hlp21in");if(inp){inp.oninput=()=>{Help21._draft=inp.value;};inp.onkeydown=e=>{if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();Help21.ask();}};}
+  const a=vp.querySelector("#hlp21ask");if(a)a.onclick=()=>Help21.ask();
+  const w=vp.querySelector("#hlp21mp");if(w)w.onclick=()=>Help21.writeMp();};
+(function(){const st=document.createElement("style");st.textContent=`
+.hlp21g .bigsearch{margin-bottom:14px}.hlp21g h4{margin:6px 0 8px}
+.hlp21s{border-bottom:1px solid var(--line-2);padding:10px 2px}.hlp21s summary{cursor:pointer;font-weight:600;list-style-position:outside}
+.hlp21s ul{margin:8px 0 2px 18px;padding:0;display:grid;gap:6px;line-height:1.5;color:var(--ink-2)}.hlp21s[hidden]{display:none}
+.hlp21w{margin-bottom:12px;line-height:1.45}.hlp21a textarea{width:100%;box-sizing:border-box;margin-top:6px;resize:vertical;font:inherit}
+.hlp21act{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}.hlp21left{margin-left:auto;font-size:12px;color:var(--ink-3)}
+.hlp21ans{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--line-2);line-height:1.55;overflow-wrap:anywhere}.hlp21ans b{display:block;margin-bottom:6px}
+.hlp21ansb{margin-top:8px;line-height:1.5;color:var(--ink-2);overflow-wrap:anywhere}
+.hlp21n{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-2)}.hlp21n ul{margin:6px 0 0 18px;padding:0;line-height:1.5;color:var(--ink-2)}.hlp21nd{color:var(--ink-3);font-size:12px;font-variant-numeric:tabular-nums}
+.hlp21bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 14px;margin-bottom:14px;border-radius:10px;background:var(--info-soft,var(--line-2));color:var(--ink)}.hlp21bar .lnk{margin-left:auto}
+@media (max-width:640px){.hlp21n{grid-template-columns:1fr}}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
