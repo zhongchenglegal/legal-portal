@@ -9874,7 +9874,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="16f12f50cd75";
+const ZC_BUILD="b5d1733c7b9b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11145,6 +11145,112 @@ const _pbindSvc21=Pages.bind;Pages.bind=function(vp){_pbindSvc21.call(this,vp);i
   /* задачи по делу — после того, как можно начать работу */
   const nt=vp.querySelector('[data-act="newTaskM"]');if(nt&&Router.cur==="matter"){const orig=nt.onclick;nt.onclick=e=>{const m=matter(Router.arg);if(m&&m.status!=="closed"){if(m.pipeline!=="contract"){toast(T1(UI.plBlocked));return;}const g=Gate21.start(m);if(g.length&&St21.before(m,"work")){toast(T1(UI.st21TasksBlocked)+": "+g.join(" · "));return;}}if(orig)orig.call(nt,e);};}};
 (()=>{const st=document.createElement("style");st.textContent=`.gate21{font-weight:600}.pend21{margin-top:10px}.pend21 .reqrow{align-items:center}.pend21 .rt.open{margin-left:auto}.ar21 .reqrow{align-items:center}.ar21 .rt.open{margin-left:auto}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.0 · этап 5 · ФИНАНСЫ АДВОКАТА: «ОБЗОР» И СВОИ СТАВКИ ═══════════════════════════
+   • «Финансы» адвоката: первая вкладка «Обзор» — только свои дела и свой доход: поступления и заработок по месяцам,
+     самые доходные дела, виды услуг, долги клиентов, КП → договоры, сроки.
+   • Свои ставки: настройки оплаты фирмы целиком видны только финансам, поэтому раньше портал адвоката считал «Мой доход»
+     по стандартным ставкам программы. Теперь после входа приходят ставки, утверждённые управляющим адвокатом (my_pay_settings):
+     только то, что нужно для своего расчёта. Карточка «Мои ставки» — в «Обзоре» и в «Мой доход».
+   • Заработок по делу — оценка: база по делу × ваш процент (минимум и квартальные части распределяются по месяцу, не по делу). */
+Object.assign(UI,{
+  fin21Ov:"Обзор||概览", fin21In12:"Поступления по моим делам · 12 мес.||我的案件收款 · 12个月", fin21Earn12:"Мой заработок на руки · 12 мес.||我的实发收入 · 12个月",
+  fin21Avg:"в среднем в месяц||月均", fin21Debt:"Долги клиентов по моим делам||我的案件客户欠款", fin21Conv:"КП → договор||报价 → 合同",
+  fin21Pend:"ещё на проверке у УП||待管理合伙人核对", fin21ByMonth:"Поступления и заработок по месяцам||按月收款与收入", fin21InS:"Поступления||收款", fin21EarnS:"Заработок на руки||实发收入",
+  fin21Prelim:"{m} — предварительно, месяц ещё не утверждён||{m}——预估，本月尚未批准", fin21Top:"Самые доходные дела||收入最高的案件", fin21Rcv:"поступило||已收款", fin21MyEst:"мой заработок ≈||我的收入≈",
+  fin21EstNote:"Заработок по делу — оценка: база по делу × ваш процент. Минимум и квартальные части считаются за месяц, а не по делу.||按案件的收入为估算：案件基数 × 您的比例。保底与季度部分按月计算，不按案件。",
+  fin21Svc:"По видам услуг · 12 мес.||按服务类型 · 12个月", fin21Matters:"дел||案件", fin21Active:"в работе||进行中",
+  fin21DebtT:"Долги клиентов||客户欠款", fin21Paid:"оплачено||已付", fin21NoDebt:"Долгов по вашим делам нет||您的案件没有欠款",
+  fin21AfterRes:"оплата после результата — результат готов||结果后付款——结果已完成",
+  fin21Kp:"КП и договоры · 12 мес.||报价与合同 · 12个月", fin21KpAll:"новых дел||新案件", fin21KpSent:"КП отправлено||已发送报价", fin21KpSigned:"договор подписан||合同已签署", fin21KpLost:"отказ||未成交",
+  fin21Dl:"Сроки разовых услуг · 12 мес.||一次性服务期限 · 12个月", fin21OnTime:"сданы в срок||按期完成", fin21Late:"с просрочкой||逾期完成", fin21LateNow:"просрочено сейчас||当前已逾期", fin21Soon:"дедлайн в ближайшие 7 дней||7天内到期",
+  fin21Rates:"Мои ставки||我的费率", fin21Pct:"Процент от базы||基数比例", fin21Min:"Гарантированный минимум в месяц||每月保底", fin21MinNote:"выплачивается как аванс в счёт процентной части||作为比例部分的预支发放",
+  fin21Repay:"погашение аванса — не больше {p} % начисления в месяц||每月偿还预支不超过应计的{p}%", fin21Prem:"Премиальная часть||奖金部分", fin21Tax:"Налоги||税费", fin21TaxV:"соц. {s} % · НДФЛ {n} %||社保{s}% · 个税{n}%",
+  fin21Rate:"Курс||汇率", fin21Base:"База — поступления по вашим делам без НДС и транзитных сумм, по вашей доле в деле.||基数——您案件的收款（不含增值税与代收代付），按您在案件中的份额计算。",
+  fin21SrcMp:"Ставки утверждены управляющим адвокатом||费率由管理合伙人批准", fin21SrcDef:"Стандартные ставки программы — управляющий адвокат их не менял||系统标准费率——管理合伙人未修改",
+  fin21SrcErr:"Не удалось получить ставки с сервера — показаны стандартные||无法从服务器获取费率——显示标准费率", fin21Changed:"изменены {d}||修改于{d}", fin21None:"Пока нет данных||暂无数据"
+});
+const Fin21={
+  src:"",
+  me(){return (U()||{}).emp;},
+  months(){const M=todayS().slice(0,7);return Array.from({length:12},(_,i)=>addMonth(M,i-11));},
+  mine(){return MMall().filter(m=>m&&!m._fact20&&Adv21.touches(m));},
+  pays(ids){return Object.values(S.payments||{}).filter(p=>p&&p.matterId&&ids.has(p.matterId));},
+  usd(p){try{return Pay.usdOf(p);}catch(e){return 0;}},
+  toUsd(v,cur){const st=paySettings();return r2((+v||0)*Money17.rate(cur||"UZS")/(+st.usdRate||12750));},
+  signed(m){return m.pipeline==="contract"||m.contractSigned===true;},
+  lost(m){return m.pipeline==="lost"||m.closeReason==="lost";},
+  /* строка своей зарплаты за месяц: утверждённая — как есть, текущий месяц — предварительно */
+  row(M){const me=this.me();const d=S.payroll[M];if(d&&d.status==="approved")return {r:(d.rows||[]).find(x=>x.emp===me)||null,pre:false};
+    if(M===todayS().slice(0,7)&&payPeople().includes(me)){try{const c=Pay.current("month",M);return {r:(c.rows||[]).find(x=>x.emp===me)||null,pre:c.status!=="approved"};}catch(e){}}return {r:null,pre:false};},
+  lineEarn(r,l){if(!r||!l)return 0;const pct=l.kind==="cn"?(+paySettings().cnMonthlyPct||0):l.kind==="exec"?(+r.pct||0):0;return r2((+l.base||0)*pct/100);},
+  data(){const me=this.me(),ms=this.months(),from=ms[0]+"-01";const mm=this.mine();const ids=new Set(mm.map(m=>m.id));const pays=this.pays(ids);
+    const ok=pays.filter(p=>!p.pending),pend=pays.filter(p=>p.pending);
+    const inM=ms.map(M=>r2(ok.filter(p=>monthOf(p.date)===M).reduce((s,p)=>s+this.usd(p),0)));
+    const rows=ms.map(M=>this.row(M));const earnM=rows.map(x=>x.r?r2(+x.r.net||0):0);
+    /* заработок по делам — из строк зарплаты (база по делу × процент) */
+    const byNo={};rows.forEach(x=>{if(!x.r)return;(x.r.lines||[]).forEach(l=>{if(!l.no)return;byNo[l.no]=r2((byNo[l.no]||0)+this.lineEarn(x.r,l));});});
+    const top=mm.map(m=>{const rc=r2(ok.filter(p=>p.matterId===m.id).reduce((s,p)=>s+this.usd(p),0));return {m,rc,earn:byNo[m.no]||0};}).filter(x=>x.rc>0||x.earn>0).sort((a,b)=>b.rc-a.rc||b.earn-a.earn).slice(0,8);
+    const svc={};["oneoff","court","support"].forEach(k=>svc[k]={n:0,act:0,usd:0});
+    mm.forEach(m=>{const s=svc[m.svc];if(!s)return;s.n++;if(m.status!=="closed"&&!this.lost(m))s.act++;});
+    ok.filter(p=>p.date>=from).forEach(p=>{const m=S.matters[p.matterId];const s=m&&svc[m.svc];if(s)s.usd=r2(s.usd+this.usd(p));});
+    const debts=mm.filter(m=>this.signed(m)&&!this.lost(m)&&(+m.cost||0)>0&&m.status!=="cancelled").map(m=>{const cur=Pay21.cur(m);const left=r2((+m.cost||0)-Pay21.paidC(m));return {m,cur,left,usd:this.toUsd(left,cur),pct:Pay21.pct(m)};}).filter(x=>x.left>0.5).sort((a,b)=>b.usd-a.usd);
+    const fresh=mm.filter(m=>m.lead===me&&(m.opened||"")>=from);
+    const kp={all:fresh.length,sent:fresh.filter(m=>m.offer&&m.offer.sentAt).length,signed:fresh.filter(m=>this.signed(m)).length,lost:fresh.filter(m=>this.lost(m)).length};
+    const one=mm.filter(m=>m.svc==="oneoff"&&m.deadline&&!this.lost(m));const done=one.filter(m=>m.readyAt&&m.readyAt.slice(0,10)>=from);
+    const late=done.filter(m=>(m.overdues||[]).some(o=>o.kind==="matter")||m.readyAt.slice(0,10)>m.deadline).length;
+    const open=one.filter(m=>!m.readyAt&&m.status!=="closed");const t=todayS();
+    const dl={onTime:done.length-late,late,now:open.filter(m=>m.deadline<t).length,soon:open.filter(m=>m.deadline>=t&&m.deadline<=addDays(t,7)).length};
+    const last=rows[rows.length-1];const pre=last&&last.pre&&last.r?ms[ms.length-1]:"";
+    return {ms,inM,earnM,top,svc,debts,kp,dl,pre,pendUsd:r2(pend.reduce((s,p)=>s+this.usd(p),0)),pendN:pend.length};},
+  bar(v,mx,color){const w=mx>0?Math.max(v>0?2:0,Math.round(v/mx*100)):0;return `<div class="fin21bar"><i style="width:${w}%;background:${color||"var(--info)"}"></i></div>`;},
+  html(){const d=this.data();const sum=a=>r2(a.reduce((s,x)=>s+x,0));const in12=sum(d.inM),earn12=sum(d.earnM);const nE=d.earnM.filter(x=>x>0).length;
+    const debtUsd=r2(d.debts.reduce((s,x)=>s+x.usd,0));const conv=d.kp.sent?Math.round(d.kp.signed/d.kp.sent*100):0;
+    const tiles=`<div class="tiles">${F.tile(fmtUsd(in12),UI.fin21In12,"blue",d.pendN?`+ ${fmtUsd(d.pendUsd)} ${T1(UI.fin21Pend)}`:"")}${F.tile(fmtUsd(earn12),UI.fin21Earn12,"green",nE?`${fmtUsd(r2(earn12/nE))} ${T1(UI.fin21Avg)}`:"")}${F.tile(fmtUsd(debtUsd),UI.fin21Debt,d.debts.length?"red":"",d.debts.length?`${T1(UI.fin21Matters)}: ${d.debts.length}`:"")}${F.tile(d.kp.sent?conv+" %":"—",UI.fin21Conv,"amber",`${d.kp.signed} / ${d.kp.sent}`)}</div>`;
+    const chart=Chart.bars(d.ms.map(m=>MON_S(m)),[{name:UI.fin21InS,color:"var(--info)",values:d.inM.map(Math.round)},{name:UI.fin21EarnS,color:"var(--ok)",values:d.earnM.map(Math.round)}],{h:170,ticks:12,w:700});
+    const byMonth=`<div class="card"><h4>${T1(UI.fin21ByMonth)} · $</h4>${chart}${d.pre?`<div class="fin21note">${T1(UI.fin21Prelim).replace("{m}",fmtM(d.pre))}</div>`:""}</div>`;
+    const mxT=Math.max(1,...d.top.map(x=>x.rc));const cn=m=>{const c=m.clientId&&client(m.clientId);return c?clientName(c):"";};
+    const top=`<div class="card"><h4>${T1(UI.fin21Top)}</h4>${d.top.length?`<table class="paytbl"><thead><tr><th>${T1(UI.eMatter)}</th><th class="num">${T1(UI.fin21Rcv)}</th><th class="num">${T1(UI.fin21MyEst)}</th></tr></thead><tbody>${d.top.map(x=>`<tr data-matter="${x.m.id}" style="cursor:pointer"><td><b>${esc(x.m.no||"")}</b> · ${esc(mT18(x.m).slice(0,60))}<br><small style="color:var(--ink-3)">${esc(cn(x.m))}</small>${this.bar(x.rc,mxT)}</td><td class="num">${fmtUsd(x.rc)}</td><td class="num"><b style="color:var(--ok-d)">${x.earn?fmtUsd(x.earn):"—"}</b></td></tr>`).join("")}</tbody></table><div class="fin21note">${T1(UI.fin21EstNote)}</div>`:`<div class="empty2">${T1(UI.fin21None)}</div>`}</div>`;
+    const SV=[["oneoff",UI.nOneoff,"var(--info)"],["court",UI.nCourt11,"var(--red)"],["support",UI.nSupport11,"var(--ok)"]];const mxS=Math.max(1,...SV.map(([k])=>d.svc[k].usd));
+    const svc=`<div class="card"><h4>${T1(UI.fin21Svc)}</h4><div class="fin21list">${SV.map(([k,l,c])=>{const s=d.svc[k];return `<div><div class="fin21row"><span>${T1(l)}</span><b>${fmtUsd(s.usd)}</b></div>${this.bar(s.usd,mxS,c)}<small>${T1(UI.fin21Matters)}: ${s.n} · ${T1(UI.fin21Active)}: ${s.act}</small></div>`;}).join("")}</div></div>`;
+    const debts=`<div class="card"><h4>${T1(UI.fin21DebtT)}${d.debts.length?`<b style="margin-left:auto">${fmtUsd(debtUsd)}</b>`:""}</h4>${d.debts.length?`<div style="display:grid;gap:6px">${d.debts.slice(0,10).map(x=>`<div class="reqrow" data-matter="${x.m.id}" style="cursor:pointer"><span class="tm">${esc(x.m.no||"")}</span><span>${esc(mT18(x.m).slice(0,48))}<br><small style="color:var(--ink-3)">${esc(payOrderLabel21(x.m))} · ${T1(UI.fin21Paid)} ${x.pct} %${x.m.payOrder==="postpay"&&x.m.readyAt?` · <span style="color:var(--red-d)">${T1(UI.fin21AfterRes)}</span>`:""}</small></span><b style="margin-left:auto;white-space:nowrap">${fmtN(Math.round(x.left))} ${esc(x.cur==="UZS"?T1(UI.sum):x.cur)}</b></div>`).join("")}</div>`:`<div class="empty2">${T1(UI.fin21NoDebt)}</div>`}</div>`;
+    const K=[[d.kp.all,UI.fin21KpAll,"var(--ink-3)"],[d.kp.sent,UI.fin21KpSent,"var(--info)"],[d.kp.signed,UI.fin21KpSigned,"var(--ok)"],[d.kp.lost,UI.fin21KpLost,"var(--red)"]];const mxK=Math.max(1,d.kp.all);
+    const kp=`<div class="card"><h4>${T1(UI.fin21Kp)}${d.kp.sent?`<b style="margin-left:auto">${conv} %</b>`:""}</h4><div class="fin21list">${K.map(([v,l,c])=>`<div><div class="fin21row"><span>${T1(l)}</span><b>${v}</b></div>${this.bar(v,mxK,c)}</div>`).join("")}</div></div>`;
+    const dn=d.dl.onTime+d.dl.late;const onPct=dn?Math.round(d.dl.onTime/dn*100):0;
+    const dl=`<div class="card"><h4>${T1(UI.fin21Dl)}${dn?`<b style="margin-left:auto">${onPct} %</b>`:""}</h4>${dn?`<div class="fin21split"><i style="width:${onPct}%;background:var(--ok)"></i><i style="width:${100-onPct}%;background:var(--red)"></i></div>`:""}<div class="fin21list">${[[d.dl.onTime,UI.fin21OnTime,"var(--ok-d)"],[d.dl.late,UI.fin21Late,"var(--red-d)"],[d.dl.now,UI.fin21LateNow,"var(--red-d)"],[d.dl.soon,UI.fin21Soon,"var(--warn-d)"]].map(([v,l,c])=>`<div class="fin21row"><span>${T1(l)}</span><b style="color:${v?c:"var(--ink-3)"}">${v}</b></div>`).join("")}</div></div>`;
+    return tiles+`<div class="cols myinc fin21"><div style="display:grid;gap:14px;min-width:0">${byMonth}${top}${debts}</div><div style="display:grid;gap:14px;min-width:0">${this.rates()}${svc}${kp}${dl}</div></div>`;},
+  rates(){const me=this.me();if(!me||!payPeople().includes(me))return "";const st=paySettings();const P=posOf(me);const raw=S.settings.pay||{};
+    const pct=Pay.execPct(me,st);const min=(st.minByPos&&st.minByPos[P]!==undefined)?st.minByPos[P]:st.execMin;const prem=(st.premiumByPos||{})[P];const pl=(typeof PREM_OPTS!=="undefined"?PREM_OPTS:[]).find(x=>x[0]===prem);
+    const src=this.src==="err"?T1(UI.fin21SrcErr):(raw._mine21||raw.updatedAt)?T1(UI.fin21SrcMp)+(raw.updatedAt?" · "+T1(UI.fin21Changed).replace("{d}",fmtD(String(raw.updatedAt).slice(0,10))):""):T1(UI.fin21SrcDef);
+    const row=(l,v,n)=>`<div class="fin21row"><span>${T1(l)}${n?`<br><small>${n}</small>`:""}</span><b>${v}</b></div>`;
+    return `<div class="card fin21rates"><h4>${T1(UI.fin21Rates)}<span style="margin-left:auto;font-size:12px;color:var(--ink-3);font-weight:600">${esc(POS_NAME(P))}</span></h4><div class="fin21list">
+      ${isExecPos(P)?row(UI.fin21Pct,pct+" %")+row(UI.fin21Min,fmtUsd(min),T1(UI.fin21MinNote)+"; "+T1(UI.fin21Repay).replace("{p}",st.advRepayPct)):""}
+      ${pl?row(UI.fin21Prem,T1(pl[1])):""}${row(UI.fin21Tax,T1(UI.fin21TaxV).replace("{s}",st.socialPct).replace("{n}",st.ndflPct))}${row(UI.fin21Rate,"1 $ = "+fmtN(st.usdRate)+" "+T1(UI.sum))}</div>
+      <div class="fin21note">${isExecPos(P)?T1(UI.fin21Base)+" ":""}${src}</div></div>`;}
+};
+/* свои ставки после входа: сотрудник без доступа к финансам */
+if(typeof SB19!=="undefined"){const _stFin21=SB19.start.bind(SB19);SB19.start=async function(login){const r=await _stFin21.apply(this,arguments);
+  try{if(this.kind!=="client"&&this.T&&!(typeof can==="function"&&(can("finance")||can("payroll")||can("paySettings")))){Fin21.src="";
+    try{const v=await this.T.rpc("my_pay_settings");const o=Array.isArray(v)?v[0]:v;if(o&&typeof o==="object"&&Object.keys(o).length){S.settings.pay=Object.assign({},o,{id:"pay",_mine21:true});Fin21.src="mp";}else Fin21.src="def";}
+    catch(e){Fin21.src="err";}if(typeof Pay!=="undefined")Pay.cache={};}}catch(e){}
+  return r;};}
+/* «Финансы» адвоката: вкладка «Обзор» первой */
+const _finFin21=Pages.fin;Pages.fin=function(){if(!Adv21.on())return _finFin21.apply(this,arguments);
+  if(!["ov","mi","mp"].includes(this._ft))this._ft="ov";
+  const ovBtn=`<button class="${this._ft==="ov"?"on":""}" data-ft="ov">${T1(UI.fin21Ov)}</button>`;
+  if(this._ft!=="ov"){const h=_finFin21.apply(this,arguments);return h.replace('<div class="ptabs">','<div class="ptabs">'+ovBtn);}
+  const tb=`<div class="ptabs">${ovBtn}<button data-ft="mi">${T1(UI.adv21MyInc)}</button><button data-ft="mp">${T1(UI.adv21MyPays)}</button></div>`;
+  return F.hdr(T1(UI.nFin),dispName(U().emp))+tb+Fin21.html();};
+/* «Мой доход»: карточка «Мои ставки» */
+const _myincFin21=Pages.myincome;Pages.myincome=function(){const h=_myincFin21.apply(this,arguments);const me=(U()||{}).emp;if(!me||!payPeople().includes(me)||can("payroll"))return h;
+  const card=Fin21.rates();const i=h.lastIndexOf("</div></div>");return i>0?h.slice(0,i)+card+h.slice(i):h+card;};
+(function(){const st=document.createElement("style");st.textContent=`
+.fin21bar{height:6px;border-radius:3px;background:var(--line-2);overflow:hidden;margin-top:6px}.fin21bar i{display:block;height:100%;border-radius:3px}
+.fin21list{display:grid;gap:12px}.fin21list small{font-size:11.5px;color:var(--ink-3)}
+.fin21row{display:flex;gap:12px;align-items:baseline;justify-content:space-between}.fin21row span{min-width:0}.fin21row b{white-space:nowrap;font-variant-numeric:tabular-nums}
+.fin21note{font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.45}
+.fin21split{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-bottom:12px;background:var(--line-2)}.fin21split i{display:block;height:100%}
+.fin21 .paytbl td{vertical-align:top}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
