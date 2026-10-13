@@ -9876,7 +9876,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="9e8545a34308";
+const ZC_BUILD="e8a17b789e63";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -9959,7 +9959,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="1.0";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="1.1";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -11396,7 +11396,7 @@ const _pbindCli21=Pages.bind;Pages.bind=function(vp){_pbindCli21.call(this,vp);
    Только данные: руководство по ролям и «Что нового» (строки «русский||中文»). Отсюда же собирается текст для ИИ-ассистента
    (backend/supabase/functions/assistant/index.ts — скрипт backend/tools/build-assistant.mjs). После правки текста — пересобрать функцию. */
 const HELP21={
- ver:"1.0.7",
+ ver:"1.1.1",
  roles:{
   advocate:[
    {id:"login",t:"Вход и работа с окнами||登录与窗口操作",b:[
@@ -11449,6 +11449,14 @@ const HELP21={
    {id:"clients",t:"Клиенты||客户",b:[
     "В карточке клиента на «Обзоре» видны реквизиты: ИНН или ПИНФЛ, руководитель, адрес, банк, счёт, МФО, контакт, телефон.||客户资料“概览”中显示开票信息：税号或个人识别号、负责人、地址、银行、账号、MFO、联系人、电话。",
     "Вы видите клиентов своих дел и тех, кого создали сами.||您可以看到自己案件的客户以及自己创建的客户。"]},
+   {id:"translate",t:"ИИ-переводчик||AI翻译",b:[
+    "Круглая кнопка с иконкой переводчика — в правом нижнем углу на любом экране, даже поверх открытого окна.||翻译按钮位于任意页面右下角，即使打开窗口时也可使用。",
+    "Вставьте текст — перевод начнётся сразу. Набранный текст переводится по Enter (Shift+Enter — новая строка). «Копировать» — и вставляйте в WeChat, Telegram или письмо.||粘贴文字即自动翻译。输入的文字按Enter翻译（Shift+Enter换行）。点击“复制”后可粘贴到微信、Telegram或邮件中。",
+    "Направление выбирается само: русский и узбекский — на китайский; китайский — на язык интерфейса (узбекский или русский). Чтобы перевести иначе, допишите в тексте: «на английский», «на узбекском кириллицей».||翻译方向自动判断：俄语和乌兹别克语译为中文；中文译为界面语言（乌兹别克语或俄语）。如需其他方向，可在文字中注明：“翻译成英文”等。",
+    "Узбекский перевод — на латинице; кнопка «Кириллица» меняет буквы без нового перевода.||乌兹别克语译文为拉丁字母；“西里尔字母”按钮可直接转换字母，无需重新翻译。",
+    "Режимы: «Авто» — система выбирает сама; «Быстрый» — для переписки, 1–3 секунды; «Точный» — для договоров, писем в госорганы и сложных юридических текстов.||模式：“自动”——系统自动选择；“快速”——用于沟通，1–3秒；“精确”——用于合同、公函及复杂法律文本。",
+    "До 200 переводов в день, до 5000 знаков за раз — длинный документ переводите частями.||每天最多200次，每次最多5000字符——长文档请分段翻译。",
+    "Хранится только ваш последний перевод. Тексты с грубостью, оскорблениями или явно незаконным содержанием система отмечает, и управляющий адвокат получает уведомление. Обычная юридическая работа (материалы дел, описание нарушений) не отмечается.||仅保存您最近一次翻译。含粗俗、侮辱或明显违法内容的文字会被系统标记并通知管理合伙人。正常法律工作（案件材料、违法行为描述）不会被标记。"]},
    {id:"assist",t:"ИИ-ассистент||AI助手",b:[
     "Ассистент отвечает на вопросы о работе в системе по этому руководству. Юридических консультаций по делам он не даёт.||AI助手依据本指南回答系统使用问题，不提供案件法律意见。",
     "Не вставляйте в вопрос данные клиентов: имена, паспорта, суммы, номера дел.||提问时请勿填写客户信息：姓名、护照、金额、案件编号。",
@@ -11475,12 +11483,16 @@ const HELP21={
    {id:"fin",t:"Финансы и зарплата||财务与工资",b:[
     "Параметры оплаты (проценты, минимумы, налоги, курс) задаёт управляющий адвокат в «Финансах». Адвокат видит свои ставки в «Мой доход» и «Обзоре».||付款参数（比例、保底、税费、汇率）由管理合伙人在“财务”中设定。律师可在“我的收入”和“概览”中查看本人费率。",
     "Расчёт зарплаты утверждается после проверки; система пересчитывает его по данным сервера и не даёт утвердить, если числа не совпадают.||工资核算须核对后批准；系统会按服务器数据重新计算，数据不一致时无法批准。"]},
+   {id:"trlog",t:"Переводчик: история и нарушения||翻译：记录与违规",b:[
+    "«Помощь» → «Переводы»: что требует внимания (с текстом и причиной), последний перевод каждого сотрудника и число переводов за 30 дней. Тексты обычных переводов не хранятся.||“帮助”→“翻译记录”：需关注的记录（含原文与原因）、每位员工最近一次翻译及30天翻译次数。普通翻译内容不保存。",
+    "Уведомление о нарушении приходит в «События» и открывает эту вкладку.||违规通知会出现在“事件”中，点击即可打开该页面。"]},
    {id:"assist",t:"ИИ-ассистент: журнал и ключ||AI助手：记录与密钥",b:[
     "Вкладка «Вопросы» в «Помощи» — все вопросы сотрудников и ответы: видно, что непонятно в системе.||“帮助”中的“提问记录”显示员工所有提问与回答，可了解系统中不清楚的地方。",
     "Ассистент работает через функцию Supabase «assistant» и ключ Anthropic в секретах Supabase (ANTHROPIC_API_KEY). Лимит расходов задаётся в консоли Anthropic. Ключ никому не пересылайте.||AI助手通过Supabase函数“assistant”运行，Anthropic密钥保存在Supabase机密（ANTHROPIC_API_KEY）中。费用上限在Anthropic控制台设置。请勿将密钥发给任何人。"]}
   ]
  },
  news:[
+  {id:"v11s1",d:"2026-10-13",t:"Версия 1.1: ИИ-переводчик||1.1版：AI翻译",b:["Кнопка переводчика в правом нижнем углу: русский и узбекский ↔ китайский, вставили — перевелось, режимы «Авто», «Быстрый», «Точный».||右下角翻译按钮：俄语、乌兹别克语↔中文，粘贴即译，提供“自动”“快速”“精确”模式。"]},
   {id:"s7",d:"2026-10-12",t:"Раздел «Помощь» и ИИ-ассистент||“帮助”栏目与AI助手",b:["Руководство по ролям на русском и китайском, «Что нового», ИИ-ассистент (до 30 вопросов в день), журнал вопросов для управляющего адвоката.||按角色的中俄文使用指南、“更新内容”、AI助手（每天最多30个问题）、管理合伙人可查看提问记录。"]},
   {id:"s6",d:"2026-10-12",t:"Клиенты и корреспонденция||客户与函件",b:["Минимум данных клиента для дела, поле «ФИО руководителя», пометка неполных карточек, реквизиты в карточке.||建案所需客户最低信息、“负责人姓名”字段、不完整资料标记、资料中显示开票信息。","Корреспонденция: «Черновик → Ожидает отправки → Отправлено / Получено», файл обязателен, кроме черновика.||函件：“草稿→待发送→已发出/已收到”，除草稿外必须附文件。"]},
   {id:"s5",d:"2026-10-12",t:"Финансы адвоката||律师财务",b:["Вкладка «Обзор» с графиками; «Мои ставки»; доход считается по ставкам управляющего адвоката; история выплат загружается.||带图表的“概览”；“我的费率”；收入按管理合伙人费率计算；发放记录可正常加载。"]},
@@ -11583,6 +11595,123 @@ const _pbindHelp21=Pages.bind;Pages.bind=function(vp){_pbindHelp21.call(this,vp)
 .hlp21n{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-2)}.hlp21n ul{margin:6px 0 0 18px;padding:0;line-height:1.5;color:var(--ink-2)}.hlp21nd{color:var(--ink-3);font-size:12px;font-variant-numeric:tabular-nums}
 .hlp21bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 14px;margin-bottom:14px;border-radius:10px;background:var(--info-soft,var(--line-2));color:var(--ink)}.hlp21bar .lnk{margin-left:auto}
 @media (max-width:640px){.hlp21n{grid-template-columns:1fr}}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.1 · этап 1 · ИИ-ПЕРЕВОДЧИК ═══════════════════════════
+   • Круглая кнопка в правом нижнем углу на любом экране и поверх окон — только у сотрудников (не у клиентов).
+   • Окно: одно поле. Вставили текст — перевод сразу; набрали — Enter (Shift+Enter — новая строка). «Копировать» — одним нажатием.
+     Направление выбирает ИИ: русский/узбекский → китайский; китайский → язык интерфейса (узбекский или русский); указание в тексте
+     («на английский», «кириллицей») — выполняется. Узбекский — латиница; кнопка «Кириллица» переводит буквы на месте, без нового запроса.
+   • Режим: «Авто» (по умолчанию), «Быстрый», «Точный». Последний текст и режим запоминаются в браузере.
+   • Функция Supabase «translate» (backend/supabase/functions/translate): лимит 200 в день, до 5000 знаков, журнал без текстов,
+     последний перевод сотрудника; нарушения — уведомление УП. У УП в «Помощи» — вкладка «Переводы». */
+Object.assign(UI,{
+  tr21:"Переводчик||翻译", tr21Ph:"Вставьте или напишите текст — переведу сразу. Enter — перевести, Shift+Enter — новая строка. Можно добавить: «на английский», «кириллицей».||粘贴或输入文字——立即翻译。Enter——翻译，Shift+Enter——换行。可附加说明：“翻译成英文”等。",
+  tr21Go:"Перевести||翻译", tr21Busy:"Перевожу…||翻译中…", tr21Copy:"Копировать||复制", tr21Copied:"Скопировано||已复制", tr21Cyr:"Кириллица||西里尔字母", tr21Lat:"Латиница||拉丁字母",
+  tr21Auto:"Авто||自动", tr21Fast:"Быстрый||快速", tr21Prec:"Точный||精确",
+  tr21AutoT:"Система выбирает сама: короткие сообщения — быстро, договоры и длинные тексты — точно||系统自动选择：短消息用快速，合同与长文本用精确",
+  tr21FastT:"Для переписки с клиентом: ответ за 1–3 секунды||用于客户沟通：1–3秒出结果", tr21PrecT:"Для договоров, писем в госорганы и сложных юридических текстов: медленнее, но точнее с терминами||用于合同、公函及复杂法律文本：较慢但术语更准确",
+  tr21Left:"осталось {n} из 200||剩余 {n}/200", tr21Off:"Переводчик работает в рабочей системе (на сервере)||翻译仅在正式系统（服务器）中可用",
+  tr21NotYet:"Переводчик ещё не подключён — управляющий адвокат должен развернуть функцию «translate» в Supabase||翻译尚未接入——需由管理合伙人在Supabase中部署“translate”函数",
+  tr21Err:"Не удалось перевести||翻译失败", tr21Close:"Свернуть||收起", tr21ModeFast:"быстро||快速", tr21ModePrec:"точно||精确",
+  hlp21Tr:"Переводы||翻译记录", tr21Flags:"Требуют внимания||需关注", tr21NoFlags:"Нарушений нет||无违规", tr21Last:"Последний перевод сотрудников||员工最近一次翻译",
+  tr21Stats:"За 30 дней||30天内", tr21Count:"переводов||次翻译", tr21Chars:"знаков||字符", tr21Kind:{profanity:"нецензурная лексика||粗俗用语",insult:"оскорбления||侮辱性内容",illegal:"возможно незаконное||可能违法"},
+  tr21Src:"Текст||原文", tr21Dst:"Перевод||译文", tr21Why:"Причина||原因"
+});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{trFlag21:"Переводчик: {who} перевёл текст, который стоит проверить — «Помощь» → «Переводы»||翻译器：{who} 翻译的内容需要核查——“帮助”→“翻译记录”"});
+const TR21_ICON=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="10" r="3.6"/><path d="M2.2 21.5c.4-3.7 3-5.8 6.3-5.8s5.9 2.1 6.3 5.8"/><path d="M4.4 10a4.1 4.1 0 0 1 8.2 0"/><path d="M12.6 10.3v1a1.8 1.8 0 0 1-1.8 1.8H9.4"/><path d="M14.2 1.8h7a1.2 1.2 0 0 1 1.2 1.2v5.4a1.2 1.2 0 0 1-1.2 1.2h-3.1l-2.3 2.1V9.6h-1.6A1.2 1.2 0 0 1 13 8.4V3a1.2 1.2 0 0 1 1.2-1.2z"/><text x="17.7" y="7.6" text-anchor="middle" font-size="4.4" font-weight="700" stroke="none" fill="currentColor">文A</text></svg>`;
+const Tr21={
+  st:{in:"",out:"",dst:"",src:"",mode:"auto",open:false,used:"",cyr:false,left:undefined,err:"",busy:false,lastIn:"",lastMode:""},
+  key(){return "zc_tr21_"+((U()||{}).login||"");},
+  on(){return !!U()&&!isClient();},
+  save(){try{const s=this.st;localStorage.setItem(this.key(),JSON.stringify({in:s.in,out:s.out,dst:s.dst,src:s.src,mode:s.mode,open:s.open,used:s.used,cyr:s.cyr,lastIn:s.lastIn,lastMode:s.lastMode}));}catch(e){}},
+  load(){this._for=(U()||{}).login;let o={};try{o=JSON.parse(localStorage.getItem(this.key())||"{}")||{};}catch(e){}Object.assign(this.st,{in:"",out:"",dst:"",src:"",mode:"auto",open:false,used:"",cyr:false,lastIn:"",lastMode:"",err:"",busy:false,left:undefined},o);},
+  /* узбекский: латиница → кириллица (на месте, без запроса) */
+  cyr(t){const M=[["Sh","Ш"],["SH","Ш"],["sh","ш"],["Ch","Ч"],["CH","Ч"],["ch","ч"],["Yo","Ё"],["YO","Ё"],["yo","ё"],["Yu","Ю"],["YU","Ю"],["yu","ю"],["Ya","Я"],["YA","Я"],["ya","я"],["Ye","Е"],["YE","Е"],["ye","е"]];
+    let s=String(t||"").replace(/[‘’`'ʼ]/g,m=>m).replace(/O[ʻ‘’'`]/g,"Ў").replace(/o[ʻ‘’'`]/g,"ў").replace(/G[ʻ‘’'`]/g,"Ғ").replace(/g[ʻ‘’'`]/g,"ғ");
+    M.forEach(([a,b])=>{s=s.split(a).join(b);});
+    s=s.replace(/(^|[^A-Za-zЀ-ӿ])E/g,"$1Э").replace(/(^|[^A-Za-zЀ-ӿ])e/g,"$1э").replace(/[ʼ’']/g,"ъ");
+    const L={A:"А",B:"Б",D:"Д",E:"Е",F:"Ф",G:"Г",H:"Ҳ",I:"И",J:"Ж",K:"К",L:"Л",M:"М",N:"Н",O:"О",P:"П",Q:"Қ",R:"Р",S:"С",T:"Т",U:"У",V:"В",X:"Х",Y:"Й",Z:"З",a:"а",b:"б",d:"д",e:"е",f:"ф",g:"г",h:"ҳ",i:"и",j:"ж",k:"к",l:"л",m:"м",n:"н",o:"о",p:"п",q:"қ",r:"р",s:"с",t:"т",u:"у",v:"в",x:"х",y:"й",z:"з",c:"с",C:"С",w:"в",W:"В"};
+    return s.replace(/[A-Za-z]/g,ch=>L[ch]||ch);},
+  shown(){const s=this.st;return s.cyr&&/^uz/.test(s.dst||"")?this.cyr(s.out):s.out;},
+  mount(){if(!this.on()){const b=document.getElementById("tr21Btn");if(b)b.hidden=true;const p=document.getElementById("tr21Pan");if(p)p.hidden=true;return;}
+    if(this._for!==(U()||{}).login)this.load();
+    let b=document.getElementById("tr21Btn");
+    if(!b){b=document.createElement("button");b.id="tr21Btn";b.type="button";b.className="tr21btn";b.innerHTML=TR21_ICON;b.onclick=()=>this.toggle();document.body.appendChild(b);
+      const p=document.createElement("div");p.id="tr21Pan";p.className="tr21pan";p.setAttribute("role","dialog");p.hidden=true;document.body.appendChild(p);
+      /* клавиши внутри окна не уходят в окна портала (Enter не подтверждает открытый диалог, Esc сворачивает только переводчик) */
+      p.addEventListener("keydown",e=>{e.stopPropagation();if(e.key==="Escape"){this.toggle(false);}});}
+    b.hidden=false;b.title=T1(UI.tr21);b.setAttribute("aria-label",T1(UI.tr21));this.render();},
+  toggle(v){this.st.open=v===undefined?!this.st.open:!!v;this.save();this.render();if(this.st.open){const i=document.getElementById("tr21In");if(i)setTimeout(()=>i.focus(),20);}},
+  render(){const p=document.getElementById("tr21Pan");if(!p)return;const s=this.st;p.hidden=!s.open;const b=document.getElementById("tr21Btn");if(b)b.classList.toggle("on",s.open);if(!s.open)return;
+    const modes=[["auto",UI.tr21Auto,UI.tr21AutoT],["fast",UI.tr21Fast,UI.tr21FastT],["precise",UI.tr21Prec,UI.tr21PrecT]];
+    const uz=/^uz/.test(s.dst||"");const meta=[s.src&&s.dst?`${esc(s.src)} → ${esc(s.dst)}`:"",s.used?T1(s.used==="precise"?UI.tr21ModePrec:UI.tr21ModeFast):"",s.left!==undefined?T1(UI.tr21Left).replace("{n}",s.left):""].filter(Boolean).join(" · ");
+    p.innerHTML=`<div class="tr21h"><b>${T1(UI.tr21)}</b><div class="tr21seg" role="radiogroup">${modes.map(([k,l,t])=>`<button type="button" role="radio" aria-checked="${s.mode===k}" class="${s.mode===k?"on":""}" data-tr21m="${k}" title="${esc(T1(t))}">${T1(l)}</button>`).join("")}</div><button type="button" class="tr21x" data-tr21x="1" title="${esc(T1(UI.tr21Close))}" aria-label="${esc(T1(UI.tr21Close))}">✕</button></div>
+      ${SRV21()?"":`<div class="tr21note">${T1(UI.tr21Off)}</div>`}
+      <textarea id="tr21In" rows="4" maxlength="5000" autocomplete="off" spellcheck="false" placeholder="${esc(T1(UI.tr21Ph))}"></textarea>
+      <div class="tr21out${s.busy?" busy":""}" id="tr21Out" aria-live="polite"></div>
+      ${s.err?`<div class="tr21err">${esc(s.err)}</div>`:""}
+      <div class="tr21f"><span class="tr21meta">${meta}</span>${uz&&s.out?`<button type="button" class="btn sm ghost" data-tr21cyr="1">${T1(s.cyr?UI.tr21Lat:UI.tr21Cyr)}</button>`:""}<button type="button" class="btn sm" data-tr21go="1"${s.busy?" disabled":""}>${T1(s.busy?UI.tr21Busy:UI.tr21Go)}</button><button type="button" class="btn sm pri" data-tr21copy="1"${s.out&&!s.busy?"":" disabled"}>${T1(UI.tr21Copy)}</button></div>`;
+    const inp=p.querySelector("#tr21In");inp.value=s.in;const out=p.querySelector("#tr21Out");out.textContent=s.busy?T1(UI.tr21Busy):this.shown();
+    inp.oninput=()=>{s.in=inp.value;this.save();};
+    inp.onpaste=()=>setTimeout(()=>{s.in=inp.value;this.go();},0);
+    inp.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();s.in=inp.value;this.go();}};
+    p.querySelectorAll("[data-tr21m]").forEach(el=>el.onclick=()=>{s.mode=el.dataset.tr21m;this.save();this.render();});
+    p.querySelector("[data-tr21x]").onclick=()=>this.toggle(false);
+    p.querySelector("[data-tr21go]").onclick=()=>{s.in=inp.value;this.go(true);};
+    const cp=p.querySelector("[data-tr21copy]");if(cp)cp.onclick=()=>this.copy(cp);
+    const cy=p.querySelector("[data-tr21cyr]");if(cy)cy.onclick=()=>{s.cyr=!s.cyr;this.save();this.render();};},
+  async go(force){const s=this.st;const text=(s.in||"").trim();if(!text||s.busy)return;if(!force&&text===s.lastIn&&s.mode===s.lastMode&&s.out)return;
+    if(!SRV21()){s.err=T1(UI.tr21Off);this.render();return;}
+    s.busy=true;s.err="";this.render();
+    try{if(!SB19.T.invoke)throw Object.assign(new Error(T1(UI.tr21NotYet)),{status:404});
+      const r=await SB19.T.invoke("translate",{text,ui:lang==="zh"?"zh":lang==="uz"?"uz":"ru",mode:s.mode});
+      Object.assign(s,{out:(r&&r.translation)||"",src:(r&&r.src)||"",dst:(r&&r.dst)||"",used:(r&&r.mode)||"",lastIn:text,lastMode:s.mode,cyr:false});if(r&&typeof r.left==="number")s.left=r.left;}
+    catch(e){const st=e&&e.status;s.err=st===404||(e&&e.code==="no_key")?T1(UI.tr21NotYet):String((e&&e.message)||T1(UI.tr21Err));if(st===429)s.left=0;}
+    finally{s.busy=false;this.save();}
+    this.render();},
+  async copy(btn){const t=this.shown();if(!t)return;let ok=false;try{await navigator.clipboard.writeText(t);ok=true;}catch(e){}
+    if(!ok){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{ok=document.execCommand("copy");}catch(e){}ta.remove();}
+    if(ok){toast(T1(UI.tr21Copied));if(btn){btn.textContent="✓ "+T1(UI.tr21Copied);setTimeout(()=>{if(btn.isConnected)btn.textContent=T1(UI.tr21Copy);},1400);}}}
+};
+/* кнопка — после входа и при каждой перерисовке меню (смена языка, выход) */
+const _sideTr21=renderSide;renderSide=function(){const r=_sideTr21.apply(this,arguments);try{Tr21.mount();}catch(e){}return r;};
+/* ── «Помощь» → «Переводы» (управляющий адвокат) ── */
+const _hTabsTr21=Help21.tabs.bind(Help21);Help21.tabs=function(){const t=_hTabsTr21();if(this.mp()&&this.srv())t.push(["tr",UI.hlp21Tr]);return t;};
+const _hPageTr21=Help21.page.bind(Help21);Help21.page=function(){if(this._t!=="tr"||!this.mp()||!this.srv())return _hPageTr21();
+  if(!this._loadedTr)setTimeout(()=>this.loadTr(),0);const tabs=this.tabs();
+  return F.hdr(T1(UI.nHelp21),T1(UI.hlp21Tr))+`<div class="ptabs">${tabs.map(([k,l])=>`<button class="${this._t===k?"on":""}" data-hl21="${k}">${T1(l)}</button>`).join("")}</div>`+this.trHtml();};
+Help21.loadTr=async function(){this._loadedTr=true;try{const [log,last]=await Promise.all([SB19.T.select("tr_log").catch(()=>[]),SB19.T.select("tr_last").catch(()=>[])]);this._trLog=log||[];this._trLast=last||[];}catch(e){}if(Router.cur==="help")Router.render();};
+Help21.trHtml=function(){const L=(this._trLog||[]).slice().sort((a,b)=>this.at(b).localeCompare(this.at(a)));const flags=L.filter(x=>x.flag&&x.flag!=="none");const d30=addDays(todayS(),-30);
+  const by={};L.filter(x=>this.at(x).slice(0,10)>=d30&&x.status==="ok").forEach(x=>{const k=x.login;(by[k]=by[k]||{x,n:0,c:0});by[k].n++;by[k].c+=+x.chars||0;});
+  const last=(this._trLast||[]).slice().sort((a,b)=>this.at(b).localeCompare(this.at(a)));const kind=k=>T1((UI.tr21Kind||{})[k]||k);
+  return `<div class="cols hlp21a"><div style="display:grid;gap:14px;min-width:0">
+    <div class="card"><h4>${T1(UI.tr21Flags)}${flags.length?`<b style="margin-left:auto;color:var(--red-d)">${flags.length}</b>`:""}</h4>${flags.length?flags.slice(0,50).map(x=>`<details class="hlp21s tr21flag" open><summary><span class="tm">${fmtDT(this.at(x))}</span> <b>${esc(this.who(x))}</b> · <span style="color:var(--red-d)">${esc(kind(x.flag))}</span></summary><div class="hlp21ansb"><div><b>${T1(UI.tr21Why)}:</b> ${esc(x.flag_reason||"")}</div><div style="margin-top:6px"><b>${T1(UI.tr21Src)}:</b> <span class="tr21pre">${esc(x.text_in||"")}</span></div><div style="margin-top:6px"><b>${T1(UI.tr21Dst)}:</b> <span class="tr21pre">${esc(x.text_out||"")}</span></div></div></details>`).join(""):`<div class="empty2">${T1(UI.tr21NoFlags)}</div>`}</div>
+    <div class="card"><h4>${T1(UI.tr21Last)}</h4>${last.length?last.map(x=>`<details class="hlp21s"><summary><span class="tm">${fmtDT(this.at(x))}</span> <b>${esc(this.who(x))}</b> · ${esc((x.src||"")+" → "+(x.dst||""))}</summary><div class="hlp21ansb"><div><b>${T1(UI.tr21Src)}:</b> <span class="tr21pre">${esc(x.text_in||"")}</span></div><div style="margin-top:6px"><b>${T1(UI.tr21Dst)}:</b> <span class="tr21pre">${esc(x.text_out||"")}</span></div></div></details>`).join(""):`<div class="empty2">${T1(UI.noData)}</div>`}</div></div>
+    <div style="min-width:0"><div class="card"><h4>${T1(UI.tr21Stats)}</h4>${Object.keys(by).length?`<table class="tbl reg"><thead><tr><th>${T1(UI.hlp21Who)}</th><th class="num">${T1(UI.tr21Count)}</th><th class="num">${T1(UI.tr21Chars)}</th></tr></thead><tbody>${Object.values(by).sort((a,b)=>b.n-a.n).map(o=>`<tr><td>${esc(this.who(o.x))}</td><td class="num">${o.n}</td><td class="num">${fmtN(o.c)}</td></tr>`).join("")}</tbody></table>`:`<div class="empty2">${T1(UI.noData)}</div>`}</div></div></div>`;};
+/* уведомление о нарушении → «Помощь» → «Переводы» */
+const _nbTr21=Notif.bind.bind(Notif);Notif.bind=function(b){_nbTr21(b);b.querySelectorAll('[data-go^="task:trflag"]').forEach(el=>el.onclick=async()=>{
+  const me=(U()||{}).login;const d=S.notif[me];const evEl=el.closest(".ev");const it=d&&evEl&&(d.items||[]).find(i=>i.id===evEl.dataset.ev);
+  if(it&&!it.read){it.read=true;try{await dbWrite(db=>db.doc("notif/"+me).set(d));}catch(e){}this.badge();}
+  this.close();Help21._t="tr";Help21._loadedTr=false;Router.go("help");});};
+(function(){const st=document.createElement("style");st.textContent=`
+.tr21btn{position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:900;width:56px;height:56px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);box-shadow:0 6px 22px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.tr21btn svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tr21btn:hover,.tr21btn.on{background:var(--ink);color:var(--on-ink,#fff);border-color:var(--ink)}
+.tr21btn:focus-visible{outline:2px solid var(--info);outline-offset:3px}
+.tr21pan{position:fixed;right:22px;bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:901;width:min(440px,calc(100vw - 32px));max-height:calc(100vh - 120px);overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.22);padding:14px;display:flex;flex-direction:column;gap:10px}
+.tr21pan[hidden]{display:none}
+.tr21h{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;min-width:0}.tr21h b{font-size:15px}
+.tr21seg{display:flex;flex:none;margin-left:auto;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.tr21seg button{border:0;background:transparent;color:var(--ink-2);font:600 12px inherit;padding:5px 9px;white-space:nowrap;cursor:pointer}.tr21seg button.on{background:var(--ink);color:var(--on-ink,#fff)}
+.tr21x{flex:none;border:0;background:transparent;color:var(--ink-3);font-size:15px;cursor:pointer;padding:4px 6px}
+.tr21pan textarea{width:100%;box-sizing:border-box;resize:vertical;min-height:84px;font:inherit;font-size:14px;line-height:1.45;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg,var(--surface));color:var(--ink)}
+.tr21out{min-height:64px;max-height:38vh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.5;padding:10px;border-radius:10px;background:var(--line-2)}
+.tr21out.busy{color:var(--ink-3)}.tr21out:empty{display:none}
+.tr21f{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.tr21meta{flex-basis:100%;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.tr21err,.tr21note{font-size:12.5px;color:var(--red-d);line-height:1.4}.tr21note{color:var(--ink-3)}
+.tr21pre{white-space:pre-wrap;overflow-wrap:anywhere}
+@media (max-width:700px){.tr21btn{right:14px;bottom:calc(76px + env(safe-area-inset-bottom,0px));width:50px;height:50px}.tr21pan{right:16px;left:16px;width:auto;bottom:calc(134px + env(safe-area-inset-bottom,0px));max-height:calc(100vh - 170px)}}
+@media print{.tr21btn,.tr21pan{display:none!important}}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
