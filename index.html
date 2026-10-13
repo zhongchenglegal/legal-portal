@@ -2093,9 +2093,6 @@ rect.bar[fill="#1B8F6E"]{fill:var(--pri2)}
 .thr22.drag .drop22{display:flex}
 /* страница чатов: без внешней прокрутки — только список и разговор */
 body.ch22pg #viewPage{overflow:hidden;padding-bottom:16px}
-/* кнопка ИИ-переводчика (v21_tr) — над полем ввода, чтобы не закрывать «Отправить» */
-body.ch22pg .tr21btn{bottom:128px}
-@media (max-width:700px){body.ch22pg .tr21btn{bottom:96px}}
 /* «О собеседнике» */
 .inf22{border-left:1px solid var(--line);overflow:auto;padding:20px 16px}
 .inf22 .hd{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;margin-bottom:10px}
@@ -10123,7 +10120,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="2d3d1a000a6e";
+const ZC_BUILD="9171f5c46de8";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11962,6 +11959,61 @@ const _nbTr21=Notif.bind.bind(Notif);Notif.bind=function(b){_nbTr21(b);b.querySe
 @media (max-width:700px){.tr21btn{right:14px;bottom:calc(76px + env(safe-area-inset-bottom,0px));width:50px;height:50px}.tr21pan{right:16px;left:16px;width:auto;bottom:calc(134px + env(safe-area-inset-bottom,0px));max-height:calc(100vh - 170px)}}
 @media print{.tr21btn,.tr21pan{display:none!important}}`;document.head.appendChild(st);})();
 
+/* ═══════════════════════════ версия 1.1 · КНОПКА ПЕРЕВОДЧИКА — ЯЗЫЧОК У ПРАВОГО КРАЯ ═══════════════════════════
+   Решение владельца 14.10.2026: круглая кнопка переводчика (v21_tr.js) закрывала сообщения. Теперь:
+   • кнопка — «язычок» у правого края: видна узкая полоска с иконкой; мышь рядом или наведение — выезжает целиком;
+     нажатие — открыть переводчик. На телефоне: первое касание выдвигает, второе — открывает;
+   • язычок можно перетащить вверх или вниз вдоль края (место запоминается в браузере); в середину экрана он не попадает;
+   • на странице «Чаты» язычка нет — перевод там встроен («中文» в поле ввода и «Перевести» у сообщения);
+   • Alt+T — открыть или закрыть переводчик на любой странице (Ctrl+Shift+T занят браузером).
+   Файл переводчика (v21_tr.js) не меняется: модуль только переставляет его кнопку и окно. */
+Object.assign(UI,{trd21Tip:"Переводчик · Alt+T · язычок можно перетащить вверх или вниз||翻译器 · Alt+T · 可上下拖动"});
+window.UZ21=Object.assign(window.UZ21||{},{"Переводчик · Alt+T · язычок можно перетащить вверх или вниз":"Tarjimon · Alt+T · tilchani yuqoriga yoki pastga surish mumkin"});
+const TrDock21={key:"zc_trdock21",y:null,drag:null,moved:false,hideT:null,
+  /* место по высоте — доля высоты окна (0…1), чтобы не уезжало при смене размера окна */
+  ratio(){if(this.y!=null)return this.y;let v=NaN;try{v=parseFloat(localStorage.getItem(this.key));}catch(e){}this.y=isFinite(v)?Math.min(.92,Math.max(.12,v)):.72;return this.y;},
+  top(){const h=window.innerHeight,b=52;return Math.round(Math.min(h-b-12-(this.mob()?64:0),Math.max(70,this.ratio()*h-b/2)));},
+  mob(){return matchMedia("(max-width:700px)").matches;},
+  btn(){return document.getElementById("tr21Btn");},
+  place(){const b=this.btn();if(!b)return;b.classList.add("dock21");b.style.top=this.top()+"px";b.title=T1(UI.trd21Tip);this.panel();},
+  /* окно переводчика — рядом с язычком, не выходя за край */
+  panel(){const p=document.getElementById("tr21Pan"),b=this.btn();if(!p||!b||p.hidden||this.mob())return;
+    p.classList.add("dock21");const ph=p.offsetHeight||360,t=this.top();p.style.top=Math.max(12,Math.min(window.innerHeight-ph-12,t+26-ph/2))+"px";},
+  open(v){const b=this.btn();if(!b)return;b.classList.toggle("out",!!v);clearTimeout(this.hideT);if(v&&this.mob())this.hideT=setTimeout(()=>{if(!(typeof Tr21!=="undefined"&&Tr21.st.open))b.classList.remove("out");},3500);},
+  bind(){const b=this.btn();if(!b||b.dataset.dock21)return;b.dataset.dock21="1";
+    b.addEventListener("pointerdown",e=>{if(e.button!==0)return;this.drag={y0:e.clientY,t0:this.top(),id:e.pointerId,type:e.pointerType};this.moved=false;});
+    window.addEventListener("pointermove",e=>{const d=this.drag;if(!d){this.near(e);return;}if(Math.abs(e.clientY-d.y0)>6){this.moved=true;b.classList.add("drag","out");}
+      if(this.moved){const t=Math.min(window.innerHeight-64-(this.mob()?64:0),Math.max(70,d.t0+e.clientY-d.y0));b.style.top=t+"px";this.y=(t+26)/window.innerHeight;}});
+    window.addEventListener("pointerup",()=>{if(!this.drag)return;const was=this.drag;this.drag=null;b.classList.remove("drag");
+      if(this.moved){try{localStorage.setItem(this.key,String(this.y));}catch(e){}this.panel();setTimeout(()=>{this.moved=false;},0);}
+      else if(was.type!=="mouse"&&!b.classList.contains("out")&&!(typeof Tr21!=="undefined"&&Tr21.st.open)){this.tapOut=true;this.open(true);}});
+    /* после перетаскивания или первого касания на телефоне — не открывать переводчик */
+    b.addEventListener("click",e=>{if(this.moved||this.tapOut){this.tapOut=false;e.stopImmediatePropagation();e.preventDefault();}},true);
+    b.addEventListener("mouseenter",()=>this.open(true));b.addEventListener("mouseleave",()=>{if(!(typeof Tr21!=="undefined"&&Tr21.st.open)&&!this.drag)this.open(false);});
+    b.addEventListener("focus",()=>this.open(true));b.addEventListener("blur",()=>{if(!(typeof Tr21!=="undefined"&&Tr21.st.open))this.open(false);});},
+  /* мышь у правого края рядом с язычком — выдвинуть */
+  near(e){if(e.pointerType!=="mouse")return;const b=this.btn();if(!b||b.offsetParent===null)return;const t=this.top();const close=window.innerWidth-e.clientX<70&&e.clientY>t-50&&e.clientY<t+100;
+    if(close!==b.classList.contains("out")&&!(typeof Tr21!=="undefined"&&Tr21.st.open))this.open(close);}
+};
+if(typeof Tr21!=="undefined"){
+  const _trMount21d=Tr21.mount.bind(Tr21);Tr21.mount=function(){const r=_trMount21d.apply(this,arguments);try{TrDock21.place();TrDock21.bind();}catch(e){}return r;};
+  const _trRender21d=Tr21.render.bind(Tr21);Tr21.render=function(){const r=_trRender21d.apply(this,arguments);try{TrDock21.open(!!this.st.open);TrDock21.panel();}catch(e){}return r;};
+  window.addEventListener("resize",()=>{try{TrDock21.place();}catch(e){}});
+  /* Alt+T — открыть или закрыть переводчик (по физической клавише T — работает и в русской раскладке) */
+  document.addEventListener("keydown",e=>{if(e.altKey&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&e.code==="KeyT"&&Tr21.on()){e.preventDefault();Tr21.toggle();}},true);
+}
+(()=>{const st=document.createElement("style");st.textContent=`
+.tr21btn.dock21{right:-30px!important;left:auto!important;bottom:auto!important;width:62px;height:52px;border-radius:26px 0 0 26px;justify-content:flex-start;padding:0 0 0 7px;
+  transition:right .2s ease,box-shadow .2s,background .15s,color .15s;box-shadow:-3px 4px 16px rgba(0,0,0,.14);touch-action:none;cursor:grab}
+.tr21btn.dock21 svg{width:24px;height:24px}
+.tr21btn.dock21.out,.tr21btn.dock21:focus-visible{right:0!important}
+.tr21btn.dock21.drag{cursor:grabbing;transition:none;box-shadow:-4px 6px 22px rgba(0,0,0,.24)}
+.tr21btn.dock21::before{content:"";position:absolute;left:3px;top:15px;bottom:15px;width:2px;border-radius:2px;background:currentColor;opacity:.18}
+@media (min-width:701px){.tr21pan.dock21{bottom:auto!important;right:72px}}
+body.ch22pg .tr21btn{display:none!important}
+@media (max-width:700px){.tr21btn.dock21{width:58px;height:48px}}
+`;document.head.appendChild(st);})();
+
 /* ═══════════════════════════ версия 1.1 · ЧАТ В СТИЛЕ TELEGRAM ═══════════════════════════
    Решение владельца 14.10.2026 (макет design-chat.html, стиль Telegram, «всё сразу»).
    • Раздел «Чаты» во всю страницу (#/chats, #/chats/<логин>) вместо окна «Сообщения»: слева разговоры (поиск, «Непрочитанные»,
@@ -11994,16 +12046,16 @@ Object.assign(UI,{
   cm22Alt:"Перевод||译文"
 });
 /* узбекский (латиница) — словарь надписей этого модуля */
-window.UZ21=Object.assign(window.UZ21||{},{"Чаты":"Chatlar","Поиск людей и сообщений":"Odamlar va xabarlarni qidirish","Все":"Hammasi","Непрочитанные":"O‘qilmagan","Все сотрудники":"Barcha xodimlar",
+window.UZ21=Object.assign(window.UZ21||{},{"Чаты":"Chatlar","Поиск людей и сообщений":"Odamlar va xabarlarni qidirish","Все":"Hammasi","Непрочитанные":"Oʻqilmagan","Все сотрудники":"Barcha xodimlar",
   "Ничего не найдено":"Hech narsa topilmadi","Выберите, кому написать":"Kimga yozishni tanlang","в сети":"tarmoqda","был(а) в {t}":"{t} da tarmoqda edi","был(а) вчера в {t}":"kecha {t} da tarmoqda edi","был(а) {d}":"{d} tarmoqda edi",
-  "Сегодня":"Bugun","Вчера":"Kecha","Новые сообщения":"Yangi xabarlar","Вы: ":"Siz: ","Сообщений пока нет — напишите первым":"Hozircha xabar yo‘q — birinchi bo‘lib yozing","Написать сообщение…":"Xabar yozing…",
-  "Enter — отправить · Shift+Enter — новая строка · можно вставить скриншот (Ctrl+V) или перетащить файл":"Enter — yuborish · Shift+Enter — yangi qator · skrinshotni qo‘yish (Ctrl+V) yoki faylni sudrab tashlash mumkin",
+  "Сегодня":"Bugun","Вчера":"Kecha","Новые сообщения":"Yangi xabarlar","Вы: ":"Siz: ","Сообщений пока нет — напишите первым":"Hozircha xabar yoʻq — birinchi boʻlib yozing","Написать сообщение…":"Xabar yozing…",
+  "Enter — отправить · Shift+Enter — новая строка · можно вставить скриншот (Ctrl+V) или перетащить файл":"Enter — yuborish · Shift+Enter — yangi qator · skrinshotni qoʻyish (Ctrl+V) yoki faylni sudrab tashlash mumkin",
   "Прикрепить файл":"Fayl biriktirish","Отправить (Enter)":"Yuborish (Enter)","Ответить":"Javob berish","Скопировать":"Nusxalash","Перевести":"Tarjima qilish","Ответ: {n}":"Javob: {n}","Скопировано":"Nusxalandi",
   "Перевести перед отправкой (ИИ)":"Yuborishdan oldin tarjima qilish (SI)","Переведено ИИ · вернуть оригинал":"SI tarjima qildi · asl matnni qaytarish","Перевод работает в рабочей системе (на сервере)":"Tarjima ishchi tizimda (serverda) ishlaydi",
-  "Перевод ИИ":"SI tarjimasi","О собеседнике и файлы":"Suhbatdosh va fayllar","Файлы":"Fayllar","Общие дела":"Umumiy ishlar","Файлов пока нет":"Hozircha fayl yo‘q","Общих дел нет":"Umumiy ishlar yo‘q","Файл":"Fayl","Фото":"Rasm",
-  "Отпустите — файл прикрепится к сообщению":"Qo‘yib yuboring — fayl xabarga biriktiriladi","К списку чатов":"Chatlar ro‘yxatiga","прочитано":"o‘qildi","отправлено":"yuborildi","Файл больше 100 МБ":"Fayl 100 MB dan katta","Загружаю файл…":"Fayl yuklanmoqda…",
+  "Перевод ИИ":"SI tarjimasi","О собеседнике и файлы":"Suhbatdosh va fayllar","Файлы":"Fayllar","Общие дела":"Umumiy ishlar","Файлов пока нет":"Hozircha fayl yoʻq","Общих дел нет":"Umumiy ishlar yoʻq","Файл":"Fayl","Фото":"Rasm",
+  "Отпустите — файл прикрепится к сообщению":"Qoʻyib yuboring — fayl xabarga biriktiriladi","К списку чатов":"Chatlar roʻyxatiga","прочитано":"oʻqildi","отправлено":"yuborildi","Файл больше 100 МБ":"Fayl 100 MB dan katta","Загружаю файл…":"Fayl yuklanmoqda…",
   "Ответ с цитатой и файлы заработают после обновления сервера (миграция 20261014000200)":"Iqtibosli javob va fayllar server yangilangandan keyin ishlaydi (migratsiya 20261014000200)",
-  "Клиенту":"Mijozga","Внутренняя заметка":"Ichki eslatma","Сообщение увидит клиент":"Xabarni mijoz ko‘radi","Клиент не увидит · только команда дела":"Mijoz ko‘rmaydi · faqat ish jamoasi","видно клиенту":"mijozga ko‘rinadi",
+  "Клиенту":"Mijozga","Внутренняя заметка":"Ichki eslatma","Сообщение увидит клиент":"Xabarni mijoz koʻradi","Клиент не увидит · только команда дела":"Mijoz koʻrmaydi · faqat ish jamoasi","видно клиенту":"mijozga koʻrinadi",
   "внутренняя заметка":"ichki eslatma","Написать клиенту…":"Mijozga yozing…","Заметка для команды…":"Jamoa uchun eslatma…","Оригинал":"Asl matn","Перевод":"Tarjima"});
 
 const CH22_ICO={search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3",info:"M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01",
@@ -12050,10 +12102,10 @@ Object.assign(UI,{
   ch22EditLate:"Исправить можно в течение 48 часов||只能在48小时内编辑"
 });
 window.UZ21=Object.assign(window.UZ21||{},{"Новая группа":"Yangi guruh","Название группы":"Guruh nomi","Например: Практика — строительство":"Masalan: Amaliyot — qurilish","Участники":"Ishtirokchilar",
-  "{n} участников":"{n} ishtirokchi","{n} в сети":"{n} tarmoqda","Создать":"Yaratish","Отмена":"Bekor qilish","Сохранить":"Saqlash","Добавить участников":"Ishtirokchi qo‘shish","Выйти из группы":"Guruhdan chiqish",
-  "Выйти из группы «{t}»?":"«{t}» guruhidan chiqasizmi?","Убрать из группы":"Guruhdan chiqarish","создатель":"yaratuvchi","Переименовать":"Nomini o‘zgartirish","Группы":"Guruhlar","Введите название группы":"Guruh nomini kiriting",
-  "Отметьте хотя бы одного участника":"Kamida bitta ishtirokchini belgilang","Изменить":"Tahrirlash","Удалить":"O‘chirish","Удалить сообщение? Собеседник увидит «Сообщение удалено».":"Xabar o‘chirilsinmi? Suhbatdosh «Xabar o‘chirildi» ni ko‘radi.",
-  "Сообщение удалено":"Xabar o‘chirildi","изменено":"tahrirlangan","Редактирование":"Tahrirlash","Реакция":"Reaksiya","печатает…":"yozmoqda…","{n} печатает…":"{n} yozmoqda…",
+  "{n} участников":"{n} ishtirokchi","{n} в сети":"{n} tarmoqda","Создать":"Yaratish","Отмена":"Bekor qilish","Сохранить":"Saqlash","Добавить участников":"Ishtirokchi qoʻshish","Выйти из группы":"Guruhdan chiqish",
+  "Выйти из группы «{t}»?":"«{t}» guruhidan chiqasizmi?","Убрать из группы":"Guruhdan chiqarish","создатель":"yaratuvchi","Переименовать":"Nomini oʻzgartirish","Группы":"Guruhlar","Введите название группы":"Guruh nomini kiriting",
+  "Отметьте хотя бы одного участника":"Kamida bitta ishtirokchini belgilang","Изменить":"Tahrirlash","Удалить":"Oʻchirish","Удалить сообщение? Собеседник увидит «Сообщение удалено».":"Xabar oʻchirilsinmi? Suhbatdosh «Xabar oʻchirildi» ni koʻradi.",
+  "Сообщение удалено":"Xabar oʻchirildi","изменено":"tahrirlangan","Редактирование":"Tahrirlash","Реакция":"Reaksiya","печатает…":"yozmoqda…","{n} печатает…":"{n} yozmoqda…",
   "Группы, реакции и правка сообщений заработают после обновления сервера (миграция 20261014000300)":"Guruhlar, reaksiyalar va xabarni tahrirlash server yangilangandan keyin ishlaydi (migratsiya 20261014000300)",
   "Исправить можно в течение 48 часов":"48 soat ichida tahrirlash mumkin"});
 const CH22_EMO=["👍","❤️","😂","😮","🙏","✅","👀"];
