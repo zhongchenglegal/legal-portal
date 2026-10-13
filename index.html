@@ -1973,6 +1973,187 @@ rect.bar[fill="#1B8F6E"]{fill:var(--pri2)}
 }
 @media (prefers-reduced-motion:reduce){.lg21s .sharp,.lg21s .rays,.lg21s .cone,.lg21s .glint,.lg21s .glint::after,.login .card{animation:none}}
 </style>
+<style>
+/* ═══════════ версия 1.1 · ЧАТ В СТИЛЕ TELEGRAM (v21_chat.js) ═══════════
+   Палитра — переменные темы («Сапфир и графит»): свои сообщения — основной цвет, чужие — белые, фон с лёгким узором.
+   Не писать селекторы с атрибутом hidden: build.js добавляет общее правило «скрытое не показывать», только если его нет в CSS. */
+.ch22{display:grid;grid-template-columns:330px minmax(0,1fr);background:var(--surface);border-radius:12px;box-shadow:var(--sh-1);overflow:hidden;min-height:360px;
+  --in22:var(--surface);--out22:var(--pri);--chbg22:color-mix(in srgb,var(--bg) 70%,var(--pri-soft))}
+.ch22.info{grid-template-columns:330px minmax(0,1fr) 290px}
+:root[data-theme="dark"] .ch22{--in22:var(--surface2);--out22:color-mix(in srgb,var(--pri) 78%,#1E2228);--chbg22:#181C22}
+/* список */
+.lst22{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.lh22{padding:16px 16px 10px;display:flex;flex-direction:column;gap:10px}
+.lh22 h2{font:600 18px var(--font-h)}
+.srch22{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--line);border-radius:9px;padding:0 12px;color:var(--ink-3)}
+.srch22:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-ring)}
+.srch22 svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}
+.srch22 input{border:0!important;background:transparent;outline:0;box-shadow:none!important;font:inherit;font-size:13.5px;color:var(--ink);flex:1;min-width:0;padding:9px 0}
+.flt22{display:flex;gap:6px}
+.flt22 button{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 12px;font:500 12px var(--font);color:var(--ink-2);cursor:pointer}
+.flt22 button.on{background:var(--pri-soft);border-color:transparent;color:var(--pri);font-weight:600}
+.convs22{overflow:auto;flex:1;padding:2px 8px 12px}
+.sec22{font:600 10.5px var(--font-h);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:12px 10px 6px}
+.cv22{display:flex;gap:11px;align-items:center;width:100%;padding:9px 10px;border:0;background:transparent;border-radius:10px;cursor:pointer;text-align:left;color:var(--ink)}
+.cv22:hover{background:var(--surface2)}
+.cv22.on{background:var(--pri-soft)}
+.tx22{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tx22 .r1,.tx22 .r2{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tx22 .nm{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx22 .tm{font-size:11.5px;color:var(--ink-3);flex:none}
+.tx22 .lm{font-size:12.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx22 .lm b{color:var(--ink-2);font-weight:500}
+.cv22.un .lm{color:var(--ink);font-weight:500}
+.bd22{background:var(--pri);color:#fff;font:600 10.5px var(--font-h);border-radius:99px;min-width:20px;height:20px;display:inline-grid;place-items:center;padding:0 6px;flex:none}
+.tx22 .tk22{color:var(--pri)}
+.empty22{padding:30px 10px;text-align:center;color:var(--ink-3);font-size:13px}
+/* аватары */
+.av22{position:relative;flex:none;width:44px;height:44px;display:inline-flex}
+.av22 img,.av22 .vi{width:100%!important;height:100%!important;border-radius:50%!important;object-fit:cover;display:inline-flex!important;align-items:center;justify-content:center;font:600 13px var(--font-h)!important;background:var(--pri-soft);color:var(--pri)}
+.av22.lg{width:40px;height:40px}.av22.xl{width:76px;height:76px}.av22.xl .vi{font-size:22px!important}
+.on22{position:absolute;right:0;bottom:1px;width:11px;height:11px;border-radius:50%;background:var(--ok);border:2px solid var(--surface)}
+/* разговор */
+.thr22{display:flex;flex-direction:column;min-height:0;min-width:0;position:relative}
+.th22{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--surface);flex:none}
+.who22{min-width:0}.who22 b{display:block;font-weight:600;font-size:14.5px}
+.who22 small{display:block;font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who22 small.on{color:var(--ok)}
+.sp22{flex:1}
+.ib22{width:36px;height:36px;border-radius:9px;border:0;background:transparent;display:inline-grid;place-items:center;color:var(--ink-2);cursor:pointer;flex:none}
+.ib22:hover,.ib22.on{background:var(--pri-soft);color:var(--pri)}
+.ib22 svg,.trb22 svg,.snd22 svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.back22{display:none}
+.msgs22{flex:1;min-height:0;overflow:auto;padding:16px 26px 18px;display:flex;flex-direction:column;background-color:var(--chbg22);
+  background-image:radial-gradient(color-mix(in srgb,var(--pri) 9%,transparent) 1.2px,transparent 1.3px),radial-gradient(color-mix(in srgb,var(--pri) 6%,transparent) 1px,transparent 1.1px);background-size:26px 26px,13px 13px;background-position:0 0,6px 9px}
+.day22,.new22{display:flex;justify-content:center;margin:12px 0 8px;position:sticky;top:4px;z-index:1}
+.day22 span{background:var(--surface);color:var(--ink-2);font:600 11.5px var(--font);padding:4px 12px;border-radius:99px;box-shadow:var(--sh-1)}
+.new22{position:static;align-items:center;gap:10px;color:var(--pri);font:600 11.5px var(--font)}
+.new22::before,.new22::after{content:"";flex:1;height:1px;background:var(--pri);opacity:.35}
+.grp22{display:flex;margin-top:8px;max-width:76%}
+.grp22.me{align-self:flex-end;justify-content:flex-end}
+.col22{display:flex;flex-direction:column;gap:3px;min-width:0;align-items:flex-start}
+.grp22.me .col22{align-items:flex-end}
+.b22{position:relative;background:var(--in22);color:var(--ink);padding:7px 11px 6px;border-radius:15px;box-shadow:0 1px 1.5px rgba(30,36,48,.1);font-size:14px;line-height:1.45;max-width:100%;overflow-wrap:anywhere;display:flex;flex-direction:column;align-items:flex-start}
+.grp22.me .b22{background:var(--out22);color:#fff}
+.b22.tail{border-bottom-left-radius:4px}
+.grp22.me .b22.tail{border-bottom-left-radius:15px;border-bottom-right-radius:4px}
+.b22.tail::after{content:"";position:absolute;bottom:0;left:-6px;width:12px;height:12px;background:radial-gradient(circle at 0 0,transparent 11.5px,var(--in22) 12px)}
+.grp22.me .b22.tail::after{left:auto;right:-6px;background:radial-gradient(circle at 100% 0,transparent 11.5px,var(--out22) 12px)}
+.b22 .tx{white-space:normal}
+.mt22{align-self:flex-end;display:inline-flex;gap:3px;align-items:center;font-size:11px;color:var(--ink-3);margin:2px 0 -2px 14px;white-space:nowrap}
+.grp22.me .mt22{color:rgba(255,255,255,.72)}
+.tk22{width:16px;height:11px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.grp22.me .tk22.rd{color:#BFE1FF}
+.q22{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:0;border-left:3px solid var(--pri);background:var(--pri-soft);border-radius:6px;padding:4px 9px;margin:1px 0 5px;font:inherit;font-size:12.5px;color:var(--ink-2);cursor:pointer;max-width:100%;width:100%}
+.q22 b{color:var(--pri);font-size:12px}.q22 span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.grp22.me .q22{border-left-color:#fff;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)}.grp22.me .q22 b{color:#fff}
+.file22{display:flex;gap:10px;align-items:center;border:0;background:transparent;padding:3px 0 4px;cursor:pointer;color:inherit;text-align:left;min-width:200px;max-width:100%}
+.file22 i{width:40px;height:40px;border-radius:10px;background:var(--pri-soft);color:var(--pri);display:grid;place-items:center;font:700 9.5px var(--font-h);font-style:normal;flex:none}
+.grp22.me .file22 i,.cm22.me .file22 i{background:rgba(255,255,255,.18);color:#fff}
+.file22 span{display:flex;flex-direction:column;min-width:0}.file22 b{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file22 small{font-size:11.5px;color:var(--ink-3)}.grp22.me .file22 small,.cm22.me .file22 small{color:rgba(255,255,255,.7)}
+.file22:hover b{text-decoration:underline}
+.tr22{display:block;margin-top:5px;padding-top:5px;border-top:1px dashed var(--line-2);font-size:13px;color:var(--ink-2);width:100%}
+.tr22 small{display:block;font-size:10.5px;color:var(--ink-3);margin-bottom:1px}
+.grp22.me .tr22,.cm22.me .tr22{border-top-color:rgba(255,255,255,.3);color:rgba(255,255,255,.9)}.grp22.me .tr22 small,.cm22.me .tr22 small{color:rgba(255,255,255,.65)}
+.acts22{position:absolute;top:-15px;right:6px;display:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--sh-2);padding:2px;z-index:3}
+.grp22.me .acts22{right:auto;left:6px}
+.b22:hover .acts22,.b22:focus-within .acts22{display:flex}
+.acts22 button{border:0;background:transparent;width:28px;height:26px;border-radius:6px;cursor:pointer;color:var(--ink-2);display:grid;place-items:center}
+.acts22 button:hover{background:var(--pri-soft);color:var(--pri)}
+.acts22 svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.flash22{animation:fl22 1.5s ease}
+@keyframes fl22{0%,40%{box-shadow:0 0 0 3px var(--warn)}100%{box-shadow:0 1px 1.5px rgba(30,36,48,.1)}}
+.nomsg22,.pick22{margin:auto;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ink-3);font-size:13.5px;text-align:center;padding:30px}
+.nomsg22{background:var(--surface);border-radius:12px;box-shadow:var(--sh-1);padding:14px 18px}
+.pick22{height:100%;justify-content:center;background:var(--chbg22)}
+.pick22 svg{width:46px;height:46px;fill:none;stroke:currentColor;stroke-width:1.4;opacity:.6}
+/* поле ввода */
+.comp22{border-top:1px solid var(--line);background:var(--surface);padding:8px 14px 10px;flex:none}
+.rbar22{display:flex;align-items:center;gap:10px;border-left:3px solid var(--pri);background:var(--pri-soft);border-radius:6px;padding:5px 6px 5px 10px;margin:0 2px 8px;font-size:12.5px;color:var(--ink-2)}
+.rbar22>div{min-width:0;flex:1;display:flex;flex-direction:column}.rbar22 b{color:var(--pri);font-size:12px}.rbar22 span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rbar22 .ib22{width:28px;height:28px}
+.fbar22,.cmf22{display:flex;flex-wrap:wrap;gap:6px;margin:0 2px 8px}
+.cmf22:empty{display:none}
+.fchip22{display:inline-flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:4px 6px 4px 4px;font-size:12px;max-width:260px}
+.fchip22 i{font:700 9px var(--font-h);font-style:normal;background:var(--pri-soft);color:var(--pri);border-radius:6px;padding:5px 5px}
+.fchip22 button{border:0;background:transparent;color:var(--ink-3);cursor:pointer;font-size:15px;line-height:1;padding:0 2px}
+.trn22{border:0;background:transparent;color:var(--pri);font:500 12px var(--font);cursor:pointer;margin:0 4px 6px;padding:0}
+.box22{display:flex;align-items:flex-end;gap:6px;background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:5px 5px 5px 6px;transition:border-color .15s,box-shadow .15s}
+.box22:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-ring)}
+.box22 textarea{flex:1;border:0!important;background:transparent!important;box-shadow:none!important;resize:none;outline:0;font:14px/1.45 var(--font);color:var(--ink);padding:8px 4px!important;max-height:180px;min-height:22px;overflow-y:auto}
+.trb22{border:1px solid var(--line-2);background:var(--surface);border-radius:9px;padding:0 9px;height:36px;font:600 12px var(--font);color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:5px;flex:none}
+.trb22 svg{width:15px;height:15px}
+.trb22:hover{border-color:var(--pri);color:var(--pri)}.trb22:disabled{opacity:.5;cursor:wait}
+.snd22{width:38px;height:38px;border-radius:11px;border:0;background:var(--pri);color:#fff;display:inline-grid;place-items:center;cursor:pointer;flex:none}
+.snd22:hover{background:var(--pri-hover)}.snd22:disabled{opacity:.55;cursor:wait}
+.snd22 svg{width:18px;height:18px;stroke-width:2}
+.hint22{font-size:11px;color:var(--ink-3);margin:5px 6px 0}
+.drop22{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:color-mix(in srgb,var(--pri) 12%,transparent);border:2px dashed var(--pri);border-radius:12px;color:var(--pri);font:600 15px var(--font-h);z-index:5;pointer-events:none}
+.thr22.drag .drop22{display:flex}
+/* кнопка ИИ-переводчика (v21_tr) — над полем ввода, чтобы не закрывать «Отправить» */
+body.ch22pg .tr21btn{bottom:128px}
+@media (max-width:700px){body.ch22pg .tr21btn{bottom:96px}}
+/* «О собеседнике» */
+.inf22{border-left:1px solid var(--line);overflow:auto;padding:20px 16px}
+.inf22 .hd{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;margin-bottom:10px}
+.inf22 .hd b{font:600 15px var(--font-h);margin-top:6px}.inf22 .hd small{color:var(--ink-3);font-size:12px}.inf22 .hd small.on{color:var(--ok)}
+.inf22 h5{font:600 11px var(--font-h);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:18px 0 6px}
+.row22{display:flex;gap:10px;align-items:center;width:100%;border:0;background:transparent;padding:7px 6px;border-radius:8px;cursor:pointer;text-align:left;color:var(--ink)}
+.row22:hover{background:var(--surface2)}
+.row22 i{width:34px;height:34px;border-radius:8px;background:var(--pri-soft);color:var(--pri);display:grid;place-items:center;font:700 9px var(--font-h);font-style:normal;flex:none}
+.row22 span{display:flex;flex-direction:column;min-width:0}.row22 b{font-weight:600;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row22 small{color:var(--ink-3);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mute22{color:var(--ink-3);font-size:12.5px;padding:4px 6px}
+/* планшет: без панели «О собеседнике» рядом */
+@media (max-width:1180px){.ch22.info{grid-template-columns:290px minmax(0,1fr)}.ch22.info .inf22{position:absolute;right:0;top:0;bottom:0;width:290px;background:var(--surface);box-shadow:var(--sh-3);z-index:6}.ch22{position:relative}.ch22{grid-template-columns:290px minmax(0,1fr)}}
+/* телефон: список и разговор по очереди */
+@media (max-width:700px){
+  .ch22,.ch22.info{grid-template-columns:1fr;border-radius:0;box-shadow:none;margin:-12px -12px 0}
+  .ch22 .thr22{display:none}.ch22.open .thr22{display:flex}.ch22.open .lst22{display:none}
+  .back22{display:inline-grid}
+  .msgs22{padding:12px 10px}.grp22{max-width:88%}
+  .hint22,.trb22 span{display:none}
+  .th22{padding:8px 8px;gap:8px}
+  body.ch22open #bnav{display:none!important}
+}
+/* ── обсуждение с клиентом в деле ── */
+.cth22 .mode22{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:3px;margin:8px 0 0}
+.mode22 button{flex:1;border:0;background:transparent;padding:8px 6px;border-radius:8px;font:600 12.5px var(--font);color:var(--ink-2);cursor:pointer;display:inline-flex;gap:6px;align-items:center;justify-content:center}
+.mode22 svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mode22 .nt.on{background:var(--warn);color:#fff}.mode22 .cl.on{background:var(--pri);color:#fff}
+.cms22{display:flex;flex-direction:column;gap:2px;max-height:520px;overflow:auto;margin-top:10px;padding:10px 14px 14px;border-radius:12px;background:color-mix(in srgb,var(--bg) 70%,var(--pri-soft));
+  background-image:radial-gradient(color-mix(in srgb,var(--pri) 8%,transparent) 1.2px,transparent 1.3px);background-size:24px 24px}
+:root[data-theme="dark"] .cms22{background-color:#181C22}
+.cm22{max-width:84%;margin-top:8px;align-self:flex-start;display:flex;flex-direction:column;align-items:flex-start}
+.cm22.me{align-self:flex-end;align-items:flex-end}
+.who22c{font-size:11.5px;color:var(--ink-3);margin:0 10px 3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cm22 .b22{background:var(--surface)}
+:root[data-theme="dark"] .cm22 .b22{background:var(--surface2)}
+.cm22 .b22.tail::after{background:radial-gradient(circle at 0 0,transparent 11.5px,var(--surface) 12px)}
+:root[data-theme="dark"] .cm22 .b22.tail::after{background:radial-gradient(circle at 0 0,transparent 11.5px,var(--surface2) 12px)}
+.cm22.me .b22{background:var(--pri);color:#fff;border-bottom-left-radius:15px;border-bottom-right-radius:4px}
+.cm22.me .b22.tail::after{left:auto;right:-6px;background:radial-gradient(circle at 100% 0,transparent 11.5px,var(--pri) 12px)}
+.cm22.me .mt22{color:rgba(255,255,255,.72)}
+.cm22.nt22 .b22{background:var(--warn-soft);color:var(--ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--warn) 55%,transparent)}
+.cm22.nt22 .b22.tail::after{display:none}
+.cm22.nt22 .mt22{color:var(--ink-3)}.cm22.nt22 .tr22{border-top-color:var(--line-2);color:var(--ink-2)}.cm22.nt22 .tr22 small{color:var(--ink-3)}
+.cm22.nt22 .file22 i{background:var(--pri-soft);color:var(--pri)}.cm22.nt22 .file22 small{color:var(--ink-3)}
+.tg22{display:inline-flex;align-items:center;gap:3px;font:600 10.5px var(--font);border-radius:99px;padding:1px 8px}
+.tg22.v{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok-d)}
+.tg22.n{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn-d)}
+.lnk22{border:0;background:transparent;font:500 11.5px var(--font);color:inherit;opacity:.75;cursor:pointer;padding:3px 0 0;align-self:flex-start;text-decoration:underline}
+.fl22c{display:flex;flex-direction:column;gap:2px;margin-top:4px}
+.cth22 .cmsend{margin-top:10px;border:0;padding:0;background:transparent}
+.cmp22 .to22{font-size:12px;color:var(--pri);font-weight:600;margin:0 6px 6px}
+.cmp22.nt22 .to22{color:var(--warn-d)}
+.cmp22.nt22 .box22{background:var(--warn-soft);border-color:color-mix(in srgb,var(--warn) 60%,transparent)}
+.cmp22.nt22 .box22:focus-within{border-color:var(--warn);box-shadow:0 0 0 3px color-mix(in srgb,var(--warn) 25%,transparent)}
+.cmp22.nt22 .snd22{background:var(--warn)}
+/* переписка в задачах и комментарии к поручениям — те же пузыри */
+.chat .msg{border-radius:15px;box-shadow:0 1px 1.5px rgba(30,36,48,.08);padding:7px 11px}
+.chat .msg.me{border-bottom-right-radius:4px}
+.chat .msg:not(.me){border-bottom-left-radius:4px}
+</style>
 
 <!-- вход -->
 <div class="login" id="login">
@@ -9886,7 +10067,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="b34cbbac3ed9";
+const ZC_BUILD="ffdadff1e01d";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11724,6 +11905,277 @@ const _nbTr21=Notif.bind.bind(Notif);Notif.bind=function(b){_nbTr21(b);b.querySe
 .tr21pre{white-space:pre-wrap;overflow-wrap:anywhere}
 @media (max-width:700px){.tr21btn{right:14px;bottom:calc(76px + env(safe-area-inset-bottom,0px));width:50px;height:50px}.tr21pan{right:16px;left:16px;width:auto;bottom:calc(134px + env(safe-area-inset-bottom,0px));max-height:calc(100vh - 170px)}}
 @media print{.tr21btn,.tr21pan{display:none!important}}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.1 · ЧАТ В СТИЛЕ TELEGRAM ═══════════════════════════
+   Решение владельца 14.10.2026 (макет design-chat.html, стиль Telegram, «всё сразу»).
+   • Раздел «Чаты» во всю страницу (#/chats, #/chats/<логин>) вместо окна «Сообщения»: слева разговоры (поиск, «Непрочитанные»,
+     последнее сообщение, время, счётчик, «в сети»), справа разговор. Кнопка сообщений в шапке и уведомления о сообщениях
+     открывают этот раздел. Пункт в боковом меню не добавляется (меню меняет только владелец).
+   • Разговор: пузыри с «хвостиками», разделители по дням, полоса «Новые сообщения», время и ✓ / ✓✓ (прочитано — по отметке
+     собеседника), ответ с цитатой (нажатие на цитату — к исходному сообщению), файлы (кнопка, вставка скриншота, перетаскивание),
+     «Перевести» у сообщения и в поле ввода (ИИ-переводчик, только на сервере), черновик у каждого разговора.
+   • «В сети» / «был(а) в 14:20»: таблица presence (миграция 20261014000200), отметка раз в минуту, пока вкладка открыта.
+   • Телефон: список и разговор — по очереди на весь экран, «←» возвращает к списку.
+   • Обсуждение с клиентом в деле: те же пузыри; над полем — переключатель «Внутренняя заметка / Клиенту» (по умолчанию —
+     заметка, как раньше: клиенту сообщение уходит только по явному выбору), у сообщений — 🔒 / 👁, перевод — под текстом.
+   Без миграции на сервере: сообщения уходят прежним вызовом (ответ — цитатой в тексте, файлы — недоступны, «в сети» не видно). */
+Object.assign(UI,{
+  ch22:"Чаты||聊天", ch22Search:"Поиск людей и сообщений||搜索人员和消息", ch22All:"Все||全部", ch22Unread:"Непрочитанные||未读",
+  ch22Chats:"Чаты||聊天", ch22People:"Все сотрудники||全体员工", ch22None:"Ничего не найдено||未找到", ch22Pick:"Выберите, кому написать||请选择聊天对象",
+  ch22Online:"в сети||在线", ch22Seen:"был(а) в {t}||最后在线 {t}", ch22SeenY:"был(а) вчера в {t}||最后在线 昨天 {t}", ch22SeenD:"был(а) {d}||最后在线 {d}",
+  ch22Today:"Сегодня||今天", ch22Yest:"Вчера||昨天", ch22New:"Новые сообщения||新消息", ch22You:"Вы: ||你：", ch22Empty:"Сообщений пока нет — напишите первым||暂无消息，开始聊天吧",
+  ch22Ph:"Написать сообщение…||输入消息…", ch22Hint:"Enter — отправить · Shift+Enter — новая строка · можно вставить скриншот (Ctrl+V) или перетащить файл||Enter 发送 · Shift+Enter 换行 · 可粘贴截图（Ctrl+V）或拖入文件",
+  ch22Attach:"Прикрепить файл||附加文件", ch22Send:"Отправить (Enter)||发送（Enter）", ch22Reply:"Ответить||回复", ch22Copy:"Скопировать||复制", ch22Tr:"Перевести||翻译",
+  ch22ReplyTo:"Ответ: {n}||回复：{n}", ch22Copied:"Скопировано||已复制", ch22TrBtn:"Перевести перед отправкой (ИИ)||发送前翻译（AI）", ch22TrDone:"Переведено ИИ · вернуть оригинал||已由AI翻译 · 恢复原文",
+  ch22TrOff:"Перевод работает в рабочей системе (на сервере)||翻译仅在正式系统（服务器）中可用", ch22TrLbl:"Перевод ИИ||AI译文", ch22Info:"О собеседнике и файлы||对方信息与文件",
+  ch22Files:"Файлы||文件", ch22Matters:"Общие дела||共同案件", ch22NoFiles:"Файлов пока нет||暂无文件", ch22NoMatters:"Общих дел нет||无共同案件",
+  ch22File:"Файл||文件", ch22Photo:"Фото||图片", ch22Drop:"Отпустите — файл прикрепится к сообщению||松开即可附加文件", ch22Back:"К списку чатов||返回聊天列表",
+  ch22NeedMig:"Ответ с цитатой и файлы заработают после обновления сервера (миграция 20261014000200)||引用回复和文件需在服务器更新后可用（迁移 20261014000200）",
+  ch22Read:"прочитано||已读", ch22Sent:"отправлено||已发送", ch22Big:"Файл больше 100 МБ||文件超过100MB", ch22Up:"Загружаю файл…||正在上传文件…",
+  cm22Client:"Клиенту||发给客户", cm22Note:"Внутренняя заметка||内部备注", cm22ToClient:"Сообщение увидит клиент||客户将看到此消息", cm22ToTeam:"Клиент не увидит · только команда дела||客户看不到 · 仅案件团队可见",
+  cm22Vis:"видно клиенту||客户可见", cm22Int:"внутренняя заметка||内部备注", cm22PhC:"Написать клиенту…||给客户写消息…", cm22PhN:"Заметка для команды…||给团队的备注…",
+  cm22Alt:"Перевод||译文"
+});
+/* узбекский (латиница) — словарь надписей этого модуля */
+window.UZ21=Object.assign(window.UZ21||{},{"Чаты":"Chatlar","Поиск людей и сообщений":"Odamlar va xabarlarni qidirish","Все":"Hammasi","Непрочитанные":"O‘qilmagan","Все сотрудники":"Barcha xodimlar",
+  "Ничего не найдено":"Hech narsa topilmadi","Выберите, кому написать":"Kimga yozishni tanlang","в сети":"tarmoqda","был(а) в {t}":"{t} da tarmoqda edi","был(а) вчера в {t}":"kecha {t} da tarmoqda edi","был(а) {d}":"{d} tarmoqda edi",
+  "Сегодня":"Bugun","Вчера":"Kecha","Новые сообщения":"Yangi xabarlar","Вы: ":"Siz: ","Сообщений пока нет — напишите первым":"Hozircha xabar yo‘q — birinchi bo‘lib yozing","Написать сообщение…":"Xabar yozing…",
+  "Enter — отправить · Shift+Enter — новая строка · можно вставить скриншот (Ctrl+V) или перетащить файл":"Enter — yuborish · Shift+Enter — yangi qator · skrinshotni qo‘yish (Ctrl+V) yoki faylni sudrab tashlash mumkin",
+  "Прикрепить файл":"Fayl biriktirish","Отправить (Enter)":"Yuborish (Enter)","Ответить":"Javob berish","Скопировать":"Nusxalash","Перевести":"Tarjima qilish","Ответ: {n}":"Javob: {n}","Скопировано":"Nusxalandi",
+  "Перевести перед отправкой (ИИ)":"Yuborishdan oldin tarjima qilish (SI)","Переведено ИИ · вернуть оригинал":"SI tarjima qildi · asl matnni qaytarish","Перевод работает в рабочей системе (на сервере)":"Tarjima ishchi tizimda (serverda) ishlaydi",
+  "Перевод ИИ":"SI tarjimasi","О собеседнике и файлы":"Suhbatdosh va fayllar","Файлы":"Fayllar","Общие дела":"Umumiy ishlar","Файлов пока нет":"Hozircha fayl yo‘q","Общих дел нет":"Umumiy ishlar yo‘q","Файл":"Fayl","Фото":"Rasm",
+  "Отпустите — файл прикрепится к сообщению":"Qo‘yib yuboring — fayl xabarga biriktiriladi","К списку чатов":"Chatlar ro‘yxatiga","прочитано":"o‘qildi","отправлено":"yuborildi","Файл больше 100 МБ":"Fayl 100 MB dan katta","Загружаю файл…":"Fayl yuklanmoqda…",
+  "Ответ с цитатой и файлы заработают после обновления сервера (миграция 20261014000200)":"Iqtibosli javob va fayllar server yangilangandan keyin ishlaydi (migratsiya 20261014000200)",
+  "Клиенту":"Mijozga","Внутренняя заметка":"Ichki eslatma","Сообщение увидит клиент":"Xabarni mijoz ko‘radi","Клиент не увидит · только команда дела":"Mijoz ko‘rmaydi · faqat ish jamoasi","видно клиенту":"mijozga ko‘rinadi",
+  "внутренняя заметка":"ichki eslatma","Написать клиенту…":"Mijozga yozing…","Заметка для команды…":"Jamoa uchun eslatma…","Оригинал":"Asl matn","Перевод":"Tarjima"});
+
+const CH22_ICO={search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3",info:"M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01",
+  clip:"M21 12.5 12.6 21a5.5 5.5 0 0 1-7.8-7.8L13.5 4.5a3.7 3.7 0 0 1 5.2 5.2L10 18.4a1.8 1.8 0 0 1-2.6-2.6L15 8.3",send:"M22 2 11 13M22 2l-7 20-4-9-9-4z",
+  reply:"M9 17 4 12l5-5M20 18v-2a4 4 0 0 0-4-4H4",copy:"M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zM5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1",
+  tr:"M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6",back:"M15 18l-6-6 6-6",x:"M18 6 6 18M6 6l12 12",eye:"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  lock:"M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4",chat:"M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.3A8 8 0 1 1 21 12z"};
+const ch22svg=(d,cls)=>`<svg viewBox="0 0 24 24" aria-hidden="true"${cls?` class="${cls}"`:""}><path d="${d}"/></svg>`;
+const CH22_T1=`<svg class="tk22" viewBox="0 0 18 12" aria-hidden="true"><path d="M1.5 6.5 5 10l7-8"/></svg>`;
+const CH22_T2=`<svg class="tk22 rd" viewBox="0 0 18 12" aria-hidden="true"><path d="M1.5 6.5 5 10l7-8M7 10l7-8"/></svg>`;
+const ch22tx=s=>esc(String(s||"")).replace(/\n/g,"<br>");
+const ch22day=d=>{const t=ymdL(new Date());if(d===t)return T1(UI.ch22Today);const y=new Date();y.setDate(y.getDate()-1);if(d===ymdL(y))return T1(UI.ch22Yest);return fmtD(d);};
+const ch22size=n=>!n?"":n<1024?n+" B":n<1048576?Math.round(n/1024)+" KB":(n/1048576).toFixed(1).replace(".",",")+" MB";
+const ch22ext=f=>{const e=(String(f&&f.name||"").match(/\.([A-Za-z0-9]{1,5})$/)||[])[1];return e?e.toUpperCase():"FILE";};
+
+/* ── «в сети» ── */
+const Pres22={map:{},timer:null,unsub:null,ok:true,
+  on(){return typeof SRV21==="function"&&SRV21()&&this.ok;},
+  async start(){if(!U()||isClient()||!this.on()||this.timer)return;
+    const ping=async()=>{if(document.visibilityState==="hidden"||!U())return;try{await SB19.T.rpc("presence_ping");this.map[U().login]=Date.now();}catch(e){if(/presence_ping|PGRST202|Could not find/i.test(String(e&&(e.message||e))))this.stop(true);}};
+    const load=async()=>{try{const r=await SB19.T.select("presence");r.forEach(x=>{this.map[x.login]=Date.parse(x.at)||0;});this.paint();}catch(e){}};
+    await ping();await load();this.timer=setInterval(()=>{ping();load();},60000);
+    document.addEventListener("visibilitychange",this._vis=()=>{if(document.visibilityState==="visible")ping();});
+    try{this.unsub=SB19.T.subscribe("presence",null,ev=>{const r=ev.row||{};if(r.login){this.map[r.login]=Date.parse(r.at)||0;this.paint();}});}catch(e){}},
+  stop(missing){if(this.timer)clearInterval(this.timer);this.timer=null;if(this.unsub){try{this.unsub();}catch(e){}this.unsub=null;}if(missing)this.ok=false;this.map={};},
+  online(l){if(!this.on()){return !!(S.demoOnline22&&S.demoOnline22[l]);}const t=this.map[l];return !!t&&Date.now()-t<150000;},
+  status(l){if(this.online(l))return {on:true,txt:T1(UI.ch22Online)};const t=this.map[l];if(!t)return {on:false,txt:""};const d=new Date(t),hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+    const day=ymdL(d),today=ymdL(new Date()),y=new Date();y.setDate(y.getDate()-1);
+    return {on:false,txt:day===today?T1(UI.ch22Seen).replace("{t}",hm):day===ymdL(y)?T1(UI.ch22SeenY).replace("{t}",hm):T1(UI.ch22SeenD).replace("{d}",fmtD(day))};},
+  paint(){if(Router.cur==="chats"&&U()&&!isClient())Chat22.refresh(true);}
+};
+
+/* ── раздел «Чаты» ── */
+const Chat22={peer:null,q:"",filter:"all",info:false,drafts:{},reply:{},files:{},trOrig:{},trMsg:{},newMark:{},v2:true,busy:false,
+  me(){return (U()||{}).login;},
+  cid(a,b){return [a,b].sort().join("__");},
+  chat(peer){return S.chats[this.cid(this.me(),peer)]||null;},
+  msgs(peer){const c=this.chat(peer);return c&&Array.isArray(c.msgs)?c.msgs:[];},
+  lastRead(peer,who){const c=this.chat(peer);return ((c&&c.lastRead)||{})[who]||"";},
+  /* ответ сервера может прийти позже живого обновления (собеседник уже прочитал): не откатывать — отметки «прочитано»
+     берутся самые поздние, сообщения — из более полной копии */
+  merge(d){const cur=S.chats[d.id];if(!cur){S.chats[d.id]=d;return;}const lr=Object.assign({},cur.lastRead||{});Object.entries(d.lastRead||{}).forEach(([k,v])=>{if(!lr[k]||v>lr[k])lr[k]=v;});
+    const a=cur.msgs||[],b=d.msgs||[];const la=(a[a.length-1]||{}).at||"",lb=(b[b.length-1]||{}).at||"";const msgs=b.length>a.length||lb>la||(lb===la&&b.length>=a.length)?b:a;
+    S.chats[d.id]=Object.assign({},cur,d,{lastRead:lr,msgs});},
+  /* прочитано собеседником: его отметка или его более позднее сообщение (ответил — значит видел) */
+  seen(peer){const lr=this.lastRead(peer,peer);const ms=this.msgs(peer);let t=lr;for(let i=ms.length-1;i>=0;i--)if(ms[i].by===peer){if(ms[i].at>t)t=ms[i].at;break;}return t;},
+  unread(peer){const me=this.me(),lr=this.lastRead(peer,me);return this.msgs(peer).filter(m=>m.by!==me&&m.at>lr).length;},
+  role(a){try{if(typeof Who21!=="undefined"&&Who21.sub)return Who21.sub(a)||POS_NAME(a.pos);}catch(e){}return a.pos?POS_NAME(a.pos):roleLabel(a.role);},
+  peers(){const me=this.me();return Object.values(S.accounts||{}).filter(a=>a&&a.login&&a.login!==me&&a.active!==false);},
+  av(l,cls){const on=Pres22.online(l);return `<span class="av22 ${cls||""}">${avatarHtml(l)}${on?'<i class="on22"></i>':""}</span>`;},
+  preview(peer){const ms=this.msgs(peer);const m=ms[ms.length-1];if(!m)return "";const me=this.me();const f=(m.files||[])[0];
+    const body=m.text?esc(String(m.text).replace(/\s+/g," ").slice(0,120)):f?(/^image\//.test(f.type||"")?"🖼 "+T1(UI.ch22Photo):"📎 "+esc(f.name)):"";
+    return (m.by===me?`<b>${T1(UI.ch22You)}</b>`:"")+body;},
+  timeShort(at){if(!at)return "";const [d,t]=at.split("T");return d===ymdL(new Date())?(t||"").slice(0,5):d.slice(8,10)+"."+d.slice(5,7);},
+  listHtml(){const me=this.me(),q=this.q.trim().toLowerCase();
+    let rows=this.peers().map(a=>{const ms=this.msgs(a.login);const last=ms[ms.length-1];return {a,last:last?last.at:"",un:this.unread(a.login)};});
+    if(q)rows=rows.filter(r=>String(r.a.name||"").toLowerCase().includes(q)||String(typeof UZN==="function"&&lang==="uz"?UZN(r.a.name||""):"").toLowerCase().includes(q)||this.msgs(r.a.login).some(m=>String(m.text||"").toLowerCase().includes(q)));
+    if(this.filter==="un")rows=rows.filter(r=>r.un);
+    const chats=rows.filter(r=>r.last).sort((x,y)=>y.last.localeCompare(x.last)),people=rows.filter(r=>!r.last).sort((x,y)=>String(x.a.name).localeCompare(String(y.a.name),"ru"));
+    const row=r=>{const l=r.a.login,ms=this.msgs(l),last=ms[ms.length-1];const mine=last&&last.by===me;const rd=mine&&this.seen(l)>=last.at;
+      return `<button type="button" class="cv22${l===this.peer?" on":""}${r.un?" un":""}" data-ch22="${esc(l)}">${this.av(l)}<span class="tx22"><span class="r1"><span class="nm">${esc(r.a.name||l)}</span><span class="tm">${this.timeShort(r.last)}</span></span>
+        <span class="r2"><span class="lm">${last?this.preview(l):esc(this.role(r.a))}</span>${r.un?`<span class="bd22">${r.un}</span>`:mine?(rd?CH22_T2:CH22_T1):""}</span></span></button>`;};
+    const tot=this.peers().reduce((n,a)=>n+this.unread(a.login),0);
+    return `<div class="lh22"><div class="t"><h2>${T1(UI.ch22)}</h2></div>
+      <label class="srch22">${ch22svg(CH22_ICO.search)}<input id="ch22q" type="search" placeholder="${T1(UI.ch22Search)}" value="${esc(this.q)}" autocomplete="off"></label>
+      <div class="flt22"><button type="button" data-ch22f="all" class="${this.filter==="all"?"on":""}">${T1(UI.ch22All)}</button><button type="button" data-ch22f="un" class="${this.filter==="un"?"on":""}">${T1(UI.ch22Unread)}${tot?" · "+tot:""}</button></div></div>
+      <div class="convs22" id="ch22list">${chats.length?`<div class="sec22">${T1(UI.ch22Chats)}</div>${chats.map(row).join("")}`:""}${people.length&&this.filter!=="un"?`<div class="sec22">${T1(UI.ch22People)}</div>${people.map(row).join("")}`:""}${!chats.length&&(!people.length||this.filter==="un")?`<div class="empty22">${T1(UI.ch22None)}</div>`:""}</div>`;},
+  /* сообщения: группы подряд от одного человека (в пределах 5 минут и одного дня), разделители дней и «Новые сообщения» */
+  threadHtml(){const peer=this.peer,me=this.me();if(!peer||!S.accounts[peer])return `<div class="pick22">${ch22svg(CH22_ICO.chat)}<span>${T1(UI.ch22Pick)}</span></div>`;
+    const a=S.accounts[peer],st=Pres22.status(peer),ms=this.msgs(peer),peerRead=this.seen(peer),mark=this.newMark[peer]||"";
+    let h="",grp=null,day="",newShown=false;
+    const flush=()=>{if(!grp)return;const mine=grp.by===me;
+      h+=`<div class="grp22 ${mine?"me":"in"}"><div class="col22">${grp.items.map((m,i)=>this.bubble(m,mine,peerRead,i===grp.items.length-1)).join("")}</div></div>`;grp=null;};
+    ms.forEach((m,i)=>{const d=(m.at||"").slice(0,10);if(d!==day){flush();day=d;h+=`<div class="day22"><span>${ch22day(d)}</span></div>`;}
+      if(!newShown&&mark&&m.by!==me&&m.at>mark){flush();newShown=true;h+=`<div class="new22" id="ch22new"><span>${T1(UI.ch22New)}</span></div>`;}
+      const prev=grp&&grp.items[grp.items.length-1];const near=prev&&(Date.parse(m.at)-Date.parse(prev.at))<=5*60000;
+      if(grp&&grp.by===m.by&&near)grp.items.push(m);else{flush();grp={by:m.by,items:[m]};}});flush();
+    if(!ms.length)h=`<div class="nomsg22">${T1(UI.ch22Empty)}</div>`;
+    const rp=this.reply[peer],fl=this.files[peer]||[],tro=this.trOrig[peer];
+    return `<div class="th22"><button type="button" class="ib22 back22" data-ch22back="1" title="${T1(UI.ch22Back)}">${ch22svg(CH22_ICO.back)}</button>${this.av(peer,"lg")}
+        <div class="who22"><b>${esc(a.name||peer)}</b><small class="${st.on?"on":""}">${st.on?"● "+st.txt+" · ":st.txt?st.txt+" · ":""}${esc(this.role(a))}</small></div><span class="sp22"></span>
+        <button type="button" class="ib22${this.info?" on":""}" data-ch22info="1" title="${T1(UI.ch22Info)}">${ch22svg(CH22_ICO.info)}</button></div>
+      <div class="msgs22" id="ch22msgs">${h}</div>
+      <div class="comp22" id="ch22comp">${rp?`<div class="rbar22"><div><b>${T1(UI.ch22ReplyTo).replace("{n}",esc(accName(rp.by)))}</b><span>${esc(String(rp.text||"").slice(0,140))}</span></div><button type="button" class="ib22" data-ch22rx="1">${ch22svg(CH22_ICO.x)}</button></div>`:""}
+        ${fl.length?`<div class="fbar22">${fl.map((f,i)=>`<span class="fchip22"><i>${ch22ext(f)}</i>${esc(f.name)}<button type="button" data-ch22fx="${i}" aria-label="×">×</button></span>`).join("")}</div>`:""}
+        ${tro!=null?`<button type="button" class="trn22" data-ch22tro="1">${T1(UI.ch22TrDone)}</button>`:""}
+        <div class="box22"><button type="button" class="ib22" data-ch22att="1" title="${T1(UI.ch22Attach)}">${ch22svg(CH22_ICO.clip)}</button>
+          <textarea id="ch22ta" rows="1" placeholder="${T1(UI.ch22Ph)}"></textarea>
+          <button type="button" class="trb22" data-ch22tr="1" title="${T1(UI.ch22TrBtn)}">${ch22svg(CH22_ICO.tr)}<span>${lang==="zh"?"RU":"中文"}</span></button>
+          <button type="button" class="snd22" data-ch22send="1" title="${T1(UI.ch22Send)}">${ch22svg(CH22_ICO.send)}</button></div>
+        <div class="hint22">${T1(UI.ch22Hint)}</div></div>
+      <div class="drop22">${T1(UI.ch22Drop)}</div>`;},
+  bubble(m,mine,peerRead,last){const tm=(m.at||"").slice(11,16);const rd=mine&&peerRead>=m.at;
+    const q=m.reply?`<button type="button" class="q22" data-ch22go="${esc(m.reply.id||"")}" data-ch22at="${esc(m.reply.at||"")}"><b>${esc(accName(m.reply.by))}</b><span>${esc(String(m.reply.text||"").slice(0,160))}</span></button>`:"";
+    const fs=(m.files||[]).map((f,i)=>`<button type="button" class="file22" data-ch22file="${esc(m.id||m.at)}" data-i="${i}"><i>${ch22ext(f)}</i><span><b>${esc(f.name)}</b><small>${ch22size(f.size)}</small></span></button>`).join("");
+    const tr=this.trMsg[m.id||m.at];
+    const key=esc(m.id||m.at);
+    return `<div class="b22${last?" tail":""}" data-ch22m="${key}" id="ch22m_${key}">
+      <span class="acts22"><button type="button" data-ch22rep="${key}" title="${T1(UI.ch22Reply)}">${ch22svg(CH22_ICO.reply)}</button><button type="button" data-ch22cp="${key}" title="${T1(UI.ch22Copy)}">${ch22svg(CH22_ICO.copy)}</button>${m.text?`<button type="button" data-ch22trm="${key}" title="${T1(UI.ch22Tr)}">${ch22svg(CH22_ICO.tr)}</button>`:""}</span>
+      ${q}${fs}${m.text?`<span class="tx">${ch22tx(m.text)}</span>`:""}${tr?`<span class="tr22"><small>${T1(UI.ch22TrLbl)}</small>${tr==="…"?T1(UI.tr21Busy||"Перевожу…||翻译中…"):ch22tx(tr)}</span>`:""}
+      <span class="mt22">${m.via==="tg"?"✈ ":""}${tm}${mine?(rd?CH22_T2:CH22_T1):""}</span></div>`;},
+  infoHtml(){const peer=this.peer;if(!peer||!this.info)return "";const a=S.accounts[peer]||{},st=Pres22.status(peer);
+    const files=[];this.msgs(peer).forEach(m=>(m.files||[]).forEach((f,i)=>files.push({m,f,i})));
+    const pe=a.emp,me=(U()||{}).emp;let ms=[];try{ms=MM().filter(x=>x.status!=="closed"&&canSeeMatter(x)&&[x.lead,...execsOf(x).map(e=>e.emp)].includes(pe)&&[x.lead,...execsOf(x).map(e=>e.emp)].includes(me)).slice(0,8);}catch(e){}
+    return `<aside class="inf22"><div class="hd">${this.av(peer,"xl")}<b>${esc(a.name||peer)}</b><small>${esc(this.role(a))}</small>${st.txt?`<small class="${st.on?"on":""}">${st.txt}</small>`:""}</div>
+      <h5>${T1(UI.ch22Matters)}</h5>${ms.length?ms.map(x=>`<button type="button" class="row22" data-ch22mat="${esc(x.id)}"><i>${esc(String(x.no||"").slice(0,3))}</i><span><b>${esc(x.no||"")}</b><small>${esc(String(typeof mT18==="function"?mT18(x):x.title||"").slice(0,60))}</small></span></button>`).join(""):`<div class="mute22">${T1(UI.ch22NoMatters)}</div>`}
+      <h5>${T1(UI.ch22Files)} · ${files.length}</h5>${files.length?files.slice(-12).reverse().map(x=>`<button type="button" class="row22" data-ch22file="${esc(x.m.id||x.m.at)}" data-i="${x.i}"><i>${ch22ext(x.f)}</i><span><b>${esc(x.f.name)}</b><small>${ch22size(x.f.size)} · ${fmtDT(x.m.at)}</small></span></button>`).join(""):`<div class="mute22">${T1(UI.ch22NoFiles)}</div>`}</aside>`;},
+  page(arg){if(isClient())return "";if(arg&&S.accounts[arg])this.peer=arg;else if(arg==null&&!this.peer&&!matchMedia("(max-width:700px)").matches){const f=this.peers().map(a=>({l:a.login,t:(this.msgs(a.login).slice(-1)[0]||{}).at||""})).filter(x=>x.t).sort((x,y)=>y.t.localeCompare(x.t))[0];if(f)this.peer=f.l;}
+    if(this.peer&&this.newMark[this.peer]===undefined)this.newMark[this.peer]=this.lastRead(this.peer,this.me());
+    document.body.classList.add("ch22pg");
+    document.body.classList.toggle("ch22open",!!arg||(!!this.peer&&!matchMedia("(max-width:700px)").matches));
+    setTimeout(()=>this.after(),0);
+    return `<div class="ch22${this.peer?" has":""}${this.info&&this.peer?" info":""}${arg?" open":""}" id="ch22"><aside class="lst22">${this.listHtml()}</aside><section class="thr22" id="ch22thr">${this.threadHtml()}</section>${this.infoHtml()}</div>`;},
+  /* перерисовка без потери черновика, фокуса и прокрутки */
+  refresh(light){const root=document.getElementById("ch22");if(!root||Router.cur!=="chats")return;const ta=document.getElementById("ch22ta");const box=document.getElementById("ch22msgs");
+    const st={v:ta?ta.value:null,f:ta&&document.activeElement===ta,s:ta?ta.selectionStart:0,e:ta?ta.selectionEnd:0,bottom:box?box.scrollHeight-box.scrollTop-box.clientHeight<60:true,top:box?box.scrollTop:0,lq:document.activeElement&&document.activeElement.id==="ch22q",lst:(document.getElementById("ch22list")||{}).scrollTop||0};
+    if(ta)this.drafts[this.peer]=ta.value;
+    root.outerHTML=this.page(Router.arg);this.after(st);},
+  fit(){const el=document.getElementById("ch22");if(!el)return;const top=el.getBoundingClientRect().top;const bn=document.getElementById("bnav");const bh=bn&&getComputedStyle(bn).display!=="none"&&bn.offsetParent?bn.offsetHeight:0;
+    el.style.height=Math.max(360,window.innerHeight-top-(matchMedia("(max-width:700px)").matches?bh:22))+"px";},
+  after(st){const root=document.getElementById("ch22");if(!root||root.dataset.b)return;root.dataset.b="1";this.fit();const peer=this.peer;
+    const ta=document.getElementById("ch22ta"),box=document.getElementById("ch22msgs");
+    if(ta){ta.value=st&&st.v!=null?st.v:(this.drafts[peer]||"");this.grow(ta);if(st&&st.f){ta.focus();try{ta.setSelectionRange(st.s,st.e);}catch(e){}}}
+    if(box){if(st&&!st.bottom)box.scrollTop=st.top;else{const nw=document.getElementById("ch22new");if(nw&&!st)box.scrollTop=Math.max(0,nw.offsetTop-80);else box.scrollTop=box.scrollHeight;}}
+    const ls=document.getElementById("ch22list");if(ls&&st)ls.scrollTop=st.lst;
+    const q=document.getElementById("ch22q");if(q){q.oninput=()=>{this.q=q.value;const l=document.getElementById("ch22list");const t=document.createElement("div");t.innerHTML=this.listHtml();const nl=t.querySelector("#ch22list");if(l&&nl){l.innerHTML=nl.innerHTML;this.bindList(root);}};if(st&&st.lq){q.focus();const n=q.value.length;try{q.setSelectionRange(n,n);}catch(e){}}}
+    root.querySelectorAll("[data-ch22f]").forEach(b=>b.onclick=()=>{this.filter=b.dataset.ch22f;this.refresh();});
+    this.bindList(root);
+    const on=(sel,fn)=>root.querySelectorAll(sel).forEach(el=>el.onclick=e=>{e.preventDefault();e.stopPropagation();fn(el,e);});
+    on("[data-ch22back]",()=>{this.peer=null;document.body.classList.remove("ch22open");Router.go("chats");});
+    on("[data-ch22info]",()=>{this.info=!this.info;this.refresh();});
+    on("[data-ch22rx]",()=>{delete this.reply[peer];this.refresh();const t=document.getElementById("ch22ta");if(t)t.focus();});
+    on("[data-ch22fx]",el=>{(this.files[peer]||[]).splice(+el.dataset.ch22fx,1);this.refresh();});
+    on("[data-ch22tro]",()=>{const t=document.getElementById("ch22ta");if(t&&this.trOrig[peer]!=null){t.value=this.trOrig[peer];this.drafts[peer]=t.value;}delete this.trOrig[peer];this.refresh();});
+    on("[data-ch22att]",()=>this.pick());
+    on("[data-ch22send]",()=>this.send());
+    on("[data-ch22tr]",()=>this.trComposer());
+    on("[data-ch22rep]",el=>{const m=this.find(el.dataset.ch22rep);if(!m)return;this.reply[peer]={id:m.id||"",by:m.by,at:m.at,text:m.text||((m.files||[])[0]||{}).name||""};this.refresh();const t=document.getElementById("ch22ta");if(t)t.focus();});
+    on("[data-ch22cp]",el=>{const m=this.find(el.dataset.ch22cp);if(m)this.copy(m.text||"");});
+    on("[data-ch22trm]",el=>this.trMessage(el.dataset.ch22trm));
+    on("[data-ch22go]",el=>{const id=el.dataset.ch22go,at=el.dataset.ch22at;let t=id&&document.getElementById("ch22m_"+id);if(!t&&at)t=[...root.querySelectorAll("[data-ch22m]")].find(x=>x.dataset.ch22m===at);if(t){t.scrollIntoView({block:"center",behavior:"smooth"});t.classList.add("flash22");setTimeout(()=>t.classList.remove("flash22"),1600);}});
+    on("[data-ch22file]",el=>{const m=this.find(el.dataset.ch22file);const f=m&&(m.files||[])[+el.dataset.i];if(f)Files.open(f);});
+    on("[data-ch22mat]",el=>Router.go("matter",el.dataset.ch22mat));
+    if(ta){ta.oninput=()=>{this.drafts[peer]=ta.value;this.grow(ta);};
+      ta.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();this.send();}};
+      ta.onpaste=e=>{const it=[...((e.clipboardData||{}).items||[])].filter(x=>x.kind==="file");if(!it.length)return;e.preventDefault();it.forEach(x=>{const f=x.getAsFile();if(f)this.upload(f.name&&f.name!=="image.png"?f:new File([f],"screenshot-"+nowS().replace(/[:T-]/g,"")+".png",{type:f.type||"image/png"}));});};}
+    const thr=document.getElementById("ch22thr");if(thr&&peer){let dc=0;thr.ondragenter=e=>{if([...(e.dataTransfer||{}).types||[]].includes("Files")){dc++;thr.classList.add("drag");}};thr.ondragleave=()=>{if(--dc<=0){dc=0;thr.classList.remove("drag");}};
+      thr.ondragover=e=>{if([...(e.dataTransfer||{}).types||[]].includes("Files"))e.preventDefault();};thr.ondrop=e=>{e.preventDefault();dc=0;thr.classList.remove("drag");[...((e.dataTransfer||{}).files||[])].forEach(f=>this.upload(f));};}
+    if(peer&&document.visibilityState!=="hidden"&&this.unread(peer))this.markRead();
+    if(typeof UZ21N!=="undefined"&&lang==="uz")try{UZ21N.run(root);}catch(e){}},
+  bindList(root){root.querySelectorAll("[data-ch22]").forEach(el=>el.onclick=()=>{const l=el.dataset.ch22;if(this.peer&&this.peer!==l){const t=document.getElementById("ch22ta");if(t)this.drafts[this.peer]=t.value;}this.peer=l;this.newMark[l]=this.lastRead(l,this.me());Router.go("chats",l);});},
+  grow(ta){ta.style.height="auto";ta.style.height=Math.min(160,ta.scrollHeight)+"px";},
+  find(key){return this.msgs(this.peer).find(m=>(m.id||m.at)===key)||null;},
+  async copy(t){let ok=false;try{await navigator.clipboard.writeText(t);ok=true;}catch(e){}if(!ok){const x=document.createElement("textarea");x.value=t;x.style.position="fixed";x.style.opacity="0";document.body.appendChild(x);x.select();try{ok=document.execCommand("copy");}catch(e){}x.remove();}if(ok)toast(T1(UI.ch22Copied));},
+  async tr(text){if(!(typeof SRV21==="function"&&SRV21())||!SB19.T.invoke)throw new Error(T1(UI.ch22TrOff));const r=await SB19.T.invoke("translate",{text,ui:lang==="zh"?"zh":lang==="uz"?"uz":"ru",mode:"fast"});return (r&&r.translation)||"";},
+  async trMessage(key){const m=this.find(key);if(!m||!m.text)return;const k=m.id||m.at;if(this.trMsg[k]&&this.trMsg[k]!=="…"){delete this.trMsg[k];this.refresh();return;}
+    this.trMsg[k]="…";this.refresh();try{this.trMsg[k]=await this.tr(m.text);}catch(e){delete this.trMsg[k];toast(String((e&&e.message)||e));}this.refresh();},
+  async trComposer(){const ta=document.getElementById("ch22ta");const v=ta&&ta.value.trim();if(!v)return;const peer=this.peer;const b=document.querySelector("[data-ch22tr]");if(b)b.disabled=true;
+    try{const out=await this.tr(v);if(out){this.trOrig[peer]=ta.value;this.drafts[peer]=out;const t=document.getElementById("ch22ta");if(t)t.value=out;this.refresh();}}catch(e){toast(String((e&&e.message)||e));}finally{const b2=document.querySelector("[data-ch22tr]");if(b2)b2.disabled=false;}},
+  pick(){const inp=document.createElement("input");inp.type="file";inp.multiple=true;inp.onchange=()=>[...inp.files].forEach(f=>this.upload(f));inp.click();},
+  /* файл: на сервере — в закрытое хранилище (как в версии 1.0, до 100 МБ); без сервера — в память браузера (до 5 МБ) */
+  async upload(f){const peer=this.peer;if(!peer||!f)return;const srv=typeof SRV21==="function"&&SRV21()&&typeof FS20!=="undefined"&&FS20.on()&&typeof SB19.T.uploadBlob==="function";
+    if(srv&&!this.v2){toast(T1(UI.ch22NeedMig));return;}
+    const max=srv?100*1024*1024:5*1024*1024;if(f.size>max){toast(T1(UI.ch22Big));return;}
+    const id="f"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const meta={id,name:f.name||"file",type:f.type||"",size:f.size,by:this.me(),at:ymdhmL(new Date())};
+    if(f.size>2*1024*1024)toast(T1(UI.ch22Up));
+    try{if(srv){Object.assign(meta,{path:FS20.path(id,meta.name),store:"sb"});await SB19.docSet("files",id,meta);try{await SB19.T.uploadBlob(meta.path,f,meta.type);}catch(e){try{await SB19.T.del("files",{id});}catch(_){}throw e;}}
+      else{const data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});const rec=Object.assign({},meta,{data});
+        if(S.db){await S.db.doc("files/"+id).set(rec);}else{S.filesMem=S.filesMem||{};S.filesMem[id]=rec;try{LS.save();}catch(e){}}}}
+    catch(e){toast(T1(UI.fsErr20||"Не удалось загрузить файл||文件上传失败")+(e&&e.message?": "+e.message:""));return;}
+    (this.files[peer]=this.files[peer]||[]).push({id,name:meta.name,type:meta.type,size:meta.size});if(this.peer===peer)this.refresh();},
+  async send(){if(this.busy)return;const peer=this.peer,me=this.me();if(!peer)return;const ta=document.getElementById("ch22ta");const text=(ta?ta.value:"").trim();const files=(this.files[peer]||[]).slice();const rp=this.reply[peer]||null;
+    if(!text&&!files.length)return;this.busy=true;const btn=document.querySelector("[data-ch22send]");if(btn)btn.disabled=true;
+    try{const noFn=e=>/PGRST202|Could not find the function|function public\.chat_send|chat_send.*does not exist/i.test(String((e&&(e.message||e.code))||e))&&!/Нужен вход|Собеседник|Пустое|свой файл|10 файлов/.test(String(e&&e.message));
+      let done=false;
+      if(typeof SRV21==="function"&&SRV21()&&typeof chatSrv21!=="undefined"&&chatSrv21){
+        let d=null;
+        if(this.v2){try{d=await SB19.T.rpc("chat_send",{peer,body:text,reply:rp,files:files.length?files:null});done=true;}catch(e){if(noFn(e))this.v2=false;else throw e;}}
+        if(!done){if(files.length){toast(T1(UI.ch22NeedMig));return;}const body=rp?`» ${accName(rp.by)}: ${String(rp.text||"").slice(0,120)}\n${text}`:text;
+          try{d=await SB19.T.rpc("chat_send",{peer,body});done=true;}catch(e){if(noFn(e))chatSrv21=false;else throw e;}}
+        if(d&&d.id)this.merge(d);}
+      if(!done){const id=this.cid(me,peer);const c=S.chats[id]||{id,a:[me,peer].sort()[0],b:[me,peer].sort()[1],lastRead:{},msgs:[]};
+        const mo={id:"m"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),by:me,at:nowS(),text};if(files.length)mo.files=files;if(rp)mo.reply=rp;
+        c.msgs=(c.msgs||[]).concat([mo]).slice(-500);c.lastRead=Object.assign({},c.lastRead||{},{[me]:nowS()});await saveChat(c);}
+      const preview=text||("📎 "+files.map(f=>f.name).join(", "));
+      try{notify(peer,"msg",nt18("chatMsg",{who:{a:me},text:preview}),me);}catch(e){}
+      this.drafts[peer]="";delete this.reply[peer];delete this.files[peer];delete this.trOrig[peer];this.newMark[peer]="";
+      if(ta)ta.value="";Notif.badge();this.refresh();const box=document.getElementById("ch22msgs");if(box)box.scrollTop=box.scrollHeight;}
+    catch(e){toast(String((e&&e.message)||e).replace(/^.*?ERROR:\s*/,""));}
+    finally{this.busy=false;const b=document.querySelector("[data-ch22send]");if(b)b.disabled=false;const t=document.getElementById("ch22ta");if(t)t.focus();}},
+  async markRead(){const peer=this.peer;if(!peer)return;const prev=Notif.peer;Notif.peer=peer;try{await Notif.markRead();}catch(e){}finally{Notif.peer=prev;}Notif.badge();
+    const el=document.querySelector(`[data-ch22="${CSS.escape(peer)}"] .bd22`);if(el)el.remove();}
+};
+/* маршрут #/chats — только сотрудникам */
+Router.extra=Object.assign(Router.extra||{},{chats:a=>Chat22.page(a)});
+const _r17chk22=Route17.check.bind(Route17);Route17.check=function(r){if(r&&r.cur==="chats")return !!U()&&!isClient();return _r17chk22(r);};
+/* окно «Сообщения» → раздел «Чаты» */
+const _ntOpen22=Notif.open.bind(Notif);Notif.open=function(tab,peer){if(tab==="msgs"&&U()&&!isClient()){Notif.close();Router.go("chats",peer||undefined);return;}return _ntOpen22(tab,peer);};
+const _ntRender22=Notif.render.bind(Notif);Notif.render=function(){if(this.tab==="msgs"&&U()&&!isClient()){const p=this.peer;Notif.close();Router.go("chats",p||undefined);return;}return _ntRender22.apply(this,arguments);};
+/* новые сообщения и отметки «прочитано» — сразу на экране чатов */
+const _ntRer22=Notif.rerender.bind(Notif);Notif.rerender=function(){const r=_ntRer22.apply(this,arguments);try{if(Router.cur==="chats")Chat22.refresh(true);}catch(e){}return r;};
+/* при уходе со страницы — убрать режим «разговор на весь экран» (телефон) */
+const _rgo22=Router.go.bind(Router);Router.go=function(r,arg){if(r!=="chats")document.body.classList.remove("ch22open","ch22pg");if(r==="chats"&&arg&&Chat22.peer!==arg){Chat22.peer=arg;}return _rgo22(r,arg);};
+window.addEventListener("resize",()=>{try{Chat22.fit();}catch(e){}});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&Router.cur==="chats"&&Chat22.peer&&Chat22.unread(Chat22.peer))Chat22.markRead();});
+/* «в сети» — после входа сотрудника; при выходе — стоп */
+const _sideCh22=renderSide;renderSide=function(){const r=_sideCh22.apply(this,arguments);try{if(U()&&!isClient())Pres22.start();else if(!U())Pres22.stop();}catch(e){}return r;};
+/* демо-режим: кто «в сети» для показа */
+S.demoOnline22={ogabek:1,dilmurod:1,cnlawyer:1};
+
+/* ── обсуждение с клиентом в деле: пузыри, переключатель «Внутренняя заметка / Клиенту» ── */
+CMsg.item=function(x,forClient){const mine=isClient()?x.byKind==="client":x.byKind!=="client";const note=x.byKind!=="client"&&!x.visible;const alt=x.textAlt;
+  const tag=!forClient&&x.byKind!=="client"?`<span class="tg22 ${x.visible?"v":"n"}">${x.visible?"👁 "+T1(UI.cm22Vis):"🔒 "+T1(UI.cm22Int)}</span>`:"";
+  return `<div class="cm22${mine?" me":""}${note?" nt22":""}"><div class="who22c">${esc(x.byName)}${x.byKind==="client"?" · "+T1(UI.ccMsgFrom):""} ${tag}</div>
+    <div class="b22 tail"><span class="tx">${ch22tx(x.text)}</span>${alt?`<span class="tr22"><small>${T1(UI.cm22Alt)}</small>${ch22tx(alt)}</span>`:""}
+    ${(x.files||[]).length?`<span class="fl22c">${x.files.map((f,i)=>`<button type="button" class="file22" data-mfile="${x.id}" data-i="${i}"><i>${ch22ext(f)}</i><span><b>${esc(f.name)}</b><small>${ch22size(f.size)}</small></span></button>`).join("")}</span>`:""}
+    <span class="mt22">${fmtDT(x.at)}</span>${!forClient&&!alt?`<button type="button" class="lnk22" data-addtr="${x.id}">${T1(UI.ccMsgTr)}</button>`:""}</div></div>`;};
+CMsg.thread=function(m,forClient){const list=this.list(m,forClient);const closed=m.status==="closed";const key=((U()||{}).login||"")+"|"+m.id;const dr=this.drafts[key]||{};const toClient=!forClient&&!!dr.vis;
+  return `<div class="cthread cth22"><div class="lbl9" style="margin-top:12px">${T1(UI.ccMsgs)} · ${list.length}</div>
+    ${!forClient&&!closed?`<div class="mode22"><button type="button" class="nt${toClient?"":" on"}" data-cm22m="0">${ch22svg(CH22_ICO.lock)}${T1(UI.cm22Note)}</button><button type="button" class="cl${toClient?" on":""}" data-cm22m="1">${ch22svg(CH22_ICO.eye)}${T1(UI.cm22Client)}</button></div>`:""}
+    <div class="cmsgs cms22">${list.map(x=>this.item(x,forClient)).join("")||`<div class="empty2">${T1(UI.noData)}</div>`}</div>
+    ${closed?"":`<div class="cmsend"><div class="cmp22${!forClient&&!toClient?" nt22":""}">${forClient?"":`<div class="to22">${T1(toClient?UI.cm22ToClient:UI.cm22ToTeam)}</div>`}<div class="box22"><button type="button" class="ib22" id="cmAttach" title="${T1(UI.ch22Attach)}">${ch22svg(CH22_ICO.clip)}</button><textarea id="cmText" rows="1" placeholder="${T1(forClient?UI.ch22Ph:toClient?UI.cm22PhC:UI.cm22PhN)}"></textarea>${forClient?"":`<input type="checkbox" id="cmVis" hidden${toClient?" checked":""}>`}<button type="button" class="snd22" id="cmSend" title="${T1(UI.ch22Send)}">${ch22svg(CH22_ICO.send)}</button></div><div id="cmFiles" class="cmf22"></div><div class="hint22">${T1(UI.ch22Hint).split(" · ").slice(0,2).join(" · ")}</div></div></div>`}</div>`;};
+const _cmBind22=CMsg.bind.bind(CMsg);CMsg.bind=function(vp,m,forClient){_cmBind22(vp,m,forClient);const ta=vp.querySelector("#cmText");if(!ta)return;const key=((U()||{}).login||"")+"|"+m.id;const dr=this.drafts[key]||(this.drafts[key]={text:"",files:[],vis:false});
+  const grow=()=>{ta.style.height="auto";ta.style.height=Math.min(180,ta.scrollHeight)+"px";};grow();ta.addEventListener("input",grow);
+  ta.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();const s=vp.querySelector("#cmSend");if(s)s.click();}});
+  vp.querySelectorAll("[data-cm22m]").forEach(b=>b.onclick=()=>{dr.text=ta.value;dr.vis=b.dataset.cm22m==="1";const vis=vp.querySelector("#cmVis");if(vis)vis.checked=dr.vis;Router.render();setTimeout(()=>{const t=document.getElementById("cmText");if(t){t.focus();const n=t.value.length;try{t.setSelectionRange(n,n);}catch(e){}}},0);});
+  const fl=vp.querySelector("#cmFiles");if(fl&&dr.files.length)fl.innerHTML=dr.files.map(f=>`<span class="fchip22"><i>${ch22ext(f)}</i>${esc(f.name)}</span>`).join("");
+  const att=vp.querySelector("#cmAttach");if(att){const o=att.onclick;att.onclick=()=>Files.upload(f=>{dr.files.push(f);if(fl)fl.innerHTML=dr.files.map(x=>`<span class="fchip22"><i>${ch22ext(x)}</i>${esc(x.name)}</span>`).join("");});}
+  const box=vp.querySelector(".cms22");if(box)box.scrollTop=box.scrollHeight;};
 
 /* ═══════════════════════════ версия 1.1 · этап 2 · УЗБЕКСКИЙ ИНТЕРФЕЙС (ЛАТИНИЦА) ═══════════════════════════
    • Третья кнопка языка «Oʻz» — на экране входа, в шапке и в «Настройках». Надписи — по словарю uz21_dict.js
