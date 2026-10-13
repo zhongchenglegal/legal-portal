@@ -2042,6 +2042,7 @@ rect.bar[fill="#1B8F6E"]{fill:var(--pri2)}
 .b22 .tx{white-space:normal}
 .mt22{align-self:flex-end;display:inline-flex;gap:3px;align-items:center;font-size:11px;color:var(--ink-3);margin:2px 0 -2px 14px;white-space:nowrap}
 .grp22.me .mt22{color:rgba(255,255,255,.72)}
+.tk22.rd{width:19px}
 .tk22{width:16px;height:11px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .grp22.me .tk22.rd{color:#BFE1FF}
 .q22{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:0;border-left:3px solid var(--pri);background:var(--pri-soft);border-radius:6px;padding:4px 9px;margin:1px 0 5px;font:inherit;font-size:12.5px;color:var(--ink-2);cursor:pointer;max-width:100%;width:100%}
@@ -10131,7 +10132,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="5ee9eb4df952";
+const ZC_BUILD="edcdf1be13da";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12076,7 +12077,8 @@ const CH22_ICO={search:"M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3",in
   lock:"M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4",chat:"M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.3A8 8 0 1 1 21 12z"};
 const ch22svg=(d,cls)=>`<svg viewBox="0 0 24 24" aria-hidden="true"${cls?` class="${cls}"`:""}><path d="${d}"/></svg>`;
 const CH22_T1=`<svg class="tk22" viewBox="0 0 18 12" aria-hidden="true"><path d="M1.5 6.5 5 10l7-8"/></svg>`;
-const CH22_T2=`<svg class="tk22 rd" viewBox="0 0 18 12" aria-hidden="true"><path d="M1.5 6.5 5 10l7-8M7 10l7-8"/></svg>`;
+/* ✓✓ прочитано: вторая галочка заметно правее первой (раньше — на 2 px, сливались в одну) */
+const CH22_T2=`<svg class="tk22 rd" viewBox="0 0 20 12" aria-hidden="true"><path d="M1.2 6.4 4.8 10l7.4-8.2M9.2 8.4 10.8 10l7.4-8.2"/></svg>`;
 const ch22tx=s=>esc(String(s||"")).replace(/\n/g,"<br>");
 const ch22day=d=>{const t=ymdL(new Date());if(d===t)return T1(UI.ch22Today);const y=new Date();y.setDate(y.getDate()-1);if(d===ymdL(y))return T1(UI.ch22Yest);return fmtD(d);};
 const ch22size=n=>!n?"":n<1024?n+" B":n<1048576?Math.round(n/1024)+" KB":(n/1048576).toFixed(1).replace(".",",")+" MB";
