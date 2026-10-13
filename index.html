@@ -2202,6 +2202,17 @@ body.ch22pg #viewPage{overflow:hidden;padding-bottom:16px}
 .add22 i{background:var(--pri)!important;color:#fff!important}
 .lv22{margin-top:18px;width:100%;justify-content:center}
 .inf22 .hd .btn{margin-top:8px}
+
+/* ── правки 14.10.2026 ── */
+/* разговор: без прокрутки вбок */
+.msgs22,.cms22{overflow-x:hidden}
+/* панель действий и выбор реакции — в сторону свободного места: у чужих сообщений вправо, у своих — влево (не обрезаются у коротких сообщений) */
+.grp22.in .acts22,.grp22.in .rpk22{left:6px;right:auto}
+.grp22.me .acts22,.grp22.me .rpk22{right:6px;left:auto}
+/* кнопка сообщений в шапке — самолётик */
+#ms21Btn.pl22 svg{stroke-width:1.9;transform:translateX(-1px)}
+#ms21Btn.pl22:hover{color:var(--pri);border-color:var(--pri)}
+body.ch22pg #ms21Btn{color:var(--pri);border-color:var(--pri);background:var(--pri-soft)}
 /* переписка в задачах и комментарии к поручениям — те же пузыри */
 .chat .msg{border-radius:15px;box-shadow:0 1px 1.5px rgba(30,36,48,.08);padding:7px 11px}
 .chat .msg.me{border-bottom-right-radius:4px}
@@ -10120,7 +10131,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="9171f5c46de8";
+const ZC_BUILD="5ee9eb4df952";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12018,7 +12029,7 @@ body.ch22pg .tr21btn{display:none!important}
    Решение владельца 14.10.2026 (макет design-chat.html, стиль Telegram, «всё сразу»).
    • Раздел «Чаты» во всю страницу (#/chats, #/chats/<логин>) вместо окна «Сообщения»: слева разговоры (поиск, «Непрочитанные»,
      последнее сообщение, время, счётчик, «в сети»), справа разговор. Кнопка сообщений в шапке и уведомления о сообщениях
-     открывают этот раздел. Пункт «Чаты» в меню — второй в «Работе» (этап 2, решение владельца 14.10.2026).
+     открывают этот раздел. Пункта в боковом меню нет — кнопка сообщений справа вверху (самолётик).
    • Этап 2: групповые чаты, реакции, правка (48 ч) и удаление своих сообщений, «печатает…» (миграция 20261014000300).
    • Разговор: пузыри с «хвостиками», разделители по дням, полоса «Новые сообщения», время и ✓ / ✓✓ (прочитано — по отметке
      собеседника), ответ с цитатой (нажатие на цитату — к исходному сообщению), файлы (кнопка, вставка скриншота, перетаскивание),
@@ -12398,12 +12409,10 @@ const Chat22={peer:null,q:"",filter:"all",info:false,drafts:{},reply:{},files:{}
 };
 /* счётчик непрочитанных — с группами */
 Notif.unreadMsgs=function(){try{return U()&&!isClient()?Chat22.totalUnread():0;}catch(e){return 0;}};
-/* пункт «Чаты» в боковом меню (и в нижней панели телефона) — второй в «Работе», со счётчиком (решение владельца 14.10.2026) */
-ICON.chat22=CH22_ICO.chat;
-const _navCh22=navFor;navFor=function(){const g=_navCh22.apply(this,arguments);if(!U()||isClient()||!g.length||!Array.isArray(g[0][1]))return g;
-  if(!g.some(x=>(x[1]||[]).some(it=>it[0]==="chats")))g[0][1].splice(Math.min(1,g[0][1].length),0,["chats",UI.ch22,"chat22"]);return g;};
-const _sideNb22=renderSide;renderSide=function(){const r=_sideNb22.apply(this,arguments);try{const b=document.querySelector('#side [data-r="chats"]');if(b&&!b.querySelector(".nb")){const n=Chat22.totalUnread();if(n)b.insertAdjacentHTML("beforeend",`<span class="nb">${n}</span>`);}}catch(e){}return r;};
-const _ntBadge22=Notif.badge.bind(Notif);Notif.badge=function(){const r=_ntBadge22.apply(this,arguments);try{const b=document.querySelector('#side [data-r="chats"]');if(b){let nb=b.querySelector(".nb");const n=U()&&!isClient()?Chat22.totalUnread():0;if(!n){if(nb)nb.remove();}else{if(!nb){b.insertAdjacentHTML("beforeend",'<span class="nb"></span>');nb=b.querySelector(".nb");}nb.textContent=n;}}}catch(e){}return r;};
+/* пункта «Чаты» в боковом меню нет (решение владельца 14.10.2026: вход — кнопкой сообщений справа вверху).
+   Иконка этой кнопки — бумажный самолётик в стиле остальных иконок шапки (контур, толщина 2). */
+const CH22_PLANE="M21.4 3.6 2.9 10.8c-.8.3-.8 1.5.1 1.8l4.6 1.5 1.8 5.5c.2.7 1.1.9 1.6.4l2.6-2.5 4.8 3.5c.7.5 1.6.1 1.8-.7L23 5c.2-1-.7-1.8-1.6-1.4zM7.6 14.1 18 7.6l-7.9 7.7-.4 3.9";
+const _rwCh22=renderWho;renderWho=function(){const r=_rwCh22.apply(this,arguments);try{const b=document.getElementById("ms21Btn");const p=b&&b.querySelector("svg path");if(p&&p.getAttribute("d")!==CH22_PLANE){p.setAttribute("d",CH22_PLANE);b.classList.add("pl22");}}catch(e){}return r;};
 /* демо-режим: одна группа для показа */
 const _rsDemoG22=renderSide;renderSide=function(){const r=_rsDemoG22.apply(this,arguments);try{if(U()&&!isClient()&&!ch22srv()&&U().login==="shahzod"&&S.chats&&!Object.values(S.chats).some(c=>c&&c.group)&&S.accounts.ogabek&&S.accounts.dilmurod){
   S.chats.gdemo22={id:"gdemo22",group:true,title:"Практика: строительство",owner:"shahzod",members:["shahzod","ogabek","dilmurod","hakim"].filter(l=>S.accounts[l]),createdAt:"2026-10-12T09:00",lastRead:{shahzod:"2026-10-12T09:00"},
