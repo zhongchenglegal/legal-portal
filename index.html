@@ -10163,7 +10163,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="9adf8c483f03";
+const ZC_BUILD="b1d7853c8dfd";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12609,6 +12609,114 @@ const _rsUz21=renderSide;renderSide=function(){const r=_rsUz21.apply(this,argume
 const _nrUz21=Notif.render.bind(Notif);Notif.render=function(){const r=_nrUz21.apply(this,arguments);try{UZ21N.run(document.getElementById("ovN"));}catch(e){}return r;};
 /* шрифт: узбекская латиница с ʻ ʼ — тем же шрифтом, что и русский */
 (function(){const st=document.createElement("style");st.textContent=`:root[data-lang="uz"]{--lang-uz:1}`;document.head.appendChild(st);})();
+
+
+/* ═══════════════════════════ v21 · PWA: установка портала и push-уведомления на телефон ═══════════════════════════
+   Портал можно поставить на экран телефона или компьютера как приложение (значок, своё окно), а сотрудник может включить
+   push: уведомление приходит на устройство, даже когда портал закрыт. Что для этого нужно (лежит рядом с index.html на сайте):
+   manifest.webmanifest, sw.js (служебный скрипт), icons/. Здесь — только страница: регистрация скрипта, кнопка «Установить»
+   и переключатель «Push на этом устройстве» в окне «Уведомления» (в само окно вставляется обёрткой над Dlg.ask, файл
+   v20_notify.js не менялся). Подписка устройства хранится на сервере (таблица push_subs, функции push_*), рассылает её
+   функция notify-deliver. Канал «push» в списке каналов не выбирается руками: он включён, пока у человека есть хотя бы
+   одно устройство. Работает только по https (и на localhost), не с файла и не в демо-режиме. Секретные ключи — только на сервере. */
+Object.assign(UI,{
+  pw21Title:"Push на телефон и установка||手机推送与安装",
+  pw21Dev:"Это устройство||本设备",
+  pw21On:"включено||已开启",pw21Off:"выключено||未开启",pw21Denied:"запрещено в настройках браузера||已在浏览器设置中禁止",
+  pw21Unsup:"не поддерживается этим браузером||此浏览器不支持",pw21Insecure:"нужен безопасный адрес (https)||需要安全地址 (https)",
+  pw21All:"устройств с push у вас: {n}||您已开启推送的设备：{n}",
+  pw21BtnOn:"Включить на этом устройстве||在本设备开启",pw21BtnOff:"Отключить на этом устройстве||在本设备关闭",pw21BtnTest:"Проверить||发送测试",
+  pw21Inst:"Установить портал на это устройство||将门户安装到本设备",
+  pw21Ios:"На iPhone: нажмите «Поделиться» → «На экран Домой», затем откройте портал со значка — только тогда доступны push (iOS 16.4 и новее).||iPhone：点击“分享”→“添加到主屏幕”，再从图标打开门户——这样才能使用推送（iOS 16.4 及以上）。",
+  pw21IosNeed:"Откройте портал со значка на экране «Домой» — в браузере push на iPhone недоступны.||请从主屏幕图标打开门户——iPhone 的浏览器内无法使用推送。",
+  pw21NoKey:"Push на сервере ещё не настроены — обратитесь к администратору.||服务器尚未配置推送——请联系管理员。",
+  pw21Done:"Push включены на этом устройстве||已在本设备开启推送",pw21Gone:"Push отключены на этом устройстве||已在本设备关闭推送",
+  pw21Sent:"Проверочное уведомление отправлено — придёт в течение минуты||测试通知已发送——一分钟内送达",
+  pw21Denied2:"Разрешите уведомления для этого сайта в настройках браузера и повторите.||请在浏览器设置中允许本网站的通知后重试。",
+  pw21Err:"Не удалось включить push на этом устройстве.||无法在本设备开启推送。"
+});
+const Push21={
+  api:{   /* подменяется в тестах */
+    perm:()=>Notification.requestPermission(),
+    async reg(){return navigator.serviceWorker.ready;}
+  },
+  installEvt:null,arm:false,
+  secure(){return location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1";},
+  supported(){return this.secure()&&"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;},
+  isIos(){return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);},
+  standalone(){try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;}catch(e){return false;}},
+  b64(s){const p="=".repeat((4-s.length%4)%4),r=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from([...r].map(c=>c.charCodeAt(0)));},
+  /* ссылки в <head>: манифест, цвет, значки (если build.js не вписал их заранее) */
+  head(){const h=document.head,add=(tag,attrs)=>{const k=tag==="link"?`link[rel="${attrs.rel}"]`:`meta[name="${attrs.name}"]`;if(h.querySelector(k))return;const e=document.createElement(tag);Object.entries(attrs).forEach(([a,v])=>e.setAttribute(a,v));h.appendChild(e);};
+    add("link",{rel:"manifest",href:"manifest.webmanifest"});add("meta",{name:"theme-color",content:"#3A5A8C"});
+    add("link",{rel:"apple-touch-icon",href:"icons/apple-touch-icon.png"});add("meta",{name:"mobile-web-app-capable",content:"yes"});add("meta",{name:"apple-mobile-web-app-capable",content:"yes"});},
+  init(){if(location.protocol==="file:"||!this.secure()||!("serviceWorker" in navigator))return;
+    this.head();
+    window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();this.installEvt=e;});
+    window.addEventListener("appinstalled",()=>{this.installEvt=null;});
+    navigator.serviceWorker.register("sw.js",{scope:"./"}).then(r=>r.update&&r.update().catch(()=>{})).catch(e=>console.warn("sw:",e&&e.message));
+    navigator.serviceWorker.addEventListener("message",e=>{const d=e.data||{};
+      if(d.type==="zc-open"){try{const u=new URL(d.url);if(u.origin===location.origin){location.hash=u.hash||"#/home";}}catch(x){}}
+      if(d.type==="zc-push-changed")this.resync();});},
+  async sub(){try{const r=await this.api.reg();return await r.pushManager.getSubscription();}catch(e){return null;}},
+  /* состояние этого устройства: unsupported | insecure | ios | denied | on | off */
+  async state(){if(!this.secure())return "insecure";
+    if(this.isIos()&&!this.standalone())return "ios";
+    if(!this.supported())return "unsupported";
+    if(Notification.permission==="denied")return "denied";
+    return (await this.sub())&&Notification.permission==="granted"?"on":"off";},
+  async enable(){
+    if(this.isIos()&&!this.standalone()){toast(T1(UI.pw21IosNeed));return false;}
+    if(!this.supported()){toast(T1(UI.pw21Unsup));return false;}
+    let perm;try{perm=await this.api.perm();}catch(e){perm=Notification.permission;}
+    if(perm!=="granted"){toast(T1(UI.pw21Denied2));return false;}
+    try{const cfg=await SB19.T.rpc("push_config");if(!cfg||!cfg.key){toast(T1(UI.pw21NoKey));return false;}
+      const reg=await this.api.reg();let s=await reg.pushManager.getSubscription();
+      if(!s)s=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:this.b64(cfg.key)});
+      const j=s.toJSON();await SB19.T.rpc("push_subscribe",{endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,ua:navigator.userAgent.slice(0,200)});
+      toast(T1(UI.pw21Done));return true;}
+    catch(e){console.warn("push enable:",e&&e.message);toast(T1(UI.pw21Err));return false;}},
+  async disable(){try{const s=await this.sub();if(s){const ep=s.endpoint;await s.unsubscribe().catch(()=>{});await SB19.T.rpc("push_unsubscribe",{endpoint:ep});}
+      toast(T1(UI.pw21Gone));return true;}catch(e){toast(T1(UI.pw21Err));return false;}},
+  /* браузер сменил подписку (или она пропала): записать актуальную, если человек раньше включил push */
+  async resync(){try{if(!SB19.on||!U()||Notification.permission!=="granted")return;const s=await this.sub();if(!s)return;const j=s.toJSON();
+      await SB19.T.rpc("push_subscribe",{endpoint:j.endpoint,p256dh:j.keys.p256dh,auth:j.keys.auth,ua:navigator.userAgent.slice(0,200)});}catch(e){}},
+  /* блок в окне «Уведомления» */
+  html(){return `<div id="pw21" style="border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:4px 0 10px"><div style="font-weight:700;margin-bottom:6px">${esc(T1(UI.pw21Title))}</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span>${esc(T1(UI.pw21Dev))}: <b id="pw21St"></b></span>
+    <button type="button" class="btn sm" id="pw21On" hidden>${esc(T1(UI.pw21BtnOn))}</button><button type="button" class="btn sm ghost" id="pw21Off" hidden>${esc(T1(UI.pw21BtnOff))}</button>
+    <button type="button" class="btn sm ghost" id="pw21Test" hidden>${esc(T1(UI.pw21BtnTest))}</button></div>
+    <div id="pw21All" style="font-size:12px;color:var(--ink-3);margin-top:4px"></div><div id="pw21Hint" style="font-size:12px;color:var(--ink-3);margin-top:4px"></div>
+    <div style="margin-top:8px"><button type="button" class="btn sm" id="pw21Inst" hidden>${esc(T1(UI.pw21Inst))}</button></div></div>`;},
+  async paint(){const q=id=>document.getElementById(id);if(!q("pw21"))return;const st=await this.state();
+    const txt={on:UI.pw21On,off:UI.pw21Off,denied:UI.pw21Denied,unsupported:UI.pw21Unsup,insecure:UI.pw21Insecure,ios:UI.pw21Off}[st];q("pw21St").textContent=T1(txt);
+    q("pw21On").hidden=!(st==="off"||st==="ios");q("pw21Off").hidden=st!=="on";q("pw21Test").hidden=st!=="on";
+    q("pw21Hint").textContent=st==="ios"?T1(UI.pw21Ios):st==="denied"?T1(UI.pw21Denied2):"";
+    q("pw21Inst").hidden=!(this.installEvt&&!this.standalone());
+    try{const s=await SB19.T.rpc("notify_settings");const n=(s&&s.pushDevices)||0;q("pw21All").textContent=T1(UI.pw21All).replace("{n}",n);}catch(e){}},
+  bind(){const q=id=>document.getElementById(id);if(!q("pw21"))return;
+    q("pw21On").onclick=async()=>{await this.enable();this.paint();};
+    q("pw21Off").onclick=async()=>{await this.disable();this.paint();};
+    q("pw21Test").onclick=async()=>{try{await SB19.T.rpc("push_test");toast(T1(UI.pw21Sent));}catch(e){toast(Acc20.msg(e));}};
+    q("pw21Inst").onclick=async()=>{const e=this.installEvt;if(!e)return;e.prompt();try{await e.userChoice;}catch(x){}this.installEvt=null;this.paint();};
+    this.paint();}
+};
+/* вставка блока в окно «Уведомления» (Ntf20.open → Dlg.ask с полем «channels») */
+if(typeof Ntf20!=="undefined"&&typeof Dlg!=="undefined"){
+  const _open=Ntf20.open.bind(Ntf20);Ntf20.open=async function(){Push21.arm=true;try{return await _open();}finally{Push21.arm=false;}};
+  const _ask=Dlg.ask.bind(Dlg);Dlg.ask=function(opts){
+    if(Push21.arm&&opts&&Array.isArray(opts.fields)&&opts.fields.some(f=>f.k==="channels")&&!opts.fields.some(f=>f.html&&/id="pw21"/.test(f.html))){
+      opts=Object.assign({},opts,{fields:[opts.fields[0],{type:"html",html:Push21.html()},...opts.fields.slice(1)]});
+      const p=_ask(opts);Push21.bind();return p;}
+    return _ask(opts);};
+}
+/* в меню «Ещё» на телефоне: кнопка «Установить портал» (а на iPhone — подсказка), пока портал не установлен */
+Push21.sheetRow=function(){const ft=document.querySelector("#msheet .ft20");if(!ft||this.standalone())return;
+  if(this.installEvt){const b=document.createElement("button");b.type="button";b.className="btn";b.id="pw21SheetInst";b.style.cssText="width:100%;justify-content:center;margin:6px 0 0";b.textContent=T1(UI.pw21Inst);
+    b.onclick=async()=>{const e=this.installEvt;if(!e)return;e.prompt();try{await e.userChoice;}catch(x){}this.installEvt=null;b.remove();};ft.prepend(b);}
+  else if(this.isIos()){const d=document.createElement("div");d.id="pw21SheetIos";d.style.cssText="font-size:12px;color:var(--ink-3);padding:6px 4px 0";d.textContent=T1(UI.pw21Ios);ft.prepend(d);}};
+if(typeof Mob20!=="undefined"){const _mo=Mob20.open.bind(Mob20);Mob20.open=function(){const r=_mo.apply(this,arguments);try{Push21.sheetRow();}catch(e){console.warn("pw21 sheet:",e&&e.message);}return r;};}
+Push21.init();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════

@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "ZHONG CHENG · 众诚 — портал",
+  "short_name": "众诚",
+  "description": "Портал ZHONG CHENG · 众诚: дела, клиенты, задачи и уведомления",
+  "lang": "ru",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F4F5F7",
+  "theme_color": "#3A5A8C",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
