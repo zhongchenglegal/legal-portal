@@ -2070,7 +2070,38 @@ rect.bar[fill="#1B8F6E"]{fill:var(--pri2)}
 .pick22{height:100%;justify-content:center;background:var(--chbg22)}
 .pick22 svg{width:46px;height:46px;fill:none;stroke:currentColor;stroke-width:1.4;opacity:.6}
 /* поле ввода */
-.comp22{border-top:1px solid var(--line);background:var(--surface);padding:8px 14px 10px;flex:none}
+/* «парящая пилюля» (макет design-composer.html, вариант A): поле без рамок над перепиской, круглая кнопка 🎤/➤ отдельно */
+.comp22{background:var(--chbg22);padding:4px 18px 14px;flex:none;position:relative}
+.pr22{display:flex;align-items:flex-end;gap:8px}
+.pil22{flex:1;min-width:0;background:var(--surface);border-radius:24px;box-shadow:0 1px 2px rgba(30,36,48,.08),0 6px 18px rgba(30,36,48,.07);overflow:hidden;transition:box-shadow .15s}
+.pil22:focus-within{box-shadow:0 0 0 2px var(--pri-ring),0 6px 18px rgba(30,36,48,.08)}
+.pil22.edit{box-shadow:0 0 0 2px color-mix(in srgb,var(--warn) 55%,transparent),0 6px 18px rgba(30,36,48,.08)}
+.pil22.bars22{margin-bottom:8px;padding-bottom:8px}
+.pil22 .rbar22{margin:8px 8px 0;border-radius:14px 14px 6px 6px}
+.pil22 .fbar22{margin:10px 12px 0}
+.pil22 .trn22{margin:8px 16px 0}
+.in22{display:flex;align-items:flex-end;gap:2px;padding:4px 6px}
+.in22 .ib22{border-radius:50%;color:var(--ink-3)}
+.in22 .ib22 svg{width:21px;height:21px;stroke-width:1.8}
+.in22 textarea{flex:1;min-width:0;border:0!important;background:transparent!important;box-shadow:none!important;resize:none;outline:0;font:15px/1.45 var(--font);color:var(--ink);padding:8px 4px!important;max-height:160px;min-height:22px;overflow-y:auto}
+.in22 .trb22{display:none;width:30px;height:30px;padding:0;margin:3px 2px;border:0;border-radius:50%;background:var(--pri-soft);color:var(--pri);font:700 13px var(--font);justify-content:center}
+.in22 .trb22.vis22{display:inline-flex;animation:tb22 .18s ease}
+.in22 .trb22:hover{background:var(--pri);color:#fff}
+@keyframes tb22{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+.comp22 .snd22{width:48px;height:48px;border-radius:50%;box-shadow:0 4px 12px color-mix(in srgb,var(--pri) 35%,transparent);transition:background .15s,transform .1s}
+.comp22 .snd22:active{transform:scale(.93)}
+.comp22 .snd22 svg{width:22px;height:22px}
+.snd22.dual22{position:relative}
+.snd22.dual22 svg{position:absolute;transition:transform .2s ease,opacity .2s ease}
+.snd22.dual22 .mi22{opacity:0;transform:rotate(60deg) scale(.4)}
+.snd22.dual22.mic22 .mi22{opacity:1;transform:none}
+.snd22.dual22.mic22 .si22{opacity:0;transform:rotate(-60deg) scale(.4)}
+.emo22{position:absolute;bottom:calc(100% - 2px);left:18px;width:300px;max-width:calc(100% - 36px);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,.16);padding:8px;display:grid;grid-template-columns:repeat(8,1fr);gap:2px;z-index:4;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .16s,transform .16s}
+.emo22.on{opacity:1;transform:none;pointer-events:auto}
+.emo22 button{border:0;background:transparent;font-size:21px;line-height:1;border-radius:8px;padding:5px 0;cursor:pointer}
+.emo22 button:hover{background:var(--pri-soft)}
+.comp22 .hint22{margin:6px 14px 0}
+@media (max-width:700px){.comp22{padding:4px 8px 10px}.comp22 .snd22{width:44px;height:44px}.pr22{gap:6px}}
 .rbar22{display:flex;align-items:center;gap:10px;border-left:3px solid var(--pri);background:var(--pri-soft);border-radius:6px;padding:5px 6px 5px 10px;margin:0 2px 8px;font-size:12.5px;color:var(--ink-2)}
 .rbar22>div{min-width:0;flex:1;display:flex;flex-direction:column}.rbar22 b{color:var(--pri);font-size:12px}.rbar22 span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rbar22 .ib22{width:28px;height:28px}
@@ -2234,7 +2265,8 @@ body.ch22pg #ms21Btn{color:var(--pri);border-color:var(--pri);background:var(--p
 .vtx22{color:var(--pri);font-weight:500}
 /* кнопка-микрофон и полоса записи */
 .snd22.mic22{touch-action:none}
-.rec22{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--red);border-radius:14px;padding:5px 5px 5px 14px;min-height:50px;user-select:none}
+.rec22{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid color-mix(in srgb,var(--red) 55%,transparent);border-radius:26px;padding:5px 5px 5px 16px;min-height:50px;user-select:none;box-shadow:0 6px 18px rgba(30,36,48,.07)}
+.rec22 .snd22{width:40px;height:40px;box-shadow:none}
 .rdot22{width:10px;height:10px;border-radius:50%;background:var(--red);flex:none;animation:rd22 1s infinite}
 .rec22.wait .rdot22{background:var(--ink-3)}
 @keyframes rd22{50%{opacity:.25}}
@@ -10163,7 +10195,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="186484e1f39a";
+const ZC_BUILD="d3d92debcba7";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12158,6 +12190,10 @@ Object.assign(UI,{ch22Voice:"Голосовое сообщение||语音消息
   ch22MicNo:"Нет доступа к микрофону — разрешите его в браузере (значок слева от адреса сайта)||无法使用麦克风——请在浏览器中允许（网址左侧的图标）",
   ch22RecNo:"Этот браузер не умеет записывать звук||此浏览器不支持录音", ch22RecWait:"Разрешите доступ к микрофону…||请允许使用麦克风…",
   ch22RecHint:"Отпустите — отправить · смахните влево — отмена · Esc — отмена||松开发送 · 左滑取消 · Esc 取消", ch22RecHint2:"➤ — отправить · «Отмена» или Esc — не отправлять||➤ 发送 · “取消”或 Esc 不发送", ch22Speed:"Скорость||速度"});
+/* поле ввода «пилюля»: смайлы */
+Object.assign(UI,{ch22Emo:"Смайлы||表情"});
+const CH22_SMI="👍 🙏 😊 😂 ❤️ ✅ 👀 🔥 😮 😢 🤝 👌 👏 💪 💼 📄 📎 ⚖️ ⏰ 📅 ☕ 🎉 ❗ ❓".split(" ");
+window.UZ21=Object.assign(window.UZ21||{},{"Смайлы":"Smayliklar"});
 window.UZ21=Object.assign(window.UZ21||{},{"Голосовое сообщение":"Ovozli xabar","Записать голосовое (удерживайте на телефоне)":"Ovozli xabar yozish (telefonda bosib turing)","до 5:00":"5:00 gacha",
   "Нет доступа к микрофону — разрешите его в браузере (значок слева от адреса сайта)":"Mikrofonga ruxsat yoʻq — brauzerda ruxsat bering (sayt manzili chap tomonidagi belgi)",
   "Этот браузер не умеет записывать звук":"Bu brauzer ovoz yozolmaydi","Разрешите доступ к микрофону…":"Mikrofonga ruxsat bering…",
@@ -12197,6 +12233,9 @@ const Voice22={r:null,hold:null,
 window.addEventListener("pointerup",()=>{const h=Voice22.hold;if(!h)return;Voice22.hold=null;if(!Voice22.r)return;if(Date.now()-h.t>450){Voice22.finish(true);return;}
   Voice22.r.hold=false;const rh=document.getElementById("ch22rh");if(rh)rh.textContent=T1(UI.ch22RecHint2);});
 window.addEventListener("pointermove",e=>{const h=Voice22.hold;if(h&&e.clientX-h.x<-80){Voice22.hold=null;Voice22.finish(false);}});
+/* панель смайлов: щелчок мимо или Esc — закрыть */
+document.addEventListener("pointerdown",e=>{const p=document.getElementById("ch22emo");if(p&&p.classList.contains("on")&&!e.target.closest("#ch22emo,[data-ch22emb]"))p.classList.remove("on");});
+document.addEventListener("keydown",e=>{const p=document.getElementById("ch22emo");if(e.key==="Escape"&&p&&p.classList.contains("on")){e.preventDefault();e.stopPropagation();p.classList.remove("on");}},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&Voice22.r){e.preventDefault();e.stopPropagation();Voice22.finish(false);}},true);
 /* прослушивание: файл берётся так же, как при открытии файла (из хранилища по ссылке на 60 секунд или из памяти демо) */
 const Play22={cur:null,cache:{},speed:1,timer:null,
@@ -12300,18 +12339,19 @@ const Chat22={peer:null,q:"",filter:"all",info:false,drafts:{},reply:{},files:{}
         ${head}<span class="sp22"></span>
         <button type="button" class="ib22${this.info?" on":""}" data-ch22info="1" title="${T1(UI.ch22Info)}">${ch22svg(grp22?CH22_ICO.users:CH22_ICO.info)}</button></div>
       <div class="msgs22" id="ch22msgs">${h}<div class="typing22" id="ch22typing">${this.typingHtml(k)}</div></div>
-      <div class="comp22" id="ch22comp">${ed?`<div class="rbar22 ed22"><div><b>${ch22svg(CH22_ICO.edit,"bi22")} ${T1(UI.ch22Editing)}</b><span>${esc(String(ed.orig||"").slice(0,140))}</span></div><button type="button" class="ib22" data-ch22ex="1">${ch22svg(CH22_ICO.x)}</button></div>`:""}
-        ${rp&&!ed?`<div class="rbar22"><div><b>${T1(UI.ch22ReplyTo).replace("{n}",esc(accName(rp.by)))}</b><span>${esc(String(rp.text||"").slice(0,140))}</span></div><button type="button" class="ib22" data-ch22rx="1">${ch22svg(CH22_ICO.x)}</button></div>`:""}
-        ${fl.length&&!ed?`<div class="fbar22">${fl.map((f,i)=>`<span class="fchip22"><i>${ch22ext(f)}</i>${esc(f.name)}<button type="button" data-ch22fx="${i}" aria-label="×">×</button></span>`).join("")}</div>`:""}
-        ${tro!=null?`<button type="button" class="trn22" data-ch22tro="1">${T1(UI.ch22TrDone)}</button>`:""}
-        ${Voice22.r&&Voice22.r.peer===k?`<div class="rec22${Voice22.r.wait?" wait":""}"><span class="rdot22"></span><span class="rtm22" id="ch22rtm">${Voice22.r.wait?"":"0:00"}</span>${Voice22.r.wait?`<span class="rwt22">${T1(UI.ch22RecWait)}</span>`:`<div class="live22" id="ch22live">${Voice22.liveHtml()}</div><span class="rlim22">${T1(UI.ch22RecLim)}</span>`}
+      <div class="comp22" id="ch22comp">${(()=>{
+        const bars=`${ed?`<div class="rbar22 ed22"><div><b>${ch22svg(CH22_ICO.edit,"bi22")} ${T1(UI.ch22Editing)}</b><span>${esc(String(ed.orig||"").slice(0,140))}</span></div><button type="button" class="ib22" data-ch22ex="1">${ch22svg(CH22_ICO.x)}</button></div>`:""}${rp&&!ed?`<div class="rbar22"><div><b>${T1(UI.ch22ReplyTo).replace("{n}",esc(accName(rp.by)))}</b><span>${esc(String(rp.text||"").slice(0,140))}</span></div><button type="button" class="ib22" data-ch22rx="1">${ch22svg(CH22_ICO.x)}</button></div>`:""}${fl.length&&!ed?`<div class="fbar22">${fl.map((f,i)=>`<span class="fchip22"><i>${ch22ext(f)}</i>${esc(f.name)}<button type="button" data-ch22fx="${i}" aria-label="×">×</button></span>`).join("")}</div>`:""}${tro!=null?`<button type="button" class="trn22" data-ch22tro="1">${T1(UI.ch22TrDone)}</button>`:""}`;
+        if(Voice22.r&&Voice22.r.peer===k)return `${bars?`<div class="pil22 bars22">${bars}</div>`:""}<div class="rec22${Voice22.r.wait?" wait":""}"><span class="rdot22"></span><span class="rtm22" id="ch22rtm">${Voice22.r.wait?"":"0:00"}</span>${Voice22.r.wait?`<span class="rwt22">${T1(UI.ch22RecWait)}</span>`:`<div class="live22" id="ch22live">${Voice22.liveHtml()}</div><span class="rlim22">${T1(UI.ch22RecLim)}</span>`}
           <button type="button" class="rcan22" data-ch22rc="1">${T1(UI.ch22Cancel)}</button><button type="button" class="snd22" data-ch22rs="1" title="${T1(UI.ch22Send)}">${ch22svg(CH22_ICO.send)}</button></div>
-        <div class="hint22" id="ch22rh">${T1(Voice22.r.hold?UI.ch22RecHint:UI.ch22RecHint2)}</div></div>`:`
-        <div class="box22${ed?" edit":""}">${ed?"":`<button type="button" class="ib22" data-ch22att="1" title="${T1(UI.ch22Attach)}">${ch22svg(CH22_ICO.clip)}</button>`}
-          <textarea id="ch22ta" rows="1" placeholder="${T1(UI.ch22Ph)}"></textarea>
-          <button type="button" class="trb22" data-ch22tr="1" title="${T1(UI.ch22TrBtn)}">${ch22svg(CH22_ICO.tr)}<span>${lang==="zh"?"RU":"中文"}</span></button>
-          <button type="button" class="snd22" data-ch22send="1" title="${T1(UI.ch22Send)}">${ch22svg(ed?"M20 6 9 17l-5-5":CH22_ICO.send)}</button></div>
-        <div class="hint22">${T1(UI.ch22Hint)}</div></div>`}
+        <div class="hint22" id="ch22rh">${T1(Voice22.r.hold?UI.ch22RecHint:UI.ch22RecHint2)}</div>`;
+        /* «парящая пилюля»: 😊 · текст · перевод (только когда есть текст) · 📎 — и отдельная круглая кнопка 🎤/➤ */
+        return `<div class="emo22" id="ch22emo">${CH22_SMI.map(e=>`<button type="button" data-ch22emo="${e}">${e}</button>`).join("")}</div>
+        <div class="pr22"><div class="pil22${ed?" edit":""}">${bars}
+          <div class="in22"><button type="button" class="ib22" data-ch22emb="1" title="${T1(UI.ch22Emo)}">${ch22svg(CH22_ICO.smile)}</button>
+          <textarea id="ch22ta" rows="1" placeholder="${T1(UI.ch22Ph)}" title="${T1(UI.ch22Hint)}"></textarea>
+          <button type="button" class="trb22" data-ch22tr="1" title="${T1(UI.ch22TrBtn)}">${lang==="zh"?"RU":"中"}</button>
+          ${ed?"":`<button type="button" class="ib22" data-ch22att="1" title="${T1(UI.ch22Attach)}">${ch22svg(CH22_ICO.clip)}</button>`}</div></div>
+          <button type="button" class="snd22 dual22" data-ch22send="1" title="${T1(UI.ch22Send)}">${ch22svg(ed?"M20 6 9 17l-5-5":CH22_ICO.send,"si22")}${ch22svg(CH22_ICO.mic,"mi22")}</button></div>`;})()}</div>
       <div class="drop22">${T1(UI.ch22Drop)}</div>${this.formHtml()}`;},
   typingHtml(k){const t=this.typingText(k);return t?`<span class="tyb22"><i></i><i></i><i></i></span><span>${t}</span>`:"";},
   typingPaint(){if(Router.cur!=="chats")return;const el=document.getElementById("ch22typing");if(el&&this.peer){const was=el.innerHTML;el.innerHTML=this.typingHtml(this.peer);const box=document.getElementById("ch22msgs");if(box&&!was&&el.innerHTML&&box.scrollHeight-box.scrollTop-box.clientHeight<90)box.scrollTop=box.scrollHeight;}
@@ -12408,6 +12448,9 @@ const Chat22={peer:null,q:"",filter:"all",info:false,drafts:{},reply:{},files:{}
     const sb=root.querySelector("[data-ch22send]");if(sb){this.micPaint();
       sb.addEventListener("pointerdown",e=>{if(!this.micMode()||e.button!==0)return;e.preventDefault();Voice22.hold={x:e.clientX,t:Date.now()};Voice22.start(peer,true);});}
     on("[data-ch22tr]",()=>this.trComposer());
+    on("[data-ch22emb]",()=>{const p=document.getElementById("ch22emo");if(p)p.classList.toggle("on");});
+    on("[data-ch22emo]",el=>{const t=document.getElementById("ch22ta");if(!t)return;const e=el.dataset.ch22emo,s0=t.selectionStart!=null?t.selectionStart:t.value.length,s1=t.selectionEnd!=null?t.selectionEnd:s0;
+      t.value=t.value.slice(0,s0)+e+t.value.slice(s1);t.focus();try{t.setSelectionRange(s0+e.length,s0+e.length);}catch(x){}t.oninput&&t.oninput();});
     on("[data-ch22rep]",el=>{const m=this.find(el.dataset.ch22rep);if(!m)return;delete this.edit[peer];const f0=(m.files||[])[0];this.reply[peer]={id:m.id||"",by:m.by,at:m.at,text:m.text||(ch22isVoice(f0)?ch22vtxt(f0):(f0||{}).name)||""};this.refresh();const t=document.getElementById("ch22ta");if(t)t.focus();});
     on("[data-ch22cp]",el=>{const m=this.find(el.dataset.ch22cp);if(m)this.copy(m.text||"");});
     on("[data-ch22trm]",el=>this.trMessage(el.dataset.ch22trm));
@@ -12442,7 +12485,8 @@ const Chat22={peer:null,q:"",filter:"all",info:false,drafts:{},reply:{},files:{}
   grow(ta){ta.style.height="auto";ta.style.height=Math.min(160,ta.scrollHeight)+"px";},
   /* пустое поле, нет вложений и правки — вместо ➤ микрофон */
   micMode(){const k=this.peer;const ta=document.getElementById("ch22ta");return !!k&&Voice22.ok()&&!this.edit[k]&&!(this.files[k]||[]).length&&!(ta&&ta.value.trim());},
-  micPaint(){const b=document.querySelector("[data-ch22send]");if(!b)return;const mic=this.micMode();b.classList.toggle("mic22",mic);const p=b.querySelector("path");if(p)p.setAttribute("d",mic?CH22_ICO.mic:this.edit[this.peer]?"M20 6 9 17l-5-5":CH22_ICO.send);b.title=T1(mic?UI.ch22Rec:UI.ch22Send);},
+  micPaint(){const b=document.querySelector("[data-ch22send]");if(!b)return;const mic=this.micMode();b.classList.toggle("mic22",mic);b.title=T1(mic?UI.ch22Rec:UI.ch22Send);
+    const ta=document.getElementById("ch22ta"),tb=document.querySelector("[data-ch22tr]");if(tb)tb.classList.toggle("vis22",!!(ta&&ta.value.trim()));},
   /* голосовое: загрузить запись как файл (тот же путь, что у файлов чата) и сразу отправить */
   async sendVoice(peer,file,dur,wave){if(!peer)return;const meta=await this.uploadFile(file);if(!meta)return;
     const f=Object.assign(meta,{voice:true,dur:Math.max(1,Math.min(300,dur)),wave});if(this.peer!==peer)return;await this.send({files:[f],text:""});},
@@ -12487,7 +12531,7 @@ const Chat22={peer:null,q:"",filter:"all",info:false,drafts:{},reply:{},files:{}
         c.msgs=(c.msgs||[]).concat([this.newMsg(text,files,rp)]).slice(grp?-1000:-500);c.lastRead=Object.assign({},c.lastRead||{},{[me]:nowS()});await this.saveLocal(c);}
       this.notifyOthers(peer,text||(files.length&&files.every(ch22isVoice)?ch22vtxt(files[0]):"📎 "+files.map(f=>f.name).join(", ")));
       delete this.reply[peer];this.newMark[peer]="";
-      if(!o){this.drafts[peer]="";delete this.files[peer];delete this.trOrig[peer];if(ta)ta.value="";}
+      if(!o){this.drafts[peer]="";delete this.files[peer];delete this.trOrig[peer];if(ta)ta.value="";const t1=document.getElementById("ch22ta");if(t1)t1.value="";}
       Notif.badge();this.refresh();const box=document.getElementById("ch22msgs");if(box)box.scrollTop=box.scrollHeight;}
     catch(e){toast(String((e&&e.message)||e).replace(/^.*?ERROR:\s*/,""));}
     finally{this.busy=false;const b=document.querySelector("[data-ch22send]");if(b)b.disabled=false;const t=document.getElementById("ch22ta");if(t)t.focus();}},
