@@ -10163,7 +10163,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="175b40d2e15d";
+const ZC_BUILD="ab3c3df65f95";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12742,6 +12742,23 @@ Push21.appInit=function(){
   if(this.app()){document.title="ZCL";new MutationObserver(()=>{if(document.title!=="ZCL")document.title="ZCL";}).observe(document.querySelector("title")||document.head,{childList:true,subtree:true,characterData:true});}
   this.tint();new MutationObserver(()=>this.tint()).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","class"]});
   if(document.body)this.reloadBtn();};
+/* ── вход: у окна приложения свой, отдельный от вкладок браузера ──
+   Раньше вход (сессия Supabase) лежал в хранилище браузера под одним ключом «zc_sb_auth» для всех окон сайта: вход в окне
+   ZCL под другим логином незаметно переключал и вкладку браузера — она показывала прежнего человека, а сервер получал
+   действия от нового (сообщения уходили «не от того»). Теперь окно приложения хранит вход под своим ключом
+   «zc_sb_auth_app» — в нём и во вкладке можно работать под разными учётками. А если в окнах с общим входом (две вкладки)
+   сменили пользователя или вышли, остальные окна это замечают и обновляются, а не продолжают работать от чужого имени. */
+Object.assign(UI,{pw21Other:"В другом окне этого браузера сменили пользователя или вышли — страница обновлена||此浏览器的另一个窗口已切换用户或退出——页面已刷新"});
+Push21.authKey=function(){return this.app()?"zc_sb_auth_app":"zc_sb_auth";};
+Push21.authChanged=function(){if(this._ac)return;this._ac=true;try{toast(T1(UI.pw21Other));}catch(e){}setTimeout(()=>location.reload(),1200);};
+if(typeof SB19!=="undefined"&&typeof SB19.realT==="function"){const _rtPw21=SB19.realT.bind(SB19);
+  SB19.realT=function(){const sb=window.supabase,orig=sb&&sb.createClient;if(typeof orig!=="function")return _rtPw21();
+    let made=null;sb.createClient=function(u,k,o){o=Object.assign({},o);o.auth=Object.assign({},o.auth,{storageKey:Push21.authKey()});made=orig.call(this,u,k,o);return made;};
+    let t;try{t=_rtPw21();}finally{sb.createClient=orig;}
+    try{if(made&&made.auth&&made.auth.onAuthStateChange)made.auth.onAuthStateChange((ev,s)=>{const me=SB19.verified;if(!me)return;
+      const l=s&&s.user?String(s.user.email||"").split("@")[0].toLowerCase():"";
+      if((ev==="SIGNED_OUT"&&!s)||(l&&l!==String(me).toLowerCase()))Push21.authChanged();});}catch(e){console.warn("pw21 auth:",e&&e.message);}
+    return t;};}
 Push21.init();
 try{Push21.appInit();}catch(e){console.warn("pw21 app:",e&&e.message);}
 
