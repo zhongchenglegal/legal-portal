@@ -2,7 +2,7 @@
    Делает две вещи: показывает push-уведомления, когда портал закрыт, и открывает нужное дело по нажатию.
    Данные портала в нём НЕ хранятся: страница каждый раз берётся с сайта, а при отсутствии сети показывается последняя
    загруженная (чтобы значок не открывал пустое окно). Версия скрипта ниже меняется, когда меняется этот файл. */
-const SW_VERSION = "1";
+const SW_VERSION = "2";
 const SHELL = "zc-shell-" + SW_VERSION;
 
 self.addEventListener("install", () => self.skipWaiting());
@@ -11,13 +11,14 @@ self.addEventListener("activate", e => e.waitUntil((async () => {
   await self.clients.claim();
 })()));
 
-/* страница: сначала сеть (чтобы новая версия портала подхватывалась сразу), при ошибке — последняя сохранённая */
+/* страница: сначала сеть и всегда свежая (кэш браузера сайта — до 10 минут — пропускается, чтобы после публикации
+   открывалась новая версия без Ctrl+Shift+R); без сети — последняя сохранённая */
 self.addEventListener("fetch", e => {
   const r = e.request;
   if (r.method !== "GET" || r.mode !== "navigate") return;
   e.respondWith((async () => {
     try {
-      const res = await fetch(r);
+      const res = await fetch(r.url, { cache: "no-cache", credentials: "same-origin", redirect: "follow" });
       if (res && res.ok && new URL(r.url).origin === self.location.origin) { const c = await caches.open(SHELL); c.put("./", res.clone()).catch(() => {}); }
       return res;
     } catch (err) {
