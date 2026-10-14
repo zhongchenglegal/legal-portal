@@ -10163,7 +10163,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="ab3c3df65f95";
+const ZC_BUILD="186484e1f39a";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12649,7 +12649,7 @@ const Push21={
   /* ссылки в <head>: манифест, цвет, значки (если build.js не вписал их заранее) */
   head(){const h=document.head,add=(tag,attrs)=>{const k=tag==="link"?`link[rel="${attrs.rel}"]`:`meta[name="${attrs.name}"]`;if(h.querySelector(k))return;const e=document.createElement(tag);Object.entries(attrs).forEach(([a,v])=>e.setAttribute(a,v));h.appendChild(e);};
     add("link",{rel:"manifest",href:"manifest.webmanifest"});add("meta",{name:"theme-color",content:"#1A2130"});
-    add("link",{rel:"apple-touch-icon",href:"icons/apple-touch-icon.png"});add("meta",{name:"mobile-web-app-capable",content:"yes"});add("meta",{name:"apple-mobile-web-app-capable",content:"yes"});},
+    add("link",{rel:"apple-touch-icon",href:"icons/apple-touch-icon.png?v=2"});   /* ?v= — новый адрес, чтобы браузер не брал старую картинку из кэша */add("meta",{name:"mobile-web-app-capable",content:"yes"});add("meta",{name:"apple-mobile-web-app-capable",content:"yes"});},
   init(){if(location.protocol==="file:"||!this.secure()||!("serviceWorker" in navigator))return;
     this.head();
     window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();this.installEvt=e;});
@@ -12738,7 +12738,7 @@ if(typeof renderWho==="function"){const _rwRl21=renderWho;renderWho=function(){c
 Push21.appInit=function(){
   /* значок страницы: в окне приложения (строка заголовка тёмно-синяя) — белый штрих с красным, во вкладке — тёмный; с файла не подключается */
   if(location.protocol!=="file:"&&this.secure()){const ic=(href,sizes)=>{const l=document.createElement("link");l.rel="icon";l.type="image/png";l.setAttribute("sizes",sizes);l.href=href;l.setAttribute("data-pw21","1");document.head.appendChild(l);};
-    if(this.app()){ic("icons/title-32.png","32x32");ic("icons/title-64.png","64x64");}else ic("icons/favicon-32.png","32x32");}
+    if(this.app()){ic("icons/title-32.png?v=2","32x32");ic("icons/title-64.png?v=2","64x64");}else ic("icons/favicon-32.png?v=2","32x32");}
   if(this.app()){document.title="ZCL";new MutationObserver(()=>{if(document.title!=="ZCL")document.title="ZCL";}).observe(document.querySelector("title")||document.head,{childList:true,subtree:true,characterData:true});}
   this.tint();new MutationObserver(()=>this.tint()).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","class"]});
   if(document.body)this.reloadBtn();};
