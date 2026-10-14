@@ -10163,7 +10163,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="b1d7853c8dfd";
+const ZC_BUILD="85a4f7ab6dab";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12648,7 +12648,7 @@ const Push21={
   b64(s){const p="=".repeat((4-s.length%4)%4),r=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from([...r].map(c=>c.charCodeAt(0)));},
   /* ссылки в <head>: манифест, цвет, значки (если build.js не вписал их заранее) */
   head(){const h=document.head,add=(tag,attrs)=>{const k=tag==="link"?`link[rel="${attrs.rel}"]`:`meta[name="${attrs.name}"]`;if(h.querySelector(k))return;const e=document.createElement(tag);Object.entries(attrs).forEach(([a,v])=>e.setAttribute(a,v));h.appendChild(e);};
-    add("link",{rel:"manifest",href:"manifest.webmanifest"});add("meta",{name:"theme-color",content:"#3A5A8C"});
+    add("link",{rel:"manifest",href:"manifest.webmanifest"});add("meta",{name:"theme-color",content:"#1A2130"});
     add("link",{rel:"apple-touch-icon",href:"icons/apple-touch-icon.png"});add("meta",{name:"mobile-web-app-capable",content:"yes"});add("meta",{name:"apple-mobile-web-app-capable",content:"yes"});},
   init(){if(location.protocol==="file:"||!this.secure()||!("serviceWorker" in navigator))return;
     this.head();
@@ -12716,7 +12716,42 @@ Push21.sheetRow=function(){const ft=document.querySelector("#msheet .ft20");if(!
     b.onclick=async()=>{const e=this.installEvt;if(!e)return;e.prompt();try{await e.userChoice;}catch(x){}this.installEvt=null;b.remove();};ft.prepend(b);}
   else if(this.isIos()){const d=document.createElement("div");d.id="pw21SheetIos";d.style.cssText="font-size:12px;color:var(--ink-3);padding:6px 4px 0";d.textContent=T1(UI.pw21Ios);ft.prepend(d);}};
 if(typeof Mob20!=="undefined"){const _mo=Mob20.open.bind(Mob20);Mob20.open=function(){const r=_mo.apply(this,arguments);try{Push21.sheetRow();}catch(e){console.warn("pw21 sheet:",e&&e.message);}return r;};}
+/* ── окно установленного портала на компьютере (Windows, macOS): своя верхняя полоса ──
+   Манифест просит режим window-controls-overlay: браузер убирает свою строку заголовка (длинное название, адрес, значки),
+   оставляя только кнопки окна «свернуть · развернуть · закрыть» справа. Полосу рисуем сами: цвет левого меню, без надписей,
+   за неё можно перетаскивать окно; справа, рядом с кнопками окна, — «Обновить». Без этого режима (старый браузер, телефон)
+   полоса не появляется, а название окна — коротко «ZCL», цвет строки заголовка — как у левого меню. */
+Object.assign(UI,{pw21Reload:"Обновить||刷新"});
+Push21.app=function(){try{return ["standalone","window-controls-overlay","minimal-ui"].some(m=>matchMedia(`(display-mode: ${m})`).matches)||navigator.standalone===true;}catch(e){return false;}};
+Push21.tint=function(){const c=getComputedStyle(document.documentElement).getPropertyValue("--side-bg").trim()||"#1A2130";let m=document.querySelector('meta[name="theme-color"]');
+  if(!m){m=document.createElement("meta");m.setAttribute("name","theme-color");document.head.appendChild(m);}if(m.getAttribute("content")!==c)m.setAttribute("content",c);};
+Push21.tbar=function(){const w=navigator.windowControlsOverlay,on=!!(w&&w.visible),root=document.documentElement;root.classList.toggle("wco21",on);
+  let bar=document.getElementById("tb21");
+  if(!on){if(bar)bar.hidden=true;return;}
+  if(!bar){bar=document.createElement("div");bar.id="tb21";const b=document.createElement("button");b.type="button";b.id="tb21r";b.title=T1(UI.pw21Reload);b.setAttribute("aria-label",T1(UI.pw21Reload));
+    const NS="http://www.w3.org/2000/svg",s=document.createElementNS(NS,"svg");s.setAttribute("viewBox","0 0 24 24");s.setAttribute("aria-hidden","true");
+    ["M21 12a9 9 0 1 1-2.64-6.36","M21 3v6h-6"].forEach(d=>{const p=document.createElementNS(NS,"path");p.setAttribute("d",d);s.appendChild(p);});
+    b.appendChild(s);b.onclick=()=>location.reload();bar.appendChild(b);document.body.appendChild(bar);}
+  bar.hidden=false;
+  const r=w.getTitlebarAreaRect?w.getTitlebarAreaRect():null;
+  if(r&&r.height){root.style.setProperty("--tb21x",r.x+"px");root.style.setProperty("--tb21w",r.width+"px");root.style.setProperty("--tb21h",r.height+"px");}};
+Push21.appInit=function(){
+  const st=document.createElement("style");st.textContent=
+    "#tb21{position:fixed;top:0;left:var(--tb21x,0);width:var(--tb21w,100%);height:var(--tb21h,33px);left:env(titlebar-area-x,var(--tb21x,0));width:env(titlebar-area-width,var(--tb21w,100%));height:env(titlebar-area-height,var(--tb21h,33px));"+
+    "background:var(--side-bg,#1A2130);z-index:2147483000;display:flex;align-items:center;justify-content:flex-end;padding:0 6px;box-sizing:border-box;-webkit-app-region:drag;app-region:drag;-webkit-user-select:none;user-select:none}"+
+    "#tb21[hidden]{display:none}"+
+    "#tb21 button{-webkit-app-region:no-drag;app-region:no-drag;border:0;background:transparent;color:#C9D1DD;width:38px;height:28px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}"+
+    "#tb21 button:hover{background:rgba(255,255,255,.12);color:#fff}#tb21 button:focus-visible{outline:2px solid #fff;outline-offset:-2px}"+
+    "#tb21 svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}"+
+    "html.wco21 .app{margin-top:env(titlebar-area-height,var(--tb21h,33px));height:calc(100% - env(titlebar-area-height,var(--tb21h,33px)))}"+
+    "html.wco21 .ov,html.wco21 .login,html.wco21 #msheet,html.wco21 .lg21load{top:env(titlebar-area-height,var(--tb21h,33px))}";
+  document.head.appendChild(st);
+  if(this.app()){document.title="ZCL";new MutationObserver(()=>{if(document.title!=="ZCL")document.title="ZCL";}).observe(document.querySelector("title")||document.head,{childList:true,subtree:true,characterData:true});}
+  this.tint();new MutationObserver(()=>this.tint()).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","class"]});
+  const w=navigator.windowControlsOverlay;if(w&&w.addEventListener)w.addEventListener("geometrychange",()=>this.tbar());
+  if(document.body)this.tbar();else document.addEventListener("DOMContentLoaded",()=>this.tbar());};
 Push21.init();
+try{Push21.appInit();}catch(e){console.warn("pw21 app:",e&&e.message);}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
