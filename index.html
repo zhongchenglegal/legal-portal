@@ -10001,7 +10001,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="c56158e3b88c";
+const ZC_BUILD="05b8a9403d20";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11910,7 +11910,7 @@ body.ch22pg .tr21btn{display:none!important}
      заметка, как раньше: клиенту сообщение уходит только по явному выбору), у сообщений — 🔒 / 👁, перевод — под текстом.
    Без миграции на сервере: сообщения уходят прежним вызовом (ответ — цитатой в тексте, файлы — недоступны, «в сети» не видно). */
 Object.assign(UI,{
-  ch22:"Чаты||聊天", ch22Search:"Поиск людей и сообщений||搜索人员和消息", ch22All:"Все||全部", ch22Unread:"Непрочитанные||未读",
+  ch22:"Чаты||聊天", ch22Search:"Поиск людей и сообщений||搜索人员和消息", ch22All:"Все||全部", ch22Unread:"Непрочитанные||未读",ch22Personal:"Личные||私聊",
   ch22Chats:"Чаты||聊天", ch22People:"Все сотрудники||全体员工", ch22None:"Ничего не найдено||未找到", ch22Pick:"Выберите, кому написать||请选择聊天对象",
   ch22Online:"в сети||在线", ch22Seen:"был(а) в {t}||最后在线 {t}", ch22SeenY:"был(а) вчера в {t}||最后在线 昨天 {t}", ch22SeenD:"был(а) {d}||最后在线 {d}",
   ch22Today:"Сегодня||今天", ch22Yest:"Вчера||昨天", ch22New:"Новые сообщения||新消息", ch22You:"Вы: ||你：", ch22Empty:"Сообщений пока нет — напишите первым||暂无消息，开始聊天吧",
@@ -12114,7 +12114,7 @@ const Chat22={peer:null,q:"",filter:"all",info:false,drafts:{},reply:{},files:{}
     let rows=this.peers().map(a=>{const ms=this.msgs(a.login);const last=ms[ms.length-1];return {k:a.login,name:a.name||a.login,a,last:last?last.at:"",un:this.unread(a.login)};});
     rows=rows.concat(this.groups().map(g=>{const ms=g.msgs||[];const last=ms[ms.length-1];return {k:g.id,name:g.title||"",g,last:last?last.at:(g.createdAt||"0"),un:this.unread(g.id)};}));
     if(q)rows=rows.filter(r=>String(r.name).toLowerCase().includes(q)||String(typeof UZN==="function"&&lang==="uz"&&r.a?UZN(r.name):"").toLowerCase().includes(q)||this.msgs(r.k).some(m=>String(m.text||"").toLowerCase().includes(q)));
-    if(this.filter==="un")rows=rows.filter(r=>r.un);if(this.filter==="gr")rows=rows.filter(r=>r.g);
+    if(this.filter==="un")this.filter="dm";if(this.filter==="dm")rows=rows.filter(r=>!r.g);if(this.filter==="gr")rows=rows.filter(r=>r.g);
     const chats=rows.filter(r=>r.last).sort((x,y)=>y.last.localeCompare(x.last)),people=rows.filter(r=>!r.last).sort((x,y)=>String(x.name).localeCompare(String(y.name),"ru"));
     const row=r=>{const k=r.k,ms=this.msgs(k),last=ms[ms.length-1];const mine=last&&last.by===me&&!last.deleted;const rd=mine&&this.seen(k)>=last.at;const ty=this.typingText(k);
       const sub=ty?`<i class="ty22">${ty}</i>`:last?this.preview(k):r.g?esc(ch22mem(this.members(k).length)):esc(this.role(r.a));
@@ -12123,8 +12123,8 @@ const Chat22={peer:null,q:"",filter:"all",info:false,drafts:{},reply:{},files:{}
     const tot=this.totalUnread();
     return `<div class="lh22"><div class="t"><h2>${T1(UI.ch22)}</h2><button type="button" class="ib22" data-ch22ng="1" title="${T1(UI.ch22NewGroup)}">${ch22svg(CH22_ICO.edit)}</button></div>
       <label class="srch22">${ch22svg(CH22_ICO.search)}<input id="ch22q" type="search" placeholder="${T1(UI.ch22Search)}" value="${esc(this.q)}" autocomplete="off"></label>
-      <div class="flt22"><button type="button" data-ch22f="all" class="${this.filter==="all"?"on":""}">${T1(UI.ch22All)}</button><button type="button" data-ch22f="un" class="${this.filter==="un"?"on":""}">${T1(UI.ch22Unread)}${tot?" · "+tot:""}</button><button type="button" data-ch22f="gr" class="${this.filter==="gr"?"on":""}">${T1(UI.ch22Groups)}</button></div></div>
-      <div class="convs22" id="ch22list">${chats.length?`<div class="sec22">${T1(UI.ch22Chats)}</div>${chats.map(row).join("")}`:""}${people.length&&this.filter==="all"?`<div class="sec22">${T1(UI.ch22People)}</div>${people.map(row).join("")}`:""}${!chats.length&&(!people.length||this.filter!=="all")?`<div class="empty22">${T1(UI.ch22None)}</div>`:""}</div>`;},
+      <div class="flt22"><button type="button" data-ch22f="all" class="${this.filter==="all"?"on":""}">${T1(UI.ch22All)}</button><button type="button" data-ch22f="dm" class="${this.filter==="dm"?"on":""}">${T1(UI.ch22Personal)}</button><button type="button" data-ch22f="gr" class="${this.filter==="gr"?"on":""}">${T1(UI.ch22Groups)}</button></div></div>
+      <div class="convs22" id="ch22list">${chats.length?`<div class="sec22">${T1(UI.ch22Chats)}</div>${chats.map(row).join("")}`:""}${people.length&&(this.filter==="all"||this.filter==="dm")?`<div class="sec22">${T1(UI.ch22People)}</div>${people.map(row).join("")}`:""}${!chats.length&&(!people.length||this.filter!=="all")?`<div class="empty22">${T1(UI.ch22None)}</div>`:""}</div>`;},
   /* сообщения: группы подряд от одного человека (в пределах 5 минут и одного дня), разделители дней и «Новые сообщения» */
   threadHtml(){const k=this.peer,me=this.me();if(!this.valid(k))return `<div class="pick22">${ch22svg(CH22_ICO.chat)}<span>${T1(UI.ch22Pick)}</span></div>`;
     const grp22=this.isGroup(k),ms=this.msgs(k),peerRead=this.seen(k),mark=this.newMark[k]||"";
@@ -12428,6 +12428,11 @@ const _cmBind22=CMsg.bind.bind(CMsg);CMsg.bind=function(vp,m,forClient){_cmBind2
   const fl=vp.querySelector("#cmFiles");if(fl&&dr.files.length)fl.innerHTML=dr.files.map(f=>`<span class="fchip22"><i>${ch22ext(f)}</i>${esc(f.name)}</span>`).join("");
   const att=vp.querySelector("#cmAttach");if(att){const o=att.onclick;att.onclick=()=>Files.upload(f=>{dr.files.push(f);if(fl)fl.innerHTML=dr.files.map(x=>`<span class="fchip22"><i>${ch22ext(x)}</i>${esc(x.name)}</span>`).join("");});}
   const box=vp.querySelector(".cms22");if(box)box.scrollTop=box.scrollHeight;};
+/* v1.2: «Чаты» — переключатель: повторное нажатие возвращает на страницу, с которой чаты открыли */
+const Back22={r:null};
+const _rgoB22=Router.go.bind(Router);Router.go=function(r,arg){if(r==="chats"&&this.cur!=="chats"){const vp=document.getElementById("viewPage");Back22.r={cur:this.cur,arg:this.arg,top:vp?vp.scrollTop:0};}return _rgoB22(r,arg);};
+const _ntOpenB22=Notif.open.bind(Notif);Notif.open=function(tab,peer){if(tab==="msgs"&&!peer&&Router.cur==="chats"&&U()&&!isClient()){const b=Back22.r||{cur:"home"};Back22.r=null;Chat22.peer=null;document.body.classList.remove("ch22open");
+  _rgoB22.call(Router,b.cur,b.arg);setTimeout(()=>{const vp=document.getElementById("viewPage");if(vp&&b.top)vp.scrollTop=b.top;},60);return;}return _ntOpenB22(tab,peer);};
 
 /* ═══════════════════════════ версия 1.1 · этап 2 · УЗБЕКСКИЙ ИНТЕРФЕЙС (ЛАТИНИЦА) ═══════════════════════════
    • Третья кнопка языка «Oʻz» — на экране входа, в шапке и в «Настройках». Надписи — по словарю uz21_dict.js
@@ -12765,7 +12770,7 @@ const Card22={
   kpWait(m){if(typeof KP==="undefined"||!m.offer||m.offer.sentAt||m.pipeline==="contract"||m.status==="closed")return null;const st=KP.stepOf(m.offer);if(st!==2&&st!==3)return null;if(KP.canStep(m,st))return null;
     const who=st===2?KP.step2Who(m):KP.step3Who(m);const name=who?dispName(who):T1(UI.c22KpMp);
     return {step:st,who,text:T1(UI.c22KpWait).replace("{who}",name).replace("{step}",T1(st===2?UI.kpStep2:UI.kpStep3))};},
-  async kpRemind(m,step){const who=step===2?KP.step2Who(m):KP.step3Who(m);const accs=who?[accByEmp(who)]:Object.values(S.accounts||{}).filter(a=>a&&(a.emp==="shahzod"||(a.funcs||[]).includes("managing")));
+  async kpRemind(m,step){const who=step===2?KP.step2Who(m):KP.step3Who(m);const accs=who?[accByEmp(who)]:((typeof Svc21!=="undefined"&&Svc21.mpLogins().length)?Svc21.mpLogins().map(l=>(S.accounts||{})[l]||{login:l}):Object.values(S.accounts||{}).filter(a=>a&&(a.emp==="shahzod"||(a.funcs||[]).includes("managing"))));
     const list=accs.filter(a=>a&&a.login!==(U()||{}).login);list.forEach(a=>notify(a.login,"task",nt18("kpStep",{no:m.no,st:{t:step===2?UI.kpStep2:UI.kpStep3}}),m.id));
     m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.c22KpRemDone)});await saveDoc("matters",m);toast(T1(list.length?UI.c22KpRemDone:UI.c22KpRemNone));},
   /* ── панель «Что мешает и что дальше»: только когда есть строки ── */
