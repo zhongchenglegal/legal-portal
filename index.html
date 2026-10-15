@@ -2408,6 +2408,7 @@ body.ch22pg #ms21Btn{color:var(--pri);border-color:var(--pri);background:var(--p
 .c22mt svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .c22mt.cl{background:var(--pri)}.c22mt.nt{background:var(--warn)}
 @media(max-width:700px){.c22mt{font-size:0;padding:8px}.c22mt svg{width:17px;height:17px}}
+.c22miss{margin:8px 0 0;padding-left:20px;color:var(--red);font-weight:600}.c22miss li{margin:4px 0}
 @media(max-width:980px){.c22{--c22pad:14px}}
 @media(max-width:700px){
  .c22h{padding:10px 12px 10px}.c22h .row{flex-direction:column;gap:8px}.c22acts{padding-top:4px}.c22acts .btn.pri{display:none}.c22h h2{font-size:17px}
@@ -10001,7 +10002,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="7619f5c02b10";
+const ZC_BUILD="991f67062140";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12718,7 +12719,7 @@ const Card22={
     if(m.pipeline!=="contract"){
       let b=q('[data-act="kpSend"]');if(b)return {sel:'[data-act="kpSend"]',name:lab(b)};
       b=q('[data-act="kpOk2"]')||q('[data-act="kpOk3"]');if(b)return {sel:'[data-act="'+b.dataset.act+'"]',name:lab(b)};
-      b=q('[data-act="kpFile"]');if(b&&m.offer&&!m.offer.sentAt&&!m.offer.file&&typeof KP!=="undefined"&&KP.approved(m.offer))return {sel:'[data-act="kpFile"]',name:T1(UI.c22KpFileBtn)};
+      b=q('[data-act="kpFile"]');if(b&&m.pipeline==="offer"&&m.offer&&!m.offer.sentAt&&!m.offer.file&&typeof KP!=="undefined"&&KP.approved(m.offer))return {sel:'[data-act="kpFile"]',name:T1(UI.c22KpFileBtn)};
       b=q('[data-act="kpPropose"]');if(b&&(!m.offer||(typeof KP!=="undefined"&&KP.stepOf(m.offer)===1)))return {sel:'[data-act="kpPropose"]',name:lab(b)};
       if(m.offer&&!m.offer.sentAt&&m.pipeline!=="offer"&&m.pipeline!=="approval_terms"&&m.pipeline!=="team_draft")return null;   /* КП в работе — «Без КП» главной кнопкой не предлагаем */
       b=[...root.querySelectorAll("[data-pipe]")].find(x=>x.dataset.pipe!=="lost"&&!/--red/.test(x.getAttribute("style")||""));
@@ -12790,7 +12791,7 @@ const Card22={
       else if(UI.st21NeedFile&&t.includes(T1(UI.st21NeedFile)))b=act(null,'[data-act="ctFile21"]');
       else if(t.trim()===T1(UI.plBlocked)&&hasHint){w.remove();return;} /* общая фраза лишняя: она есть на «Ходе дела», а ниже перечислено, что заполнить */
       row(w,b);});
-    if(typeof KP!=="undefined"&&m.offer&&!m.offer.sentAt&&KP.approved(m.offer)&&!o.closed&&m.pipeline!=="contract"){if(!m.offer.file)row(T1(UI.c22KpNeedFile),act(UI.c22KpFileBtn,'[data-act="kpFile"]'));else row(T1(UI.c22KpReady),act(null,'[data-act="kpSend"]'));}
+    if(typeof KP!=="undefined"&&m.offer&&!m.offer.sentAt&&KP.approved(m.offer)&&!o.closed&&m.pipeline==="offer"){if(!m.offer.file)row(T1(UI.c22KpNeedFile),act(UI.c22KpFileBtn,'[data-act="kpFile"]'));else row(T1(UI.c22KpReady),act(null,'[data-act="kpSend"]'));}
     const kw=this.kpWait(m);if(kw)row(kw.text,this.btn(T1(UI.c22KpRemind),"btn sm",{c22kprem:String(kw.step)}));
     const ai=this.aiRow(m,o);if(ai)rows.push(ai);
     if(o.cf)row(o.cf,null);
@@ -13087,7 +13088,7 @@ const Card22={
   /* правая панель закреплена, только если помещается в окно целиком */
   fitSide(vp){const s=vp.querySelector(".c22side");if(s)s.style.position=s.offsetHeight>vp.clientHeight-60?"static":"";},
   bindAi(vp,m){const self=this;vp.querySelectorAll("[data-c22ai]").forEach(b=>b.onclick=e=>{e.stopPropagation();if(b.dataset.c22ai==="confirm")self.aiConfirm(m);else self.aiFix(m);});},
-  bind(vp,m){const id=m.id,self=this;this.fitSide(vp);
+  bind(vp,m){const id=m.id,self=this;this.fitSide(vp);if(typeof pr22heal==="function")pr22heal(m);
     vp.querySelectorAll("[data-c22tab]").forEach(b=>b.onclick=()=>self.show(vp,id,+b.dataset.c22tab));
     vp.querySelectorAll("[data-c22go]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.show(vp,id,+b.dataset.c22go);});
     vp.querySelectorAll("[data-c22target]").forEach(b=>b.onclick=e=>{e.stopPropagation();const t=vp.querySelector(b.dataset.c22target);if(t)t.click();else toast(T1(UI.stNoRight));});
@@ -13167,7 +13168,7 @@ if(typeof Pipe!=="undefined"){
   const _pl22=Pipe.line.bind(Pipe);
   Pipe.line=function(m,forClient){if(!pr22oneoff(m)||forClient)return _pl22(m,forClient);
     const cur=m.pipeline==="lost"?-1:PIPE_IDX(m.pipeline);const hist=m.pipelineHistory||[];const last=s=>hist.slice().reverse().find(h=>h.step===s);
-    return `<div class="stline pl11">${PIPE11.map(([k,l],i)=>{const idx=PIPE_IDX(k);const st=idx<cur?"done":idx===cur?"cur":"todo";const h=last(k);
+    return `<div class="stline pl11">${PIPE11.filter(([k])=>k!=="contract").map(([k,l],i)=>{const idx=PIPE_IDX(k);const st=idx<cur?"done":idx===cur?"cur":"todo";const h=last(k);
       return `<div class="stp ${st}"><i>${idx<cur?"✓":i+1}</i><div class="stt">${T1(l)}${h&&idx<=cur?`<small>${fmtDT(h.at)}${h.by?" · "+dispName(h.by):""}</small>`:""}</div></div>`;}).join("")}</div>`;};
   /* кнопки до договора: завершение текущего процесса */
   const _pn22b=Pipe.next.bind(Pipe);
@@ -13204,6 +13205,27 @@ if(typeof KP!=="undefined"){
   const _ks22=KP.send.bind(KP);KP.send=async function(id){const r=await _ks22(id);const m=matter(id);
     if(pr22oneoff(m)&&m.offer&&m.offer.sentAt&&PIPE_IDX(m.pipeline)<PIPE_IDX("approval_terms"))await pr22move(m,"approval_terms",UI.pr22SentAuto);return r;};
 }
+/* v1.2: дела, где КП согласовали или отправили до автопереходов, выравниваются при открытии (тем, кто может вести воронку) */
+const pr22heal=m=>{if(!pr22oneoff(m)||!m.offer||m.status==="closed"||m.lostPending||["contract","lost"].includes(m.pipeline)||typeof KP==="undefined")return;if(!Pipe.can(m))return;
+  const i=PIPE_IDX(m.pipeline);if(m.offer.sentAt&&i<PIPE_IDX("approval_terms"))setTimeout(()=>pr22move(m,"approval_terms",UI.pr22SentAuto),0);
+  else if(!m.offer.sentAt&&KP.approved(m.offer)&&i<PIPE_IDX("offer"))setTimeout(()=>pr22move(m,"offer",UI.pr22KpAuto),0);};
+/* v1.2: «Договор подписан» закрывает этап «Подписание договора»: сначала проверка, что договор оформлен;
+   если нет — список недостающего и помощь: «Договор и стоимость», затем файл договора */
+const Sign22={
+  miss(m){migrateMatter11(m);const k=m.contract||{},out=[];const add=(ok,l,w)=>{if(!ok)out.push({l,w});};
+    add(k.no,"Номер договора||合同编号","ct");add(k.date,"Дата договора||合同日期","ct");add(k.subject,"Предмет договора||合同标的","ct");add(k.term,"Срок договора||合同期限","ct");
+    add(k.penaltyRate!==""&&k.penaltyRate!==undefined,"Неустойка||违约金","ct");add((+m.cost||0)>0,"Стоимость||费用","ct");
+    add(typeof PAYO21==="undefined"||PAYO21[m.payOrder],"Порядок оплаты||付款方式","ct");add(accsForMatter(m).length>0||!!m.resultGroup,"Доступ клиента в кабинет или группа для передачи результата||客户门户访问或成果交付群","ct");
+    add(k.file,"Файл подписанного договора||已签合同文件","file");return out;},
+  async run(id){const m=matter(id);const ms=this.miss(m);if(!ms.length)return true;
+    const v=await Dlg.ask({title:T1("Договор ещё не оформлен||合同尚未办妥")+" · "+m.no,text:T1("Чтобы отметить «Договор подписан», заполните:||标记“合同已签署”前，请补充："),
+      fields:[{k:"l",type:"html",html:"<ul class=\"c22miss\">"+ms.map(x=>"<li>"+esc(T1(x.l))+"</li>").join("")+"</ul>"}],okText:"Заполнить||填写"});if(!v)return false;
+    if(ms.some(x=>x.w==="ct"))await Contract11.edit(id);
+    const m2=matter(id);if(!(m2.contract&&m2.contract.file)){toast(T1("Приложите файл подписанного договора||请附加已签合同文件"));Contract11.file(id);return false;}
+    const left=this.miss(m2);if(left.length){toast(T1("Ещё не заполнено||尚未填写")+": "+left.map(x=>T1(x.l)).join(", "));return false;}return true;}
+};
+if(typeof Pipe!=="undefined"){const _psg22=Pipe.set.bind(Pipe);Pipe.set=async function(id,step){const m=matter(id);
+  if(step==="contract"&&pr22oneoff(m)&&m.pipeline!=="contract"&&!(typeof FW17!=="undefined"&&FW17.isOrder(m))){if(!await Sign22.run(id))return;}return _psg22(id,step);};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
