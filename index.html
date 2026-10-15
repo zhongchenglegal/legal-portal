@@ -10001,7 +10001,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="3e1fcdc2b2be";
+const ZC_BUILD="c56158e3b88c";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12659,6 +12659,7 @@ Object.assign(UI,{
   c22ChatFiles:"Файлы переписки||沟通文件",c22ChatNoFiles:"В переписке пока нет файлов||沟通中暂无文件",c22TplT:"Вставить шаблон||插入模板",c22TplMeet:"Предложить встречу||建议会面",c22TplStatus:"Сообщить о ходе дела||通报进展",
   c22DocSearch:"Поиск по файлам…||搜索文件…",c22DocAll:"Все файлы||全部文件",c22DocNewF:"+ Папка||+ 文件夹",c22DocFName:"Название папки||文件夹名称",c22DocNoFolder:"Без папки||未归类",c22DocMove:"Переместить в папку||移至文件夹",c22DocEmpty:"Файлов нет||无文件",c22DocFound:"Найдено: {n}||找到：{n}",c22DocBack:"← Все папки||← 全部文件夹",c22DocDelF:"Удалить папку (файлы останутся)||删除文件夹（文件保留）",
   c22ModeT:"Нажмите, чтобы переключить: заметка для команды ↔ сообщение клиенту||点击切换：团队备注 ↔ 发给客户",
+  c22KpWait:"КП на согласовании у {who} ({step}) — ждём решения, от вас пока ничего не требуется||报价正在由 {who} 审批（{step}）——请等待，暂无需您操作",c22KpMp:"управляющего партнёра||管理合伙人",c22KpRemind:"Напомнить||提醒",c22KpRemDone:"Напоминание о согласовании КП отправлено||已发送报价审批提醒",c22KpRemNone:"Некому отправить напоминание — сообщите управляющему партнёру||无可提醒对象，请联系管理合伙人",
   c22StName:"Название этапа||阶段名称",c22StAfter:"Вставить после||插入到此阶段之后",c22StNow:"сейчас||当前",c22StPassed:"пройден||已完成",
   c22StRule:"Дополнительные этапы добавляются только впереди текущего. Порядок — по строкам: первая строка идёт раньше второй. Пустые строки не учитываются.||附加阶段只能加在当前阶段之后。顺序按行：第一行在前。空行忽略。"
 });
@@ -12707,7 +12708,7 @@ const Card22={
   fmtM(m,v){const a={};a[Money17.cur(m)]=v;return Money17.fmt(a);},
   defaultTab(m){return m.pipeline!=="contract"&&m.status!=="closed"?3:0;},
   /* ── главная кнопка: какую из прежних кнопок нажать; подпись всегда «Следующий этап →», точное название — в подсказке ── */
-  primary(root,m){if(m.status==="closed")return null;const q=s=>root.querySelector(s);const lab=b=>b.textContent.trim();
+  primary(root,m){if(m.status==="closed")return null;if(m.pipeline!=="contract"&&this.kpWait(m)&&!root.querySelector('[data-act="kpOk2"],[data-act="kpOk3"]'))return null;const q=s=>root.querySelector(s);const lab=b=>b.textContent.trim();
     if(m.pipeline!=="contract"){
       let b=q('[data-act="kpSend"]');if(b)return {sel:'[data-act="kpSend"]',name:lab(b)};
       b=q('[data-act="kpOk2"]')||q('[data-act="kpOk3"]');if(b)return {sel:'[data-act="'+b.dataset.act+'"]',name:lab(b)};
@@ -12760,6 +12761,13 @@ const Card22={
     const v=await Dlg.ask({title:T1(UI.trNeed18)+" · "+m.no,fields,wide:true});if(!v)return;const done=[];
     need.forEach((x,i)=>{const z=String(v["zh"+i]||"").trim();if(z){Tr18.setZh(m,x.k,z,this.trSrc(m,x.k));done.push(T1(x.l));}});if(!done.length)return;
     m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.trNeed18)+": "+done.join(", ")});delete this.ai[m.id];await saveDoc("matters",m);Router.render();},
+  /* ── КП ждёт согласования руководителя / китайского юриста (не текущего пользователя) ── */
+  kpWait(m){if(typeof KP==="undefined"||!m.offer||m.offer.sentAt||m.pipeline==="contract"||m.status==="closed")return null;const st=KP.stepOf(m.offer);if(st!==2&&st!==3)return null;if(KP.canStep(m,st))return null;
+    const who=st===2?KP.step2Who(m):KP.step3Who(m);const name=who?dispName(who):T1(UI.c22KpMp);
+    return {step:st,who,text:T1(UI.c22KpWait).replace("{who}",name).replace("{step}",T1(st===2?UI.kpStep2:UI.kpStep3))};},
+  async kpRemind(m,step){const who=step===2?KP.step2Who(m):KP.step3Who(m);const accs=who?[accByEmp(who)]:Object.values(S.accounts||{}).filter(a=>a&&(a.emp==="shahzod"||(a.funcs||[]).includes("managing")));
+    const list=accs.filter(a=>a&&a.login!==(U()||{}).login);list.forEach(a=>notify(a.login,"task",nt18("kpStep",{no:m.no,st:{t:step===2?UI.kpStep2:UI.kpStep3}}),m.id));
+    m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.c22KpRemDone)});await saveDoc("matters",m);toast(T1(list.length?UI.c22KpRemDone:UI.c22KpRemNone));},
   /* ── панель «Что мешает и что дальше»: только когда есть строки ── */
   todo(root,m,c,o){const rows=[];const q=o.q;
     const row=(content,b)=>{const r=this.el("div","trow");if(typeof content==="string")r.appendChild(this.el("span","t",content));else{content.classList.add("t");r.appendChild(content);}
@@ -12774,6 +12782,7 @@ const Card22={
       else if(UI.st21NeedFile&&t.includes(T1(UI.st21NeedFile)))b=act(null,'[data-act="ctFile21"]');
       else if(t.trim()===T1(UI.plBlocked)&&hasHint){w.remove();return;} /* общая фраза лишняя: она есть на «Ходе дела», а ниже перечислено, что заполнить */
       row(w,b);});
+    const kw=this.kpWait(m);if(kw)row(kw.text,this.btn(T1(UI.c22KpRemind),"btn sm",{c22kprem:String(kw.step)}));
     const ai=this.aiRow(m,o);if(ai)rows.push(ai);
     if(o.cf)row(o.cf,null);
     if(!o.closed&&c&&!accsForMatter(m).length&&!m.resultGroup){if(this.mp())row(T1(UI.c22NoAccessRow),act(UI.c22Grant,'[data-cp="access"]'));else row(T1(UI.c22NoAccessRow)+" · "+T1(UI.c22AccessMp),null);}
@@ -13089,6 +13098,7 @@ const Card22={
     vp.querySelectorAll("[data-c22fnew]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.folderNew(m);});
     const up=vp.querySelector('[data-c22drop] [data-act="mUp"]');if(up)up.addEventListener("click",()=>{self._upFolder=self.fold[id]||"";},true);
     this.bindDocs(vp,m);
+    vp.querySelectorAll("[data-c22kprem]").forEach(b=>b.onclick=e=>{e.stopPropagation();b.disabled=true;self.kpRemind(m,+b.dataset.c22kprem);});
     vp.querySelectorAll("[data-c22ctdl]").forEach(b=>b.onclick=e=>{e.stopPropagation();const k=m.contract||{};if(k.file)Files.open(k.file);});
     vp.querySelectorAll("[data-c22todomin]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.todoToggle(vp);});
     vp.querySelectorAll("[data-c22col]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.boardSet(m,b.dataset.c22col==="off");});
