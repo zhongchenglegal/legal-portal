@@ -10001,7 +10001,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="7c0ebcf136ce";
+const ZC_BUILD="3e1fcdc2b2be";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10203,7 +10203,7 @@ const Staff21={
       d.vac=1;if(!wasVac||bad("name"))d.name=g;if(bad("role"))d.role=g;d.short=d.role;
       if(!wasVac||bad("pos"))d.pos="";delete d.demo;});
     /* сотрудники из базы, которых нет в оргсхеме */
-    real.forEach((a,emp)=>{if(ALL[emp]&&!ALL[emp].vac)return;
+    real.forEach((a,emp)=>{if(ALL[emp]&&!ALL[emp].vac){/* v1.2: имя настоящего сотрудника — из базы (в публичной сборке имена оргсхемы обезличены) */if(a.name){const nm=String(a.name);this.orig[emp]=Object.assign(this.orig[emp]||{},{name:(this.orig[emp]&&this.orig[emp].name)||ALL[emp].name});ALL[emp].name=nm.includes("||")?nm:nm+"||"+nm;}return;}
       const nm=String(a.name||emp);const role=this.ROLE[a.pos]||a.role||"";
       if(ALL[emp]&&ALL[emp].vac){this.orig[emp]=Object.assign(this.orig[emp]||{},{name:ALL[emp].name,vac:ALL[emp].vac});delete ALL[emp].vac;ALL[emp].name=nm.includes("||")?nm:nm+"||"+nm;return;}
       ALL[emp]={id:emp,name:nm.includes("||")?nm:nm+"||"+nm,role,short:role,type:this.TYPE[a.pos]||"sup",st:0,ent:a.entity==="llc"?"ooo":"firm",unit:a.unitId||null,pos:"",goals:[],funcs:[]};
