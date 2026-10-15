@@ -2282,6 +2282,142 @@ body.ch22pg #ms21Btn{color:var(--pri);border-color:var(--pri);background:var(--p
 .chat .msg.me{border-bottom-right-radius:4px}
 .chat .msg:not(.me){border-bottom-left-radius:4px}
 </style>
+<style>
+/* ═══════════ v22 · ПРОБНАЯ КАРТОЧКА РАЗОВОЙ УСЛУГИ (2-я редакция, для показа владельцу) ═══════════
+   Шапка с одной кнопкой «Следующий этап», пять вкладок, панель «Что мешает и что дальше», одна шкала этапов, правая панель.
+   Все кнопки — прежние (переставлены), поэтому действия настоящие. Стили только с префиксом c22.
+   --c22pad — верхний отступ #viewPage (22px, на узких экранах 14px): липкие вкладки и правая панель считаются от него. */
+.c22{--c22pad:22px}
+.c22h{background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;padding:14px 18px 12px;margin-bottom:0}
+.c22h .crumb{font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}.c22h .crumb b{color:var(--pri);font-weight:600}
+.c22h .crumb .btn{padding:3px 8px;font-size:12px}
+.c22h .row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-top:6px}
+.c22h h2{margin:0;font-size:20px;line-height:1.25;font-weight:600}
+.c22cl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:7px;color:var(--ink-2);font-size:14px}
+.c22cl b{color:var(--ink);cursor:pointer}.c22cl b:hover{color:var(--pri)}
+.c22cps{display:inline-flex;flex-wrap:wrap;gap:6px}
+.c22cp{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:6px;padding:1px 8px;font-size:12px;background:var(--surface2);color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.c22cp:hover{border-color:var(--pri);color:var(--pri)}
+.c22chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0;align-items:center}
+.c22chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px;font-size:12px;font-weight:600;background:var(--pri-soft);color:var(--pri);white-space:nowrap}
+.c22chip.w{background:var(--warn-soft);color:var(--warn-d)}.c22chip.r{background:var(--red-soft);color:var(--red-d)}.c22chip.g{background:var(--ok-soft);color:var(--ok-d)}.c22chip.n{background:var(--surface2);color:var(--ink-2)}
+.c22chips .mv17{font-size:12px;padding:4px 11px}
+.c22acts{display:flex;gap:8px;align-items:center;flex:none;position:relative;padding-top:2px}
+.c22acts .btn.pri{font-size:13.5px;padding:10px 16px;white-space:nowrap}
+.c22ic{width:40px;height:40px;padding:0;justify-content:center;font-size:16px}
+.c22menu{position:absolute;right:0;top:46px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--sh-3);padding:6px;min-width:250px;z-index:40;display:none;flex-direction:column;gap:2px}
+.c22menu.open{display:flex}
+.c22menu .btn,.c22menu button{width:100%;justify-content:flex-start;border:0;background:transparent;font-weight:500;border-radius:7px;text-align:left;padding:8px 10px;font-size:13px}
+.c22menu .btn:hover,.c22menu button:hover{background:var(--surface2)}
+.c22menu .sep{height:1px;background:var(--line);margin:4px 0}
+.c22menu .ms{display:none}
+/* вкладки липнут к верху страницы: липкая область в Chrome считается от внутреннего отступа #viewPage, поэтому top отрицательный */
+.c22tw{position:sticky;top:calc(-1 * var(--c22pad));z-index:30;background:var(--bg);margin:0 0 14px}
+.c22tabs{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:0 0 12px 12px;padding:0 10px;overflow-x:auto;scrollbar-width:none}
+.c22tabs::-webkit-scrollbar{display:none}
+.c22tabs button{border:0;background:transparent;padding:11px 13px;font-weight:600;font-size:13px;color:var(--ink-2);border-bottom:3px solid transparent;white-space:nowrap;cursor:pointer;font-family:inherit}
+.c22tabs button.on{color:var(--pri);border-color:var(--pri)}
+.c22tabs button .nb{background:var(--red);color:#fff;border-radius:999px;padding:0 6px;font-size:11px;margin-left:6px}
+.c22tab{display:none}.c22tab.on{display:block}
+.c22grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;align-items:start}
+.c22grid>div{min-width:0}
+.c22side{position:sticky;top:calc(45px - var(--c22pad))}
+.c22tab .card{margin-bottom:14px}
+.c22dup{display:none!important}
+.c22todo{border-left:4px solid var(--warn);background:var(--warn-soft)}
+.c22todo h4{color:var(--warn-d)}
+.c22todo .trow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:8px 0;border-top:1px solid rgba(0,0,0,.07);font-size:13px}
+.c22todo .trow:first-of-type{border-top:0}
+.c22todo .trow>.reqonly,.c22todo .trow>.card{display:block;margin:0!important;padding:0;border:0;background:transparent;box-shadow:none;font-size:13px}
+.c22todo .trow>.card b{font-weight:600}
+.c22todo .trow .t{flex:1 1 240px;min-width:0}.c22todo .trow .bts{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;flex:none}
+.c22ai ul{margin:6px 0 0;padding-left:18px}.c22ai li{margin:2px 0}.c22ai .c22k{color:var(--ink-3)}
+.c22pre{display:flex;align-items:center;gap:10px;background:var(--ok-soft);color:var(--ok-d);border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:10px;flex-wrap:wrap}
+.c22pre .btn{margin-left:auto;padding:3px 9px;font-size:12px}
+.c22prebody{display:none;margin:0 0 12px;padding:10px 12px;background:var(--surface2);border-radius:8px}.c22prebody.on{display:block}
+.c22kv{display:grid;grid-template-columns:118px 1fr;gap:5px 10px;font-size:13px}.c22kv dt{color:var(--ink-3)}.c22kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.c22kp{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface2);border-radius:8px;padding:8px 12px;font-size:12.5px;margin-top:10px}
+.c22stg .actions{margin-top:10px!important}
+.c22feed li .k{display:inline-block;width:16px;color:var(--ink-3)}
+.c22drop{border:1px dashed var(--line);border-radius:8px;padding:10px;text-align:center;color:var(--ink-3);font-size:12px;margin:10px 0 8px}
+.card.drag .c22drop{border-color:var(--pri);background:var(--pri-soft);color:var(--pri)}
+.c22chat{padding-top:12px}
+.c22st ol{margin:6px 0 0;padding-left:20px}.c22st li{margin:3px 0}.c22st small,.c22stno small{color:var(--ink-3)}.c22stno{margin:6px 0 0;padding-left:20px;list-style:none;color:var(--ink-3)}
+.c22bar{display:none}
+.c22hint{font-size:12px;color:var(--ink-3)}
+/* кнопка ИИ-переводчика у правого края: без «палочки»-ручки */
+.tr21btn.dock21::before{display:none}
+/* до договора: будущие рабочие этапы серым */
+.c22ghost{opacity:.5;margin-top:10px}
+/* КП: прикреплённые файлы */
+.c22kpf{margin:8px 0 12px}.c22kpf .chips{margin-top:4px}.c22kpb{color:var(--ink-3)}
+/* переписка: область сообщений выше, переключатель и быстрые сообщения у поля ввода */
+.c22chat .cms22{min-height:320px;max-height:60vh;overflow-y:auto;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column}
+/* панель переписки фиксированной высоты: сообщения занимают всё место, поле ввода прижато к низу */
+.c22chat.c22fixed{display:flex;flex-direction:column;overflow:hidden;margin-bottom:0}
+.c22chat.c22fixed>h4{flex:none}
+.c22chat.c22fixed .cthread{flex:1;min-height:0;display:flex;flex-direction:column}
+.c22chat.c22fixed .cms22{flex:1;min-height:0;max-height:none}
+.c22chat.c22fixed .cmsend{flex:none}
+.c22.chat-on .c22bar{display:none!important}
+.c22chat .cms22 .empty2{margin:auto;text-align:center;max-width:380px;color:var(--ink-3);font-style:normal;font-size:13px;padding:28px 10px;line-height:1.5}
+.c22chat .cms22 .empty2::before{content:"💬";display:block;font-size:30px;margin-bottom:8px}
+.c22chat .cmsend{margin-top:10px}
+.c22chat .mode22{display:inline-flex;width:auto;margin:0 0 8px}.c22chat .mode22 button{flex:none;padding:7px 14px}
+.c22tpl{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}.c22tpl .btn{font-size:12px}
+.c22chat .box22 textarea{min-height:44px}
+/* «Что мешает»: свёрнутая панель — одна строка заголовка */
+.c22todo h4 .more{margin-left:auto}.c22todo.min{padding-bottom:4px}.c22todo.min .c22todob{display:none}.c22todo.min h4{margin-bottom:0;border-bottom:0}
+/* доска задач на «Ходе дела»: 4 колонки в ряд (3 — без «На проверке») */
+.c22 .kb2 .kb{grid-template-columns:repeat(4,minmax(0,1fr))}.c22 .kb2.c22k3 .kb{grid-template-columns:repeat(3,minmax(0,1fr))}
+.c22colx{margin-left:6px;border:0;background:transparent;color:var(--ink-3);cursor:pointer;font-size:12px;padding:0 4px;border-radius:4px}.c22colx:hover{color:var(--red);background:var(--red-soft)}
+/* «Клиент и команда»: две карточки рядом */
+.c22pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media(max-width:700px){.c22 .kb2 .kb{grid-template-columns:repeat(4,minmax(210px,1fr));overflow-x:auto;padding-bottom:6px}.c22 .kb2.c22k3 .kb{grid-template-columns:repeat(3,minmax(210px,1fr))}.c22pair{grid-template-columns:1fr}}
+/* финансы */
+.c22money{display:flex;gap:10px;margin-bottom:10px}.c22money div{flex:1;background:var(--surface2);border-radius:10px;padding:10px 12px;min-width:0}.c22money b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.c22money small{color:var(--ink-3);font-size:12px}.c22money .ok b{color:var(--ok-d)}.c22money .due b{color:var(--red)}
+.c22bar2{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}.c22bar2 i{display:block;height:100%;background:var(--ok)}
+.c22fin .c22kv{margin-top:12px}
+@media(max-width:700px){.c22money{flex-direction:column}}
+.c22red{color:var(--red)!important;font-weight:600}.c22red .btn{margin-left:8px;font-weight:600}
+.c22ct h4 .btn{margin-left:auto}.c22up{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important}.c22dl{background:var(--ok-soft);color:var(--ok-d);border-color:var(--ok)}
+.c22dupw{display:none}
+/* переписка: поле ввода с режимом внутри; синее — клиенту, жёлтое — заметка */
+.c22chat .hint22,.c22chat .to22,.c22chat .c22tpl{display:none!important}
+.c22chat .box22{align-items:center;gap:8px;padding:6px 6px 6px 8px;border-radius:16px;border:1.5px solid color-mix(in srgb,var(--pri) 45%,var(--line));background:color-mix(in srgb,var(--pri) 6%,var(--surface));box-shadow:0 2px 10px rgba(20,40,80,.06)}
+.c22chat .cmp22.nt22 .box22{border-color:color-mix(in srgb,var(--warn) 70%,var(--line));background:var(--warn-soft)}
+.c22chat .box22 textarea{min-height:24px;max-height:220px!important}
+.c22lead{flex:none}.c22mode{display:inline-flex!important;margin:0!important;width:auto!important;padding:2px!important;border-radius:11px!important;background:var(--surface)!important}
+.c22mode button{flex:none!important;padding:6px 10px!important;font-size:12px!important;border-radius:9px!important}
+.c22tplw{position:relative;flex:none}.c22tplb{width:34px;height:34px;border:0;border-radius:10px;background:transparent;cursor:pointer;font-size:17px}.c22tplb:hover{background:var(--surface2)}
+.c22tplmenu{display:none;position:absolute;bottom:42px;left:0;z-index:50;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh-3);padding:6px;min-width:250px;flex-direction:column}
+.c22tplw.open .c22tplmenu{display:flex}.c22tplh{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;padding:6px 10px}
+.c22tplmenu button{border:0;background:transparent;text-align:left;padding:9px 10px;border-radius:8px;font:500 13px var(--font);color:var(--ink);cursor:pointer}.c22tplmenu button:hover{background:var(--pri-soft);color:var(--pri)}
+.c22chat .cms22{background:linear-gradient(180deg,var(--surface2),color-mix(in srgb,var(--pri) 3%,var(--surface2)))}
+.c22cf{display:none;flex-wrap:wrap;gap:8px;padding:0 0 10px;flex:none;max-height:140px;overflow:auto}.c22cf.on{display:flex}
+.c22cfi{display:flex;flex-direction:column;align-items:flex-start;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 10px;cursor:pointer;font:inherit;text-align:left}.c22cfi:hover{border-color:var(--pri)}.c22cfi small{color:var(--ink-3);font-size:11px}
+/* документы: поиск, папки */
+.c22dtb{display:flex;gap:8px;margin:0 0 12px}.c22ds{flex:1;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font:inherit;background:var(--surface2)}
+.c22fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:12px}
+.c22ftile{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:12px 14px;cursor:pointer;font:inherit;text-align:left}.c22ftile:hover{border-color:var(--pri);background:var(--pri-soft)}.c22ftile small{color:var(--ink-3)}
+.c22fr{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--line)}.c22fr:first-child{border-top:0}.c22fn{cursor:pointer}.c22fm{color:var(--ink-3);font-size:11px;margin-left:auto}.c22mv{border:1px solid var(--line);border-radius:8px;padding:3px 6px;font-size:12px;background:var(--surface)}
+.c22fnav{display:flex;align-items:center;gap:10px;margin-bottom:8px}.c22fnav .c22fdel{margin-left:auto}
+@media(max-width:700px){.c22mode button span,.c22mode button{font-size:0!important}.c22mode button svg{width:16px;height:16px}.c22fm{display:none}}
+.c22lead .c22mode{display:none!important}
+.c22mt{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:10px;padding:7px 12px;font:600 12.5px var(--font);cursor:pointer;white-space:nowrap;color:#fff}
+.c22mt svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.c22mt.cl{background:var(--pri)}.c22mt.nt{background:var(--warn)}
+@media(max-width:700px){.c22mt{font-size:0;padding:8px}.c22mt svg{width:17px;height:17px}}
+@media(max-width:980px){.c22{--c22pad:14px}}
+@media(max-width:700px){
+ .c22h{padding:10px 12px 10px}.c22h .row{flex-direction:column;gap:8px}.c22acts{padding-top:4px}.c22acts .btn.pri{display:none}.c22h h2{font-size:17px}
+ .c22grid{grid-template-columns:1fr}.c22side{position:static!important}
+ .c22tabs{padding:0 6px}.c22tabs button{padding:10px 10px}
+ /* нижняя панель: липкая область снизу уже отступает на высоту нижнего меню (padding-bottom #viewPage), поэтому bottom:0 */
+ .c22bar{display:flex;gap:8px;position:sticky;bottom:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:var(--sh-3);z-index:20;margin-top:10px}
+ .c22bar .btn.pri{flex:1;justify-content:center}
+}
+</style>
 
 <!-- вход -->
 <div class="login" id="login">
@@ -10137,7 +10273,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="eb53edb0c47b";
+const ZC_BUILD="054bfcc3b199";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10220,7 +10356,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="1.1";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="1.2";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12747,6 +12883,504 @@ if(typeof SB19!=="undefined"&&typeof SB19.realT==="function"){const _rtPw21=SB19
     return t;};}
 Push21.init();
 try{Push21.appInit();}catch(e){console.warn("pw21 app:",e&&e.message);}
+
+
+/* ═══════════════════════════ v22 · ПРОБНАЯ КАРТОЧКА РАЗОВОЙ УСЛУГИ (2-я редакция) ═══════════════════════════
+   Пробный вариант для показа владельцу (отчёт 14.10.2026 + его 13 правок от 15.10.2026). Только для svc === "oneoff", сотрудники.
+   Страница собирается из прежней: блоки и кнопки берутся готовыми и переставляются, поэтому действия настоящие.
+   Шапка: название, клиент (только название компании / ФИО), плашки «этап · срок · чей ход», одна кнопка «Следующий этап →», меню «⋯».
+   Вкладки: Ход дела · Клиент · Переписка · Договор и деньги · История. На «Ходе дела» нет повторов клиента и денег.
+   Панель «Что мешает и что дальше» показывается только когда есть что показать; перевод названия для клиента готовит ИИ
+   (на сервере — функция translate, в демо — заготовленный перевод), сотрудник подтверждает. Этапы: «Проверка перевода» и
+   «Подтверждение китайского юриста» только когда в деле назначены переводчик / китайский юрист; дополнительные этапы
+   добавляются и удаляются, системные — нет. Доступ клиенту в кабинет выдаёт только управляющий партнёр. */
+Object.assign(UI,{
+  c22Tabs:["Ход дела||案件进展","Переписка||沟通","Документы||文件","Договор||合同","Финансы||财务","Клиент и команда||客户与团队","История||历史"],
+  c22Todo:"Что мешает и что дальше||待处理与下一步",
+  c22Stages:"Этапы||阶段",c22Signed:"Договор подписан||合同已签",c22Pre:"{n} шагов до договора||签约前 {n} 步",c22Hide:"Свернуть||收起",c22Setup:"Настроить||设置",
+  c22Client:"Клиент||客户",c22OpenClient:"Карточка клиента||客户卡片",c22Contact:"Контакт по делу||案件联系人",c22Contacts:"Контакты||联系方式",c22Lang:"Язык||语言",c22Tr:"Переводчик||翻译",
+  c22Access:"Кабинет||门户",c22NoAccess:"доступа нет||未开通",c22Acc:"доступов: {n}||已开通：{n}",c22Wait:"Ждём от клиента||等待客户",
+  c22Msgs:"Сообщений||消息",c22Unans:"без ответа||未回复",c22OpenCab:"Открыть переписку||打开沟通",
+  c22Team:"Команда||团队",c22Rev:"Проверяющий||审核人",c22Edit:"Изменить||编辑",c22More:"Ещё||更多",c22Next:"Следующий этап||下一阶段",
+  c22Copied:"Скопировано||已复制",c22KpNone:"КП не подготовлено||尚未准备报价",c22KpOpen:"Открыть КП||打开报价",
+  c22StageOf:"этап {i} из {n}||第 {i}/{n} 阶段",c22Paused:"Приостановлено||已暂停",c22Until:"до||至",
+  c22Remind:"Напомнить клиенту||提醒客户",c22RemindPay:"Напоминаем об оплате по договору {no}. Просим произвести оплату.||提醒您支付合同 {no} 的款项，请及时付款。",
+  c22RemindDocs:"Напоминаем: ждём от вас — {t}.||提醒：我们仍在等待您提供 {t}。",
+  c22NoAccessRow:"Клиенту не выдан доступ в кабинет||客户尚未开通门户访问",c22Grant:"Выдать доступ||开通访问",c22AccessMp:"доступ выдаёт управляющий партнёр||由管理合伙人开通",
+  c22Unanswered:"Сообщений клиента без ответа: {n}||客户消息未回复：{n}",c22Reply:"Ответить||回复",
+  c22Info:"Сведения о деле||案件信息",c22Deadline:"Срок||期限",c22Feed:"Все записи по делу||案件全部记录",c22Pipe:"воронка||阶段",c22StageK:"этап||阶段",c22PayK:"оплата||付款",c22PauseK:"пауза||暂停",
+  c22Attach:"Прикрепить файл||附加文件",c22Drop:"Перетащите файлы сюда или нажмите «Прикрепить файл»||将文件拖到此处，或点击“附加文件”",
+  c22AiReady:"Перевод для клиента готов (ИИ) — проверьте и подтвердите||客户译文已由 AI 准备好，请核对并确认",c22AiBusy:"Готовлю перевод для клиента (ИИ)…||正在准备客户译文（AI）…",
+  c22AiNone:"Перевод для клиента: ИИ не перевёл, переведите вручную||客户译文：AI 未能翻译，请手动翻译",c22AiDemo:"демо-перевод, при внедрении — ИИ||演示译文，正式版由 AI 生成",
+  c22Confirm:"Подтвердить||确认",c22Fix:"Исправить||修改",c22AiDone:"Перевод подтверждён||译文已确认",c22AiHist:"Перевод для клиента подтверждён (ИИ)||客户译文已确认（AI）",
+  c22StTitle:"Этапы дела||案件阶段",c22StSys:"Системные этапы — не удаляются||系统阶段——不可删除",c22StNo:"нет||无",
+  c22StAutoTr:"появляется автоматически, когда в деле назначен переводчик||案件指派翻译后自动出现",c22StAutoCn:"появляется автоматически, когда в деле назначен китайский юрист||案件指派中国律师后自动出现",
+  c22StCustom:"Дополнительные этапы — по одному в строке; добавлять и удалять можно только их||附加阶段——每行一个；仅可增删这些",c22StHist:"Этапы||阶段",
+  c22PreStages:"Этапы до договора||签约前阶段",c22WorkLater:"Этапы работы откроются после отметки «Договор подписан»||标记“合同已签署”后开启办理阶段",
+  c22KpAttach:"Прикрепить КП||附加报价",c22KpFiles:"Файлы КП||报价文件",c22KpBadge:"КП||报价",c22CorrAdd:"+ Добавить||+ 添加",
+  c22ChatTitle:"Переписка с клиентом||与客户的沟通",c22ChatEmpty:"Сообщений пока нет — напишите клиенту или оставьте заметку для команды||暂无消息——给客户写信或为团队留言",
+  c22TplPay:"Напомнить об оплате||提醒付款",c22TplDocs:"Запросить документы||索取文件",c22TplReady:"Результат готов||成果已完成",
+  c22TplPayT:"Напоминаем об оплате по договору {no}. Просим произвести оплату.||提醒您支付合同 {no} 的款项，请及时付款。",
+  c22TplDocsT:"Для продолжения работы по делу {no} просим направить нам документы.||为继续办理 {no} 案件，请向我们提供相关文件。",
+  c22TplReadyT:"Результат по делу {no} готов. Направляем вам материалы.||{no} 案件成果已完成，现向您发送相关材料。",
+  c22CorrAdvHint:"Входящее — с файлом письма, регистрируется как «Получено». Исходящее — черновик (или «Ожидает отправки», если приложен файл): подписывает и отправляет руководство.||收文须附文件，登记为“已收到”。发文登记为草稿（附文件则为“待发送”）：由管理层签署并发出。",c22CorrFile:"Файл письма (скан или PDF)||函件文件（扫描件或PDF）",c22CorrNeedFile:"Для входящего письма приложите файл||收文请附文件",
+  c22CorrReg:"Письмо зарегистрировано||函件已登记",
+  c22Collapse:"Свернуть ▴||收起 ▴",c22Expand:"Развернуть ▾||展开 ▾",c22ColDel:"Убрать колонку «На проверке»||移除“待审核”列",c22ColBack:"+ колонка «На проверке»||+ “待审核”列",c22ColBusy:"В колонке «На проверке» есть задачи — сначала перенесите их||“待审核”列中仍有任务，请先移走",
+  c22Fin:"Финансы по делу||案件财务",c22FinCost:"Стоимость услуги||服务费用",c22FinPaid:"Оплачено||已付",c22FinDue:"Осталось||剩余",c22FinOrder:"Порядок оплаты||付款方式",c22FinStatus:"Статус оплаты||付款状态",c22FinCur:"Валюта||币种",c22FinKp:"Сумма КП||报价金额",c22FinNone:"Стоимость ещё не указана — заполните «Договор и стоимость»||尚未填写费用",c22FinPct:"оплачено {p} %||已付 {p}%",
+  c22PoNone:"не выбран||未选择",c22CtInfo:"Сведения о договоре||合同信息",c22CtNo:"Номер договора||合同编号",c22CtDate:"Дата договора||合同日期",c22CtSubj:"Предмет||标的",c22CtTerm:"Срок действия||期限",c22CtSigned:"Подписан||已签署",c22CtFile:"Файл договора||合同文件",c22CtDl:"⬇ Скачать договор||⬇ 下载合同",c22CtUp:"⚠ Загрузить договор||⚠ 上传合同",c22CtNoFile:"файл договора не загружен||尚未上传合同文件",c22CtNone:"не указано||未填写",
+  c22ChatFiles:"Файлы переписки||沟通文件",c22ChatNoFiles:"В переписке пока нет файлов||沟通中暂无文件",c22TplT:"Вставить шаблон||插入模板",c22TplMeet:"Предложить встречу||建议会面",c22TplStatus:"Сообщить о ходе дела||通报进展",
+  c22DocSearch:"Поиск по файлам…||搜索文件…",c22DocAll:"Все файлы||全部文件",c22DocNewF:"+ Папка||+ 文件夹",c22DocFName:"Название папки||文件夹名称",c22DocNoFolder:"Без папки||未归类",c22DocMove:"Переместить в папку||移至文件夹",c22DocEmpty:"Файлов нет||无文件",c22DocFound:"Найдено: {n}||找到：{n}",c22DocBack:"← Все папки||← 全部文件夹",c22DocDelF:"Удалить папку (файлы останутся)||删除文件夹（文件保留）",
+  c22ModeT:"Нажмите, чтобы переключить: заметка для команды ↔ сообщение клиенту||点击切换：团队备注 ↔ 发给客户",
+  c22StName:"Название этапа||阶段名称",c22StAfter:"Вставить после||插入到此阶段之后",c22StNow:"сейчас||当前",c22StPassed:"пройден||已完成",
+  c22StRule:"Дополнительные этапы добавляются только впереди текущего. Порядок — по строкам: первая строка идёт раньше второй. Пустые строки не учитываются.||附加阶段只能加在当前阶段之后。顺序按行：第一行在前。空行忽略。"
+});
+/* демо-переводы названий (в живой системе их готовит серверная функция translate; названия компаний не переводятся) */
+const DICT22={
+  "Регистрация двух ООО с китайским учредителем":"为中国股东注册两家有限责任公司",
+  "Покупка стального завода в Ангрене — due diligence и структура сделки":"安格连钢厂收购——尽职调查与交易架构",
+  "После второго контроля — проверка перевода и подтверждение китайского юриста":"第二次审核后——译文审核及中国律师确认",
+  "Заключение по земельному участку 0,8 га, Ташкентская область":"塔什干州 0.8 公顷土地法律意见书",
+  "THunder Gogo — экспертиза договора поставки":"THunder Gogo——供货合同审查",
+  "Экспертиза договора аренды производственного помещения — Сырдарья":"生产厂房租赁合同审查——锡尔河州",
+  "Правовое заключение по земельному участку":"土地法律意见书",
+  "Сопровождение покупки нежилого здания":"非住宅楼宇购买法律支持",
+  "Правовое заключение по земельному участку — Ташкент":"土地法律意见书——塔什干",
+  "Подготовка договора поставки (RU/ZH)":"供货合同起草（俄文/中文）",
+  "Аккредитация представительства иностранной компании":"外国公司代表处认证登记",
+  "Дистрибьюторский договор с китайским производителем":"与中国制造商的经销协议",
+  "Регистрация ООО с иностранным учредителем":"外资有限责任公司注册",
+  "Разрешение на привлечение иностранной рабочей силы":"外籍劳动力聘用许可",
+  "Договор подряда на строительство склада — Сырдарья":"仓库建设承包合同——锡尔河州",
+  "Due diligence производственной площадки":"生产场地尽职调查",
+  "Лицензия на строительно-монтажные работы":"建筑安装工程许可证",
+  "Регистрация представительства и лицензия на импорт":"代表处登记及进口许可证",
+  "Договор аренды склада и регистрация филиала":"仓库租赁合同及分公司登记",
+  "Лицензия на розничную торговлю алкоголем":"酒类零售许可证",
+  "Лицензия на хранение ГСМ — КП истекло":"油料储存许可证——报价已过期",
+  "Юридическое заключение по договору займа — клиент выбрал другую фирму":"借款合同法律意见书——客户选择了其他律所",
+  "Сопровождение сделки по покупке доли в ООО":"有限责任公司股权收购交易法律支持",
+  "Проверка договора поставки оборудования (типовая)":"设备供应合同审查（标准）",
+  "Проверка договора аренды цеха (арендодатель — Yangiyul Textile)":"车间租赁合同审查（出租方——Yangiyul Textile）",
+  "Проверка договора поставки оборудования":"设备供应合同审查",
+  "Проверка договора аренды склада":"仓库租赁合同审查",
+  "Проверка дистрибьюторского договора (КНР)":"经销协议审查（中国）",
+  "Проверка договора подряда на реконструкцию склада":"仓库改造承包合同审查"
+};
+const Card22={
+  tab:{},pre:{},ai:{},
+  on(m){return !!m&&m.svc==="oneoff"&&!isClient()&&typeof matterView==="function"&&matterView(m)==="full";},
+  mp(){return typeof Svc21!=="undefined"&&typeof Svc21.mp==="function"?Svc21.mp():(isFounder()||hasF("managing"));},
+  el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;},
+  hx(t,c,html){const e=this.el(t,c);e.innerHTML=html;return e;},
+  btn(label,cls,data){const b=this.el("button",cls||"btn sm",label);b.type="button";Object.entries(data||{}).forEach(([k,v])=>{b.dataset[k]=v;});return b;},
+  card(root,key){const t=T1(UI[key]);return [...root.querySelectorAll(".card")].find(c=>{const h=c.querySelector(":scope>h4");return h&&h.textContent.trim().startsWith(t);})||null;},
+  msgs(m){return Object.values(S.clientMessages||{}).filter(x=>x.matterId===m.id).sort((a,b)=>String(a.at).localeCompare(String(b.at)));},
+  unanswered(m){const l=this.msgs(m);let n=0;for(let i=l.length-1;i>=0;i--){if(l[i].byKind==="client")n++;else break;}return n;},
+  fmtM(m,v){const a={};a[Money17.cur(m)]=v;return Money17.fmt(a);},
+  defaultTab(m){return m.pipeline!=="contract"&&m.status!=="closed"?3:0;},
+  /* ── главная кнопка: какую из прежних кнопок нажать; подпись всегда «Следующий этап →», точное название — в подсказке ── */
+  primary(root,m){if(m.status==="closed")return null;const q=s=>root.querySelector(s);const lab=b=>b.textContent.trim();
+    if(m.pipeline!=="contract"){
+      let b=q('[data-act="kpSend"]');if(b)return {sel:'[data-act="kpSend"]',name:lab(b)};
+      b=q('[data-act="kpOk2"]')||q('[data-act="kpOk3"]');if(b)return {sel:'[data-act="'+b.dataset.act+'"]',name:lab(b)};
+      b=q('[data-act="kpPropose"]');if(b&&!m.offer)return {sel:'[data-act="kpPropose"]',name:lab(b)};
+      b=[...root.querySelectorAll("[data-pipe]")].find(x=>x.dataset.pipe!=="lost"&&!/--red/.test(x.getAttribute("style")||""));
+      if(b)return {sel:'[data-pipe="'+b.dataset.pipe+'"]',name:lab(b)};
+      return null;}
+    const b=[...root.querySelectorAll("[data-stage]")].find(x=>x.dataset.ret!=="1");
+    if(b)return {sel:'[data-stage="'+b.dataset.stage+'"][data-ret="0"]',name:lab(b)};
+    return null;},
+  /* ── шапка: клиент — только название компании или ФИО ── */
+  clientLine(m,c){const d=this.el("div","c22cl");if(!c)return d;const nm=this.el("b","",clientName(c));nm.dataset.client=c.id;d.appendChild(nm);return d;},
+  contacts(c){const ct=(c&&c.contacts)||{};const ph=(ct.phones||[])[0],wc=(ct.wechat||[])[0],em=(ct.emails||[])[0];const w=this.el("span","c22cps");
+    const cp=(ic,v)=>{const s=this.el("span","c22cp",ic+" "+v+" ⧉");s.dataset.c22copy=v;s.title=T1(UI.c22Copied);w.appendChild(s);};
+    if(ph)cp("📞",ph);if(wc)cp("WeChat:",wc);if(em)cp("✉",em);return w.children.length?w:null;},
+  /* ── шапка: плашки (без денег) ── */
+  chips(m){const d=this.el("div","c22chips");const s=status11(m);const contract=m.pipeline==="contract",closed=m.status==="closed";
+    let st=s.l;if(contract&&!closed&&typeof St21!=="undefined"){const l=St21.list(m);const i=l.indexOf(m.stage);if(i>=0)st+=" · "+T1(UI.c22StageOf).replace("{i}",i+1).replace("{n}",l.length);}
+    d.appendChild(this.el("span","c22chip"+(closed?" n":""),st));
+    if(m.paused)d.appendChild(this.el("span","c22chip w",T1(UI.c22Paused)));
+    if(m.deadline&&!closed){const w=wdLeft17(m.deadline);const cls=w<0?"r":w<=5?"w":"n";
+      const t=T1(UI.c22Deadline)+" "+fmtD(m.deadline)+(w<0?" · "+T1(UI.dlLate17)+" "+(-w)+" "+T1(UI.wd17):w===0?" · "+T1(UI.dlToday17):" · "+w+" "+T1(UI.wd17));d.appendChild(this.el("span","c22chip "+cls,"⏱ "+t));}
+    if(!closed){const mv=move17Badge(m);if(mv){const w=this.hx("span","",mv);if(w.firstChild)d.appendChild(w.firstChild);}}
+    return d;},
+  /* ── перевод для клиента: источник, подпись поля ── */
+  trSrc(m,k){const f=(Tr18.fields(m)||[]).find(x=>x[0]===k);if(f)return String(f[1]||"");if(k.startsWith("ca:")){const a=(m.clientActions||[]).find(x=>"ca:"+x.id===k);return a?String(a.text||""):"";}return "";},
+  aiRow(m,o){if(typeof Tr18==="undefined"||o.closed||m.pipeline==="lost"||!Tr18.applies(m))return null;const need=Tr18.need(m);if(!need.length)return null;
+    const r=this.el("div","trow");r.dataset.c22airow="1";const can=Tr18.can(m);const p=this.ai[m.id];const bts=this.el("div","bts");
+    if(p===undefined||p==="busy"){r.appendChild(this.el("span","t",T1(UI.c22AiBusy)));if(p===undefined)this.aiFetch(m);}
+    else{const ready=need.filter(x=>p[x.k]);
+      if(ready.length){const t=this.el("div","t c22ai");t.appendChild(this.el("div","",T1(UI.c22AiReady)+(p.demo?" · "+T1(UI.c22AiDemo):"")));
+        const ul=this.el("ul");ready.forEach(x=>ul.appendChild(this.hx("li","",`<span class="c22k">${esc(T1(x.l))}:</span> ${esc(this.trSrc(m,x.k))} → <b>${esc(p[x.k])}</b>`)));t.appendChild(ul);r.appendChild(t);
+        if(can){bts.appendChild(this.btn(T1(UI.c22Confirm),"btn sm pri",{c22ai:"confirm"}));bts.appendChild(this.btn(T1(UI.c22Fix),"btn sm",{c22ai:"fix"}));}}
+      else{r.appendChild(this.el("span","t",T1(UI.c22AiNone)+": "+need.map(x=>T1(x.l)).join(", ")));if(can)bts.appendChild(this.btn(T1(UI.c22Fix),"btn sm",{c22ai:"fix"}));}}
+    if(bts.children.length)r.appendChild(bts);return r;},
+  async aiFetch(m){this.ai[m.id]="busy";const need=Tr18.need(m);const out={demo:false};
+    for(const x of need){const src=this.trSrc(m,x.k);if(!src)continue;try{const r=await this.aiTr(src);if(r&&r.zh)out[x.k]=r.zh;if(r&&r.demo)out.demo=true;}catch(e){}}
+    this.ai[m.id]=out;
+    if(Router.cur==="matter"&&Router.arg===m.id){const vp=document.getElementById("viewPage");const old=vp&&vp.querySelector("[data-c22airow]");
+      if(old){const nr=this.aiRow(m,{closed:m.status==="closed"});if(nr)old.replaceWith(nr);else old.remove();this.bindAi(vp,m);}}},
+  /* на сервере — та же функция translate, что в чате (имена и названия компаний она не переводит); в демо — заготовка */
+  async aiTr(text){const srv=typeof ch22srv==="function"&&ch22srv()&&typeof SB19!=="undefined"&&SB19.T&&typeof SB19.T.invoke==="function";
+    if(srv){const r=await SB19.T.invoke("translate",{text,ui:"ru",mode:"fast"});return r&&r.translation&&(!r.dst||r.dst==="zh")?{zh:r.translation}:null;}
+    await new Promise(s=>setTimeout(s,700));const zh=DICT22[String(text).trim()];return zh?{zh,demo:true}:null;},
+  async aiConfirm(m){const p=this.ai[m.id];if(!p||p==="busy")return;const done=[];Tr18.need(m).forEach(x=>{if(p[x.k]){Tr18.setZh(m,x.k,p[x.k],this.trSrc(m,x.k));done.push(T1(x.l));}});if(!done.length)return;
+    m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.c22AiHist)+": "+done.join(", ")});delete this.ai[m.id];await saveDoc("matters",m);toast(T1(UI.c22AiDone));Router.render();},
+  async aiFix(m){const p=this.ai[m.id];const pp=(p&&p!=="busy")?p:{};const need=Tr18.need(m);const F=Tr18.fields(m)||[];const fields=[];
+    need.forEach((x,i)=>{const f=F.find(y=>y[0]===x.k)||[];fields.push({k:"ru"+i,type:"html",html:`<div class="tr18ru"><span class="lbl9">${esc(T1(x.l))}</span>${esc(String(f[1]||this.trSrc(m,x.k)))}</div>`});
+      fields.push({k:"zh"+i,label:T1(UI.trZh18),type:x.k==="title"?"text":"textarea",value:pp[x.k]||f[2]||""});});
+    const v=await Dlg.ask({title:T1(UI.trNeed18)+" · "+m.no,fields,wide:true});if(!v)return;const done=[];
+    need.forEach((x,i)=>{const z=String(v["zh"+i]||"").trim();if(z){Tr18.setZh(m,x.k,z,this.trSrc(m,x.k));done.push(T1(x.l));}});if(!done.length)return;
+    m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.trNeed18)+": "+done.join(", ")});delete this.ai[m.id];await saveDoc("matters",m);Router.render();},
+  /* ── панель «Что мешает и что дальше»: только когда есть строки ── */
+  todo(root,m,c,o){const rows=[];const q=o.q;
+    const row=(content,b)=>{const r=this.el("div","trow");if(typeof content==="string")r.appendChild(this.el("span","t",content));else{content.classList.add("t");r.appendChild(content);}
+      const bs=(Array.isArray(b)?b:[b]).filter(Boolean);if(bs.length){const w=this.el("div","bts");bs.forEach(x=>w.appendChild(x));r.appendChild(w);}rows.push(r);};
+    const act=(label,sel)=>{const t=q(sel);if(!t)return null;return this.btn(label?T1(label):t.textContent.trim(),"btn sm",{c22target:sel});};
+    const msgBtn=(label,text)=>this.btn(T1(label),"btn sm",Object.assign({c22q:"msg"},text?{c22text:text}:{}));
+    const hint=UI.st21SignHint?T1(UI.st21SignHint):null,needC=T1(UI.plNeedContract);
+    const hasHint=o.warns.some(w=>(hint&&w.textContent.includes(hint))||w.textContent.includes(needC));
+    o.warns.forEach(w=>{const t=w.textContent;let b=null;
+      if(t.includes(T1(UI.payBlock8))||t.includes(T1(UI.payBlockM)))b=[msgBtn(UI.c22Remind,T1(UI.c22RemindPay).replace("{no}",m.no)),act(null,'[data-act="payAdd21"]')||act(null,'[data-act="newPayM"]')];
+      else if(t.includes(needC)||(hint&&t.includes(hint))||(UI.st21NeedPayOrder&&t.includes(T1(UI.st21NeedPayOrder)))){b=[act(null,'[data-act="ctEdit"]')];if(UI.st21NeedFile&&t.includes(T1(UI.st21NeedFile)))b.push(act(null,'[data-act="ctFile21"]'));}
+      else if(UI.st21NeedFile&&t.includes(T1(UI.st21NeedFile)))b=act(null,'[data-act="ctFile21"]');
+      else if(t.trim()===T1(UI.plBlocked)&&hasHint){w.remove();return;} /* общая фраза лишняя: она есть на «Ходе дела», а ниже перечислено, что заполнить */
+      row(w,b);});
+    const ai=this.aiRow(m,o);if(ai)rows.push(ai);
+    if(o.cf)row(o.cf,null);
+    if(!o.closed&&c&&!accsForMatter(m).length&&!m.resultGroup){if(this.mp())row(T1(UI.c22NoAccessRow),act(UI.c22Grant,'[data-cp="access"]'));else row(T1(UI.c22NoAccessRow)+" · "+T1(UI.c22AccessMp),null);}
+    (m.clientActions||[]).filter(a=>!a.done).forEach(a=>{const kind=T1(a.kind==="docs"?UI.ccAskDocs:a.kind==="sign"?UI.ccAskSign:a.kind==="pay"?UI.ccAskPay:UI.ccAskOther);
+      row(T1(UI.c22Wait)+": "+kind+" — "+a.text+" · "+fmtD(String(a.at).slice(0,10)),msgBtn(UI.c22Remind,T1(UI.c22RemindDocs).replace("{t}",a.text)));});
+    const un=this.unanswered(m);if(un)row(T1(UI.c22Unanswered).replace("{n}",un),msgBtn(UI.c22Reply));
+    if(o.ccHint&&!o.closed&&o.contract)row(o.ccHint,null);
+    if(!rows.length)return null;
+    const min=this.todoMin();const card=this.el("div","card c22todo"+(min?" min":""));const h=this.el("h4","",T1(UI.c22Todo)+" · "+rows.length);h.appendChild(this.btn(T1(min?UI.c22Expand:UI.c22Collapse),"more",{c22todomin:"1"}));card.appendChild(h);const body=this.el("div","c22todob");rows.forEach(r=>body.appendChild(r));card.appendChild(body);return card;},
+  todoMin(){try{return localStorage.getItem("c22todoMin")==="1";}catch(e){return false;}},
+  todoToggle(vp){const card=vp.querySelector(".c22todo");if(!card)return;const min=!card.classList.contains("min");card.classList.toggle("min",min);try{localStorage.setItem("c22todoMin",min?"1":"0");}catch(e){}const b=card.querySelector("[data-c22todomin]");if(b)b.textContent=T1(min?UI.c22Expand:UI.c22Collapse);},
+  /* доска задач: 4 колонки в ряд; колонку «На проверке» ведущий/УП может убрать (только пустую) и вернуть */
+  boardCan(m){return m.status!=="closed"&&(this.mp()||(typeof Svc21!=="undefined"&&typeof Svc21.lead==="function"&&Svc21.lead(m)));},
+  board(tasks,m,closed){const kb=tasks.querySelector(".kb2");if(!kb)return;const can=this.boardCan(m);const h4=tasks.querySelector(":scope>h4");
+    if(m.kbNoReview22){const col=kb.querySelector('[data-col="review"]');if(col&&!col.querySelector(".kc")){col.remove();kb.classList.add("c22k3");}if(can&&h4)h4.appendChild(this.btn(T1(UI.c22ColBack),"more",{c22col:"on"}));}
+    else if(can){const kh=kb.querySelector('[data-col="review"] .kh');if(kh){const x=this.btn("✕","c22colx",{c22col:"off"});x.title=T1(UI.c22ColDel);x.setAttribute("aria-label",T1(UI.c22ColDel));kh.appendChild(x);}}},
+  async boardSet(m,off){const mm=matter(m.id);if(!mm)return;if(off&&Object.values(S.tasks||{}).some(t=>t.matterId===mm.id&&t.status==="review")){toast(T1(UI.c22ColBusy));return;}
+    if(off)mm.kbNoReview22=true;else delete mm.kbNoReview22;await saveDoc("matters",mm);Router.render();},
+  /* ── документы: поиск по названию и папки (m.folders22; у файла f.folder) ── */
+  fold:{},dq:{},
+  docsBody(m){const files=(m.files||[]).map((f,i)=>({f,i}));const folders=m.folders22||[];const cur=this.fold[m.id]||"";const q=(this.dq[m.id]||"").trim().toLowerCase();
+    const w=this.el("div","c22docs");
+    const row=({f,i})=>{const r=this.el("div","c22fr");const a=this.el("span","chipf c22fn",(f.url?"🔗 ":"📄 ")+f.name);a.dataset.act="mFile";a.dataset.i=String(i);if(f.kind==="kp")a.appendChild(this.el("small","c22kpb"," · "+T1(UI.c22KpBadge)));r.appendChild(a);
+      r.appendChild(this.el("small","c22fm",[f.folder||"",f.at?fmtDT(f.at):""].filter(Boolean).join(" · ")));
+      if(folders.length){const sel=this.el("select","c22mv");sel.dataset.c22mv=String(i);sel.title=T1(UI.c22DocMove);[["",T1(UI.c22DocNoFolder)],...folders.map(x=>[x,"📁 "+x])].forEach(([v,l])=>{const o=this.el("option","",l);o.value=v;if((f.folder||"")===v)o.selected=true;sel.appendChild(o);});r.appendChild(sel);}
+      return r;};
+    if(q){const hit=files.filter(x=>String(x.f.name||"").toLowerCase().includes(q));w.appendChild(this.el("div","c22hint",T1(UI.c22DocFound).replace("{n}",hit.length)));hit.forEach(x=>w.appendChild(row(x)));return w;}
+    if(cur){const nav=this.el("div","c22fnav");nav.appendChild(this.btn(T1(UI.c22DocBack),"btn sm ghost",{c22fold:""}));nav.appendChild(this.el("b","","📁 "+cur));nav.appendChild(this.btn("🗑","btn sm ghost c22fdel",{c22fdel:cur}));nav.lastChild.title=T1(UI.c22DocDelF);w.appendChild(nav);
+      const inF=files.filter(x=>x.f.folder===cur);if(!inF.length)w.appendChild(this.el("div","empty2",T1(UI.c22DocEmpty)));inF.forEach(x=>w.appendChild(row(x)));return w;}
+    if(folders.length){const g=this.el("div","c22fgrid");folders.forEach(n=>{const b=this.btn("","c22ftile",{c22fold:n});b.appendChild(this.el("b","","📁 "+n));b.appendChild(this.el("small","",String(files.filter(x=>x.f.folder===n).length)));g.appendChild(b);});w.appendChild(g);}
+    const loose=files.filter(x=>!x.f.folder||!folders.includes(x.f.folder));if(!loose.length&&!folders.length)w.appendChild(this.el("div","empty2",T1(UI.noData)));loose.forEach(x=>w.appendChild(row(x)));return w;},
+  docsCard(docs,m){docs.querySelectorAll(":scope>.chips,:scope>.empty2").forEach(x=>x.remove());const h4=docs.querySelector(":scope>h4");
+    const tb=this.el("div","c22dtb");const inp=this.el("input","c22ds");inp.type="search";inp.placeholder=T1(UI.c22DocSearch);inp.value=this.dq[m.id]||"";inp.dataset.c22dq="1";tb.appendChild(inp);
+    if(m.status!=="closed")tb.appendChild(this.btn(T1(UI.c22DocNewF),"btn sm",{c22fnew:"1"}));
+    if(h4)h4.after(tb);const body=this.docsBody(m);tb.after(body);},
+  docsRedraw(vp,m){const old=vp.querySelector(".c22docs");if(!old)return;const nb=this.docsBody(matter(m.id));old.replaceWith(nb);this.bindDocs(vp,m);if(typeof Pages!=="undefined"){const mf=Files&&Files.open;nb.querySelectorAll('[data-act="mFile"]').forEach(el=>el.onclick=()=>mf.call(Files,matter(m.id).files[+el.dataset.i]));}},
+  bindDocs(vp,m){const self=this;
+    vp.querySelectorAll("[data-c22fold]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.fold[m.id]=b.dataset.c22fold;self.dq[m.id]="";const i=vp.querySelector("[data-c22dq]");if(i)i.value="";self.docsRedraw(vp,m);});
+    vp.querySelectorAll("[data-c22mv]").forEach(sel=>sel.onchange=async()=>{const mm=matter(m.id);const f=(mm.files||[])[+sel.dataset.c22mv];if(!f)return;if(sel.value)f.folder=sel.value;else delete f.folder;await saveDoc("matters",mm);self.docsRedraw(vp,m);});
+    vp.querySelectorAll("[data-c22fdel]").forEach(b=>b.onclick=async e=>{e.stopPropagation();const mm=matter(m.id);const n=b.dataset.c22fdel;mm.folders22=(mm.folders22||[]).filter(x=>x!==n);(mm.files||[]).forEach(f=>{if(f.folder===n)delete f.folder;});self.fold[m.id]="";await saveDoc("matters",mm);Router.render();});},
+  async folderNew(m){const v=await Dlg.ask({title:T1(UI.c22DocNewF).replace("+ ","")+" · "+m.no,fields:[{k:"name",label:T1(UI.c22DocFName),value:"",required:true}]});if(!v)return;const n=String(v.name||"").trim().slice(0,60);if(!n)return;
+    const mm=matter(m.id);mm.folders22=mm.folders22||[];if(!mm.folders22.includes(n))mm.folders22.push(n);this.fold[m.id]=n;await saveDoc("matters",mm);Router.render();},
+  /* ── сведения о договоре: реквизиты, файл; скачать или (красным) загрузить ── */
+  ctCard(m,closed){const card=this.el("div","card c22ct");const k=m.contract||{};const h=this.el("h4","",T1(UI.c22CtInfo));
+    if(k.file){h.appendChild(this.btn(T1(UI.c22CtDl),"btn sm c22dl",{c22ctdl:"1"}));}
+    else if(!closed){h.appendChild(this.btn(T1(UI.c22CtUp),"btn sm c22up",{c22target:'[data-act="ctFile21"]'}));}
+    card.appendChild(h);const dl=this.el("dl","c22kv");const kv=(l,v,red)=>{dl.appendChild(this.el("dt","",T1(l)));dl.appendChild(this.el("dd",red?"c22red":"",v||T1(UI.c22CtNone)));};
+    kv(UI.c22CtNo,k.no);kv(UI.c22CtDate,k.date?fmtD(k.date):"");if(k.subject)kv(UI.c22CtSubj,k.subject);if(k.term)kv(UI.c22CtTerm,k.term);
+    const ph=(m.pipelineHistory||[]).filter(x=>x.step==="contract").slice(-1)[0];if(m.pipeline==="contract")kv(UI.c22CtSigned,(ph?fmtD(String(ph.at).slice(0,10))+(ph.by?" · "+dispName(ph.by):""):"✓"));
+    if(Money17.cost(m)>0&&(typeof costVisible!=="function"||costVisible(m)))kv(UI.c22FinCost,this.fmtM(m,Money17.cost(m)));
+    const po=typeof payOrderLabel21==="function"?payOrderLabel21(m):"";kv(UI.c22FinOrder,po||T1(UI.c22PoNone),!po);
+    kv(UI.c22CtFile,k.file?k.file.name:T1(UI.c22CtNoFile),!k.file);card.appendChild(dl);return card;},
+  /* ── финансы: стоимость, оплачено, осталось, порядок и статус оплаты ── */
+  finCard(m,payAdd){const card=this.el("div","card c22fin");const h=this.el("h4","",T1(UI.c22Fin));
+    if(payAdd&&m.status!=="closed")h.appendChild(this.btn(payAdd.textContent.trim(),"more",{c22target:'[data-act="'+payAdd.dataset.act+'"]'}));card.appendChild(h);
+    const cost=Money17.cost(m),paid=Money17.paid(m),due=Money17.due(m);
+    if(!(cost>0)){const o=m.offer;card.appendChild(this.el("div","c22hint",T1(UI.c22FinNone)));const dl0=this.el("dl","c22kv");if(o&&o.sum){dl0.appendChild(this.el("dt","",T1(UI.c22FinKp)));dl0.appendChild(this.el("dd","",fmtN(o.sum)+" "+T1(UI.sum)));}const po0=typeof payOrderLabel21==="function"?payOrderLabel21(m):"";dl0.appendChild(this.el("dt","",T1(UI.c22FinOrder)));dl0.appendChild(this.el("dd",po0?"":"c22red",po0||T1(UI.c22PoNone)));card.appendChild(dl0);return card;}
+    const box=this.el("div","c22money");const cell=(v,l,cls)=>{const d=this.el("div",cls||"");d.appendChild(this.el("b","",v));d.appendChild(this.el("small","",T1(l)));box.appendChild(d);};
+    cell(this.fmtM(m,cost),UI.c22FinCost);cell(this.fmtM(m,paid),UI.c22FinPaid,"ok");cell(this.fmtM(m,due),UI.c22FinDue,due>0?"due":"ok");card.appendChild(box);
+    const pct=Math.min(100,Math.round(paid/cost*100));const bar=this.hx("div","c22bar2",'<i style="width:'+pct+'%"></i>');card.appendChild(bar);card.appendChild(this.el("div","c22hint",T1(UI.c22FinPct).replace("{p}",pct)));
+    const dl=this.el("dl","c22kv");const kv=(k,v)=>{if(!v)return;dl.appendChild(this.el("dt","",T1(k)));dl.appendChild(this.el("dd","",v));};
+    const po=typeof payOrderLabel21==="function"?payOrderLabel21(m):"";dl.appendChild(this.el("dt","",T1(UI.c22FinOrder)));const pdd=this.el("dd","",po||T1(UI.c22PoNone));if(!po){pdd.className="c22red";if(document&&m.status!=="closed")pdd.appendChild(this.btn(T1(UI.ctEdit),"btn sm",{c22target:'[data-act="ctEdit"]'}));}dl.appendChild(pdd);kv(UI.c22FinStatus,m.paymentStatus&&typeof payLabel==="function"?payLabel(m.paymentStatus):"");kv(UI.c22FinCur,Money17.cur(m));
+    card.appendChild(dl);return card;},
+  /* ── одна шкала этапов; «Настроить» — прежняя кнопка «Этапы» ── */
+  stages(m,o){const card=this.el("div","card c22stg");const h=this.el("h4","",T1(o.contract?UI.c22Stages:UI.c22PreStages));
+    if(o.stBtn){o.stBtn.className="more";o.stBtn.textContent=T1(UI.c22Setup);h.appendChild(o.stBtn);}card.appendChild(h);
+    if(o.contract){
+      const ph=(m.pipelineHistory||[]).filter(h=>h.step==="contract").slice(-1)[0]||{};
+      const at=m.contractSignedAt||ph.at||"";const by=m.contractSignedBy?accName(m.contractSignedBy):(ph.by?dispName(ph.by):"");
+      const parts=["✓ "+T1(UI.c22Signed)+(at?" "+fmtD(String(at).slice(0,10)):"")+(by?" · "+by:"")];
+      if(typeof costVisible==="function"&&costVisible(m)&&Money17.cost(m)>0)parts.push(this.fmtM(m,Money17.cost(m)));
+      const po=typeof payOrderLabel21==="function"?payOrderLabel21(m):"";if(po)parts.push(po);
+      const pre=this.el("div","c22pre",parts.join(" · "));
+      const n=(o.pl11&&o.pl11.querySelectorAll(".stp").length)||5;const lbl=T1(UI.c22Pre).replace("{n}",n)+" ›";
+      const tg=this.btn(this.pre[m.id]?T1(UI.c22Hide):lbl,"btn sm",{c22pre:"1",lbl});pre.appendChild(tg);card.appendChild(pre);
+      const body=this.el("div","c22prebody"+(this.pre[m.id]?" on":""));if(o.pl11)body.appendChild(o.pl11.cloneNode(true));
+      const hl=o.svc&&[...o.svc.querySelectorAll(".lbl9")].find(x=>x.textContent.trim()===T1(UI.plHist));if(hl&&hl.nextElementSibling)body.appendChild(hl.nextElementSibling.cloneNode(true));
+      card.appendChild(body);
+      if(o.stline)card.appendChild(o.stline);if(o.ccActs)card.appendChild(o.ccActs);
+    }else{
+      if(o.pl11)card.appendChild(o.pl11);
+      if(o.pipeBtns.length){const a=this.el("div","actions");a.style.justifyContent="flex-start";o.pipeBtns.forEach(b=>a.appendChild(b));card.appendChild(a);}
+      const off=m.offer;const kpl=this.el("div","c22kp");
+      if(!off){kpl.appendChild(this.el("span","",T1(UI.c22KpNone)));const pb=o.q('[data-act="kpPropose"]');if(pb)kpl.appendChild(this.btn(pb.textContent.trim(),"btn sm",{c22target:'[data-act="kpPropose"]'}));}
+      else{let s=fmtN(off.sum)+" "+T1(UI.sum)+" · "+(off.sentAt?T1(UI.kpSent)+" "+fmtDT(off.sentAt):(typeof KP!=="undefined"&&KP.approved(off))?T1(UI.kpDone):T1(UI.kpDraft));if(off.validUntil)s+=" · "+T1(UI.c22Until)+" "+fmtD(off.validUntil);kpl.appendChild(this.el("span","",T1(UI.kpTitle)+": "+s));}
+      card.appendChild(kpl);
+    }
+    return card;},
+  /* ── до договора: на «Ходе дела» — предпросмотр будущих рабочих этапов (серым) ── */
+  workPreview(m,o){const card=this.el("div","card c22stg c22wp");const h=this.el("h4","",T1(UI.c22Stages));if(o.stBtn){o.stBtn.className="more";o.stBtn.textContent=T1(UI.c22Setup);h.appendChild(o.stBtn);}card.appendChild(h);
+    card.appendChild(this.el("div","c22hint",T1(UI.c22WorkLater)));
+    const l=typeof St21!=="undefined"?St21.list(m):[];if(l.length){const line=this.el("div","stline c22ghost");l.forEach((k,i)=>line.appendChild(this.hx("div","stp todo",`<i>${i+1}</i><div class="stt">${esc(St21.label(k))}</div>`)));card.appendChild(line);}
+    return card;},
+  /* ── КП: прикреплённые файлы (offer.file — прежний механизм до отправки; файлы kind:"kp" — прикреплённые отсюда в любой момент) ── */
+  kpFiles(kp,m,closed){const h4=kp.querySelector(":scope>h4");const o=m.offer;const kpf=(m.files||[]).map((f,i)=>({f,i})).filter(x=>x.f&&x.f.kind==="kp");
+    if(h4&&!closed&&!kp.querySelector('[data-act="kpFile"]')&&typeof KP!=="undefined"&&KP.canStep(m,1))h4.appendChild(this.btn(T1(UI.c22KpAttach),"more",{c22kpup:"1"}));
+    if(!(kpf.length||(o&&o.file)))return;const box=this.el("div","c22kpf");box.appendChild(this.el("span","lbl9",T1(UI.c22KpFiles)));const chips=this.el("div","chips");
+    if(o&&o.file){const s=this.el("span","chipf","📎 "+o.file.name);s.dataset.c22kpopen="1";chips.appendChild(s);}
+    kpf.forEach(x=>{const s=this.el("span","chipf","📎 "+x.f.name);s.dataset.act="mFile";s.dataset.i=String(x.i);chips.appendChild(s);});box.appendChild(chips);
+    if(h4&&h4.nextSibling)kp.insertBefore(box,h4.nextSibling);else kp.appendChild(box);},
+  kpAttach(m){if(typeof KP!=="undefined"&&!KP.canStep(m,1)){toast(T1(UI.stNoRight));return;}const id=m.id;
+    Files.upload(async f=>{const mm=matter(id);if(!mm)return;mm.files=mm.files||[];mm.files.push(Object.assign(f,{kind:"kp"}));mm.history=mm.history||[];mm.history.push({at:nowS(),by:U().emp,what:T1(UI.c22KpAttach)+": "+f.name});await saveDoc("matters",mm);Router.render();});},
+  /* ── корреспонденция: с правом на журнал — прежнее окно регистрации (дело подставлено); адвокат по делу — своё окно ── */
+  corrCan(m){if(typeof Corr==="undefined"||m.status==="closed")return false;if(can("corrEdit"))return true;const me=(U()||{}).emp;return !!me&&(m.lead===me||execsOf(m).some(x=>x.emp===me));},
+  corrAdd(m){if(!can("corrEdit"))return this.corrAddAdv(m);
+    const _ask=Dlg.ask;const patched=function(o){if(Dlg.ask===patched)Dlg.ask=_ask;try{((o&&o.fields)||[]).forEach(f=>{if(f.k==="matterId")f.value=m.id;});}catch(e){}return _ask.call(Dlg,o);};
+    Dlg.ask=patched;setTimeout(()=>{if(Dlg.ask===patched)Dlg.ask=_ask;},3000);return Corr.create();},
+  /* адвокат по делу регистрирует письма сам: входящее — как полученное, исходящее — как черновик (подписывает и отправляет УП) */
+  async corrAddAdv(m){const me=U();if(!me)return;
+    const v=await Dlg.ask({title:T1(UI.kReg)+" · "+m.no,text:T1(UI.c22CorrAdvHint),fields:[
+      {k:"dir",label:T1(UI.kDir),type:"select",value:"in",options:[["in",T1(UI.kIn)],["out",T1(UI.kOut)]]},
+      {k:"date",label:T1(UI.eDate),type:"date",value:todayS(),required:true},{k:"no",label:T1(UI.kNo),value:"",required:true},
+      {k:"from",label:T1(UI.kFrom),value:""},{k:"to",label:T1(UI.kTo),value:""},{k:"subject",label:T1(UI.kSubj),value:"",required:true},
+      {k:"files",label:T1(UI.c22CorrFile),type:"files",span:true,check:v=>v.dir==="in"&&!(v.files||[]).length?T1(UI.c22CorrNeedFile):""}]});if(!v)return;
+    const file=(v.files||[])[0]||null;const k={id:uid("k"),dir:v.dir,date:v.date,no:v.no,from:v.from,to:v.to,subject:v.subject,matterId:m.id,emp:me.emp,createdBy:me.emp,status:v.dir==="in"?"delivered":(file?"pending":"draft")};if(file)k.file=file;
+    try{await saveDoc("corr",k);}catch(e){toast(String(e&&e.message||e));return;}
+    m.history=m.history||[];m.history.push({at:nowS(),by:me.emp,what:T1(UI.c22CorrReg)+": "+T1(k.dir==="in"?UI.kIn:UI.kOut)+" "+k.no+" · "+k.subject});await saveDoc("matters",m);
+    if(typeof audit==="function")audit(`${m.no}: письмо ${k.no} зарегистрировано`);Router.render();},
+  /* ── переписка: панель фиксированной высоты — поле ввода всегда внизу и на виду, страница не прыгает ── */
+  fitChat(vp,t){const card=vp.querySelector(".c22chat");if(!card)return;const on=((vp.querySelector(".c22tab.on")||{}).dataset||{}).c22pane==="1";card.classList.toggle("c22fixed",on);if(!on){card.style.height="";return;}
+    const vr=vp.getBoundingClientRect();if(t==null){const h=vp.querySelector(".c22h");t=h?h.getBoundingClientRect().bottom-vr.top+vp.scrollTop:0;}
+    const tw=vp.querySelector(".c22tw");const twH=tw?tw.offsetHeight:0;const phone=window.innerWidth<=700;const reserve=phone?(parseFloat(getComputedStyle(vp).paddingBottom)||0)+8:16;
+    const top0=card.getBoundingClientRect().top-vr.top+vp.scrollTop;   /* место карточки при scrollTop = 0 */
+    const availNoScroll=vp.clientHeight-top0-reserve,availStuck=vp.clientHeight-twH-14-reserve;
+    if(availNoScroll>=460){card.style.height=availNoScroll+"px";if(vp.scrollTop>0)vp.scrollTop=0;}else{card.style.height=Math.max(380,availStuck)+"px";vp.scrollTop=t;}
+    setTimeout(()=>{const box=vp.querySelector(".c22chat .cms22");if(box)box.scrollTop=box.scrollHeight;const ta=vp.querySelector("#cmText");if(ta&&!document.querySelector(".ov.open"))ta.focus({preventScroll:true});},30);},
+  /* ── переписка: заголовок с клиентом, переключатель и быстрые сообщения рядом с полем ввода ── */
+  /* ── переписка: режим «Клиенту / Заметка» внутри поля ввода, шаблоны по кнопке 📝, файлы переписки наверху ── */
+  TPL22:[
+    ["c22TplPay","Уважаемый клиент!\n\nНапоминаем, что по договору {no} ожидается оплата. Просим произвести платёж в согласованный срок и направить нам подтверждение (платёжное поручение или квитанцию).\n\nЕсли оплата уже произведена — пожалуйста, сообщите нам, и мы сверим поступление.\n\nС уважением,\n{me}, ZHONG CHENG LEGAL"],
+    ["c22TplDocs","Уважаемый клиент!\n\nДля продолжения работы по делу {no} нам необходимы следующие документы:\n• \n• \n\nПросим направить их через личный кабинет или ответным сообщением. Если возникнут вопросы — мы на связи.\n\nС уважением,\n{me}, ZHONG CHENG LEGAL"],
+    ["c22TplReady","Уважаемый клиент!\n\nРады сообщить, что работа по делу {no} завершена — результат готов. Материалы доступны в вашем личном кабинете.\n\nПросим ознакомиться и подтвердить приёмку. Будем рады ответить на ваши вопросы.\n\nС уважением,\n{me}, ZHONG CHENG LEGAL"],
+    ["c22TplMeet","Уважаемый клиент!\n\nПредлагаем провести встречу по делу {no}, чтобы обсудить текущий ход работы. Пожалуйста, сообщите удобные для вас дату и время.\n\nС уважением,\n{me}, ZHONG CHENG LEGAL"],
+    ["c22TplStatus","Уважаемый клиент!\n\nИнформируем о ходе работы по делу {no}: в настоящее время дело находится на этапе «{stage}». О следующих шагах мы сообщим дополнительно.\n\nС уважением,\n{me}, ZHONG CHENG LEGAL"]],
+  tplText(m,t){return t.split("{no}").join(m.no).split("{me}").join(dispName((U()||{}).emp)||"").split("{stage}").join(typeof St21!=="undefined"?St21.label(m.stage):m.stage||"");},
+  chatFiles(m){const out=[];this.msgs(m).forEach(x=>(x.files||[]).forEach((f,i)=>out.push({x,f,i})));return out.reverse();},
+  chatCard(chat,m,c){const cw=this.el("div","card c22chat");const h=this.el("h4","",T1(UI.c22ChatTitle)+(c?" · "+clientName(c):""));
+    const fl=this.chatFiles(m);const fb=this.btn("📎 "+T1(UI.c22ChatFiles)+" · "+fl.length,"more",{c22cf:"1"});h.appendChild(fb);cw.appendChild(h);
+    const box=this.el("div","c22cf");if(fl.length)fl.forEach(({x,f,i})=>{const b=this.el("button","c22cfi");b.type="button";b.dataset.mfile=x.id;b.dataset.i=String(i);
+      b.appendChild(this.el("b","","📄 "+f.name));b.appendChild(this.el("small","",(x.byName||"")+" · "+fmtDT(x.at)));box.appendChild(b);});else box.appendChild(this.el("div","c22hint",T1(UI.c22ChatNoFiles)));cw.appendChild(box);
+    const lbl=chat.querySelector(":scope>.lbl9");if(lbl)lbl.remove();
+    const em=chat.querySelector(".cms22 .empty2");if(em)em.textContent=T1(UI.c22ChatEmpty);
+    const mode=chat.querySelector(":scope>.mode22"),bx=chat.querySelector(".box22");
+    if(bx){const lead=this.el("div","c22lead");if(mode){mode.classList.add("c22mode");lead.appendChild(mode);}
+      const tb=this.btn("📝","c22tplb",{c22tplm:"1"});tb.title=T1(UI.c22TplT);tb.setAttribute("aria-label",T1(UI.c22TplT));
+      const menu=this.el("div","c22tplmenu");menu.appendChild(this.el("div","c22tplh",T1(UI.c22TplT)));this.TPL22.forEach(([l,t])=>menu.appendChild(this.btn(T1(UI[l]),"",{c22tpl:this.tplText(m,t)})));
+      const w=this.el("span","c22tplw");w.appendChild(tb);w.appendChild(menu);
+      const snd=bx.querySelector("#cmSend");const on=mode&&mode.querySelector(".on");const isCl=!!(on&&on.dataset.cm22m==="1");const mt=this.btn("","c22mt "+(isCl?"cl":"nt"),{c22mt:"1"});mt.innerHTML=on?on.innerHTML:"";mt.title=T1(UI.c22ModeT);lead.appendChild(mt);bx.insertBefore(w,snd||null);bx.insertBefore(lead,snd||null);}
+    else if(mode)chat.querySelector(".cmsend")?.prepend(mode);
+    cw.appendChild(chat);return cw;},
+  prefill(vp,text){const ta=vp.querySelector("#cmText"),mode=vp.querySelector('[data-cm22m="1"]');if(ta&&text)ta.value=ta.value?ta.value+"\n"+text:text;
+    if(mode&&!mode.classList.contains("on"))mode.click();else if(ta){ta.focus();ta.scrollIntoView({block:"center"});}},
+  /* ── настройка этапов: системные не трогаем; переводчик/китайский юрист — по составу команды;
+        дополнительные — только впереди текущего, у каждого своё место («после …») и порядок по строкам ── */
+  async stagesEdit(id){const m=matter(id);if(!m||m.status==="closed")return;
+    if(!(this.mp()||(typeof Svc21!=="undefined"&&typeof Svc21.lead==="function"&&Svc21.lead(m)))){toast(T1(UI.stNoRight));return;}
+    const l=St21.list(m),cur=St21.idx(m),isC=k=>/^c_/.test(k),names=m.stageNames21||{};const hasTr=!!m.translator,hasCn=!!(m.cnLawyer&&m.cnLawyer!=="-");
+    const anchorOf=i=>{for(let j=i-1;j>=0;j--)if(!isC(l[j]))return l[j];return "work";};
+    const locked=l.map((k,i)=>({k,i})).filter(x=>isC(x.k)&&x.i<=cur).map(x=>({id:x.k,name:names[x.k]||x.k,after:anchorOf(x.i)}));
+    const ahead=l.map((k,i)=>({k,i})).filter(x=>isC(x.k)&&x.i>cur).map(x=>({id:x.k,name:names[x.k]||x.k,after:anchorOf(x.i)}));
+    const anchors=l.map((k,i)=>({k,i})).filter(x=>!isC(x.k)&&x.i>=cur&&x.k!=="archive").map(x=>[x.k,St21.label(x.k)]);const a0=(anchors[0]||["work"])[0];
+    const li=l.map((k,i)=>`<li>${isC(k)&&i>cur?"✎":"🔒"} ${esc(St21.label(k))}${i===cur?` <b>◀ ${esc(T1(UI.c22StNow))}</b>`:i<cur?` <small>· ${esc(T1(UI.c22StPassed))}</small>`:""}${k==="translation"?` <small>· ${esc(T1(UI.c22StAutoTr))}</small>`:k==="cn"?` <small>· ${esc(T1(UI.c22StAutoCn))}</small>`:""}</li>`).join("");
+    const no=[!hasTr?`<li>— ${esc(St21.label("translation"))}: ${esc(T1(UI.c22StNo))} <small>· ${esc(T1(UI.c22StAutoTr))}</small></li>`:"",!hasCn?`<li>— ${esc(St21.label("cn"))}: ${esc(T1(UI.c22StNo))} <small>· ${esc(T1(UI.c22StAutoCn))}</small></li>`:""].join("");
+    const N=Math.min(8,Math.max(3,ahead.length+2));
+    const fields=[{k:"sys",type:"html",html:`<div class="c22st"><b>${esc(T1(UI.c22StSys))}</b><ol>${li}</ol>${no?`<ul class="c22stno">${no}</ul>`:""}<div class="c22hint">${esc(T1(UI.c22StRule))}</div></div>`}];
+    for(let r=0;r<N;r++){const a=ahead[r];fields.push({k:"n"+r,label:T1(UI.c22StName)+" "+(r+1),value:a?a.name:""});fields.push({k:"a"+r,label:T1(UI.c22StAfter),type:"select",value:a&&anchors.some(x=>x[0]===a.after)?a.after:a0,options:anchors.length?anchors:[["work",St21.label("work")]]});}
+    const v=await Dlg.ask({title:T1(UI.c22StTitle)+" · "+m.no,fields,wide:true});if(!v)return;
+    const rows=[];for(let r=0;r<N;r++){const n=String(v["n"+r]||"").trim();if(!n)continue;const ex=ahead.find(a=>a.name===n&&!rows.some(x=>x.id===a.id));rows.push({id:ex?ex.id:"c_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+r,name:n,after:v["a"+r]||a0});}
+    /* системные — по составу команды; пройденные дополнительные — на своих местах; остальные — после выбранного этапа в порядке строк */
+    const base=St21.build(m,{team:m.stage==="team"||l.includes("team"),review:St21.reviewRequired(m)||l.includes("review"),translation:hasTr||m.stage==="translation",cn:hasCn||m.stage==="cn",custom:[]});
+    const all=[...locked,...rows];const out=[];base.forEach(k=>{out.push(k);all.filter(x=>x.after===k).forEach(x=>out.push(x.id));});
+    all.forEach(x=>{if(!out.includes(x.id))out.splice(out.indexOf("work")+1,0,x.id);});   /* якорь исчез (например, снят переводчик) — ставим после «В работе» */
+    m.stageNames21={};all.forEach(x=>{m.stageNames21[x.id]=x.name;});m.stages21=out;
+    if(!m.stages21.includes(m.stage))m.stage=m.stages21[Math.max(0,St21.idx(m))];
+    St21.register(m);m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.c22StHist)+": "+St21.list(m).map(k=>St21.label(k)).join(" → ")});
+    await saveDoc("matters",m);audit(`${m.no}: этапы изменены`);Router.render();},
+  /* ── вкладка «Клиент»: сведения о клиенте (контакты здесь, а не в шапке) ── */
+  clientCard(m,c,o){const card=this.el("div","card");const h=this.el("h4","",T1(UI.c22Client));
+    if(c){h.appendChild(this.btn(T1(UI.c22OpenClient),"more",{client:c.id}));}card.appendChild(h);
+    if(!c){card.appendChild(this.el("div","empty2","—"));return card;}
+    const dl=this.el("dl","c22kv");const kv=(k,v)=>{dl.appendChild(this.el("dt","",T1(k)));dl.appendChild(this.hx("dd","",v));};
+    const acc=m.clientContactId&&S.clientAccounts[m.clientContactId];kv(UI.c22Contact,esc(acc?acc.name:(c.contact||(c.person&&c.person.fio)||"—")));
+    const ct=this.contacts(c);if(ct){dl.appendChild(this.el("dt","",T1(UI.c22Contacts)));const dd=this.el("dd");dd.appendChild(ct);dl.appendChild(dd);}
+    kv(UI.c22Lang,(typeof isChineseClient==="function"&&isChineseClient(c))?"中文":"RU");
+    kv(UI.c22Tr,m.translator?esc(dispName(m.translator)):"—");
+    const n=accsForMatter(m).length;kv(UI.c22Access,n?esc(T1(UI.c22Acc).replace("{n}",n)):esc(T1(UI.c22NoAccess))+(this.mp()?"":" · "+esc(T1(UI.c22AccessMp))));
+    const pend=(m.clientActions||[]).filter(a=>!a.done);kv(UI.c22Wait,pend.length?pend.map(a=>esc(a.text)).join("; "):"—");
+    kv(UI.c22Msgs,String(this.msgs(m).length)+(o.unans?` · <b>${o.unans} ${esc(T1(UI.c22Unans))}</b>`:""));
+    card.appendChild(dl);const b=this.btn(T1(UI.c22OpenCab),"btn sm",{c22go:"1"});b.style.marginTop="10px";card.appendChild(b);return card;},
+  teamCard(m,MP,q){const card=this.el("div","card");const h=this.el("h4","",T1(UI.c22Team));
+    if(q('[data-act="editMatter"]'))h.appendChild(this.btn(T1(UI.c22Edit),"more",{c22target:'[data-act="editMatter"]'}));card.appendChild(h);
+    const dl=this.el("dl","c22kv");const kv=(k,v)=>{if(!v)return;dl.appendChild(this.el("dt","",T1(k)));dl.appendChild(this.hx("dd","",v));};
+    kv(UI.mLead,esc(dispName(m.lead)));
+    const ex=execsOf(m).filter(x=>x.emp!==m.lead);if(ex.length)kv(UI.mExec,ex.map(x=>esc(dispName(x.emp))+(MP?` <small style="color:var(--ink-3)">${esc(String(x.share))} %</small>`:"")).join(", "));
+    if(m.reviewer)kv(UI.c22Rev,esc(dispName(m.reviewer)));if(m.translator)kv(UI.mTr,esc(dispName(m.translator)));
+    const cn=cnLawyerOf(m);if(cn)kv(UI.mCn,esc(dispName(cn)));
+    card.appendChild(dl);return card;},
+  /* ── единая история ── */
+  feed(m){const card=this.el("div","card c22feed");card.appendChild(this.el("h4","",T1(UI.c22Feed)));const f=[];
+    (m.history||[]).forEach(h=>f.push({at:h.at,by:h.by,t:h.what,k:"•"}));
+    (m.pipelineHistory||[]).forEach(h=>f.push({at:h.at,by:h.by,t:T1(UI.c22Pipe)+": "+T1((PIPE11.find(x=>x[0]===h.step)||["",h.step==="lost"?UI.plLost:h.step])[1])+(h.note?" — "+h.note:""),k:"◇"}));
+    (m.stageHistory||[]).forEach(h=>f.push({at:h.at,by:h.by,t:(h.returned?T1(UI.stReturn)+" ← ":T1(UI.c22StageK)+": ")+(typeof St21!=="undefined"?St21.label(h.stage):h.stage)+(h.note?" — "+h.note:""),k:"◆"}));
+    (m.paymentLog||[]).forEach(p=>f.push({at:p.at,by:p.by,t:T1(UI.c22PayK)+": "+(p.status==="unblock"?T1(UI.payUnblocked):payLabel(p.status))+(p.note?" — "+p.note:""),k:"$"}));
+    (m.pauses||[]).forEach(p=>f.push({at:(p.since||"")+"T00:00",by:p.by,t:T1(UI.c22PauseK)+": "+p.days+" "+T1(UI.psDays)+" · "+(p.reason||""),k:"⏸"}));
+    f.sort((a,b)=>String(b.at||"").localeCompare(String(a.at||"")));
+    const ul=this.el("ul","hist");f.forEach(x=>ul.appendChild(this.hx("li","",`<span class="ht">${esc(fmtDT(x.at))}</span><span class="k">${x.k}</span><b>${esc(x.by?dispName(x.by):"")}</b> · ${esc(String(x.t||""))}`)));
+    if(!f.length)ul.appendChild(this.el("li","",T1(UI.noData)));card.appendChild(ul);return card;},
+  /* ── файлы: перетаскивание в блок «Документы» — через прежнюю загрузку (тот же лимит, то же хранилище) ── */
+  async dropFiles(vp,files){this._upFolder=this.fold[Router.arg]||"";const btn=vp.querySelector('[data-act="mUp"]'),inp=document.getElementById("fileIn");if(!btn||!inp||!files.length)return;
+    for(const f of files){const orig=inp.click;inp.click=()=>{};try{btn.click();}finally{inp.click=orig;}
+      const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;if(typeof inp.onchange==="function")inp.onchange();await new Promise(s=>setTimeout(s,500));}},
+  /* ── сборка страницы из прежней ── */
+  build(id,html,m){
+    const tpl=document.createElement("template");tpl.innerHTML=html;const root=tpl.content;const wrap=this.el("div","c22");const q=s=>root.querySelector(s)||wrap.querySelector(s);
+    const back=q("button.btn.ghost.sm[data-go]"),ph=q(".ph"),svc=q(".svc11"),kp=q(".kp12"),cc=q(".card.cc"),tr=q(".card.tr18");
+    const cfEl=q(".cf17.bad");const cf=cfEl?(cfEl.closest(".card")||cfEl):null;
+    const sim=[...root.querySelectorAll(".card")].find(c=>c.querySelector(".sim17")||(c.firstElementChild&&/sim17/.test(c.firstElementChild.className||"")));
+    const what=this.card(root,"hWhat"),qual=this.card(root,"mQuality"),pays=this.card(root,"mPays"),tasks=this.card(root,"matterTasks"),docs=this.card(root,"mDocs"),ev=this.card(root,"matterEvents"),corr=this.card(root,"hCorr"),hist=this.card(root,"mHist");
+    const c=client(m.clientId),closed=m.status==="closed",contract=m.pipeline==="contract",MP=this.mp();
+    const phBtns=ph?[...ph.querySelectorAll("button")].filter(b=>!/^(newTaskM|newEventM)$/.test(b.dataset.act||"")):[];
+    const warns=svc?[...svc.children].filter(e=>e.matches(".reqonly,.warn11,.gate21")):[];
+    const svcActs=svc?svc.querySelector(":scope>.actions"):null;
+    const pipeBtns=svcActs?[...svcActs.querySelectorAll("[data-pipe]")]:[];
+    const svcBtns=svcActs?[...svcActs.querySelectorAll("button:not([data-pipe])")]:[];
+    /* договор, файл договора и поступление остаются в блоке «Разовая услуга»; «Этапы» → к шкале этапов; остальное — в меню «⋯» */
+    const KEEP=/^(ctEdit|ctFile21|payAdd21|newPayM|stages21)$/;const svcMenu=svcBtns.filter(b=>!KEEP.test(b.dataset.act||""));
+    const payAdd=svcBtns.find(b=>/^(payAdd21|newPayM)$/.test(b.dataset.act||""))||null;const stBtn=svcBtns.find(b=>b.dataset.act==="stages21")||null;
+    const pl11=svc?svc.querySelector(":scope>.stline"):null;
+    const stline=cc?cc.querySelector(":scope>.stline"):null;const ccActs=cc?cc.querySelector(":scope>.actions"):null;
+    const ccHint=cc?[...cc.children].find(e=>e.tagName==="DIV"&&!e.className&&/font-size:12px/.test(e.getAttribute("style")||"")):null;
+    const chat=cc?cc.querySelector(":scope>.cthread"):null;
+    const prim=this.primary(root,m);
+    if(tr)tr.remove();   /* прежний баннер перевода заменён строкой с переводом от ИИ */
+    /* шапка */
+    const h=this.el("div","c22h");const crumb=this.el("div","crumb");if(back)crumb.appendChild(back);
+    crumb.appendChild(this.hx("span","",`<b>${esc(m.no)}</b> · ${esc(kindLabel17(m))}`));h.appendChild(crumb);
+    const row=this.el("div","row");const left=this.el("div");left.style.minWidth="0";
+    left.appendChild(this.el("h2","",mT18(m)));left.appendChild(this.clientLine(m,c));left.appendChild(this.chips(m));row.appendChild(left);
+    const acts=this.el("div","c22acts");
+    if(prim){const pb=this.btn(T1(UI.c22Next)+" →","btn pri",{c22target:prim.sel});pb.title=prim.name;acts.appendChild(pb);}
+    const mb=this.btn("⋯","btn c22ic",{c22menu:"1"});mb.title=T1(UI.c22More);mb.setAttribute("aria-label",T1(UI.c22More));acts.appendChild(mb);
+    const menu=this.el("div","c22menu");phBtns.forEach(b=>menu.appendChild(b));
+    if(svcMenu.length){menu.appendChild(this.el("div","sep"));svcMenu.forEach(b=>menu.appendChild(b));}
+    const lost=pipeBtns.find(b=>b.dataset.pipe==="lost");if(lost){menu.appendChild(this.el("div","sep"));menu.appendChild(lost);}
+    acts.appendChild(menu);row.appendChild(acts);h.appendChild(row);wrap.appendChild(h);
+    /* вкладки */
+    const unans=this.unanswered(m),pend=(m.clientActions||[]).filter(a=>!a.done).length;
+    const active=this.tab[id]!=null?this.tab[id]:this.defaultTab(m);
+    const tw=this.el("div","c22tw"),tb=this.el("div","c22tabs");
+    UI.c22Tabs.forEach((t,i)=>{const b=this.btn(T1(t),"",{c22tab:String(i)});if(i===active)b.classList.add("on");const nb=i===1?unans:i===5?pend:0;if(nb)b.appendChild(this.el("span","nb",String(nb)));tb.appendChild(b);});
+    tw.appendChild(tb);wrap.appendChild(tw);wrap.classList.toggle("chat-on",active===1);
+    const panes=[0,1,2,3,4,5,6].map(i=>{const d=this.el("div","c22tab"+(i===active?" on":""));d.dataset.c22pane=String(i);wrap.appendChild(d);return d;});
+    /* Ход дела (0): всё вертикально — что мешает (если есть), этапы, задачи (4 колонки в ряд), события */
+    const L=panes[0];
+    const todo=this.todo(root,m,c,{warns,cf,ccHint,closed,contract,q});
+    const stg=this.stages(m,{pl11,stline,ccActs,pipeBtns:pipeBtns.filter(b=>b.dataset.pipe!=="lost"),svc,contract,q,stBtn:contract?stBtn:null});
+    /* до договора воронка и «что мешает» живут на вкладке «Договор и деньги»; на «Ходе дела» — предпросмотр будущих рабочих этапов */
+    if(contract){if(todo)L.appendChild(todo);L.appendChild(stg);}else L.appendChild(this.workPreview(m,{stBtn}));
+    /* главная кнопка уже в шапке — её двойник в блоке этапов прячем (нажатие в шапке передаётся ему) */
+    if(prim){const d=stg.querySelector(prim.sel);if(d){d.classList.add("c22dup");const a=d.closest(".actions");if(a&&![...a.querySelectorAll("button")].some(x=>!x.classList.contains("c22dup")))a.classList.add("c22dup");}}
+    if(svcActs&&!svcActs.querySelector("button"))svcActs.remove();
+    const toHead=(card,sel)=>{const b=q(sel);const h4=card&&card.querySelector(":scope>h4");if(b&&h4){b.className="more";h4.appendChild(b);}};
+    if(tasks){toHead(tasks,'[data-act="newTaskM"]');this.board(tasks,m,closed);L.appendChild(tasks);}
+    if(ev){toHead(ev,'[data-act="newEventM"]');L.appendChild(ev);}
+    /* Переписка (1): обсуждение с клиентом — панель фиксированной высоты */
+    if(chat){if(cc)chat.remove();panes[1].appendChild(this.chatCard(chat,m,c));}
+    /* Документы (2): сначала файлы по делу, затем корреспонденция */
+    if(docs){this.docsCard(docs,m);
+      const up=docs.querySelector('[data-act="mUp"]');if(up){up.textContent=T1(UI.c22Attach);const dz=this.el("div","c22drop",T1(UI.c22Drop));const ar=docs.querySelector(":scope>.addrow");if(ar)docs.insertBefore(dz,ar);else docs.appendChild(dz);docs.dataset.c22drop="1";}panes[2].appendChild(docs);}
+    if(corr){const h4=corr.querySelector(":scope>h4");if(h4&&this.corrCan(m))h4.appendChild(this.btn(T1(UI.c22CorrAdd),"more",{c22corr:"1"}));panes[2].appendChild(corr);}
+    /* Договор и деньги (3): до договора — сначала «что мешает» и воронка, затем сведения, договор, КП, поступления */
+    if(!contract){if(todo)panes[3].appendChild(todo);panes[3].appendChild(stg);}
+    panes[3].appendChild(this.ctCard(m,closed));if(what){const h4=what.querySelector(":scope>h4");if(h4)h4.textContent=T1(UI.c22Info);what.classList.add("c22dupw");}
+    if(svc)panes[3].appendChild(svc);if(kp){this.kpFiles(kp,m,closed);panes[3].appendChild(kp);}
+    /* Финансы (4): сводка, поступления, качество и оплата (для УП) */
+    panes[4].appendChild(this.finCard(m,payAdd));if(pays)panes[4].appendChild(pays);if(qual&&MP)panes[4].appendChild(qual);
+    if(sim&&!contract&&!closed&&!sim.querySelector(".sim17.empty"))panes[3].appendChild(sim);
+    /* Клиент и команда (4): сведения о клиенте и команда рядом, ниже кабинет клиента; доступ выдаёт только УП */
+    const g4=this.el("div","c22pair");g4.appendChild(this.clientCard(m,c,{unans,pend}));g4.appendChild(this.teamCard(m,MP,q));panes[5].appendChild(g4);
+    if(cc){if(!MP)cc.querySelectorAll('[data-cp="access"]').forEach(a=>a.replaceWith(this.el("span","c22hint",T1(UI.c22AccessMp))));panes[5].appendChild(cc);}
+    /* всё, что осталось от прежней страницы и не разложено — на «Договор и деньги» */
+    [...root.querySelectorAll(".card")].forEach(x=>{if(x===hist||x===qual||x===sim)return;if(root.contains(x))panes[3].appendChild(x);});
+    /* История (5) */
+    panes[6].appendChild(this.feed(m));
+    /* телефон: нижняя панель — только главная кнопка */
+    if(prim){const bar=this.el("div","c22bar");const pb=this.btn(T1(UI.c22Next)+" →","btn pri",{c22target:prim.sel});pb.title=prim.name;bar.appendChild(pb);wrap.appendChild(bar);}
+    return wrap.outerHTML;},
+  show(vp,id,i){this.tab[id]=i;vp.querySelectorAll("[data-c22tab]").forEach(b=>b.classList.toggle("on",+b.dataset.c22tab===i));vp.querySelectorAll("[data-c22pane]").forEach(p=>p.classList.toggle("on",+p.dataset.c22pane===i));
+    const w=vp.querySelector(".c22");if(w)w.classList.toggle("chat-on",i===1);
+    const h=vp.querySelector(".c22h");const t=h?h.getBoundingClientRect().bottom-vp.getBoundingClientRect().top+vp.scrollTop:0;
+    if(i===1)this.fitChat(vp,t);else{if(h&&vp.scrollTop>t)vp.scrollTop=t;this.fitChat(vp,t);}this.fitSide(vp);},
+  /* правая панель закреплена, только если помещается в окно целиком */
+  fitSide(vp){const s=vp.querySelector(".c22side");if(s)s.style.position=s.offsetHeight>vp.clientHeight-60?"static":"";},
+  bindAi(vp,m){const self=this;vp.querySelectorAll("[data-c22ai]").forEach(b=>b.onclick=e=>{e.stopPropagation();if(b.dataset.c22ai==="confirm")self.aiConfirm(m);else self.aiFix(m);});},
+  bind(vp,m){const id=m.id,self=this;this.fitSide(vp);
+    vp.querySelectorAll("[data-c22tab]").forEach(b=>b.onclick=()=>self.show(vp,id,+b.dataset.c22tab));
+    vp.querySelectorAll("[data-c22go]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.show(vp,id,+b.dataset.c22go);});
+    vp.querySelectorAll("[data-c22target]").forEach(b=>b.onclick=e=>{e.stopPropagation();const t=vp.querySelector(b.dataset.c22target);if(t)t.click();else toast(T1(UI.stNoRight));});
+    const mb=vp.querySelector("[data-c22menu]"),menu=vp.querySelector(".c22menu");if(mb&&menu){mb.onclick=e=>{e.stopPropagation();menu.classList.toggle("open");};menu.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>menu.classList.remove("open")));}
+    vp.querySelectorAll("[data-c22copy]").forEach(b=>b.onclick=async e=>{e.stopPropagation();try{await navigator.clipboard.writeText(b.dataset.c22copy);toast(T1(UI.c22Copied));}catch(x){toast(b.dataset.c22copy);}});
+    vp.querySelectorAll("[data-c22pre]").forEach(b=>b.onclick=()=>{const body=b.closest(".c22pre").nextElementSibling;const on=!body.classList.contains("on");body.classList.toggle("on",on);self.pre[id]=on;b.textContent=on?T1(UI.c22Hide):b.dataset.lbl;});
+    vp.querySelectorAll("[data-c22q]").forEach(b=>b.onclick=e=>{e.stopPropagation();if(b.dataset.c22q!=="msg")return;self.show(vp,id,1);self.prefill(vp,b.dataset.c22text||"");});
+    vp.querySelectorAll("[data-c22tpl]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.prefill(vp,b.dataset.c22tpl||"");});
+    vp.querySelectorAll("[data-c22kpup]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.kpAttach(m);});
+    vp.querySelectorAll("[data-c22kpopen]").forEach(b=>b.onclick=e=>{e.stopPropagation();if(m.offer&&m.offer.file)Files.open(m.offer.file);});
+    vp.querySelectorAll("[data-c22corr]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.corrAdd(m);});
+    vp.querySelectorAll("[data-c22mt]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();const o=vp.querySelector(".c22mode [data-cm22m]:not(.on)");if(o)o.click();});
+    const cfb=vp.querySelector("[data-c22cf]");if(cfb)cfb.onclick=e=>{e.stopPropagation();const bx=vp.querySelector(".c22cf");if(bx)bx.classList.toggle("on");self.fitChat(vp);};
+    const tw=vp.querySelector(".c22tplw");if(tw){tw.querySelector("[data-c22tplm]").onclick=e=>{e.preventDefault();e.stopPropagation();tw.classList.toggle("open");};}
+    vp.querySelectorAll(".c22tplmenu [data-c22tpl]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();if(tw)tw.classList.remove("open");const ta=vp.querySelector("#cmText");if(ta){ta.value=b.dataset.c22tpl;ta.dispatchEvent(new Event("input",{bubbles:true}));ta.style.height="auto";ta.style.height=Math.min(220,ta.scrollHeight+2)+"px";ta.focus();ta.setSelectionRange(0,0);ta.scrollTop=0;}});
+    const dq=vp.querySelector("[data-c22dq]");if(dq)dq.oninput=()=>{self.dq[id]=dq.value;self.docsRedraw(vp,m);};
+    vp.querySelectorAll("[data-c22fnew]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.folderNew(m);});
+    const up=vp.querySelector('[data-c22drop] [data-act="mUp"]');if(up)up.addEventListener("click",()=>{self._upFolder=self.fold[id]||"";},true);
+    this.bindDocs(vp,m);
+    vp.querySelectorAll("[data-c22ctdl]").forEach(b=>b.onclick=e=>{e.stopPropagation();const k=m.contract||{};if(k.file)Files.open(k.file);});
+    vp.querySelectorAll("[data-c22todomin]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.todoToggle(vp);});
+    vp.querySelectorAll("[data-c22col]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.boardSet(m,b.dataset.c22col==="off");});
+    this.bindAi(vp,m);this.fitChat(vp);
+    const dz=vp.querySelector("[data-c22drop]");if(dz){const has=e=>[...((e.dataTransfer||{}).types||[])].includes("Files");
+      dz.ondragover=e=>{if(has(e)){e.preventDefault();dz.classList.add("drag");}};dz.ondragleave=e=>{if(!dz.contains(e.relatedTarget))dz.classList.remove("drag");};
+      dz.ondrop=e=>{e.preventDefault();dz.classList.remove("drag");const fs=[...((e.dataTransfer||{}).files||[])];if(fs.length)self.dropFiles(vp,fs);};}}
+};
+document.addEventListener("click",e=>{document.querySelectorAll(".c22menu.open").forEach(x=>{if(!x.contains(e.target)&&!(e.target.closest&&e.target.closest("[data-c22menu]")))x.classList.remove("open");});});
+document.addEventListener("click",e=>{document.querySelectorAll(".c22tplw.open").forEach(x=>{if(!x.contains(e.target))x.classList.remove("open");});});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".c22tplw.open").forEach(x=>x.classList.remove("open"));if(e.key==="Escape")document.querySelectorAll(".c22menu.open").forEach(x=>x.classList.remove("open"));});
+window.addEventListener("resize",()=>{const vp=document.getElementById("viewPage");if(vp&&Router.cur==="matter"&&vp.querySelector(".c22chat"))Card22.fitChat(vp);});
+/* этапы перевода и китайского юриста — только при назначенных в деле переводчике / китайском юристе (кроме дела, стоящего на этом этапе) */
+if(typeof St21!=="undefined"){
+  const _stl22=St21.list.bind(St21);St21.list=function(m){const l=_stl22(m);if(!m)return l;const tr=!!m.translator||m.stage==="translation",cn=!!(m.cnLawyer&&m.cnLawyer!=="-")||m.stage==="cn";return l.filter(k=>(k!=="translation"||tr)&&(k!=="cn"||cn));};
+  St21.edit=id=>Card22.stagesEdit(id);
+}
+const _mp22=Pages.matter;Pages.matter=function(id){const html=_mp22.call(this,id);const m=matter(id);if(!Card22.on(m))return html;try{return Card22.build(id,html,m);}catch(e){console.warn("card22",e);return html;}};
+const _pb22=Pages.bind;Pages.bind=function(vp){_pb22.call(this,vp);if(Router.cur!=="matter"||!Router.arg)return;const m=matter(Router.arg);if(Card22.on(m)&&vp.querySelector(".c22"))Card22.bind(vp,m);};
+if(typeof Files!=="undefined"){const _up22=Files.upload.bind(Files);Files.upload=function(cb){const fo=Card22._upFolder;Card22._upFolder=undefined;return _up22(fo?(x=>{if(x)x.folder=fo;return cb(x);}):cb);};}
+if(typeof Corr21!=="undefined"&&typeof Corr21.opts==="function"){const _co22=Corr21.opts.bind(Corr21);Corr21.opts=function(){const l=_co22();return (typeof Adv21!=="undefined"&&Adv21.on())?l.filter(x=>x[0]!=="sent"):l;};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
