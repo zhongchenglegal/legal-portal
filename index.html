@@ -5917,6 +5917,9 @@ can=function(action,emp){const F=isFounder(),MP=hasF("managing"),P=pos();
 /* длинные формы — широкий диалог */
 const _ask9b=Dlg.ask.bind(Dlg);Dlg.ask=function(o){if(o&&(o.fields||[]).length>12&&o.wide===undefined)o.wide=true;return _ask9b(o);};
 /* ── поступления: диалог ── */
+/* v1.2 единый курс: курс поступления не вводится вручную — берётся из «Настроек оплаты» (сервер проверяет то же) */
+const payRateOf=cur=>{const st=paySettings();return cur==="USD"?+st.usdRate:cur==="CNY"?+st.cnyRate:1;};
+const payRateNote=(stored,cur)=>cur==="UZS"?T1("Курс: 1 (сумы)||汇率：1（苏姆）"):T1("Курс||汇率")+": <b>"+fmtN(stored||payRateOf(cur))+"</b> · "+T1(stored?"курс дня оплаты (сохранён)||付款当日汇率（已保存）":"из «Настроек оплаты»||来自“薪酬设置”");
 const Payment={
   fields(p,pre){p=p||{};pre=pre||{};const st=paySettings();const mid=p.matterId||pre.matterId||"";const m=mid&&S.matters[mid];const mats=MMall().filter(x=>matterView(x)).sort((a,b)=>b.opened.localeCompare(a.opened)).map(x=>[x.id,`${x.no} · ${x.title.slice(0,40)} · ${(client(x.clientId)||{}).name||""}`]);
     const cur=p.currency||"USD";
@@ -5927,7 +5930,7 @@ const Payment={
       {k:"kind",label:T1(UI.payKind),type:"select",value:p.kind||(mid?"legal":"translation"),options:[["legal",T1(UI.pkLegal)],["translation",T1(UI.pkTransl)],["other",T1(UI.pkOther)]]},
       {k:"amount",label:T1(UI.pAmount),type:"number",value:p.amount||"",required:true},
       {k:"currency",label:T1(UI.pCur),type:"select",value:cur,options:CURS},
-      {k:"rate",label:T1(UI.pRate),type:"number",value:p.rate||(cur==="USD"?st.usdRate:cur==="CNY"?st.cnyRate:1),hint:T1("Для сумов — 1. Курс $ по умолчанию: ||苏姆填1。默认美元汇率：")+st.usdRate},
+      {type:"html",html:`<div id="payRate1" class="fhint" style="margin:0">${payRateNote(p.id&&p.currency===cur?p.rate:null,cur)}</div>`},
       {k:"transit",label:T1(UI.pTransit),type:"number",value:p.transit||0,hint:T1(UI.pTransitH)},
       {k:"transitNote",label:T1(UI.pTransitNote),value:p.transitNote||""},
       {k:"viaFirm",label:T1(UI.pVia),type:"select",value:p.viaFirm===false?"0":"1",options:[["1",T1(UI.yes)],["0",T1(UI.no)]]},
@@ -5936,12 +5939,14 @@ const Payment={
       {k:"note",label:T1(UI.mNotes),type:"textarea",value:p.note||"",span:1}
     ];},
   apply(p,v){const st=paySettings();const m=v.matterId&&S.matters[v.matterId];
-    Object.assign(p,{matterId:v.matterId||"",clientId:v.clientId||(m?m.clientId:""),date:v.date,kind:v.kind,amount:+v.amount||0,currency:v.currency,rate:+v.rate||1,usdRate:st.usdRate,transit:+v.transit||0,transitNote:v.transitNote,viaFirm:v.viaFirm!=="0",withVat:v.withVat==="1",translator:v.translator||"",note:v.note});
+    /* v1.2 единый курс: новое поступление (или смена валюты) — курс из «Настроек оплаты»; у прошлого поступления курс дня оплаты сохраняется */
+    const keep=!!(p.currency&&p.currency===v.currency&&+p.rate>0);const rate=keep?+p.rate:payRateOf(v.currency),usdRate=keep&&+p.usdRate>0?+p.usdRate:+st.usdRate;
+    Object.assign(p,{matterId:v.matterId||"",clientId:v.clientId||(m?m.clientId:""),date:v.date,kind:v.kind,amount:+v.amount||0,currency:v.currency,rate,usdRate,transit:+v.transit||0,transitNote:v.transitNote,viaFirm:v.viaFirm!=="0",withVat:v.withVat==="1",translator:v.translator||"",note:v.note});
     p.entity=m?m.entity:(v.kind==="translation"?"legal":"legal");p.unitId=m?m.unitId:(v.kind==="translation"?"u_tr":"");if(p.entity!=="llc")p.withVat=false;if(p.currency==="UZS")p.rate=1;
-    if(p.currency==="USD"&&p.rate>0){p.usdRate=p.rate;}},
+    if(p.currency==="USD"&&p.rate>0&&!keep){p.usdRate=p.rate;}},
   wire(){setTimeout(()=>{const st=paySettings(),md=document.getElementById("mdD");const q=k=>md.querySelector("#dlg_"+k);const mi=q("matterId"),cu=q("currency");
     if(mi)mi.onchange=()=>{const m=S.matters[mi.value];if(m){q("kind").value="legal";q("clientId").value=m.clientId||"";}else if(q("kind").value==="legal")q("kind").value="translation";};
-    if(cu)cu.onchange=()=>{q("rate").value=cu.value==="USD"?st.usdRate:cu.value==="CNY"?st.cnyRate:1;};},60);},
+    if(cu)cu.onchange=()=>{const r=document.getElementById("payRate1");if(r)r.innerHTML=payRateNote(null,cu.value);};},60);},
   async create(pre){if(!can("payments"))return;const pr=Dlg.ask({title:T1(UI.payNew),fields:this.fields(null,pre),wide:true});this.wire();const v=await pr;if(!v)return;const p={id:uid("p"),by:U().emp,at:nowS()};this.apply(p,v);
     if(!p.matterId&&p.kind==="legal"){toast(Pay.reasonLabel("noMatter"));}
     await saveDoc("payments",p);await this.syncMatter(p,+1);audit(`Поступление ${fmtN(p.amount)} ${p.currency}${p.matterId&&S.matters[p.matterId]?" по делу "+S.matters[p.matterId].no:""}`);Router.render();},
@@ -7620,7 +7625,10 @@ Object.assign(UI,{
 });
 /* ── справочник причин: добавлен «отложил проект» ── */
 LOST11.splice(4,0,["postponed","отложил проект||项目推迟"]);
-const usdRate12=()=>+(workSettings().usdRate||12000);
+/* v1.2: единый курс (решение владельца 16.10.2026) — курс доллара берётся только из «Настроек оплаты»;
+   прежний отдельный курс «Ценовой политики» (settings.work.usdRate) больше не используется и не редактируется */
+const usdRate12=()=>+(paySettings().usdRate||12750);
+const rateNote12=()=>`<div class="fhint" style="margin:0">${T1(UI.prRate)}: <b>${fmtN(usdRate12())}</b> · ${T1("из «Настроек оплаты» — один курс для всей программы||来自“薪酬设置”——全程序统一汇率")}</div>`;
 /* ── ценовая политика ── */
 S.pricing=S.pricing||{};
 CA_KEYS10.push("pricing");
@@ -7639,7 +7647,7 @@ const Price={
   isRegular(c){if(!c)return false;const mm=MMall().filter(m=>m.clientId===c.id);if(mm.some(m=>m.status==="closed"&&(m.closeReason||"done")==="done"))return true;return (c.contracts||[]).some(k=>k.status==="active"&&k.date&&daysTo(k.date)<=-183);},
   isAbon(c){if(!c)return false;return MMall().some(m=>m.clientId===c.id&&m.svc==="support"&&m.status!=="closed"&&m.pipeline==="contract");},
   recommend(pol,m,co){const base=this.range(pol,m.svc,m.unitId);if(!base)return null;let k=1;Object.keys(COEF_OPTS).forEach(key=>{const v=(pol.coefs[key]||{})[co[key]||"normal"];if(v)k*=v;});let d=0;if(co.regular)d+=+pol.regularPct||0;if(co.abon)d+=+pol.abonPct||0;k*=Math.max(0,1-d/100);return {min:Math.round(base.min*k),max:Math.round(base.max*k),k:r2(k),base};},
-  async edit(){if(!(isFounder()||hasF("managing"))){toast(T1(UI.prOnlyMp));return;}const cur=this.current();const f=[{k:"usdRate",label:T1(UI.prRate),type:"number",value:usdRate12()}];
+  async edit(){if(!(isFounder()||hasF("managing"))){toast(T1(UI.prOnlyMp));return;}const cur=this.current();const f=[{type:"html",html:rateNote12()}];
     SVC11.forEach(([svc,l])=>{f.push({type:"section",label:T1(UI.prBaseP)+" · "+T1(l)});this.units(svc).forEach(u=>{const r=this.range(cur,svc,u.id)||{min:0,max:0};f.push({k:`r_${svc}_${u.id}_min`,label:unitName(u.id)+" · "+T1(UI.prMin),type:"number",value:r.min},{k:`r_${svc}_${u.id}_max`,label:unitName(u.id)+" · "+T1(UI.prMax),type:"number",value:r.max});});});
     f.push({type:"section",label:T1(UI.prCoefs)});Object.keys(COEF_OPTS).forEach(key=>COEF_OPTS[key].forEach(([v,l])=>f.push({k:`c_${key}_${v}`,label:T1(COEF_LBL[key])+" · "+T1(l),type:"number",value:(cur.coefs[key]||{})[v]??1})));
     f.push({k:"regularPct",label:T1(UI.prRegular),type:"number",value:cur.regularPct},{k:"abonPct",label:T1(UI.prAbon),type:"number",value:cur.abonPct});
@@ -7648,7 +7656,6 @@ const Price={
     SVC11.forEach(([svc])=>{doc.rates[svc]={};this.units(svc).forEach(u=>{doc.rates[svc][u.id]=[+v[`r_${svc}_${u.id}_min`]||0,+v[`r_${svc}_${u.id}_max`]||0];});});
     Object.keys(COEF_OPTS).forEach(key=>{doc.coefs[key]={};COEF_OPTS[key].forEach(([x])=>{doc.coefs[key][x]=+v[`c_${key}_${x}`]||1;});});
     this.list().forEach(p=>{if(p.status==="active"){p.status="archived";saveDoc("pricing",p);}});await saveDoc("pricing",doc);
-    const ws=Object.assign({},S.settings.work||{},{id:"work",usdRate:+v.usdRate||12000});await saveDoc("settings",ws);
     audit(`Утверждена ценовая политика v${ver}`);toast(T1(UI.saved));Router.render();},
   page(){if(!this.canSee())return `<div class="locked">${T1(UI.prNoAccess)}</div>`;const p=this.current();const MP=isFounder()||hasF("managing");
     const tbl=SVC11.map(([svc,l])=>`<div class="card"><h4>${T1(l)}</h4><table class="tbl"><thead><tr><th>${T1(UI.fUnit11)}</th><th class="num">${T1(UI.prMin)}</th><th class="num">${T1(UI.prMax)}</th></tr></thead><tbody>${this.units(svc).map(u=>{const r=this.range(p,svc,u.id)||{min:0,max:0};return `<tr><td>${unitName(u.id)} <span class="entbadge ${u.entity}">${T1(ENTITY_S[u.entity])}</span></td><td class="num">${fmtN(r.min)}</td><td class="num">${fmtN(r.max)}</td></tr>`;}).join("")}</tbody></table></div>`).join("");
@@ -7868,8 +7875,8 @@ const _attnRows12=attnRows11;attnRows11=function(scope){const rows=_attnRows12(s
 const _acct12=Home.accountant;Home.accountant=function(){const h=_acct12.call(this);const me=U().emp;const ts=Object.values(S.tasks).filter(t=>t.emp===me&&(t.tags||[]).includes("ЭСФ")&&t.status!=="done").sort((a,b)=>(a.due||"9").localeCompare(b.due||"9"));const disp=MMall().map(migrateMatter11).filter(m=>m.invoiceDisputed);
   return `<div class="dash2"><div class="card"><h4>${T1(UI.hmAct)} · ${T1(UI.esfTitle)} <span class="nb">${ts.length}</span></h4>${ts.length?ts.map(t=>{const m=t.matterId&&S.matters[t.matterId];return `<div class="reqrow" ${m?`data-matter="${m.id}" style="cursor:pointer"`:""}><span class="tm">${t.due?fmtD(t.due):"—"}</span><span><b>${esc(t.title)}</b>${m?`<br><small>${esc((client(m.clientId)||{}).name||"")}</small>`:""}</span><span class="rt${t.due&&daysTo(t.due)<0?" late":" open"}">${t.due&&daysTo(t.due)<0?T1(UI.overdue):T1(UI.kOpen)}</span></div>`;}).join(""):`<div class="empty2">✓</div>`}</div><div class="card"><h4>${T1(UI.atDisputed)} <span class="nb">${disp.length}</span></h4>${disp.length?disp.map(m=>`<div class="reqrow" data-matter="${m.id}" style="cursor:pointer"><span class="tm">${esc(m.no)}</span><span>${esc(mT18(m).slice(0,60))}<br><small>${esc(m.invoiceDisputed.reason)}</small></span></div>`).join(""):`<div class="empty2">✓</div>`}</div></div>`+h;};
 /* параметры: срок отмены ЭСФ */
-const _wsEdit12=WorkSet.edit.bind(WorkSet);WorkSet.edit=async function(){if(!(isFounder()||hasF("managing")))return;const st=workSettings();const v=await Dlg.ask({title:T1(UI.wsTitle),fields:[{k:"staleWd",label:T1(UI.wsStale),type:"number",value:st.staleWd},{k:"fileLimitKb",label:T1(UI.wsFile),type:"number",value:st.fileLimitKb},{k:"esfDays",label:T1(UI.esfDays),type:"number",value:esfDays12()},{k:"usdRate",label:T1(UI.prRate),type:"number",value:usdRate12()}]});if(!v)return;
-  const next=Object.assign({},S.settings.work||{},{id:"work",staleWd:Math.max(1,+v.staleWd||5),fileLimitKb:Math.max(50,+v.fileLimitKb||180),esfDays:Math.max(1,+v.esfDays||10),usdRate:+v.usdRate||12000,updatedAt:nowS(),updatedBy:U().login});await saveDoc("settings",next);audit(`Параметры работы: нет движения ${next.staleWd} р.д., файл ${next.fileLimitKb} КБ, отмена ЭСФ ${next.esfDays} р.д., курс ${next.usdRate}`);toast(T1(UI.wsSaved));Router.render();};
+const _wsEdit12=WorkSet.edit.bind(WorkSet);WorkSet.edit=async function(){if(!(isFounder()||hasF("managing")))return;const st=workSettings();const v=await Dlg.ask({title:T1(UI.wsTitle),fields:[{k:"staleWd",label:T1(UI.wsStale),type:"number",value:st.staleWd},{k:"fileLimitKb",label:T1(UI.wsFile),type:"number",value:st.fileLimitKb},{k:"esfDays",label:T1(UI.esfDays),type:"number",value:esfDays12()},{type:"html",html:rateNote12()}]});if(!v)return;
+  const next=Object.assign({},S.settings.work||{},{id:"work",staleWd:Math.max(1,+v.staleWd||5),fileLimitKb:Math.max(50,+v.fileLimitKb||180),esfDays:Math.max(1,+v.esfDays||10),updatedAt:nowS(),updatedBy:U().login});await saveDoc("settings",next);audit(`Параметры работы: нет движения ${next.staleWd} р.д., файл ${next.fileLimitKb} КБ, отмена ЭСФ ${next.esfDays} р.д., курс ${next.usdRate}`);toast(T1(UI.wsSaved));Router.render();};
 /* кабинет клиента: приёмка по ЭСФ в истории */
 const _cpMatter12c=CP.matter.bind(CP);CP.matter=function(id){let h=_cpMatter12c(id);const m=matter(id);if(!m||!clientCan(m))return h;if(m.esf&&m.esf.acceptedAt)h=h.replace(`<div class="sub">`,`<div class="sub">${T1(UI.cpEsfAccepted)} · `);return h;};
 /* тик при переходах */
@@ -8521,11 +8528,11 @@ Object.assign(UI,{
   lostHidden17:"подробности видят команда дела и УП||详情仅案件团队和管理合伙人可见",arLostKp17:"Неудачные КП||未成交报价",arSvc17:"Вид услуги||服务类型",anLostPend17:"ждёт подтверждения отказа||待确认拒绝"
 });
 const ws17=()=>Object.assign({kpMaxDays:7,kpSlaWd:2,loadHigh:7,loadLate:2,packKpKb:700},workSettings());
-/* параметры работы: + срок КП, норма скорости КП, пороги нагрузки, лимит файла КП «Пакета услуг» (поля v12 — срок ЭСФ и курс USD — сохранены) */
+/* параметры работы: + срок КП, норма скорости КП, пороги нагрузки, лимит файла КП «Пакета услуг» (поле v12 — срок ЭСФ — сохранено; курс USD с v1.2 только в «Настройках оплаты») */
 WorkSet.edit=async function(){if(!(isFounder()||hasF("managing")))return;const st=ws17();
-  const v=await Dlg.ask({title:T1(UI.wsTitle),fields:[{k:"staleWd",label:T1(UI.wsStale),type:"number",value:st.staleWd},{k:"fileLimitKb",label:T1(UI.wsFile),type:"number",value:st.fileLimitKb},{k:"esfDays",label:T1(UI.esfDays),type:"number",value:esfDays12()},{k:"usdRate",label:T1(UI.prRate),type:"number",value:usdRate12()},
+  const v=await Dlg.ask({title:T1(UI.wsTitle),fields:[{k:"staleWd",label:T1(UI.wsStale),type:"number",value:st.staleWd},{k:"fileLimitKb",label:T1(UI.wsFile),type:"number",value:st.fileLimitKb},{k:"esfDays",label:T1(UI.esfDays),type:"number",value:esfDays12()},{type:"html",html:rateNote12()},
     {k:"kpMaxDays",label:T1(UI.wsKpMax17),type:"number",value:st.kpMaxDays},{k:"kpSlaWd",label:T1(UI.wsKpSla17),type:"number",value:st.kpSlaWd},{k:"loadHigh",label:T1(UI.wsLoadHigh17),type:"number",value:st.loadHigh},{k:"loadLate",label:T1(UI.wsLoadLate17),type:"number",value:st.loadLate},{k:"packKpKb",label:T1(UI.wsPackKb17),type:"number",value:st.packKpKb,min:100,max:5000,hint:T1(UI.wsPackKbH17)}]});if(!v)return;
-  const next=Object.assign({},S.settings.work||{},{id:"work",staleWd:Math.max(1,+v.staleWd||5),fileLimitKb:Math.max(50,+v.fileLimitKb||180),esfDays:Math.max(1,+v.esfDays||10),usdRate:+v.usdRate||12000,packKpKb:Math.min(5000,Math.max(100,+v.packKpKb||700)),kpMaxDays:Math.min(60,Math.max(1,+v.kpMaxDays||7)),kpSlaWd:Math.max(1,+v.kpSlaWd||2),loadHigh:Math.max(1,+v.loadHigh||7),loadLate:Math.max(1,+v.loadLate||2),updatedAt:nowS(),updatedBy:U().login});
+  const next=Object.assign({},S.settings.work||{},{id:"work",staleWd:Math.max(1,+v.staleWd||5),fileLimitKb:Math.max(50,+v.fileLimitKb||180),esfDays:Math.max(1,+v.esfDays||10),packKpKb:Math.min(5000,Math.max(100,+v.packKpKb||700)),kpMaxDays:Math.min(60,Math.max(1,+v.kpMaxDays||7)),kpSlaWd:Math.max(1,+v.kpSlaWd||2),loadHigh:Math.max(1,+v.loadHigh||7),loadLate:Math.max(1,+v.loadLate||2),updatedAt:nowS(),updatedBy:U().login});
   await saveDoc("settings",next);audit(`Параметры работы: нет движения ${next.staleWd} р.д., файл ${next.fileLimitKb} КБ, КП до ${next.kpMaxDays} дн., норма КП ${next.kpSlaWd} р.д., нагрузка ${next.loadHigh}/${next.loadLate}, ЭСФ ${next.esfDays} дн., курс ${next.usdRate}, КП пакета ${next.packKpKb} КБ`);toast(T1(UI.wsSaved));Router.render();};
 
 /* ── срок действия КП ── */
@@ -10002,7 +10009,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="991f67062140";
+const ZC_BUILD="ca42a4eaba2c";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11095,11 +11102,11 @@ const Pay21={
     m.paymentStatus=st;m.paymentLog=m.paymentLog||[];m.paymentLog.push({at:nowS(),by:(U()||{}).login||"system",status:st,note:T1(UI.pay21Auto)});return true;},
   async add(id){const m=matter(id);if(!m||!Svc21.lead(m)||m.status==="closed")return;migrateMatter11(m);const st=paySettings();const cur=this.cur(m);
     const pr=Dlg.ask({title:T1(UI.pay21Add)+" · "+m.no,fields:[{k:"date",label:T1(UI.eDate),type:"date",value:todayS(),required:true},{k:"amount",label:T1(UI.pAmount||"Сумма||金额"),type:"number",value:"",required:true},
-      {k:"currency",label:T1(UI.ctCur),type:"select",value:cur,options:CURS},{k:"rate",label:T1(UI.pRate||"Курс||汇率"),type:"number",value:typeof Money17!=="undefined"?Money17.rate(cur):1},
+      {k:"currency",label:T1(UI.ctCur),type:"select",value:cur,options:CURS},{type:"html",html:`<div id="payRate21" class="fhint" style="margin:0">${payRateNote(null,cur)}</div>`},
       {k:"note",label:T1(UI.crqComment)},{k:"files",label:T1(UI.pay21Proof),type:"files",required:true}]});
-    setTimeout(()=>{const md=document.getElementById("mdD");const cu=md&&md.querySelector("#dlg_currency"),ra=md&&md.querySelector("#dlg_rate");if(cu&&ra)cu.onchange=()=>{ra.value=cu.value==="USD"?st.usdRate:cu.value==="CNY"?st.cnyRate:1;};},60);
+    setTimeout(()=>{const md=document.getElementById("mdD");const cu=md&&md.querySelector("#dlg_currency");if(cu)cu.onchange=()=>{const r=document.getElementById("payRate21");if(r)r.innerHTML=payRateNote(null,cu.value);};},60);
     const v=await pr;if(!v)return;const amount=+v.amount||0;if(amount<=0){toast(T1(UI.po21ErrFirst));return;}const proof=(v.files||[])[0];if(!proof){toast(T1(UI.pay21Proof));return;}
-    const p={id:uid("p"),by:U().emp,at:nowS(),matterId:m.id,clientId:m.clientId||"",date:v.date,kind:"legal",amount,currency:v.currency,rate:v.currency==="UZS"?1:(+v.rate||1),usdRate:st.usdRate,transit:0,transitNote:"",viaFirm:true,withVat:false,translator:"",note:v.note||"",entity:m.entity,unitId:m.unitId,pending:true,proof};
+    const p={id:uid("p"),by:U().emp,at:nowS(),matterId:m.id,clientId:m.clientId||"",date:v.date,kind:"legal",amount,currency:v.currency,rate:payRateOf(v.currency),usdRate:+st.usdRate,transit:0,transitNote:"",viaFirm:true,withVat:false,translator:"",note:v.note||"",entity:m.entity,unitId:m.unitId,pending:true,proof};
     try{await saveDoc("payments",p);}catch(e){toast(String((e&&e.message)||e));return;}
     await Payment.syncMatter(p,+1);audit(`${m.no}: поступление ${fmtN(amount)} ${p.currency} внесено ведущим — на проверке`);
     Svc21.mpLogins().forEach(l=>{if(l!==U().login)notify(l,"task",nt18("payAdv21",{who:{a:U().login},sum:fmtN(amount)+" "+p.currency,no:m.no}),m.id);});Router.render();},
