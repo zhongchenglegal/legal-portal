@@ -10001,7 +10001,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="05b8a9403d20";
+const ZC_BUILD="7619f5c02b10";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12665,6 +12665,7 @@ Object.assign(UI,{
   c22DocSearch:"Поиск по файлам…||搜索文件…",c22DocAll:"Все файлы||全部文件",c22DocNewF:"+ Папка||+ 文件夹",c22DocFName:"Название папки||文件夹名称",c22DocNoFolder:"Без папки||未归类",c22DocMove:"Переместить в папку||移至文件夹",c22DocEmpty:"Файлов нет||无文件",c22DocFound:"Найдено: {n}||找到：{n}",c22DocBack:"← Все папки||← 全部文件夹",c22DocDelF:"Удалить папку (файлы останутся)||删除文件夹（文件保留）",
   c22ModeT:"Нажмите, чтобы переключить: заметка для команды ↔ сообщение клиенту||点击切换：团队备注 ↔ 发给客户",
   c22KpWait:"КП на согласовании у {who} ({step}) — ждём решения, от вас пока ничего не требуется||报价正在由 {who} 审批（{step}）——请等待，暂无需您操作",c22KpMp:"управляющего партнёра||管理合伙人",c22KpRemind:"Напомнить||提醒",c22KpRemDone:"Напоминание о согласовании КП отправлено||已发送报价审批提醒",c22KpRemNone:"Некому отправить напоминание — сообщите управляющему партнёру||无可提醒对象，请联系管理合伙人",
+  c22KpFileBtn:"Приложить файл КП||附加报价文件",c22KpNeedFile:"КП согласовано — приложите файл КП, затем отправьте его клиенту||报价已批准——请附加报价文件，然后发送给客户",c22KpReady:"КП согласовано и файл приложен — отправьте КП клиенту||报价已批准且已附文件——请发送给客户",
   c22StName:"Название этапа||阶段名称",c22StAfter:"Вставить после||插入到此阶段之后",c22StNow:"сейчас||当前",c22StPassed:"пройден||已完成",
   c22StRule:"Дополнительные этапы добавляются только впереди текущего. Порядок — по строкам: первая строка идёт раньше второй. Пустые строки не учитываются.||附加阶段只能加在当前阶段之后。顺序按行：第一行在前。空行忽略。"
 });
@@ -12717,7 +12718,9 @@ const Card22={
     if(m.pipeline!=="contract"){
       let b=q('[data-act="kpSend"]');if(b)return {sel:'[data-act="kpSend"]',name:lab(b)};
       b=q('[data-act="kpOk2"]')||q('[data-act="kpOk3"]');if(b)return {sel:'[data-act="'+b.dataset.act+'"]',name:lab(b)};
-      b=q('[data-act="kpPropose"]');if(b&&!m.offer)return {sel:'[data-act="kpPropose"]',name:lab(b)};
+      b=q('[data-act="kpFile"]');if(b&&m.offer&&!m.offer.sentAt&&!m.offer.file&&typeof KP!=="undefined"&&KP.approved(m.offer))return {sel:'[data-act="kpFile"]',name:T1(UI.c22KpFileBtn)};
+      b=q('[data-act="kpPropose"]');if(b&&(!m.offer||(typeof KP!=="undefined"&&KP.stepOf(m.offer)===1)))return {sel:'[data-act="kpPropose"]',name:lab(b)};
+      if(m.offer&&!m.offer.sentAt&&m.pipeline!=="offer"&&m.pipeline!=="approval_terms"&&m.pipeline!=="team_draft")return null;   /* КП в работе — «Без КП» главной кнопкой не предлагаем */
       b=[...root.querySelectorAll("[data-pipe]")].find(x=>x.dataset.pipe!=="lost"&&!/--red/.test(x.getAttribute("style")||""));
       if(b)return {sel:'[data-pipe="'+b.dataset.pipe+'"]',name:lab(b)};
       return null;}
@@ -12787,6 +12790,7 @@ const Card22={
       else if(UI.st21NeedFile&&t.includes(T1(UI.st21NeedFile)))b=act(null,'[data-act="ctFile21"]');
       else if(t.trim()===T1(UI.plBlocked)&&hasHint){w.remove();return;} /* общая фраза лишняя: она есть на «Ходе дела», а ниже перечислено, что заполнить */
       row(w,b);});
+    if(typeof KP!=="undefined"&&m.offer&&!m.offer.sentAt&&KP.approved(m.offer)&&!o.closed&&m.pipeline!=="contract"){if(!m.offer.file)row(T1(UI.c22KpNeedFile),act(UI.c22KpFileBtn,'[data-act="kpFile"]'));else row(T1(UI.c22KpReady),act(null,'[data-act="kpSend"]'));}
     const kw=this.kpWait(m);if(kw)row(kw.text,this.btn(T1(UI.c22KpRemind),"btn sm",{c22kprem:String(kw.step)}));
     const ai=this.aiRow(m,o);if(ai)rows.push(ai);
     if(o.cf)row(o.cf,null);
@@ -12888,7 +12892,7 @@ const Card22={
     if(o&&o.file){const s=this.el("span","chipf","📎 "+o.file.name);s.dataset.c22kpopen="1";chips.appendChild(s);}
     kpf.forEach(x=>{const s=this.el("span","chipf","📎 "+x.f.name);s.dataset.act="mFile";s.dataset.i=String(x.i);chips.appendChild(s);});box.appendChild(chips);
     if(h4&&h4.nextSibling)kp.insertBefore(box,h4.nextSibling);else kp.appendChild(box);},
-  kpAttach(m){if(typeof KP!=="undefined"&&!KP.canStep(m,1)){toast(T1(UI.stNoRight));return;}const id=m.id;
+  kpAttach(m){if(m.offer&&!m.offer.sentAt){const b=document.querySelector('#viewPage [data-act="kpFile"]');if(b){b.click();return;}}if(typeof KP!=="undefined"&&!KP.canStep(m,1)){toast(T1(UI.stNoRight));return;}const id=m.id;
     Files.upload(async f=>{const mm=matter(id);if(!mm)return;mm.files=mm.files||[];mm.files.push(Object.assign(f,{kind:"kp"}));mm.history=mm.history||[];mm.history.push({at:nowS(),by:U().emp,what:T1(UI.c22KpAttach)+": "+f.name});await saveDoc("matters",mm);Router.render();});},
   /* ── корреспонденция: с правом на журнал — прежнее окно регистрации (дело подставлено); адвокат по делу — своё окно ── */
   corrCan(m){if(typeof Corr==="undefined"||m.status==="closed")return false;if(can("corrEdit"))return true;const me=(U()||{}).emp;return !!me&&(m.lead===me||execsOf(m).some(x=>x.emp===me));},
@@ -13138,9 +13142,9 @@ if(typeof Pipe!=="undefined"){const _pn22=Pipe.next.bind(Pipe);Pipe.next=functio
    «Формирование команды» — включаемый этап (окно «Настроить»). Приёмку отмечает клиент в кабинете, УП — сразу,
    адвокат — с доказательством (файл обязателен; Stage.acceptOffline). */
 Object.assign(UI,{
-  plLead:"Приём заявки||受理申请",plNeg:"Обсуждение условий||洽谈条件",plOffer:"Ожидание решения клиента по КП||等待客户对报价的决定",
+  plLead:"Приём заявки||受理申请",plNeg:"Обсуждение условий||洽谈条件",plOffer:"Отправление КП клиенту||向客户发送报价",plOfferC:"Готовим и направляем вам предложение||正在准备并向您发送报价",
   plTerms:"Согласование условий договора||协商合同条款",plTeam:"Подписание договора||签署合同",plContract:"Договор подписан||合同已签署",
-  pr22Lead:"Заявка принята||申请已受理",pr22Offer:"Клиент согласен с КП||客户同意报价",pr22Terms:"Условия согласованы||条款已商定",pr22Sign:"Договор подписан||合同已签署",
+  pr22Lead:"Заявка принята||申请已受理",pr22Offer:"КП отправлено — к согласованию условий||报价已发送——进入条款协商",pr22KpAuto:"КП согласовано — этап «Отправление КП клиенту»||报价已批准——进入“向客户发送报价”阶段",pr22SentAuto:"КП отправлено клиенту — этап «Согласование условий договора»||报价已发送——进入“协商合同条款”阶段",pr22Terms:"Условия согласованы||条款已商定",pr22Sign:"Договор подписан||合同已签署",
   pr22Start:"Начать работу||开始办理",pr22Team:"Команда назначена||团队已指派",pr22Work:"Работа выполнена||工作已完成",pr22Custom:"Готово||已完成",
   pr22Appr:"Согласовано||已批准",pr22Rev:"Проверено||已审核",pr22Tr:"Перевод проверен||译文已校对",pr22Cn:"Подтверждено||已确认",pr22Acc:"Клиент принял||客户已验收",
   pr22Close:"Закрыть дело||结案",pr22TeamOpt:"Этап «Формирование команды»||“组建团队”阶段",pr22TeamOn:"включить (после подписания договора, до работы)||启用（签约后、办理前）",
@@ -13155,7 +13159,7 @@ const PR22_PIPE={lead:"pr22Lead",offer:"pr22Offer",approval_terms:"pr22Terms",te
   if(typeof STAGES10!=="undefined")STAGES10.forEach(x=>{if(PR22_ST[x[0]])x[1]=PR22_ST[x[0]];});
   if(typeof STAGES10!=="undefined"&&!STAGES10.some(x=>x[0]==="archive"))STAGES10.push(["archive",PR22_ST.archive]);else if(typeof STAGES10!=="undefined")STAGES10.find(x=>x[0]==="archive")[1]=PR22_ST.archive;
   if(typeof PIPE11!=="undefined"){const L={lead:UI.plLead,negotiation:UI.plNeg,offer:UI.plOffer,approval_terms:UI.plTerms,team_draft:UI.plTeam,contract:UI.plContract};
-    PIPE11.forEach(x=>{if(L[x[0]])x[1]=L[x[0]];if(x[0]==="team_draft")x[2]=UI.plTermsC;});}
+    PIPE11.forEach(x=>{if(L[x[0]])x[1]=L[x[0]];if(x[0]==="team_draft")x[2]=UI.plTermsC;if(x[0]==="offer")x[2]=UI.plOfferC;});}
 })();
 const pr22oneoff=m=>!!m&&m.svc==="oneoff";
 /* шкала до договора: показываем и «Подписание договора» */
@@ -13172,7 +13176,8 @@ if(typeof Pipe!=="undefined"){
     const fw=[];
     if(m.pipeline==="approval_terms"&&(MP||Pipe.can(m)))fw.push({to:"team_draft",label:UI.pr22Terms});
     else if(m.pipeline==="team_draft"&&(MP||lead))fw.push({to:"contract",label:UI.pr22Sign,mp:true});
-    const res=keep.map(a=>(!a.danger&&!a.skip&&PR22_PIPE[m.pipeline])?Object.assign({},a,{label:UI[PR22_PIPE[m.pipeline]]}):a);
+    const keep2=m.pipeline==="offer"&&!(m.offer&&m.offer.sentAt)?keep.filter(a=>a.danger||a.skip||a.to!=="approval_terms"):keep;
+    const res=keep2.map(a=>(!a.danger&&!a.skip&&PR22_PIPE[m.pipeline])?Object.assign({},a,{label:UI[PR22_PIPE[m.pipeline]]}):a);
     const i=res.findIndex(a=>a.danger);res.splice(i<0?res.length:i,0,...fw);return res;};
   /* после подписания — работа начинается сама (или «Формирование команды», если этап включён) */
   const _ps22=Pipe.set.bind(Pipe);
@@ -13191,6 +13196,14 @@ if(typeof Stage!=="undefined"){const _sn22=Stage.next.bind(Stage);
   Stage.next=function(m){const out=_sn22(m);if(!pr22oneoff(m))return out;const s=m.stage;
     return out.map(a=>{if(a.ret)return a;if(a.archive)return Object.assign({},a,{label:UI.pr22Close});const k=PR22_DONE[s]||(/^c_/.test(s)?"pr22Custom":null);return k?Object.assign({},a,{label:UI[k]}):a;});};}
 
+/* v1.2: КП — последнее согласование переводит на «Отправление КП клиенту», отправка — на «Согласование условий договора» */
+const pr22move=async(m,to,what)=>{const from=m.pipeline;m.pipeline=to;m.pipelineHistory=m.pipelineHistory||[];m.pipelineHistory.push({step:to,at:nowS(),by:U().emp,from,auto:true});m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(what)});try{await saveDoc("matters",m);}catch(e){}Router.render();};
+if(typeof KP!=="undefined"){
+  const _kd22=KP.decide.bind(KP);KP.decide=async function(id,step,ok){const r=await _kd22(id,step,ok);const m=matter(id);
+    if(pr22oneoff(m)&&ok&&m.offer&&!m.offer.sentAt&&KP.approved(m.offer)&&PIPE_IDX(m.pipeline)<PIPE_IDX("offer"))await pr22move(m,"offer",UI.pr22KpAuto);return r;};
+  const _ks22=KP.send.bind(KP);KP.send=async function(id){const r=await _ks22(id);const m=matter(id);
+    if(pr22oneoff(m)&&m.offer&&m.offer.sentAt&&PIPE_IDX(m.pipeline)<PIPE_IDX("approval_terms"))await pr22move(m,"approval_terms",UI.pr22SentAuto);return r;};
+}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
