@@ -6284,7 +6284,7 @@ Matter.apply=function(m,v){const hadEx=(m.executors||[]).slice();_mapply9b(m,v);
   m.cnLawyer=v.cnLawyer||"";m.translator=v.translator||"";
   const rv=v.reviewer||"";if(rv&&(rv===m.lead||(m.executors||[]).some(x=>x.emp===rv))){toast(T1("Второй контролёр не может быть исполнителем дела — оставлен прежний||复核人不能是案件执行人——保留原复核人"));}else m.reviewer=rv;
   if(isFounder()||hasF("managing")){if(v.reviewPassed!==undefined)m.reviewPassed=v.reviewPassed==="1";if(v.contractSigned!==undefined)m.contractSigned=v.contractSigned==="1";if(v.claim!==undefined)m.claim=v.claim==="1";}
-  else{if(m.reviewPassed===undefined)m.reviewPassed=false;if(m.contractSigned===undefined)m.contractSigned=false;if(m.claim===undefined)m.claim=false;}
+  else{if(m.reviewPassed===undefined)m.reviewPassed=false;if(m.contractSigned===undefined)m.contractSigned=m.pipeline==="contract"||!!m.contractSignedAt;if(m.claim===undefined)m.claim=false;}
   m._v9b=1;};
 /* клиент: китайский юрист сопровождения */
 const _cfields9b=Cli.fields.bind(Cli);Cli.fields=function(c){const f=_cfields9b(c);c=c||{};const i=f.findIndex(x=>x.k==="managers");f.splice(i>=0?i+1:f.length,0,{k:"cnLawyer",label:T1(UI.cCn),type:"select",value:c.cnLawyer||"",options:[["","—"],...cnPeople().map(e=>[e,dispName(e)])],hint:T1("10 % базы по делам клиента; можно переопределить в деле||客户案件基数的10%；可在案件中覆盖")});return f;};
@@ -7578,7 +7578,7 @@ Matter.apply=function(m,v){const wasSigned=m.contractSigned;const wasPipe=m.pipe
   if(m.svc==="court"){if(chk&&m.entity!=="legal"){toast(T1(UI.crOnlyLegal));throw new Error("court-entity");}if(!isLicensed(m.lead)){toast(T1(UI.crLeadLic));throw new Error("court-lead");}if(!["litigation","criminal"].includes(m.type))m.type="litigation";}
   if(m.svc==="support"){if(chk&&m.entity!=="llc"){toast(T1(UI.spLlc));throw new Error("support-entity");}m.billing="subscription";}
   if(m.svc==="oneoff"&&m.billing==="subscription")m.billing="fixed";
-  if(!(isFounder()||hasF("managing"))){m.contractSigned=wasSigned===undefined?false:wasSigned;}
+  if(!(isFounder()||hasF("managing"))){m.contractSigned=wasSigned===undefined?(wasPipe==="contract"||!!m.contractSignedAt):wasSigned;}   /* v1.2: копия без отметки не «отменяет» подписание */
   if(v.pipeline&&!m.pipeline)m.pipeline=v.pipeline;
   if(m.pipeline&&m.pipeline!=="contract"&&m.contractSigned&&(isFounder()||hasF("managing"))&&wasSigned===false){m.pipeline="contract";(m.pipelineHistory=m.pipelineHistory||[]).push({step:"contract",at:nowS(),by:U().emp,from:wasPipe});}
   if(m.cost===undefined||m.currency==="UZS"||!m.currency){m.cost=+v.fee||0;m.currency=m.currency||"UZS";}
@@ -10273,7 +10273,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="054bfcc3b199";
+const ZC_BUILD="0de26cbc704d";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -13381,6 +13381,11 @@ const _mp22=Pages.matter;Pages.matter=function(id){const html=_mp22.call(this,id
 const _pb22=Pages.bind;Pages.bind=function(vp){_pb22.call(this,vp);if(Router.cur!=="matter"||!Router.arg)return;const m=matter(Router.arg);if(Card22.on(m)&&vp.querySelector(".c22"))Card22.bind(vp,m);};
 if(typeof Files!=="undefined"){const _up22=Files.upload.bind(Files);Files.upload=function(cb){const fo=Card22._upFolder;Card22._upFolder=undefined;return _up22(fo?(x=>{if(x)x.folder=fo;return cb(x);}):cb);};}
 if(typeof Corr21!=="undefined"&&typeof Corr21.opts==="function"){const _co22=Corr21.opts.bind(Corr21);Corr21.opts=function(){const l=_co22();return (typeof Adv21!=="undefined"&&Adv21.on())?l.filter(x=>x[0]!=="sent"):l;};}
+/* v1.2: «Договор подписан» — и ведущему дела (раньше кнопка была только у УП, хотя Pipe.set и сервер ведущему разрешают;
+   проверки — файл договора, порядок оплаты, реквизиты — делает Pipe.set при нажатии) */
+if(typeof Pipe!=="undefined"){const _pn22=Pipe.next.bind(Pipe);Pipe.next=function(m){const out=_pn22(m);if(!m||m.status==="closed"||m.lostPending||["contract","lost"].includes(m.pipeline))return out;
+  if(typeof Svc21==="undefined"||Svc21.mp()||!Svc21.lead(m)||out.some(a=>a.to==="contract"))return out;if(typeof KPV17!=="undefined"&&KPV17.expired&&KPV17.expired(m))return out;
+  const i=out.findIndex(a=>a.danger);out.splice(i<0?out.length:i,0,{to:"contract",label:UI.plSetContract,mp:true});return out;};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
