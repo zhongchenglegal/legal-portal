@@ -10037,7 +10037,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="a223e93843d9";
+const ZC_BUILD="28af5bbbced6";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11242,6 +11242,8 @@ Stage.set=async function(id,to,ret){const m=matter(id);if(!m)return;migrateMatte
   const l=St21.list(m);if(!ret&&l.indexOf(to)>=l.indexOf("work")&&St21.before(m,"work")){const g=Gate21.start(m);if(g.length){toast(T1(UI.st21NotStarted)+": "+g.join(" · "));return;}}
   if(to==="ready"&&!ret){const b=payBlock11(m);if(b){toast(T1(b==="month"?UI.payBlockM:UI.payBlock8));return;}if(Gate21.postpayWarn(m)&&!await Dlg.confirm(T1(UI.st21PostpayT),T1(UI.st21Postpay)))return;}
   let note="";if(ret){const v=await Dlg.ask({title:T1(UI.stReturn),fields:[{k:"why",label:T1(UI.stReturnWhy),type:"textarea",required:true}]});if(!v)return;note=v.why;}
+  /* Шаг 1: перевод этапа выполняет сервер (v23_stage_srv.js); без серверной функции — прежний путь */
+  if(typeof StSrv23!=="undefined"&&await StSrv23.move(m,to,ret,note))return;
   const from=m.stage;m.stage=to;m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:to,at:nowS(),by:U().emp,from,returned:!!ret,note,internal:!!ret});
   /* проверяющего назначает УП; автоназначение руководителя и начальника по «Структуре» отключено (16.10.2026) */
   if(from==="review"&&!ret)m.reviewPassed=true;
@@ -11259,6 +11261,8 @@ Stage.acceptOffline=async function(m){if(m.stage!=="ready")return;const u=U();co
     {k:"date",label:T1(UI.stAcceptDate),type:"date",value:todayS()},{k:"note",label:T1(UI.stAcceptNote),type:"textarea",required:true},{k:"files",label:T1(UI.st21AcceptFile),type:"files",required:!MP,hint:MP?"":T1(UI.st21AcceptNeedFile)}]});if(!v)return;
   const file=(v.files||[])[0]||null;if(!MP&&!file){toast(T1(UI.st21AcceptNeedFile));return;}
   const basisL={paper:UI.stAbPaper,msg:UI.stAbMsg,mail:UI.stAbMail,court:UI.stAbCourt,other:UI.stAbOther}[v.basis]||UI.stAbOther;
+  /* Шаг 1: приёмку записывает сервер (v23_stage_srv.js) */
+  if(typeof StSrv23!=="undefined"&&await StSrv23.accept(m,v,file,basisL))return;
   const a={id:uid("acc"),matterId:m.id,clientId:m.clientId,byLogin:u.login,byName:u.name,at:nowS(),result:"accepted",text:v.note,offline:true,basis:v.basis,basisDate:v.date||todayS(),file};S.clientAcceptance[a.id]=a;await dbWrite(db=>db.doc("clientAcceptance/"+a.id).set(a));
   if(file){m.files=m.files||[];m.files.push(Object.assign({},file,{by:u.emp,at:nowS(),kind:"acceptance21"}));}
   m.stage="accepted";m.acceptedAt=nowS();m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:"accepted",at:nowS(),by:u.emp,byName:u.name,offline:true,note:T1(basisL)+": "+v.note});
@@ -11292,6 +11296,8 @@ const Archive21={
     const pr=Dlg.ask({title:T1(UI.ar21T)+" · "+m.no,text:T1(UI.ar21Check),fields,wide:true,okText:UI.ar21T});
     setTimeout(()=>{const md=document.getElementById("mdD");if(!md)return;md.querySelectorAll("[data-ar21file]").forEach(el=>el.onclick=()=>{const key=el.dataset.ar21file;const f=key==="ct"?k.file:key==="acc"?(acc&&acc.file):(S.payments[key]||{}).proof;if(f)Files.open(f);});},60);
     const v=await pr;if(!v)return;
+    /* Шаг 1: архивацию выполняет сервер (v23_stage_srv.js) — проверки и подтверждение поступлений там же */
+    if(typeof StSrv23!=="undefined"&&await StSrv23.archive(m,!!pend.length&&v.confirm==="1"))return;
     if(pend.length&&v.confirm==="1"){for(const p of pend){p.pending=false;p.wasPending21=true;p.confirmedBy=U().login;p.confirmedAt=nowS();await saveDoc("payments",p);}audit(`${m.no}: подтверждены поступления на проверке (${pend.length})`);}
     const g2=Gate21.archive(m);if(g2.length){toast(T1(UI.ar21Block)+": "+g2.join(" · "));Router.render();return;}
     m.stage="archive";m.status="closed";m.closed=m.closed||todayS();m.archivedAt=nowS();m.archivedBy=U().login;m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:"archive",at:nowS(),by:U().emp,byName:U().name});
@@ -13271,7 +13277,10 @@ if(typeof Stage!=="undefined"){const _sn22c=Stage.next.bind(Stage);
     if(act&&act.archive&&m.stage==="archive")return Archive21.run(m);
     if(!act||!act.close22)return _ss22c(id,to,ret);
     if(!await Dlg.confirm(T1(UI.arc22Q)+" · "+m.no,T1(UI.arc22T)))return;
-    const mm=matter(id);if(!mm||mm.stage!=="accepted"||mm.status==="closed")return;const from=mm.stage;
+    const mm=matter(id);if(!mm||mm.stage!=="accepted"||mm.status==="closed")return;
+    /* Шаг 1: «Закрыть дело» выполняет сервер (v23_stage_srv.js) */
+    if(typeof StSrv23!=="undefined"&&await StSrv23.close(mm))return;
+    const from=mm.stage;
     mm.stage="archive";mm.closeReadyAt=nowS();mm.stageHistory=mm.stageHistory||[];mm.stageHistory.push({stage:"archive",at:nowS(),by:U().emp,from});
     mm.history=mm.history||[];mm.history.push({at:nowS(),by:U().emp,what:T1(UI.arc22Done)});
     try{await saveDoc("matters",mm);}catch(e){mm.stage=from;toast(String(e&&e.message||e));Router.render();return;}
@@ -13350,6 +13359,43 @@ if(typeof Adv21!=="undefined"){
   if(typeof LS!=="undefined"&&typeof LS.save==="function"){const _lsCorr22=LS.save;LS.save=function(){const all=Adv21._corrAll;if(!all)return _lsCorr22.apply(this,arguments);
     const cur=S.corr;S.corr=all;try{return _lsCorr22.apply(this,arguments);}finally{S.corr=cur;}};}
 }
+
+
+/* ═══════════════════════════ v23 · ЭТАПЫ ДЕЛА — НА СЕРВЕРЕ (Шаг 1 переноса логики) ═══════════════════════════
+   Правило владельца 17.10.2026: логика — на сервере, портал только показывает и вызывает сервер.
+   Перевод этапа и возврат на доработку, «Принято клиентом», «Закрыть дело» (разовая услуга) и «Отправить в архив»
+   выполняет сервер (миграции 20261017000100–0400): права, проверки, запись в дело, журнал, уведомления.
+   Портал оставляет себе окна (причина возврата, основание приёмки, подтверждение) и подписи на языке нажавшего.
+   Пока миграции не выполнены в Supabase (функции нет — PGRST202) или в демо-режиме — прежний путь портала.
+   Фиксация просрочки при «Результат готов» (Late13) пока в портале — отдельный шаг. */
+const StSrv23={
+  missing:false,
+  on(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&!this.missing;},
+  noFn(e){return /PGRST202|Could not find the function|does not exist/i.test(String((e&&(e.message||e.code))||e)+" "+String(e&&e.code||""));},
+  msg(e){return String((e&&(e.message||e.error_description))||e||"").replace(/^.*?ERROR:\s*/,"");},
+  /* вызов: {d} — готово; {skip} — функции нет, прежний путь; {err} — сервер отказал (текст причины) */
+  async call(fn,args){if(!this.on())return {skip:true};
+    try{return {d:await SB19.T.rpc(fn,args)};}catch(e){if(this.noFn(e)){this.missing=true;return {skip:true};}return {err:this.msg(e)};}},
+  /* ответ сервера — новое состояние дела */
+  apply(m,d){if(!m||!d||typeof d!=="object")return;Object.keys(m).forEach(k=>{if(!(k in d))delete m[k];});Object.assign(m,d);m.id=m.id||d.id;},
+  given(m){return Array.isArray(m.stages21)&&m.stages21.length?m.stages21:St21.list(m);},
+  async reload(col){try{const a=await SB19.colDocs(col);S[col]={};a.forEach(x=>{S[col][x.id]=x.data;});}catch(e){}},
+  /* итог: true — сделано на сервере (или сервер отказал — причина показана); false — прежний путь */
+  done(r,m,okText){if(r.skip)return false;if(r.err){toast(r.err);Router.render();return true;}this.apply(m,r.d);if(okText)toast(okText);Router.render();return true;},
+  async move(m,to,ret,note){
+    const labels={from:St21.label(m.stage),to:St21.label(to),to_ru:withLang18("ru",()=>St21.label(to)),st:L2(()=>stLabel(to,true,m))};
+    return this.done(await this.call("matter_stage_move",{mid:m.id,to_stage:to,ret:!!ret,note:note||"",given:this.given(m),labels}),m);},
+  async accept(m,v,file,basisL){
+    const r=await this.call("matter_accept_offline",{mid:m.id,basis:v.basis,basis_date:v.date||todayS(),note:v.note,file:file||null,given:this.given(m),
+      labels:{basis:T1(basisL),st:L2(()=>stLabel("accepted",true,m))}});
+    if(r.d)await this.reload("clientAcceptance");
+    return this.done(r,m,T1(UI.stAcceptOff));},
+  async close(m){return this.done(await this.call("matter_close_oneoff",{mid:m.id,given:this.given(m),labels:{done:T1(UI.arc22Done)}}),m,T1(UI.arc22Done));},
+  async archive(m,confirm){
+    const r=await this.call("matter_archive",{mid:m.id,confirm_pending:!!confirm,given:this.given(m),labels:{done:T1(UI.ar21Done)}});
+    if(r.d&&confirm)await this.reload("payments");
+    return this.done(r,m,T1(UI.ar21Done));}
+};
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
