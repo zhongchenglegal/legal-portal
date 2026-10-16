@@ -4223,7 +4223,7 @@ const Cabinet={tab:"sum",
     b.querySelectorAll("[data-open]").forEach(el=>el.onclick=()=>{this.close();Profile.open(el.dataset.open,"tasks");});
     b.querySelectorAll("[data-pw]").forEach(el=>el.onclick=async()=>{const l=el.dataset.pw;const v=await Dlg.ask({title:T1(UI.aReset)+" · "+l,fields:[{k:"pw",label:T1(UI.aNewPw)+" "+l,required:true}]});if(!v)return;const pw=v.pw;const w=PW17.weak(pw,l);if(w){toast(T1(UI.aNewPw)+": "+w);return;}const a=S.accounts[l];delete a.alg;delete a.iter;Object.assign(a,(PW17.can()?await PW17.make(pw):await (async()=>{const salt=rnd17(16);return {salt,hash:await sha(salt+":"+pw)};})()));delete a.demoPw;a.sessions=[];await saveAccount(a);audit(`Сброшен пароль: ${l}`);toast(T1(UI.saved));});
     b.querySelectorAll("[data-tg]").forEach(el=>el.onclick=async()=>{const a=S.accounts[el.dataset.tg];if(a.login===Auth.user.login)return;a.active=a.active===false;if(!a.active)a.sessions=[];await saveAccount(a);audit(`${a.active?"Включён":"Отключён"} аккаунт ${a.login}`);this.render();});
-    const na=b.querySelector('[data-act="newAcc"]'); if(na)na.onclick=async()=>{const ppl=Object.keys(ALL).filter(isPerson);const v=await Dlg.ask({title:T1(UI.aCreate),fields:[{k:"login",label:T1(UI.aLogin),required:true},{k:"name",label:T1(UI.aName),required:true},{k:"role",label:T1(UI.aRole),type:"select",value:"staff",options:[["founder",T1(UI.rFounder)],["coo",T1(UI.rCoo)],["hr",T1(UI.rHr)],["head",T1(UI.rHead)],["staff",T1(UI.rStaff)]]},{k:"emp",label:T1(UI.aEmp),type:"select",value:"",options:[["","—"],...ppl.map(e=>[e,dispName(e)])]},{k:"pw",label:T1(UI.lgP),required:true}]});if(!v)return;const login=v.login.toLowerCase();if(S.accounts[login]){toast(login+" — "+T1("уже существует||已存在"));return;}const w=PW17.weak(v.pw,login);if(w){toast(T1(UI.lgP)+": "+w);return;}const acc={login,name:v.name,role:v.role,emp:v.emp||null,active:true,...(PW17.can()?await PW17.make(v.pw):await (async()=>{const salt=rnd17(16);return {salt,hash:await sha(salt+":"+v.pw)};})())};await saveAccount(acc);audit(`Создан аккаунт ${login} (${v.role})`);this.render();};
+    const na=b.querySelector('[data-act="newAcc"]'); if(na)na.onclick=async()=>{const ppl=Object.keys(ALL).filter(isPerson);const v=await Dlg.ask({title:T1(UI.aCreate),fields:[{k:"login",label:T1(UI.aLogin),required:true},{k:"name",label:T1(UI.aName),required:true},{k:"role",label:T1(UI.aRole),type:"select",value:"staff",options:[["staff",T1("Адвокат||律师")],["mp",T1("Управляющий адвокат||管理律师")]]},{k:"emp",label:T1(UI.aEmp),type:"select",value:"",options:[["","—"],...ppl.map(e=>[e,dispName(e)])]},{k:"pw",label:T1(UI.lgP),required:true}]});if(!v)return;const login=v.login.toLowerCase();if(S.accounts[login]){toast(login+" — "+T1("уже существует||已存在"));return;}const w=PW17.weak(v.pw,login);if(w){toast(T1(UI.lgP)+": "+w);return;}const acc={login,name:v.name,role:"staff",funcs:v.role==="mp"?["managing"]:[],emp:v.emp||null,active:true,...(PW17.can()?await PW17.make(v.pw):await (async()=>{const salt=rnd17(16);return {salt,hash:await sha(salt+":"+v.pw)};})())};await saveAccount(acc);audit(`Создан аккаунт ${login} (${v.role})`);this.render();};
   }
 };
 
@@ -4304,7 +4304,13 @@ const ROLEMAP={founder:{pos:"founderOnly",funcs:["founder"]},coo:{pos:"coo",func
 function normAccount(a){
   if(!a.pos){const m=ROLEMAP[a.role]||ROLEMAP.staff;a.pos=m.pos||(ALL[a.emp]&&ALL[a.emp].type==="adv"?"advocate":ALL[a.emp]&&ALL[a.emp].type==="int"?"intern":"lawyer");a.funcs=a.funcs||m.funcs;}
   if(a.emp==="shahzod"&&!(a.funcs||[]).includes("managing"))a.funcs=[...new Set([...(a.funcs||[]),"founder","managing"])];
-  a.role=(a.funcs||[]).includes("founder")?"founder":a.pos==="coo"?"coo":a.pos==="hr"?"hr":(a.funcs||[]).some(f=>f.startsWith("head:")||f.startsWith("depthead:"))?"head":"staff";
+  /* 16.10.2026: ролей только две — УП (founder/managing) и адвокат. Должностей и руководителей подразделений нет:
+     у сотрудника остаются только функции УП, должность — «адвокат» («Учредитель» совета учредителей — как был).
+     Лицензия адвоката — не роль: отметка учётки (licensed); пока её нет — по прежней должности (licensedOf, v9_app.js). */
+  if(typeof a.licensed!=="boolean")a.licensed=a.emp==="shahzod"||["advocate","senior"].includes(a.pos);
+  a.funcs=(a.funcs||[]).filter(f=>f==="founder"||f==="managing");
+  if(a.pos!=="founderOnly")a.pos="advocate";
+  a.role=a.funcs.includes("founder")?"founder":"staff";
   return a;
 }
 const _login=Auth.login.bind(Auth);
@@ -4312,7 +4318,8 @@ Auth.login=async function(login,pw){const ok=await _login(login,pw);if(ok){const
 const _restore=Auth.restore.bind(Auth);
 Auth.restore=function(){_restore();if(Auth.user){const a=normAccount(S.accounts[Auth.user.login]);Object.assign(Auth.user,{pos:a.pos,funcs:a.funcs||[],role:a.role});}};
 const U=()=>Auth.user, hasF=f=>!!U()&&(U().funcs||[]).includes(f), isFounder=()=>hasF("founder"), pos=()=>U()&&U().pos;
-const headUnits=()=>U()?(U().funcs||[]).filter(f=>/^(head|depthead):/.test(f)).map(f=>f.split(":")[1]):[];
+/* руководство подразделением прав не даёт (16.10.2026: только УП и адвокат) */
+const headUnits=()=>[];
 const isHeadOfEmp=emp=>{const u=unitOf(emp);return !!u&&headUnits().includes(u);};
 const isJunior=emp=>{const d=ALL[emp];return !!d&&(d.type==="jur"||d.type==="int");};
 const sameUnit=emp=>!!U()&&!!unitOf(emp)&&unitOf(emp)===unitOf(U().emp);
@@ -5537,14 +5544,19 @@ function mapOldUnit(m){
   if(p==="p2"||p==="p3"){if(t==="litigation")return ck==="criminal"?"u_p3":(build?"u_build":"u_p4");if(t==="licensing")return "u_lic";if(t==="realty")return "u_build";return "u_p2";}
   return t==="licensing"?"u_lic":t==="realty"?"u_build":(t==="litigation"?"u_p4":"u_p2");
 }
+/* лицензия адвоката (16.10.2026 — не роль и не доступ): отметка учётки licensed; пока её нет — по прежней должности
+   (адвокат или старший юрист). Нужна для законных правил: судебное дело, дела ООО, налог в расчёте зарплаты. */
+function licensedOf(e){if(e==="shahzod")return true;const a=typeof accByEmp==="function"?accByEmp(e):null;
+  if(a){if(typeof a.licensed==="boolean")return a.licensed;return ["advocate","senior"].includes(a.pos);}const d=ALL[e]||{};return d.type==="adv";}
 function migrateMatter9(m){
   if(!m)return m;
   if(!m.unitId||!/^u_/.test(m.unitId)){const nu=mapOldUnit(m);if(m.practice!==nu)m.practiceOld=m.practiceOld||m.practice;m.unitId=nu;m.practice=nu;}
   if(m.practice!==m.unitId)m.practice=m.unitId;
   if(!m.entity)m.entity=entityOfUnit(m.unitId);
   /* состав: в ООО только юристы, в адвокатской фирме только адвокаты/помощники/стажёры */
-  const isAdv=e=>{const a=accByEmp?accByEmp(e):null;const p=a?a.pos:null;return p?["advocate","senior"].includes(p):(ALL[e]&&ALL[e].type==="adv");};
-  const isLaw=e=>{const a=accByEmp?accByEmp(e):null;const p=a?a.pos:null;return p?["lawyer","junior"].includes(p):(ALL[e]&&ALL[e].type==="jur"&&empEntity(e)==="llc");};
+  /* 16.10.2026: адвокат — по лицензии (licensedOf), юрист ООО — сотрудник ООО без лицензии; должностей нет */
+  const isAdv=e=>licensedOf(e);
+  const isLaw=e=>!licensedOf(e)&&(()=>{const a=accByEmp?accByEmp(e):null;return a?(a.entity||empEntity(e))==="llc":(ALL[e]&&ALL[e].type==="jur"&&empEntity(e)==="llc");})();
   if(m.entity==="llc"&&m.lead&&m.lead!=="shahzod"&&isAdv(m.lead)){const cand=(m.team||[]).find(isLaw)||["dora","shuhrat1","shuhrat2","shahzod2"][Math.abs(hashCode9(m.id))%4];m.leadOld=m.leadOld||m.lead;m.team=[...new Set([m.lead,...(m.team||[])])].filter(e=>e!==cand);m.lead=cand;}
   if(m.entity==="llc"&&(m.team||[]).some(isAdv)){m.teamOld=m.teamOld||m.team.slice();m.team=m.team.filter(e=>!isAdv(e));}
   if(m.entity==="legal"&&(m.team||[]).some(isLaw)){m.teamOld=m.teamOld||m.team.slice();m.team=m.team.filter(e=>!isLaw(e));}
@@ -5763,12 +5775,16 @@ const qOf=M=>M.slice(0,4)+"-Q"+(Math.floor((+M.slice(5,7)-1)/3)+1);
 const qMonths=Q=>{const y=Q.slice(0,4),q=+Q.slice(6);return [1,2,3].map(i=>`${y}-${String((q-1)*3+i).padStart(2,"0")}`);};
 const addMonth=(M,n)=>{const [y,m]=M.split("-").map(Number);const d=new Date(y,m-1+n,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;};
 const endOfM=M=>{const [y,m]=M.split("-").map(Number);return ymdL(new Date(y,m,0));};
-const posOf=e=>{const a=accByEmp(e);if(a&&a.pos)return a.pos==="depthead"?"cnlawyer":a.pos;const d=ALL[e]||{};return d.type==="adv"?"advocate":d.type==="int"?"intern":d.type==="jur"?(/помощник|assistant/i.test(T1(d.role||""))?"assistant":"lawyer"):"office";};
-const headUnitOf=e=>{const u=unitsAll().find(x=>x.head===e);return u?u.id:null;};
+/* 16.10.2026: должностей нет — каждый сотрудник адвокат («Учредитель» совета учредителей — как был); руководство
+   подразделением в «Структуре» прав и надбавок не даёт (сама «Структура» не меняется) */
+const posOf=e=>{const a=accByEmp(e);return a&&a.pos==="founderOnly"?"founderOnly":"advocate";};
+const headUnitOf=e=>null;
 const execsOf=m=>{migrateMatter9b(m);return m.executors||[{emp:m.lead,share:100}];};
 const cnLawyerOf=m=>{if(m.cnLawyer)return m.cnLawyer==="-"?null:m.cnLawyer;const c=client(m.clientId);return c&&c.cnLawyer||null;};
-const cnPeople=()=>Object.keys(ALL).filter(e=>isPerson(e)&&posOf(e)==="cnlawyer");
-const trPeople=()=>Object.keys(ALL).filter(e=>isPerson(e)&&posOf(e)==="translator");
+/* китайским юристом и переводчиком дела (клиента) УП назначает любого сотрудника — должностей нет */
+const staffPeople9b=()=>Object.keys(ALL).filter(e=>isPerson(e)&&posOf(e)!=="founderOnly"&&!(typeof FOUNDERS!=="undefined"&&FOUNDERS.some(f=>f&&f.id===e)));
+const cnPeople=()=>staffPeople9b();
+const trPeople=()=>staffPeople9b();
 const payPeople=()=>[...new Set([...staffIds(),...Object.values(S.accounts).filter(a=>a.active!==false&&a.emp).map(a=>a.emp)])].filter(e=>ALL[e]&&!ALL[e].members&&(isPerson(e)||accByEmp(e))&&!["zhong","jia","shahzod"].includes(e)&&!((accByEmp(e)||{}).funcs||[]).includes("founder"));
 /* ── миграция дела: исполнители с долями, контроль, договор, претензия ── */
 /* v17: псевдослучайное заполнение (по хешу id) — только для встроенных демо-записей.
@@ -5812,7 +5828,7 @@ const Pay={
   execPct(e,st){const P=posOf(e);return P==="senior"?st.seniorPct:P==="advocate"?st.execPct:(P==="lawyer"||P==="junior")?st.p2Pct:0;},
   attested(e,M){const w=((S.profiles[e]||{}).work)||{};if(w.attested)return true;if(w.attestedAt)return w.attestedAt.slice(0,7)<=M;return false;},
   newRow(e){return {emp:e,name:dispName(e),pos:posOf(e),entity:empEntity(e),unitId:unitOf(e),fixed:0,pct:0,base:0,cumBase:0,paidBefore:0,qN:0,pctPart:0,minApplied:false,headBase:0,headPart:0,headModel:null,cnBase:0,cnCum:0,cnPart:0,trBase:0,trAllBase:0,trPart:0,ind:null,indPart:0,qPart:0,accrued:0,taxBase:0,ndfl:0,social:0,net:0,cost:0,notes:[],lines:[]};},
-  taxes(r,st){const adv=r.entity==="legal"&&["advocate","senior"].includes(r.pos);const a=r.accrued;
+  taxes(r,st){/* налог адвоката — по лицензии (16.10.2026), не по должности */const adv=r.entity==="legal"&&licensedOf(r.emp);const a=r.accrued;
     if(adv){r.taxBase=r2(a/(1+st.socialPct/100));r.social=r2(a-r.taxBase);r.ndfl=r2(r.taxBase*st.ndflPct/100);r.net=r2(r.taxBase-r.ndfl);r.cost=a;r.taxMode="adv";}
     else{r.taxBase=a;r.ndfl=r2(a*st.ndflPct/100);r.social=r2(a*st.socialPct/100);r.net=r2(a-r.ndfl);r.cost=r2(a+r.social);r.taxMode="emp";}
     return r;},
@@ -5823,13 +5839,14 @@ const Pay={
     cands.forEach(p=>{const why=this.eligibility(p);if(why)skipped.push({id:p.id,code:why,reason:this.reasonLabel(why),date:p.date,usd:this.usdOf(p)});else elig.push(p);});
     const rows={},row=e=>rows[e]||(rows[e]=this.newRow(e));const warnings=[];const trh=(unit9("u_tr")||{}).head;let baseTotal=0,firmKeeps=0;
     elig.forEach(p=>{const b=this.base(p);baseTotal+=b;const m=p.matterId&&S.matters[p.matterId];
-      if(p.kind==="translation"){if(p.translator&&isPerson(p.translator)){const r=row(p.translator);r.trBase+=b;r.lines.push({id:p.id,no:m?m.no:T1(UI.pkTransl),base:b,share:100,kind:"tr"});}if(trh&&isPerson(trh)){row(trh).trAllBase+=b;}return;}
+      /* 16.10.2026: все — как адвокаты: оплаты перевода переводчику не распределяются, надбавки руководителя и китайского юриста нет */
+      if(p.kind==="translation")return;
       if(!m)return; migrateMatter9b(m);
       const ex=execsOf(m);let pctSum=0;
       ex.forEach(x=>{if(!isPerson(x.emp))return;const r=row(x.emp);const own=r2(b*x.share/100);r.base+=own;r.lines.push({id:p.id,no:m.no,base:own,share:x.share,kind:"exec"});pctSum+=this.execPct(x.emp,st)*x.share/100;});
-      const u=unit9(m.unitId);const h=u&&u.head&&isPerson(u.head)&&u.head!=="shahzod"?u.head:null;
+      const u=unit9(m.unitId);const h=null;
       if(h){const hs=(ex.find(x=>x.emp===h)||{}).share||0;const hb=u.headModel==="nonplaying"?b:r2(b*(1-hs/100));if(hb>0){row(h).headBase+=hb;row(h).lines.push({id:p.id,no:m.no,base:hb,share:0,kind:"head"});pctSum+=st.headPct*(u.headModel==="nonplaying"?1:(1-hs/100));}}else firmKeeps+=r2(b*st.headPct/100);
-      const cn=cnLawyerOf(m);if(cn&&isPerson(cn)){row(cn).cnBase+=b;row(cn).lines.push({id:p.id,no:m.no,base:b,share:100,kind:"cn"});pctSum+=st.cnPct;}
+      
       const cap=st.capPct+(ex.some(x=>posOf(x.emp)==="senior")?st.seniorPct-st.execPct:0);
       if(pctSum>cap+0.01)warnings.push({type:"cap",id:p.id,no:m.no,pct:r2(pctSum),cap});
     });
@@ -5989,20 +6006,13 @@ Pages.payroll=function(){if(!can("payroll"))return `<div class="locked">${T1(UI.
 Pages.paySettings=function(){if(!can("paySettings"))return `<div class="locked">${T1(UI.noPay)}</div>`;const st=paySettings();const raw=S.settings.pay||{};
   const row=(l,v)=>`<tr><td>${T1(l)}</td><td>${v}</td></tr>`,sec=l=>`<tr class="sec"><td colspan="2">${T1(l)}</td></tr>`,pct=k=>st[k]+" %",usd=k=>fmtUsd(st[k]);
   return `<div class="cols"><div class="card"><h4>${T1(UI.sTitle)}<button class="act" data-act="editSet">${T1(UI.sEdit)}</button></h4><div style="font-size:12px;color:var(--ink-3);margin-bottom:8px">${T1(UI.sOnly)}</div><table class="settbl">
-    ${sec(UI.sExec)}${row(UI.sExecPct,pct("execPct"))}${row(UI.sSeniorPct,pct("seniorPct"))}${row(UI.sP2Pct,pct("p2Pct"))}${row(UI.sP2Q,pct("p2QPct"))}${row(UI.sExecMin,usd("execMin"))}${row(UI.sAssistant,usd("assistantBase"))}${row(UI.sAssistantAtt,usd("assistantAttested"))}${row(UI.sIntern,usd("internBase"))}
-    ${sec(UI.sHeads)}${row(UI.sHeadPct,pct("headPct"))}${row(UI.sHeadUncond,pct("headUncondPct"))}${row(UI.sHeadGoal,pct("headGoalPct"))}${row(UI.sHeadNon,usd("headNonplayingBase"))}
-    ${sec(UI.sCn)}${row(UI.sCnPct,pct("cnPct"))}${row(UI.sCnM,pct("cnMonthlyPct"))}${row(UI.sCnQ,pct("cnQPct"))}${row(UI.sCnMin,usd("cnMin"))}${row(UI.sClHeadQ,usd("clHeadQBonus"))}${row(UI.sClHeadA,usd("clHeadAnnual"))}
-    ${sec(UI.sTr)}${row(UI.sTrBase,usd("trBase"))}${row(UI.sTrBonus,usd("trBonus"))}${row(UI.sTrHead,usd("trHeadBase"))}${row(UI.sTrHeadBonus,usd("trHeadBonus"))}${row(UI.sTrExt,pct("trExtPct"))}${row(UI.sTrHeadExt,pct("trHeadExtPct"))}
-    ${sec(UI.sOps)}${Object.entries(st.opsFixed).map(([k,v])=>row(POS[k]||k,fmtUsd(v))).join("")}
+    ${sec(UI.sExec)}${row(UI.sExecPct,pct("execPct"))}${row(UI.sExecMin,usd("execMin"))}
     ${sec(UI.sTax)}${row(UI.sVat,pct("vatPct"))}${row(UI.sSocial,pct("socialPct"))}${row(UI.sNdfl,pct("ndflPct"))}${row(UI.sCap,pct("capPct"))}${row(UI.sBreak,usd("breakEven"))}${row(UI.sUsd,fmtN(st.usdRate))}${row(UI.sCny,fmtN(st.cnyRate))}</table></div>
     <div class="card"><h4>${T1(UI.sHist)}</h4>${(raw.history||[]).length?`<ul class="hist">${raw.history.slice().reverse().slice(0,40).map(h=>`<li><span class="ht">${fmtDT(h.at)}</span><b>${esc((S.accounts[h.by]||{}).name||h.by)}</b> · ${esc(h.what)}</li>`).join("")}</ul>`:`<div class="empty2">${T1(UI.noData)}</div>`}</div></div>`;};
 const PaySet={
   async edit(){if(!can("paySettings"))return;const st=paySettings();const n=(k,l,h)=>({k,label:T1(l),type:"number",value:st[k],hint:h});const s=l=>({type:"section",label:T1(l)});
-    const fields=[s(UI.sExec),n("execPct",UI.sExecPct),n("seniorPct",UI.sSeniorPct),n("p2Pct",UI.sP2Pct),n("p2QPct",UI.sP2Q),n("execMin",UI.sExecMin),n("assistantBase",UI.sAssistant),n("assistantAttested",UI.sAssistantAtt),n("internBase",UI.sIntern),
-      s(UI.sHeads),n("headPct",UI.sHeadPct),n("headUncondPct",UI.sHeadUncond),n("headGoalPct",UI.sHeadGoal),n("headNonplayingBase",UI.sHeadNon),
-      s(UI.sCn),n("cnPct",UI.sCnPct),n("cnMonthlyPct",UI.sCnM),n("cnQPct",UI.sCnQ),n("cnMin",UI.sCnMin),n("clHeadQBonus",UI.sClHeadQ),n("clHeadAnnual",UI.sClHeadA),
-      s(UI.sTr),n("trBase",UI.sTrBase),n("trBonus",UI.sTrBonus),n("trHeadBase",UI.sTrHead),n("trHeadBonus",UI.sTrHeadBonus),n("trExtPct",UI.sTrExt),n("trHeadExtPct",UI.sTrHeadExt),
-      s(UI.sOps),...Object.keys(st.opsFixed).map(k=>({k:"ops_"+k,label:T1(POS[k]||k),type:"number",value:st.opsFixed[k]})),
+    /* 16.10.2026: все — как адвокаты; ставки других должностей, руководителей, кит. юристов и переводчиков не редактируются */
+    const fields=[s(UI.sExec),n("execPct",UI.sExecPct),n("execMin",UI.sExecMin),
       s(UI.sTax),n("vatPct",UI.sVat),n("socialPct",UI.sSocial),n("ndflPct",UI.sNdfl),n("capPct",UI.sCap),n("breakEven",UI.sBreak),n("usdRate",UI.sUsd),n("cnyRate",UI.sCny)];
     document.getElementById("mdD").classList.add("w3");const v=await Dlg.ask({title:T1(UI.sTitle),fields,wide:true,cancelText:UI.cancel});document.getElementById("mdD").classList.remove("w3");if(!v)return;
     const cur=S.settings.pay||{id:"pay",history:[]};const next=Object.assign({},cur,{id:"pay"});next.opsFixed=Object.assign({},st.opsFixed);const changes=[];
@@ -6041,7 +6051,7 @@ Matter.fields=function(m){const f=_mfields9b(m);m=m||{};const ex=m.executors||[]
   const i=f.findIndex(x=>x.k==="team");const execOpts=[["","—"],...advSel().filter(o=>o[0]!=="shahzod")];
   const add=[{type:"section",label:T1(UI.mExec)+(frozen?" · "+T1(UI.mFrozen):"")},{k:"exec2",label:T1(UI.mExec2),type:"select",value:second,options:execOpts},{k:"share1",label:T1(UI.mShare1),type:"number",value:s1,hint:T1(UI.mShareH)},
     {type:"section",label:T1(UI.mQuality)},{k:"cnLawyer",label:T1(UI.mCn),type:"select",value:m.cnLawyer||"",options:[["",T1("по клиенту||按客户")],["-","—"],...cnPeople().map(e=>[e,dispName(e)])],hint:T1(UI.mCnH)},{k:"translator",label:T1(UI.mTr),type:"select",value:m.translator||"",options:[["","—"],...trPeople().map(e=>[e,dispName(e)+((ALL[e]||{}).practiceFor?" · "+unitName(ALL[e].practiceFor):"")])]},
-    {k:"reviewer",label:T1(UI.mRev),type:"select",value:m.reviewer||"",options:[["","—"],...[...new Set(["shahzod",...unitsAll().map(u=>u.head).filter(Boolean),...Object.keys(ALL).filter(e=>isPerson(e)&&posOf(e)==="senior")])].filter(e=>isPerson(e)).map(e=>[e,dispName(e)])]},
+    {k:"reviewer",label:T1(UI.mRev),type:"select",value:m.reviewer||"",options:[["","—"],...[...new Set(["shahzod",...staffPeople9b()])].filter(e=>isPerson(e)).map(e=>[e,dispName(e)])]},/* проверяющий — любой сотрудник (16.10.2026) */
     /* v17: поля фильтра качества влияют на зарплату — их меняют только УП и учредители.
        «Второй контроль пройден» ставится подтверждением этапа 5, «Договор подписан» — шагом воронки. */
     ...(isFounder()||hasF("managing")?[{k:"reviewPassed",label:T1(UI.mRevOk),type:"select",value:m.reviewPassed?"1":"0",options:[["0",T1(UI.no)],["1",T1(UI.yes)]]},{k:"contractSigned",label:T1(UI.mContract),type:"select",value:m.contractSigned?"1":"0",options:[["1",T1(UI.yes)],["0",T1(UI.no)]]},{k:"claim",label:T1(UI.mClaim),type:"select",value:m.claim?"1":"0",options:[["0",T1(UI.no)],["1",T1(UI.yes)]]}]:[])];
@@ -7124,7 +7134,8 @@ CA_KEYS10.push("clientRequests");
 /* ── доступ к стоимости ── */
 function costVisible(m){const u=U();if(!u||isClient()||!m)return false;const P=pos();if(isFounder()||hasF("managing")||P==="coo"||P==="accountant")return true;const me=u.emp;
   if(m.lead===me||execsOf(m).some(x=>x.emp===me))return true;if(headUnits().some(h=>sameFamily(h,m.unitId)))return true;if(P==="cnlawyer"&&cnLawyerOf(m)===me)return true;return false;}
-const isLicensed=e=>e==="shahzod"||["advocate","senior"].includes(posOf(e));
+/* лицензия адвоката — отметка учётки (licensedOf, v9_app.js), не должность (16.10.2026) */
+const isLicensed=e=>licensedOf(e);
 const leadViolation=m=>m.svc==="court"&&m.status!=="closed"&&m.pipeline!=="lost"&&!!m.lead&&!isLicensed(m.lead);
 /* ── миграция дела ── */
 function migrateMatter11(m){if(!m)return m;migrateMatter9b(m);migrateMatter10(m);if(m._v11)return m;
@@ -7907,8 +7918,9 @@ Object.assign(UI,{
  cmpTitle:"Сравнение расчёта «до / после»||核算“前后”对比", cpPenalty:"Скидка (зачёт пени) в следующей счёт-фактуре||违约金抵扣（下一张电子发票）"
 });
 /* ── параметры ── */
-Object.assign(PAY_DEFAULTS,{minByPos:{advocate:1300,senior:1300,lawyer:1300,junior:1300,cnlawyer:1500},advRepayPct:100,advMax:3000,advFromQuarter:false,stageActs:false,
-  premiumByPos:{advocate:"pct",senior:"pct",lawyer:"pct",junior:"pct",cnlawyer:"pct",translator:"ind",assistant:"none",intern:"none",coo:"none",accountant:"none",hr:"none",office:"none",clerk:"none",marketing:"none",it:"none"}});
+/* 16.10.2026: должностей нет — минимум и премия только «Адвокат» */
+Object.assign(PAY_DEFAULTS,{minByPos:{advocate:1300},advRepayPct:100,advMax:3000,advFromQuarter:false,stageActs:false,
+  premiumByPos:{advocate:"pct"}});
 const _ps13=paySettings;paySettings=()=>{const o=_ps13();const s=S.settings.pay||{};o.minByPos=Object.assign({},PAY_DEFAULTS.minByPos,s.minByPos||{});o.premiumByPos=Object.assign({},PAY_DEFAULTS.premiumByPos,s.premiumByPos||{});return o;};
 const PREM_OPTS=[["pct",UI.prmPct],["quarter",UI.prmQuarter],["ind",UI.prmInd],["none",UI.prmNone]];
 const PaySet13={
@@ -7920,7 +7932,7 @@ const PaySet13={
     next.history=(cur.history||[]).concat([{at:nowS(),by:U().login,what:"Параметры v13 (аванс, премии, этапные акты)"}]).slice(-200);next.updatedAt=nowS();next.updatedBy=U().login;await saveDoc("settings",next);Pay.cache={};audit("Изменены параметры оплаты v13");toast(T1(UI.saved));Router.render();}
 };
 const _paySetPage13=Pages.paySettings;Pages.paySettings=function(){const h=_paySetPage13.call(this);if(!can("paySettings"))return h;const st=paySettings();
-  const card=`<div class="card"><h4>${T1(UI.sV13)}<button class="act" data-act="editSet13">${T1(UI.sEdit)}</button></h4><table class="settbl"><tr class="sec"><td colspan="2">${T1(UI.sMinByPos)}</td></tr>${Object.entries(st.minByPos).map(([p,v])=>`<tr><td>${T1(POS[p]||p)}</td><td>${fmtUsd(v)}</td></tr>`).join("")}<tr><td>${T1(UI.sRepayPct)}</td><td>${st.advRepayPct} %</td></tr><tr><td>${T1(UI.sAdvMax)}</td><td>${fmtUsd(st.advMax)}</td></tr><tr><td>${T1(UI.sAdvQ)}</td><td>${T1(st.advFromQuarter?UI.yes:UI.no)}</td></tr><tr><td>${T1(UI.sStageActs)}</td><td>${T1(st.stageActs?UI.yes:UI.no)}</td></tr><tr class="sec"><td colspan="2">${T1(UI.sPremium)}</td></tr>${Object.entries(st.premiumByPos).map(([p,v])=>`<tr><td>${T1(POS[p]||p)}</td><td>${T1((PREM_OPTS.find(x=>x[0]===v)||PREM_OPTS[3])[1])}</td></tr>`).join("")}</table></div>`;
+  const card=`<div class="card"><h4>${T1(UI.sV13)}<button class="act" data-act="editSet13">${T1(UI.sEdit)}</button></h4><table class="settbl"><tr class="sec"><td colspan="2">${T1(UI.sMinByPos)}</td></tr>${Object.keys(PAY_DEFAULTS.minByPos).map(p=>[p,st.minByPos[p]]).map(([p,v])=>`<tr><td>${T1(POS[p]||p)}</td><td>${fmtUsd(v)}</td></tr>`).join("")}<tr><td>${T1(UI.sRepayPct)}</td><td>${st.advRepayPct} %</td></tr><tr><td>${T1(UI.sAdvMax)}</td><td>${fmtUsd(st.advMax)}</td></tr><tr><td>${T1(UI.sAdvQ)}</td><td>${T1(st.advFromQuarter?UI.yes:UI.no)}</td></tr><tr><td>${T1(UI.sStageActs)}</td><td>${T1(st.stageActs?UI.yes:UI.no)}</td></tr><tr class="sec"><td colspan="2">${T1(UI.sPremium)}</td></tr>${Object.keys(PAY_DEFAULTS.premiumByPos).map(p=>[p,st.premiumByPos[p]]).map(([p,v])=>`<tr><td>${T1(POS[p]||p)}</td><td>${T1((PREM_OPTS.find(x=>x[0]===v)||PREM_OPTS[3])[1])}</td></tr>`).join("")}</table></div>`;
   const i=h.lastIndexOf("</div>");return i>0?h.slice(0,i)+card+h.slice(i):h+card;};
 /* ── журнал авансов ── */
 S.advances=S.advances||{};CA_KEYS10.push("advances");
@@ -8390,7 +8402,8 @@ const _attnW17=attnRows11;attnRows11=function(scope){const rows=_attnW17(scope);
       Одно напоминание на один срок (метка в записи); при переносе срока напомнит снова. ── */
 const Remind17={last:0,busy:false,
   accts(emps){return [...new Set(emps.filter(Boolean))].map(accByEmp).filter(Boolean);},
-  accountants(){return Object.values(S.accounts||{}).filter(a=>a.active!==false&&normAccount(a).pos==="accountant");},
+  /* 16.10.2026: бухгалтера нет — напоминание «счёт/ЭСФ не выставлен» получает УП (и ведущий дела) */
+  accountants(){return Object.values(S.accounts||{}).filter(a=>a.active!==false&&(a.funcs||[]).some(f=>f==="founder"||f==="managing"));},
   async tick(force){if(!U()||isClient()||this.busy)return;if(!force&&Date.now()-this.last<10*60000)return;this.busy=true;this.last=Date.now();
     try{const saves=[];
       /* сроки дел — только разовые услуги и суды: дело сопровождения и его задания сюда не попадают */
@@ -9659,9 +9672,9 @@ const Acc20={
   /* ── сотрудники (Управление → Доступы) ── */
   async newStaff(){if(!(isFounder()||hasF("managing"))){toast(T1(UI.caOnlyFounder));return;}const ppl=Object.keys(ALL).filter(isPerson);
     const v=await Dlg.ask({title:T1(UI.aCreate),fields:[{k:"login",label:T1(UI.aLogin),required:true,hint:T1("латиница, цифры, точка||拉丁字母、数字、点")},{k:"name",label:T1(UI.aName),required:true},
-      {k:"role",label:T1(UI.aRole),type:"select",value:"staff",options:[["founder",T1(UI.rFounder)],["coo",T1(UI.rCoo)],["hr",T1(UI.rHr)],["head",T1(UI.rHead)],["staff",T1(UI.rStaff)]]},
+      {k:"role",label:T1(UI.aRole),type:"select",value:"staff",options:[["staff",T1("Адвокат||律师")],["mp",T1("Управляющий адвокат||管理律师")]]},
       {k:"emp",label:T1(UI.aEmp),type:"select",value:"",options:[["","—"],...ppl.map(e=>[e,dispName(e)])],required:true},{k:"pw",label:T1(UI.lgP),value:genPw(),required:true,check:x=>Acc20.pwCheck(x.pw,x.login)}]});
-    if(!v)return;const login=String(v.login).trim().toLowerCase();const n=normAccount({login,name:v.name,role:v.role,emp:v.emp||null,active:true});
+    if(!v)return;const login=String(v.login).trim().toLowerCase();const n=normAccount({login,name:v.name,role:"staff",funcs:v.role==="mp"?["managing"]:[],emp:v.emp||null,active:true});
     try{await this.rpc("admin_create_account",{acc:{kind:"staff",login,emp:v.emp||null,pos:n.pos||null,funcs:n.funcs||[],unitId:n.unitId||null,entity:n.entity||null,lang:"ru",data:{name:v.name,role:v.role}},pw:v.pw});}
     catch(e){toast(this.msg(e));return;}await this.reload();await this.showOnce(login,v.pw);Cabinet.render&&Cabinet.render();},
   async resetStaff(l){if(!(isFounder()||hasF("managing"))){toast(T1(UI.caOnlyFounder));return;}
@@ -10009,7 +10022,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="ca42a4eaba2c";
+const ZC_BUILD="453bef359372";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10241,20 +10254,21 @@ if(typeof Acc20!=="undefined"){const _newStaff21=Acc20.newStaff.bind(Acc20);Acc2
   const units=unitsAll().filter(u=>u&&u.id);
   const v=await Dlg.ask({title:T1(UI.aCreate),text:T1(UI.nsHint21),fields:[
     {k:"name",label:T1(UI.nsName21),required:true},{k:"nameZh",label:T1(UI.nsNameZh21)},
-    {k:"pos",label:T1(UI.nsPos21),type:"select",value:"advocate",options:Object.entries(Staff21.ROLE).map(([k,r])=>[k,T1(r)])},
     {k:"slot",label:T1("Позиция в «Структуре» (кому подчиняется)||架构职位（上级）"),type:"select",value:"",options:[["",T1("— без позиции —||— 无职位 —")],...(typeof Slot21!=="undefined"?Slot21.free():[])]},
     {k:"unit",label:T1(UI.nsUnit21),type:"select",value:"",options:[["","—"],...units.map(u=>[u.id,T1((u.nameRu||u.id)+"||"+(u.nameZh||u.nameRu||u.id))])]},
     {k:"access",label:T1(UI.nsAccess21),type:"select",value:"advocate",options:[["advocate",T1("Адвокат||律师")],["mp",T1("Управляющий адвокат||管理律师")]]},
+    {k:"lic",label:T1(UI.acc21Lic),type:"select",value:"1",options:[["1",T1(UI.yes)],["0",T1(UI.no)]],hint:T1(UI.acc21LicHint)},
     {k:"login",label:T1(UI.aLogin),required:true,hint:T1("латиница, цифры, точка||拉丁字母、数字、点")},
     {k:"pw",label:T1(UI.lgP),value:genPw(),required:true,check:x=>Acc20.pwCheck(x.pw,x.login)}]});
   if(!v)return;const login=String(v.login).trim().toLowerCase();
   /* роль доступа: «Управляющий адвокат» — функция managing; «Адвокат» — data.access (v21_adv.js) */
-  v.role="staff";const pos=v.pos,funcs=v.access==="mp"?["managing"]:[];
+  /* 16.10.2026: должности нет — роль только «Управляющий адвокат» или «Адвокат» */
+  v.role="staff";const pos=null,funcs=v.access==="mp"?["managing"]:[];
   /* позиция в «Структуре»: подразделение — то, где эта позиция */
   if(v.slot&&ALL[v.slot]&&ALL[v.slot].unit)v.unit=ALL[v.slot].unit;
   const unit=units.find(u=>u.id===v.unit);const name=v.nameZh?v.name+"||"+v.nameZh:v.name;
   try{await this.rpc("admin_create_account",{acc:{kind:"staff",login,emp:null,pos,funcs,unitId:v.unit||null,entity:unit?unit.entity:null,lang:"ru",
-      data:{name,nameZh:v.nameZh||undefined,role:v.role,slot:v.slot||undefined,access:v.access}},pw:v.pw});}
+      data:{name,nameZh:v.nameZh||undefined,role:v.role,slot:v.slot||undefined,access:v.access,licensed:v.lic==="1"}},pw:v.pw});}
   catch(e){toast(this.msg(e));return;}
   await this.reload();await this.showOnce(login,v.pw);Cabinet.render&&Cabinet.render();};}
 /* после создания или изменения учётки сотрудника — сразу в структуре, кадрах и расчёте */
@@ -10466,7 +10480,8 @@ const _pbind21=Pages.bind;Pages.bind=function(vp){_pbind21.call(this,vp);if(Rout
 
 /* ═══════════════════════════ v21 · РОЛЬ ДОСТУПА «АДВОКАТ» (версия 1.0, шаг 1) ═══════════════════════════
    Решение владельца 11.10.2026. Роль хранится в учётке (data.access = "advocate", сервер — миграция 20261011000100);
-   управляющий адвокат — по функциям founder/managing, как раньше. Учётки без роли и демо-режим работают как раньше.
+   управляющий адвокат — по функциям founder/managing, как раньше. С 16.10.2026 ролей только две (УП и адвокат): учёток без роли нет,
+   должность и руководство подразделением прав не дают; демо-режим — по тем же правилам.
    Адвокат видит только то, что его касается. Дело касается адвоката, если он в нём ведущий, в команде, исполнитель,
    проверяющий, переводчик/китайский юрист дела или получил задание сопровождения — одно правило для всех разделов.
    Меню: Работа — Главная, Разовые услуги, Судебные дела, Юр. сопровождение, Обращения клиентов, Архив, Календарь;
@@ -10479,6 +10494,8 @@ const _pbind21=Pages.bind;Pages.bind=function(vp){_pbind21.call(this,vp);if(Rout
 Object.assign(UI,{
   acc21Access:"Доступ||权限",acc21Adv:"Адвокат||律师",acc21Mp:"Управляющий адвокат||管理律师",acc21None:"без роли||无角色",acc21Change:"Изменить доступ||修改权限",
   acc21Self:"Свой доступ управляющего адвоката изменить нельзя||不能修改自己的管理律师权限",
+  acc21Lic:"Лицензия адвоката||律师执照",acc21LicShort:"лицензия||执照",
+  acc21LicHint:"Не роль и не доступ. Нужна для законных правил: судебное дело ведёт адвокат с лицензией, адвокат не ведёт дела ООО, налог в расчёте зарплаты||不是角色或权限。用于法定规则：诉讼案件须由持证律师负责，律师不负责有限公司案件，工资计税",
   adv21ClientQ:"Клиент нового дела||新案件的客户",adv21Mine:"Мой клиент (из моих дел)||我的客户（来自我的案件）",adv21Find:"Найти клиента фирмы по точному названию или ИНН||按准确名称或税号查找律所客户",
   adv21New:"Новый клиент||新客户",adv21FindQ:"Название или ИНН||名称或税号",adv21FindHint:"Список всех клиентов фирмы не показывается — введите точное название или ИНН||不显示律所全部客户——请输入准确名称或税号",
   adv21NotFound:"Клиент не найден. Проверьте название или ИНН, либо создайте нового клиента||未找到客户。请核对名称或税号，或新建客户",
@@ -10490,12 +10507,13 @@ Object.assign(UI,{
   mx21Note:"✓ — всё · ◐ — только своё (дела, где он участник) · 👁 — только просмотр · — нет. Остальные виды доступа добавляются по решению управляющего адвоката.||✓ — 全部 · ◐ — 仅本人相关 · 👁 — 仅查看 · — 无。其他权限类型由管理律师决定后添加。"
 });
 const Adv21={
-  /* роль учётки: "mp" — управляющий адвокат (функции), "advocate" — адвокат, "" — без роли */
-  kind(a){a=a||{};if((a.funcs||[]).some(f=>f==="founder"||f==="managing"))return "mp";return a.access||"";},
-  label(k){return T1(k==="mp"?UI.acc21Mp:k==="advocate"?UI.acc21Adv:UI.acc21None);},
-  on(){const u=U();if(!u||isClient()||typeof Staff21==="undefined"||!Staff21.on())return false;return this.kind(S.accounts[u.login]||{})==="advocate";},
+  /* роль учётки (16.10.2026 — только две): "mp" — управляющий адвокат (функции founder/managing), иначе "advocate" — адвокат.
+     Учёток «без роли» нет; должность и руководство подразделением прав не дают. Действует и в демо-режиме. */
+  kind(a){a=a||{};if((a.funcs||[]).some(f=>f==="founder"||f==="managing"))return "mp";return "advocate";},
+  label(k){return T1(k==="mp"?UI.acc21Mp:UI.acc21Adv);},
+  on(){const u=U();if(!u||isClient())return false;return this.kind(S.accounts[u.login]||u)==="advocate";},
   touches(m){const me=(U()||{}).emp;return !!(m&&me)&&(m.lead===me||(m.team||[]).includes(me)||m.cnLawyer===me||m.translator===me||m.reviewer===me||(m.executors||[]).some(x=>x&&x.emp===me)||(m.assignments||[]).some(a=>a&&a.emp===me));},
-  isAdvEmp(e){const a=accByEmp(e);return !!a&&(a.pos==="advocate"||a.access==="advocate");}
+  isAdvEmp(e){const a=accByEmp(e);return !!a&&this.kind(a)==="advocate";}
 };
 /* ── что видно: дела ── */
 const _mvAdv21=matterView;matterView=function(m){if(!Adv21.on())return _mvAdv21(m);if(!m||m._fact20)return null;migrateMatter9(m);return Adv21.touches(m)?"full":null;};
@@ -10532,7 +10550,8 @@ const _mCreateAdv21=Matter.create;Matter.create=async function(clientId){if(!Adv
 if(typeof SB19!=="undefined"){const _dsAdv21=SB19.docSet.bind(SB19);SB19.docSet=async function(name,id,obj){if(name==="clients"&&obj&&obj._stub21)return;return _dsAdv21(name,id,obj);};}
 const _mfAdv21=Matter.fields;Matter.fields=function(m){const f=_mfAdv21.apply(this,arguments);if(!Adv21.on())return f;const me=U().emp,cur=(m&&m.team)||[];
   f.forEach(x=>{if(!x)return;if(x.k==="lead"&&!(m&&m.id)){x.value=me;x.options=[[me,dispName(me)]];}
-    if(x.k==="team"&&Array.isArray(x.options))x.options=x.options.filter(o=>!o[0]||o[0]===me||cur.includes(o[0])||!Adv21.isAdvEmp(o[0]));});return f;};
+    /* людей в команду дела добавляет только УП (16.10.2026) */
+    if(x.k==="team"&&Array.isArray(x.options))x.options=x.options.filter(o=>!o[0]||o[0]===me||cur.includes(o[0]));});return f;};
 /* ── события: свои ── */
 const _evFAdv21=Ev.fields.bind(Ev);Ev.fields=function(e){const f=_evFAdv21(e);if(Adv21.on()){const me=U().emp;f.forEach(x=>{if(x&&x.k==="emp"){x.value=me;x.options=[[me,dispName(me)]];}});}return f;};
 /* ── корреспонденция: регистрирует по своим делам; меняет и удаляет только черновики ── */
@@ -10577,22 +10596,26 @@ const _nextNoAdv21=nextNo11;nextNo11=function(ent){const no=_nextNoAdv21(ent);if
   Object.values(Calc20.facts).forEach(f=>{const r=re.exec(f&&f.no||"");if(r&&+r[1]>=n)n=+r[1]+1;});return `${m[1]}-${m[2]}-${String(n).padStart(3,"0")}`;};
 /* ── «Доступы»: роль в списке и «Изменить доступ» ── */
 if(typeof Acc20!=="undefined"){
-  Acc20.setAccess=async function(login){const a=S.accounts[login];if(!a)return;const cur=Adv21.kind(a);
-    if(login===U().login&&cur==="mp"){toast(T1(UI.acc21Self));return;}
-    const v=await Dlg.ask({title:T1(UI.acc21Change)+" · "+login,text:esc(a.name||""),fields:[{k:"access",label:T1(UI.acc21Access),type:"select",value:cur||"advocate",options:[["advocate",T1(UI.acc21Adv)],["mp",T1(UI.acc21Mp)]]}]});if(!v||v.access===cur)return;
-    const funcs=v.access==="mp"?[...new Set([...(a.funcs||[]).filter(f=>f!=="founder"),"managing"])]:(a.funcs||[]).filter(f=>f!=="managing"&&f!=="founder");
-    try{await this.rpc("admin_update_account",{target:login,patch:{funcs,data:{access:v.access}}});}catch(e){toast(this.msg(e));return;}
-    audit(`Доступ ${login}: ${Adv21.label(v.access)}`);await this.reload();toast(T1(UI.saved));Cabinet.render&&Cabinet.render();};
+  /* роль (УП / адвокат) и отметка «Лицензия адвоката» (16.10.2026); свою роль управляющий адвокат не меняет */
+  Acc20.setAccess=async function(login){const a=S.accounts[login];if(!a)return;const cur=Adv21.kind(a),self=login===U().login&&cur==="mp",lic=licensedOf(a.emp);
+    const v=await Dlg.ask({title:T1(UI.acc21Change)+" · "+login,text:esc(a.name||"")+(self?" · "+T1(UI.acc21Self):""),fields:[
+      ...(self?[]:[{k:"access",label:T1(UI.acc21Access),type:"select",value:cur,options:[["advocate",T1(UI.acc21Adv)],["mp",T1(UI.acc21Mp)]]}]),
+      {k:"lic",label:T1(UI.acc21Lic),type:"select",value:lic?"1":"0",options:[["1",T1(UI.yes)],["0",T1(UI.no)]],hint:T1(UI.acc21LicHint)}]});if(!v)return;
+    const acc=self?cur:v.access,nl=v.lic==="1";if(acc===cur&&nl===lic)return;
+    const patch={data:{access:acc,licensed:nl}};
+    if(acc!==cur)patch.funcs=acc==="mp"?[...new Set([...(a.funcs||[]).filter(f=>f!=="founder"),"managing"])]:(a.funcs||[]).filter(f=>f!=="managing"&&f!=="founder");
+    try{await this.rpc("admin_update_account",{target:login,patch});}catch(e){toast(this.msg(e));return;}
+    audit(`Доступ ${login}: ${Adv21.label(acc)} · ${T1(UI.acc21Lic)}: ${T1(nl?UI.yes:UI.no)}`);await this.reload();toast(T1(UI.saved));Cabinet.render&&Cabinet.render();};
   const _cabAccAdv21=Cabinet.acc.bind(Cabinet);Cabinet.acc=function(){let h=_cabAccAdv21();if(!Acc20.on())return h;
     Object.values(S.accounts).forEach(a=>{if(!a||!a.login)return;const btn=`<button class="btn sm" data-pw="${esc(a.login)}">`;
-      h=h.replace(btn,`<button class="btn sm ghost" data-acc21="${esc(a.login)}">${T1(UI.acc21Access)}: ${Adv21.label(Adv21.kind(a))}</button> `+btn);});return h;};
+      h=h.replace(btn,`<button class="btn sm ghost" data-acc21="${esc(a.login)}">${T1(UI.acc21Access)}: ${Adv21.label(Adv21.kind(a))}${licensedOf(a.emp)?" · "+T1(UI.acc21LicShort):""}</button> `+btn);});return h;};
   const _cabBindAdv21=Cabinet.bind.bind(Cabinet);Cabinet.bind=function(b){_cabBindAdv21(b);if(!Acc20.on())return;b.querySelectorAll("[data-acc21]").forEach(el=>el.onclick=()=>Acc20.setAccess(el.dataset.acc21));};
 }
 /* ── «Матрица прав» по разделам меню ── */
 const MX21_COLS=[["home",UI.nHome],["oneoff",UI.nOneoff],["court",UI.nCourt11],["support",UI.nSupport11],["creq",UI.nCReq],["archive",UI.nArchive11],["cal",UI.nCal],
   ["chart",UI.nChart],["manage",UI.nManage],["clients",UI.nClients],["corr",UI.nCorr],["hr",UI.nHr],["fin",UI.nFin],["price",UI.nPrice],["kpstats",UI.ksTitle],["overdues",UI.nOverdues],["req",UI.nReq],["complaints",UI.nComplaints]];
 const MX21_ADV={home:2,oneoff:2,court:2,support:2,creq:2,archive:2,cal:2,corr:2,fin:2,price:3,req:2};
-const _rightsAdv21=Cabinet.rights.bind(Cabinet);Cabinet.rights=function(){if(typeof Staff21==="undefined"||!Staff21.on())return _rightsAdv21();const mk=(lbl,f)=>`<tr><td><b>${T1(lbl)}</b></td>${MX21_COLS.map(([k])=>{const x=f(k);return `<td class="${x===1?"y":x===2||x===3?"p":"n"}">${x===1?"✓":x===2?"◐":x===3?"👁":"—"}</td>`;}).join("")}</tr>`;
+const _rightsAdv21=Cabinet.rights.bind(Cabinet);Cabinet.rights=function(){const mk=(lbl,f)=>`<tr><td><b>${T1(lbl)}</b></td>${MX21_COLS.map(([k])=>{const x=f(k);return `<td class="${x===1?"y":x===2||x===3?"p":"n"}">${x===1?"✓":x===2?"◐":x===3?"👁":"—"}</td>`;}).join("")}</tr>`;
   return `<div class="card"><h4>${T1(UI.cRights)}</h4><div style="overflow-x:auto"><table class="tbl matrix"><thead><tr><th>${T1(UI.aRole)}</th>${MX21_COLS.map(([,l])=>`<th>${T1(l)}</th>`).join("")}</tr></thead><tbody>
     ${mk(UI.acc21Mp,()=>1)}${mk(UI.acc21Adv,k=>MX21_ADV[k]||0)}</tbody></table></div><p style="font-size:12px;color:var(--ink-3);margin-top:10px">${T1(UI.mx21Note)}</p></div>`;};
 
@@ -11185,10 +11208,11 @@ Pipe.unsign21=async function(id){const m=matter(id);if(!m||!Svc21.mp()||!m.contr
 
 /* ── переходы по стадиям ── */
 Stage.next=function(m){const u=U();if(!u||isClient()||!m)return [];migrateMatter11(m);if(m.status==="closed"||m.pipeline!=="contract"||m.paused||m.pipeline==="lost")return [];
-  const me=u.emp,F=Svc21.mp(),lead=m.lead===me||execsOf(m).some(x=>x.emp===me),head=headUnits().some(h=>sameFamily(h,m.unitId)),ok=c=>c||F;const s=m.stage,nx=St21.next(m),out=[];if(!nx)return out;
-  if(s==="review"){if(!lead&&ok(m.reviewer===me||head||posOf(me)==="senior")){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
-  if(s==="translation"){if(!lead&&ok(m.translator===me||posOf(me)==="translator")){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
-  if(s==="cn"){if(!lead&&ok(cnLawyerOf(m)===me||posOf(me)==="cnlawyer")){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
+  /* 16.10.2026: две роли — УП или назначенный в деле (ведущий/исполнитель, проверяющий, переводчик, китайский юрист); должности и руководство подразделением прав не дают */
+  const me=u.emp,F=Svc21.mp(),lead=m.lead===me||execsOf(m).some(x=>x.emp===me),head=false,ok=c=>c||F;const s=m.stage,nx=St21.next(m),out=[];if(!nx)return out;
+  if(s==="review"){if(!lead&&ok(m.reviewer===me)){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
+  if(s==="translation"){if(!lead&&ok(m.translator===me)){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
+  if(s==="cn"){if(!lead&&ok(cnLawyerOf(m)===me)){out.push({to:nx,label:St21.label(nx),confirm:true});out.push({to:"work",label:UI.stReturn,ret:true});}return out;}
   if(s==="ready"){if(nx==="accepted"&&ok(lead||head))out.push({to:"accepted",label:UI.stAcceptOff,offline:true});return out;}
   if(s==="accepted"){if(nx==="archive"&&F)out.push({to:"archive",label:UI.ar21T,archive:true});return out;}
   if(s==="archive")return out;
@@ -11204,7 +11228,7 @@ Stage.set=async function(id,to,ret){const m=matter(id);if(!m)return;migrateMatte
   if(to==="ready"&&!ret){const b=payBlock11(m);if(b){toast(T1(b==="month"?UI.payBlockM:UI.payBlock8));return;}if(Gate21.postpayWarn(m)&&!await Dlg.confirm(T1(UI.st21PostpayT),T1(UI.st21Postpay)))return;}
   let note="";if(ret){const v=await Dlg.ask({title:T1(UI.stReturn),fields:[{k:"why",label:T1(UI.stReturnWhy),type:"textarea",required:true}]});if(!v)return;note=v.why;}
   const from=m.stage;m.stage=to;m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:to,at:nowS(),by:U().emp,from,returned:!!ret,note,internal:!!ret});
-  if(to==="review"&&!m.reviewer){const me=U().emp;const self=m.lead===me||execsOf(m).some(x=>x.emp===me);if(headUnits().length&&!self)m.reviewer=me;else if(typeof Org21!=="undefined"){const b=Org21.boss(m.lead);if(b&&b!==me)m.reviewer=b;}}
+  /* проверяющего назначает УП; автоназначение руководителя и начальника по «Структуре» отключено (16.10.2026) */
   if(from==="review"&&!ret)m.reviewPassed=true;
   if(to==="ready"){m.readyAt=nowS();if(!l.includes("review"))m.reviewPassed=true;}
   m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:(ret?"Возврат на доработку с этапа «"+St21.label(from)+"»":"Этап: "+St21.label(to))});
@@ -13233,6 +13257,18 @@ const Sign22={
 };
 if(typeof Pipe!=="undefined"){const _psg22=Pipe.set.bind(Pipe);Pipe.set=async function(id,step){const m=matter(id);
   if(step==="contract"&&pr22oneoff(m)&&m.pipeline!=="contract"&&!(typeof FW17!=="undefined"&&FW17.isOrder(m))){if(!await Sign22.run(id))return;}return _psg22(id,step);};}
+/* корреспонденция адвоката (решение владельца 16.10.2026): письма своих дел и внесённые им самим. На сервере — то же правило
+   (миграция 0035, политики corr_read/corr_upd); в демо-режиме сервера нет — список отбирается при показе страницы.
+   Обёртка — последней, чтобы отбор действовал на все разделы страницы. */
+if(typeof Adv21!=="undefined"){
+  Adv21.corrOk=function(k){const me=(U()||{}).emp;if(!k||!me)return false;if(k.createdBy===me)return true;const m=k.matterId&&matter(k.matterId);return !!m&&matterView(m)==="full";};
+  const _rendCorr22=Router.render.bind(Router);Router.render=function(){if(!Adv21.on())return _rendCorr22.apply(this,arguments);
+    const keep=S.corr;Adv21._corrAll=keep;S.corr=Object.fromEntries(Object.entries(keep||{}).filter(([,k])=>Adv21.corrOk(k)));
+    try{return _rendCorr22.apply(this,arguments);}finally{S.corr=keep;Adv21._corrAll=null;}};
+  /* сохранение демо-данных во время показа — всегда с полным списком писем */
+  if(typeof LS!=="undefined"&&typeof LS.save==="function"){const _lsCorr22=LS.save;LS.save=function(){const all=Adv21._corrAll;if(!all)return _lsCorr22.apply(this,arguments);
+    const cur=S.corr;S.corr=all;try{return _lsCorr22.apply(this,arguments);}finally{S.corr=cur;}};}
+}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
