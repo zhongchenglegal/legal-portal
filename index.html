@@ -6383,6 +6383,12 @@ const _lsRestore9e=LS.restore;LS.restore=function(){const r=_lsRestore9e.call(th
 /* ── состав схемы по режимам: «Сейчас» — только реальные сотрудники; этап 1 / цель — только позиции ── */
 const isDemoM=m=>!!m.demo||/\(тест\)|（测试）/.test(String(m.name||""));
 const chartMembers9=u=>mode==="now"?u.members.filter(m=>!m.vac&&!isDemoM(m)):u.members.filter(m=>m.vac&&(m.st??2)<=lim());
+/* «Сейчас» (16.10.2026): реальные сотрудники без «Позиции в Структуре» тоже показываются — в своей организации;
+   подпись под именем — роль («Адвокат» / «Управляющий адвокат»), а не позиция плана. «Этап 1» и «Цель» не меняются. */
+const unplacedNow9=key=>{if(mode!=="now"||(key!=="legal"&&key!=="llc")||typeof Staff21==="undefined")return [];
+  return [...new Set(Staff21.added||[])].map(id=>ALL[id]).filter(m=>m&&!m.vac&&!m.members&&!isDemoM(m)&&!UNITS.some(u=>u.members.includes(m))&&(key==="llc"?m.ent==="ooo":m.ent!=="ooo"));};
+const roleNow9=m=>{if(mode!=="now")return m.role;const a=typeof accByEmp==="function"?accByEmp(m.id):null;if(!a)return m.role;
+  return typeof Adv21!=="undefined"&&Adv21.kind(a)==="mp"?"Управляющий адвокат||管理律师":"Адвокат||律师";};
 const isAs9=m=>m.type==="jur"&&/помощник|assistant|助理/i.test(T1(m.name)+" "+T1(m.role));
 const plRu=(n,f)=>{const a=Math.abs(n)%100,b=a%10;return f[a>10&&a<20?2:b===1?0:b>1&&b<5?1:2];};
 const cntLbl=(n,kind)=>lang==="zh"?(kind==="pos"?`${n} 个岗位`:`${n} 人`):lang==="uz"?`${n} ${kind==="pos"?"lavozim":"kishi"}`:`${n} ${kind==="pos"?plRu(n,["позиция","позиции","позиций"]):"чел."}`;
@@ -6404,10 +6410,10 @@ render=function(){
     {key:"shared",cls:"shared",title:T1(UI.orgShared9),sub:"",units:["u_cl","u_tr","u_ops"],extra:0}
   ];
   const orgHtml=groups.map(g=>{
-    const us=g.units.map(byId).filter(Boolean);const ms=us.flatMap(chartMembers9);
+    const us=g.units.map(byId).filter(Boolean);const ms=us.flatMap(chartMembers9).concat(unplacedNow9(g.key));
     if(flat&&!ms.length)return "";
     let body;
-    if(flat){const pm=ms.slice().sort((a,b)=>(a.type==="adv"?0:a.type==="jur"?1:2)-(b.type==="adv"?0:b.type==="jur"?1:2));body=`<div class="units9-now">${pm.map(m=>memberCard(m,true)).join("")}</div>`;}
+    if(flat){const pm=ms.slice().sort((a,b)=>(a.type==="adv"?0:a.type==="jur"?1:2)-(b.type==="adv"?0:b.type==="jur"?1:2));body=`<div class="units9-now">${pm.map(m=>memberCard(Object.assign({},m,{role:roleNow9(m)}),true)).join("")}</div>`;}
     else body=`<div class="units">${us.map(branch9e).join("")}</div>`;
     return `<div class="org9 ${g.cls}"><div class="org9h"><b>${esc(g.title)}</b><span class="pill9"><b>${ms.length+g.extra}</b> ${T1(UI.ppl9)}</span></div>${body}</div>`;
   }).join("");
@@ -6416,7 +6422,7 @@ render=function(){
       <div class="chips">${FOUNDERS.map(f=>{const ph=photo(f.id);return `<div class="chip${f.lead?" lead":""}${ph?" hasph":""}${f.id===activeId?" active":""}" data-id="${f.id}" role="button" tabindex="0">${ph?`<img class="cph" src="${ph}" alt="">`:""}<div><div class="cn">${T(f.name)}</div><div class="cr">${T1(f.chip)}</div></div></div>`;}).join("")}</div></div>
     <div class="orgs9">${orgHtml}</div></div>`;
   /* показатели */
-  const all=UNITS.flatMap(chartMembers9);
+  const all=UNITS.flatMap(chartMembers9).concat(unplacedNow9("legal"),unplacedNow9("llc"));
   const n=(f)=>all.filter(f).length;
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   set("k9All",all.length+1);set("k9Legal",n(m=>m.ent==="firm")+1);set("k9Llc",n(m=>m.ent==="ooo"));
@@ -10022,7 +10028,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="453bef359372";
+const ZC_BUILD="009f0d5f34d2";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
