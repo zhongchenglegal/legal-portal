@@ -10103,7 +10103,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="abdbec518ab2";
+const ZC_BUILD="b3e0632cef95";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -13963,6 +13963,8 @@ if(typeof Card22!=="undefined"){
     const box=document.createElement("div");box.innerHTML=Pre24.card(m);pane.insertBefore(box.firstElementChild,pane.firstChild);
     /* главная кнопка шапки — действие текущего этапа */
     pane.querySelectorAll(".c22todo .trow").forEach(r=>{if(r.querySelector('[data-c22target*="kp"],[data-c22kprem],[data-c22target*="data-pipe"]'))r.remove();});
+    if(["lead","negotiation","offer","approval_terms"].includes(m.pipeline)){pane.querySelectorAll(":scope>.c22ct,:scope>.svc11").forEach(x=>x.remove());
+      pane.querySelectorAll(".c22todo .trow").forEach(r=>{if(r.querySelector('[data-c22target*="ctEdit"],[data-c22target*="ctFile21"]'))r.remove();});}
     const todo=pane.querySelector(".c22todo");if(todo&&!todo.querySelector(".trow"))todo.remove();
     if(m.pipeline==="contract"||m.status==="closed"){const d0=document.createElement("div");d0.appendChild(w.cloneNode(true));return d0.innerHTML;}
     const p=Pre24.prim(m);w.querySelectorAll(".c22acts .btn.pri,.c22bar .btn.pri").forEach(b=>{if(p){b.textContent=p.name+" →";b.dataset.c22target=`.p24 [data-p24a="${p.a}"]`;}else b.remove();});
@@ -13975,14 +13977,17 @@ if(typeof Card22!=="undefined"&&Card22.feed){const _fd24=Card22.feed.bind(Card22
 /* до договора: прежние кнопки воронки разовой услуги не показываются — действия на этапах; «Отказ» остаётся в меню «⋯» */
 if(typeof Pipe!=="undefined"){const _pn24=Pipe.next.bind(Pipe);Pipe.next=function(m){const out=_pn24(m);if(!m||m.svc!=="oneoff"||isClient()||["contract","lost"].includes(m.pipeline))return out;
   return out.filter(a=>a.danger||a.to==="lostconfirm"||a.to==="lostreturn"||(m.pipeline==="team_draft"&&a.to==="contract"));};}
-/* новое дело разовой услуги: источник заявки; ведущий другой — назначение со сроком (принимает он), сам себе — принято сразу */
-{const _mc24=Matter.create;Matter.create=async function(){const before=new Set(Object.keys(S.matters||{}));const r=await _mc24.apply(this,arguments);
-  const nm=Object.values(S.matters||{}).find(x=>!before.has(x.id)&&x.svc==="oneoff");if(!nm||nm.intake23)return r;const me=Pre24.me(),at=nowS();
-  nm.intake23={src:Pre24.mp()?"mp":"adv",by:me,at,text:nm.notes||"",files:(nm.files||[]).map(f=>Object.assign({},f))};
-  if(nm.lead===me){nm.intake23.accepted={by:me,at};if(nm.pipeline==="lead"||!nm.pipeline){nm.pipeline="negotiation";(nm.pipelineHistory=nm.pipelineHistory||[]).push({step:"negotiation",at,by:me,from:"lead"});}Pre24.toFolder(nm);}
-  else{nm.intake23.assign={to:nm.lead,by:me,at,due:typeof addWD==="function"?addWD(todayS(),1):todayS(),note:""};if(nm.pipeline!=="lead"){const from=nm.pipeline;nm.pipeline="lead";(nm.pipelineHistory=nm.pipelineHistory||[]).push({step:"lead",at,by:me,from});}
-    const a=accByEmp(nm.lead);if(a&&a.login!==U().login)notify(a.login,"task",nt18("p24assign",{no:nm.no,d:{d:nm.intake23.assign.due}}),nm.id);}
-  try{await saveDoc("matters",nm);}catch(e){}Router.render();return r;};}
+/* новое дело разовой услуги: этап «Приём заявки» ставится при создании дела, до записи (не после — на сервере дело появляется не сразу).
+   Ведущий другой — назначение со сроком, принимает он; сам себе — заявка принята сразу. Прежнее поле «Этап воронки» в окне не показывается. */
+{const _mf24=Matter.fields;Matter.fields=function(m){const pre=Matter._svc;const f=_mf24.apply(this,arguments);if(m&&m.id)return f;const sv=f.find(x=>x&&x.k==="svc");const one=(pre||(sv&&sv.value))==="oneoff";
+    return one?f.filter(x=>!(x&&x.k==="pipeline")):f;};
+  const _ma24=Matter.apply;Matter.apply=function(m,v){const isNew=!m.no&&!(S.matters||{})[m.id];const r=_ma24.apply(this,arguments);
+    if(!isNew||m.svc!=="oneoff"||m.intake23||isClient())return r;const me=Pre24.me(),at=nowS();
+    m.intake23={src:Pre24.mp()?"mp":"adv",by:me,at,text:String(v.notes||m.notes||""),files:(Array.isArray(v.files)?v.files:[]).map(x=>Object.assign({},x))};
+    if(m.lead===me){m.intake23.accepted={by:me,at};v.pipeline="negotiation";const fn=withLang18("ru",()=>T1(UI.p24DocsFolder));
+      if(m.intake23.files.length){m.folders22=[fn];m.intake23.folder=fn;(v.files||[]).forEach(x=>{x.folder=fn;});}}
+    else{m.intake23.assign={to:m.lead,by:me,at,due:typeof addWD==="function"?addWD(todayS(),1):todayS(),note:""};v.pipeline="lead";}
+    return r;};}
 /* обращения клиентов (разовая услуга): видит только УП, пока не назначен ведущий; УП назначает ведущего со сроком, берёт себе или отклоняет с сообщением клиенту */
 if(typeof CReq!=="undefined"){
   const _all24=CReq.all.bind(CReq);CReq.all=function(){const l=_all24();if(isClient()||Pre24.mp())return l;return l.filter(r=>r.svc!=="oneoff");};
@@ -14005,6 +14010,15 @@ if(typeof CReq!=="undefined"){
     (out.notify||[]).forEach(n=>{const a=accByEmp(n.to);if(a&&a.login!==u.login)notify(a.login,"task",nt18(n.k,Object.assign({no:m.no},n.p||{})),m.id);});
     notify(r.contactId,"client",nt18("negC",{no:m.no}),m.id);audit(`Обращение ${r.id}: ${dispName(lead)}`);Router.go("matter",m.id);};
 }
+/* ══ НОМЕР ДЕЛА ОТДЕЛЬНО ОТ НОМЕРА ДОГОВОРА (решение владельца 17.10.2026) ══
+   Номер договора — прежний (ZCL-26-101 …, Reg21: в договоре дела и в реестре договоров). Номер нового дела разовой услуги — порядковый
+   1, 2, 3 … (один общий счёт); выдаёт сервер (reserve_matter_no, миграция 20261017001100); без сервера — следующий по видимым делам.
+   Заказы по рамочному договору — как раньше (номер рамочного / № заказа). */
+Pre24.reserveNo=async function(){if(typeof SB19!=="undefined"&&SB19.on&&SB19.T&&!this.noNoSrv){try{const n=await SB19.T.rpc("reserve_matter_no",{});if(n)return String(n);}
+    catch(e){if(/PGRST202|Could not find the function|reserve_matter_no/i.test(String((e&&(e.message||e.code))||e)))this.noNoSrv=true;else throw e;}}
+  let n=0;Object.values(S.matters||{}).forEach(m=>{if(/^[0-9]+$/.test(String(m.no||"")))n=Math.max(n,+m.no);});return String(n+1);};
+if(typeof Reg21!=="undefined"&&Reg21.number){const _num24=Reg21.number.bind(Reg21);Reg21.number=async function(m){const fw=(m.contract||{}).mode==="framework";const r=await _num24(m);
+  if(m&&m.svc==="oneoff"&&!fw){m.no=await Pre24.reserveNo();}return r;};}
 /* ══ КАБИНЕТ КЛИЕНТА: КП — принять, задать вопрос, отказаться; отметки «открыл» и «скачал» ══ */
 const Pre24C={
   async call(m,act,text){if(typeof StSrv23!=="undefined"&&StSrv23.on()&&!Pre24.noSrvC){const r=await StSrv23.call("pre24_client",{mid:m.id,act,text:text||""});if(r.err){toast(r.err);return false;}if(r.d){StSrv23.apply(m,r.d);return true;}if(r.skip)Pre24.noSrvC=true;}
