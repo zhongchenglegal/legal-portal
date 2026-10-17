@@ -5614,7 +5614,7 @@ function mapOldUnit(m){
   return t==="licensing"?"u_lic":t==="realty"?"u_build":(t==="litigation"?"u_p4":"u_p2");
 }
 /* лицензия адвоката (16.10.2026 — не роль и не доступ): отметка учётки licensed; пока её нет — по прежней должности
-   (адвокат или старший юрист). Нужна для законных правил: судебное дело, дела ООО, налог в расчёте зарплаты. */
+   (адвокат или старший юрист). Нужна для законных правил: судебное дело, налог в расчёте зарплаты. */
 function licensedOf(e){if(e==="shahzod")return true;const a=typeof accByEmp==="function"?accByEmp(e):null;
   if(a){if(typeof a.licensed==="boolean")return a.licensed;return ["advocate","senior"].includes(a.pos);}const d=ALL[e]||{};return d.type==="adv";}
 function migrateMatter9(m){
@@ -5622,13 +5622,9 @@ function migrateMatter9(m){
   if(!m.unitId||!/^u_/.test(m.unitId)){const nu=mapOldUnit(m);if(m.practice!==nu)m.practiceOld=m.practiceOld||m.practice;m.unitId=nu;m.practice=nu;}
   if(m.practice!==m.unitId)m.practice=m.unitId;
   if(!m.entity)m.entity=entityOfUnit(m.unitId);
-  /* состав: в ООО только юристы, в адвокатской фирме только адвокаты/помощники/стажёры */
-  /* 16.10.2026: адвокат — по лицензии (licensedOf), юрист ООО — сотрудник ООО без лицензии; должностей нет */
-  const isAdv=e=>licensedOf(e);
-  const isLaw=e=>!licensedOf(e)&&(()=>{const a=accByEmp?accByEmp(e):null;return a?(a.entity||empEntity(e))==="llc":(ALL[e]&&ALL[e].type==="jur"&&empEntity(e)==="llc");})();
-  if(m.entity==="llc"&&m.lead&&m.lead!=="shahzod"&&isAdv(m.lead)){const cand=(m.team||[]).find(isLaw)||["dora","shuhrat1","shuhrat2","shahzod2"][Math.abs(hashCode9(m.id))%4];m.leadOld=m.leadOld||m.lead;m.team=[...new Set([m.lead,...(m.team||[])])].filter(e=>e!==cand);m.lead=cand;}
-  if(m.entity==="llc"&&(m.team||[]).some(isAdv)){m.teamOld=m.teamOld||m.team.slice();m.team=m.team.filter(e=>!isAdv(e));}
-  if(m.entity==="legal"&&(m.team||[]).some(isLaw)){m.teamOld=m.teamOld||m.team.slice();m.team=m.team.filter(e=>!isLaw(e));}
+  /* 17.10.2026 (решение владельца): правило «в ООО только юристы, в адвокатской фирме только адвокаты» убрано совсем —
+     любой сотрудник ведёт дела и бюро, и ООО. Прежняя молчаливая подмена ведущего (на демо-сотрудника) и чистка команды
+     при показе дела удалены: портал больше никогда сам не меняет ведущего и команду. */
   return m;
 }
 const hashCode9=s=>{let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))|0;return h;};
@@ -10103,7 +10099,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="50e5ed067da3";
+const ZC_BUILD="e295f0a43b48";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10576,7 +10572,7 @@ Object.assign(UI,{
   acc21Access:"Доступ||权限",acc21Adv:"Адвокат||律师",acc21Mp:"Управляющий адвокат||管理律师",acc21None:"без роли||无角色",acc21Change:"Изменить доступ||修改权限",
   acc21Self:"Свой доступ управляющего адвоката изменить нельзя||不能修改自己的管理律师权限",
   acc21Lic:"Лицензия адвоката||律师执照",acc21LicShort:"лицензия||执照",
-  acc21LicHint:"Не роль и не доступ. Нужна для законных правил: судебное дело ведёт адвокат с лицензией, адвокат не ведёт дела ООО, налог в расчёте зарплаты||不是角色或权限。用于法定规则：诉讼案件须由持证律师负责，律师不负责有限公司案件，工资计税",
+  acc21LicHint:"Не роль и не доступ. Нужна для законных правил: судебное дело ведёт адвокат с лицензией, налог в расчёте зарплаты||不是角色或权限。用于法定规则：诉讼案件须由持证律师负责，工资计税",
   adv21ClientQ:"Клиент нового дела||新案件的客户",adv21Mine:"Мой клиент (из моих дел)||我的客户（来自我的案件）",adv21Find:"Найти клиента фирмы по точному названию или ИНН||按准确名称或税号查找律所客户",
   adv21New:"Новый клиент||新客户",adv21FindQ:"Название или ИНН||名称或税号",adv21FindHint:"Список всех клиентов фирмы не показывается — введите точное название или ИНН||不显示律所全部客户——请输入准确名称或税号",
   adv21NotFound:"Клиент не найден. Проверьте название или ИНН, либо создайте нового клиента||未找到客户。请核对名称或税号，或新建客户",
