@@ -2488,6 +2488,107 @@ body.ch22pg #ms21Btn{color:var(--pri);border-color:var(--pri);background:var(--p
 .p24 .cf24{margin:6px 0 0;padding-left:18px;font-size:12.5px}.p24 .cf24 li{margin:2px 0}
 .nw24{display:inline-flex;gap:8px;flex-wrap:wrap}
 </style>
+<style>
+/* ═══ версия 1.3 · главный экран «Разовые услуги» (v25_list.js; макет design-oneoff-list.html) ═══ */
+.l25 .hd25{align-items:center}
+.l25 .t25{display:flex;align-items:center;gap:10px}.l25 .t25 h2{margin:0}
+.n25{background:var(--pri-soft);color:var(--pri);font:700 13px var(--font-h);border-radius:999px;padding:3px 10px}
+.mo25{position:relative;display:inline-flex}
+.ib25{min-width:38px;font-size:17px;line-height:1;padding:0 10px!important;letter-spacing:1px}
+.mn25p{position:absolute;right:0;top:calc(100% + 6px);z-index:30;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.14);padding:6px;width:220px;display:none;flex-direction:column}
+.mn25p.on{display:flex}
+.mn25p button{border:0;background:transparent;text-align:left;padding:9px 12px;border-radius:8px;font:500 13px var(--font);color:var(--ink);cursor:pointer}
+.mn25p button:hover,.mn25p button.on{background:var(--pri-soft);color:var(--pri)}
+/* плитки */
+.ks25{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.5fr);gap:12px;margin:4px 0 16px}
+.k25{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid transparent;border-radius:14px;padding:12px 14px;box-shadow:var(--sh-1);text-align:left;font:inherit;color:inherit;cursor:pointer;transition:border-color .15s,transform .12s;min-width:0}
+button.k25:hover{transform:translateY(-1px)}
+.k25.on{border-color:var(--pri)}
+.k25.mon{cursor:default}
+.k25 .ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:18px;flex:none}
+.k25 .tx{display:flex;flex-direction:column;min-width:0}
+.k25 small{color:var(--ink-3);font-size:12px}
+.k25 b{font:700 20px var(--font-h);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k25 b.mn25{font-size:17px}
+.k25 em{font-style:normal;font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k25.blue .ic{background:var(--pri-soft);color:var(--pri)}
+.k25.red .ic{background:var(--red-soft)}.k25.red b{color:var(--red)}.k25.red.zero b{color:var(--ink-3)}
+.k25.warn .ic{background:var(--warn-soft)}
+.k25.grey .ic{background:var(--surface2)}
+.k25.ok .ic{background:var(--ok-soft);color:var(--ok);font-weight:700}
+.k25.zero b{color:var(--ink-3)}
+/* строка управления */
+.tl25{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.sr25{flex:1;min-width:220px;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 12px;height:40px;transition:border-color .15s,box-shadow .15s}
+.sr25:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-ring)}
+.sr25 svg{width:17px;height:17px;fill:none;stroke:var(--ink-3);stroke-width:2;stroke-linecap:round;flex:none}
+.sr25 input{flex:1;min-width:0;border:0!important;outline:0;background:transparent!important;box-shadow:none!important;padding:0!important;height:38px;font:14px var(--font);color:var(--ink)}
+.sg25v{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;overflow-x:auto;scrollbar-width:none}
+.sg25v::-webkit-scrollbar{display:none}
+.sg25v button{border:0;background:transparent;border-radius:7px;padding:7px 12px;font:600 12.5px var(--font);color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.sg25v button.on{background:var(--pri);color:#fff}
+.fb25{height:40px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:0 14px;font:600 13px var(--font);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.fb25.on{border-color:var(--pri);color:var(--pri)}
+.fb25 .c{background:var(--pri);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px}
+select.fb25{padding-right:12px}
+.ch25{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 12px}
+.ch25 button{border:0;background:var(--pri-soft);color:var(--pri);border-radius:999px;padding:5px 11px;font:600 12px var(--font);cursor:pointer}
+.ch25 button b{font-size:14px;margin-left:3px}
+.ch25.q{margin:0 0 8px}.ch25.q button{background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}.ch25.q button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.ad25{background:var(--surface);border-radius:14px;box-shadow:var(--sh-1);padding:12px 14px;margin-bottom:14px}
+.ad25 .flt11{margin:0}
+/* общее: номер, срок, этап */
+.no25{font:600 12.5px var(--font-h);white-space:nowrap;color:var(--ink)}
+.no25 .entbadge{margin-right:5px;vertical-align:1px}
+.ty25{font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt25{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl25{font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.du25{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 10px;font:600 12px var(--font);white-space:nowrap;background:var(--surface2);color:var(--ink-2)}
+.du25 i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.du25.r{background:var(--red-soft);color:var(--red)}
+.du25.w{background:var(--warn-soft);color:var(--warn-d)}
+.du25.y{background:var(--warn-soft);color:var(--warn-d)}
+.sg25{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sg25>b{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sg25>b.s-done{color:var(--ok-d)}.sg25>b.s-paused{color:var(--warn-d)}.sg25>b.s-lost,.sg25>b.s-closed{color:var(--ink-3)}.sg25>b.s-pipe{color:var(--info-d)}
+.pb25{display:block;height:4px;border-radius:4px;background:var(--line);overflow:hidden}.pb25 i{display:block;height:100%;background:var(--pri);border-radius:4px}
+.sg25 small{font-size:11px;color:var(--ink-3)}
+.bd25{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}.bd25 .payw{margin:0}
+.l25 .team{display:flex}.l25 .team img,.l25 .team .vi{width:28px;height:28px;border-radius:999px;object-fit:cover;border:2px solid var(--surface);margin-left:-7px;display:grid;place-items:center;font:700 10px var(--font-h)}
+.l25 .team>:first-child{margin-left:0}
+.l25 .team .vi{background:var(--pri-soft);color:var(--pri)}
+/* A · таблица («Списком») */
+.tb25{background:var(--surface);border-radius:14px;box-shadow:var(--sh-1);overflow:hidden}
+.tr25{display:grid;grid-template-columns:minmax(130px,170px) minmax(200px,1.7fr) 104px 150px minmax(170px,1fr);gap:16px;align-items:center;padding:12px 18px;border-top:1px solid var(--line);position:relative;cursor:pointer;transition:background .12s}
+.tr25.h{border-top:0;background:var(--surface2);font:600 11px var(--font-h);color:var(--ink-3);letter-spacing:.5px;text-transform:uppercase;padding:10px 18px;cursor:default}
+.tr25:not(.h):hover{background:var(--surface2)}
+.tr25.late::before,.cd25.late::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
+.tr25>div{min-width:0}
+/* B · карточки по срокам («Мои дела по срокам») */
+.gr25{margin-bottom:18px}
+.gh25{display:flex;align-items:center;gap:8px;font:600 13px var(--font-h);margin:0 4px 8px}
+.gh25>span{width:9px;height:9px;border-radius:50%}
+.gh25 em{font-style:normal;font:600 12px var(--font);color:var(--ink-3);background:var(--surface);border-radius:999px;padding:1px 8px}
+.cs25{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.cd25{background:var(--surface);border-radius:14px;box-shadow:var(--sh-1);padding:14px 16px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;cursor:pointer;border:1px solid transparent;transition:border-color .15s,transform .12s}
+.cd25:hover{border-color:var(--line-2,var(--line));transform:translateY(-1px)}
+.cd25 .r25{display:flex;align-items:center;gap:8px;min-width:0}.cd25 .sp25{flex:1}
+.cd25 .r25 .ty25{flex:1}
+.cd25 .ft25{border-top:1px solid var(--line);padding-top:10px}
+/* планшет и телефон */
+@media (max-width:1280px){.ks25{grid-template-columns:repeat(4,minmax(0,1fr))}.ks25 .mon{grid-column:1/-1}}
+@media (max-width:1100px){.tr25{grid-template-columns:140px minmax(0,1fr) 140px minmax(150px,.8fr)}.tr25>.c-tm{display:none}}
+@media (max-width:700px){
+  .ks25{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.k25{padding:10px 12px;gap:10px}.k25 .ic{width:34px;height:34px;font-size:16px}.k25 b{font-size:18px}
+  .tl25{gap:8px}.sg25v{order:3;width:100%}.sg25v button{flex:1}
+  .tr25.h{display:none}.tr25{grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;padding:12px 14px}
+  .tr25>.c-no{grid-column:1/-1}.tr25>.c-tt{grid-column:1}.tr25>.c-dl{grid-column:2;grid-row:2}.tr25>.c-sg{grid-column:1/-1}
+  .cs25{grid-template-columns:1fr}
+  .l25 .hd25{flex-wrap:wrap;gap:10px}.l25 .hd25 .acts{width:100%;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;gap:6px}.l25 .hd25 .acts::-webkit-scrollbar{display:none}.l25 .hd25 .acts .btn{white-space:nowrap;flex:none}.l25 .hd25 .acts{align-items:center}.l25 .hd25 .acts .nw24{display:flex;flex-wrap:nowrap;gap:6px;flex:none;order:-1}.l25 .hd25 .acts .nw24 .pri{order:-1}.l25 .hd25 .acts .mo25{order:-2}
+  .sr25{flex-basis:100%}.tl25 .fb25{flex:1;justify-content:center}
+  .mo25{position:static}.mn25p{right:12px;top:auto;margin-top:46px}
+}
+</style>
 
 <!-- вход -->
 <div class="login" id="login">
@@ -10106,7 +10207,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="c8a3eabc6199";
+const ZC_BUILD="7c877b8a75d5";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10189,7 +10290,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="1.2";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="1.3";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -14115,6 +14216,92 @@ if(typeof CP!=="undefined"&&CP.creqPage){const _cq24=CP.creqPage.bind(CP);CP.cre
   const mark=esc(r.text).slice(0,40);const i=h.indexOf(mark);if(i<0)return;const j=h.indexOf("</div>",i);if(j<0)return;h=h.slice(0,j)+`<div class="q24" style="margin-top:4px">${esc(T1("Отклонено||已拒绝"))}: ${esc(r.reject23.msg)}</div>`+h.slice(j);});return h;};}
 /* прежние автопереходы v1.2 (выравнивание по КП и «КП отправлено → согласование условий») — для разовой услуги их делают этапы */
 if(typeof pr22heal!=="undefined"){Pre24._heal=true;}
+
+/* ══ версия 1.3: главный экран «Разовые услуги» (решение владельца по макету design-oneoff-list.html, «оба варианта переключателем») ══
+   Только раздел oneoff; судебные дела и сопровождение — как раньше. Только вид: данные, фильтры, сортировка, права — прежние
+   (Flt11, section17List, KB11, Funnel17, SvcAn17, CSV17); кнопки шапки (заявка, регистрация договора, пакет) берутся из прежней разметки.
+   Шапка: название + счётчик, ⋯ (аналитика услуг, воронка, CSV) и прежние кнопки. Плитки: в работе · просрочено · ждут оплаты · нет движения ·
+   по договорам — нажатие включает тот же быстрый фильтр, что раньше кнопки. Одна строка: поиск · вид · фильтры · сортировка.
+   Вид «Мои дела по срокам» — карточки по группам (просрочено, сегодня, ближайшие 5 р.д., позже…), «Списком» — таблица с колонками. */
+Object.assign(UI,{
+  l25Work:"В работе||进行中",l25Late:"Просрочено||逾期",l25Pay:"Ждут оплаты||待付款",l25Stale:"Нет движения||无进展",l25Money:"По договорам||合同金额",
+  l25Due:"к оплате||待付",l25Pot:"в воронке||漏斗中",l25More:"Ещё||更多",l25Paused:"приост.||暂停",l25Done:"сделано||完成",l25Closed:"закрыто||关闭",
+  l25No:"Номер||编号",l25Case:"Дело и клиент||案件与客户",l25Team:"Команда||团队",l25Dl:"Срок||期限",l25Stage:"Этап||阶段",
+  l25gLate:"Просрочено||逾期",l25gToday:"Срок сегодня||今天到期",l25gSoon:"Ближайшие 5 рабочих дней||未来5个工作日",l25gLater:"Позже||稍后",
+  l25gNone:"Без срока||无期限",l25gPaused:"Приостановлено||已暂停",l25gDone:"Сделано, ждёт приёмки||已完成，待验收",l25gClosed:"Закрыто и не состоялось||已关闭及未成交",
+  l25In:"через||还有",l25PreC:"до договора||签约前",l25Filters:"Фильтры||筛选",l25Clear:"Снять фильтр||取消筛选",l25Empty:"Ничего не найдено||未找到"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"В работе":"Ishda","Просрочено":"Muddati oʻtgan","Ждут оплаты":"Toʻlov kutilmoqda","Нет движения":"Harakat yoʻq","По договорам":"Shartnomalar boʻyicha",
+  "к оплате":"toʻlanishi kerak","в воронке":"voronkada","Ещё":"Yana","приост.":"toʻxt.","сделано":"bajarildi","закрыто":"yopildi",
+  "Номер":"Raqam","Дело и клиент":"Ish va mijoz","Команда":"Jamoa","Срок":"Muddat","Этап":"Bosqich",
+  "Срок сегодня":"Muddat bugun","Ближайшие 5 рабочих дней":"Yaqin 5 ish kuni","Позже":"Keyinroq","Без срока":"Muddatsiz","Приостановлено":"Toʻxtatilgan",
+  "Сделано, ждёт приёмки":"Bajarildi, qabul kutilmoqda","Закрыто и не состоялось":"Yopilgan va amalga oshmagan","через":"qoldi","до договора":"shartnomagacha",
+  "Фильтры":"Filtrlar","Снять фильтр":"Filtrni olib tashlash","Ничего не найдено":"Hech narsa topilmadi"});
+const L25={
+  Q:["qLate","qPay","qStale"],
+  /* сколько дел покажет быстрый фильтр — при прочих условиях как сейчас */
+  cnt(sec,f,k){const g=Object.assign({},f);this.Q.forEach(x=>g[x]=false);if(k)g[k]=true;let l=Flt11.apply(sec17Base(sec),g,sec);if(f.view==="mine")l=l.filter(isMine17);return l;},
+  grp(m){if(m.status==="closed"||m.pipeline==="lost")return 7;if(m.paused)return 5;if(isDone11(m))return 6;if(!m.deadline)return 4;const w=wdLeft17(m.deadline);return w<0?0:w===0?1:w<=5?2:3;},
+  G:[["l25gLate","var(--red)"],["l25gToday","var(--warn)"],["l25gSoon","var(--pri)"],["l25gLater","var(--ink-3)"],["l25gNone","var(--ink-3)"],["l25gPaused","var(--warn)"],["l25gDone","var(--ok)"],["l25gClosed","var(--ink-3)"]],
+  due(m){const fin=m.status==="closed"||m.pipeline==="lost"||isDone11(m);if(!m.deadline)return `<span class="du25 g">—</span>`;const w=wdLeft17(m.deadline);
+    if(fin||w===null)return `<span class="du25 g" title="${esc(fmtD(m.deadline))}">${esc(fmtD(m.deadline))}</span>`;
+    const c=w<0?"r":w===0?"w":w<=2?"y":"g";const t=w<0?`${T1(UI.dlLate17)} ${-w} ${T1(UI.wd17)}`:w===0?T1(UI.dlToday17):`${T1(UI.l25In)} ${w} ${T1(UI.wd17)}`;
+    return `<span class="du25 ${c}" title="${esc(fmtD(m.deadline))}"><i></i>${t}</span>`;},
+  stage(m){const s=status11(m);let pb="",sub="";
+    if(m.pipeline==="contract"&&m.status!=="closed"&&!m.paused&&typeof St21!=="undefined"){const l=St21.list(m);const i=l.indexOf(m.stage);if(i>=0){pb=`<span class="pb25"><i style="width:${Math.round((i+1)/l.length*100)}%"></i></span>`;sub=T1(UI.c22StageOf||"этап {i} из {n}||第 {i}/{n} 阶段").replace("{i}",i+1).replace("{n}",l.length);}}
+    else if(m.pipeline!=="contract"&&m.pipeline!=="lost"&&m.status!=="closed")sub=T1(UI.l25PreC);
+    /* те же значки, что были в строке дела: оплата, чей ход, КП, отказ, ЭСФ, лицензия */
+    let bd=payWarn11(m)+move17Badge(m)+(typeof KPV17!=="undefined"?KPV17.badge(m)||"":"");
+    if(m.pipeline==="lost"&&m.lostInfo&&typeof Lost17!=="undefined")bd+=`<span class="kpv17 exp">${esc(Lost17.catLabel(m.lostInfo.category))}</span>`;
+    if(m.invoiceDisputed)bd+=`<span class="payw">⚠ ${T1(UI.esfCancel)}</span>`;if(leadViolation(m))bd+=`<span class="payw" title="${T1(UI.crLeadFix)}">⚠ ${T1(UI.crLeadFix).split(" — ")[0].slice(0,28)}…</span>`;
+    return `<div class="sg25"><b class="${s.cls}">${s.l}</b>${pb}${sub?`<small>${sub}</small>`:""}${bd?`<div class="bd25">${bd}</div>`:""}</div>`;},
+  who(m){return teamAv([m.lead,...(m.team||[])]);},
+  ttl(m,two){const c=client(m.clientId);const msgs=Object.values(S.clientMessages||{}).some(x=>x.matterId===m.id);
+    return `<div class="tt25${m.paused?" paused11":""}">${esc(mT18(m))}${msgs?` <span class="cmm" title="${T1(UI.ccMsgs)}">💬</span>`:""}</div><div class="cl25">${c?esc(clientName(c)):"—"}${two&&m.unitId?" · "+esc(unitName(m.unitId)):""}</div>`;},
+  no(m,ent){return `<div class="no25">${ent?`<span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity])}</span>`:""}${esc(m.no)}</div><div class="ty25">${esc(kindLabel17(m))}</div>`;},
+  lim(list){Pages._more17=Pages._more17||{};const key=Router.cur+"|"+(Router.arg||"");const n=300;const lim=Math.min(list.length,n*(Pages._more17[key]||1));
+    return [list.slice(0,lim),list.length>lim?`<div class="more17"><span>${T1(UI.shown17)} ${lim} ${T1(UI.of17)} ${list.length}</span><button class="btn sm" data-more17="1">${T1(UI.more17)}</button><button class="btn sm ghost" data-more17="all">${T1(UI.moreAll17)}</button></div>`:""];},
+  table(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const ent=new Set(list.map(m=>m.entity)).size>1;const [l,more]=this.lim(list);
+    return `<div class="tb25"><div class="tr25 h"><div>${T1(UI.l25No)}</div><div>${T1(UI.l25Case)}</div><div class="c-tm">${T1(UI.l25Team)}</div><div>${T1(UI.l25Dl)}</div><div class="c-sg">${T1(UI.l25Stage)}</div></div>
+      ${l.map(m=>`<div class="tr25${isLate11(m)?" late":""}${m.invoiceDisputed?" disputed12":""}" data-matter="${m.id}"><div class="c-no">${this.no(m,ent)}</div><div class="c-tt">${this.ttl(m,true)}</div><div class="c-tm">${this.who(m)}</div><div class="c-dl">${this.due(m)}</div><div class="c-sg">${this.stage(m)}</div></div>`).join("")}</div>${more}`;},
+  cards(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const ent=new Set(list.map(m=>m.entity)).size>1;const [l,more]=this.lim(list);
+    return this.G.map(([k,c],i)=>{const x=l.filter(m=>this.grp(m)===i);if(!x.length)return "";
+      return `<div class="gr25"><div class="gh25"><span style="background:${c}"></span>${T1(UI[k])}<em>${x.length}</em></div><div class="cs25">${x.map(m=>`<div class="cd25${isLate11(m)?" late":""}" data-matter="${m.id}">
+        <div class="r25">${ent?`<span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity])}</span>`:""}<b class="no25">${esc(m.no)}</b><span class="ty25">· ${esc(kindLabel17(m))}</span></div>
+        <div>${this.ttl(m,false)}</div><div class="r25">${this.due(m)}<span class="sp25"></span>${this.who(m)}</div><div class="ft25">${this.stage(m)}</div></div>`).join("")}</div></div>`;}).join("")+more;},
+  tiles(sec,f){const base=this.cnt(sec,f,null);const n=k=>this.cnt(sec,f,k).length;const work=base.filter(isWorking11).length;
+    const ps=base.filter(m=>m.paused&&m.status!=="closed").length,done=base.filter(isDone11).length,cl=base.filter(m=>m.status==="closed").length;
+    const extra=[[ps,UI.l25Paused],[done,UI.l25Done],[cl,UI.l25Closed]].filter(x=>x[0]).map(([v,l])=>`${v} ${T1(l)}`).join(" · ");
+    const vis=base.filter(costVisible);const ct={},due={},pot={};vis.forEach(m=>{if(m.pipeline==="lost")return;if(m.pipeline==="contract"){Money17.add(ct,Money17.cur(m),Money17.cost(m));Money17.add(due,Money17.cur(m),Money17.due(m));}else{const p=Money17.potential(m);if(p)Money17.add(pot,p.c,p.v);}});
+    const any=o=>Object.values(o).some(Boolean);const on=this.Q.find(k=>f[k]);
+    const t=(q,cls,ic,l,v,sub)=>`<button type="button" class="k25 ${cls}${(q&&f[q])||(q==="all"&&!on)?" on":""}${v===0?" zero":""}" ${q?(q==="all"?'data-l25all="1"':`data-q17="${q}"`):""} aria-pressed="${!!(q&&f[q])}"><span class="ic">${ic}</span><span class="tx"><small>${T1(l)}</small><b>${v}</b>${sub?`<em>${sub}</em>`:""}</span></button>`;
+    return `<div class="ks25">${t("all","blue","📂",UI.l25Work,work,extra)}${t("qLate","red","⏰",UI.l25Late,n("qLate"))}${t("qPay","warn","💳",UI.l25Pay,n("qPay"))}${t("qStale","grey","💤",UI.l25Stale,n("qStale"))}
+      ${vis.length?`<div class="k25 ok mon"><span class="ic">₸</span><span class="tx"><small>${T1(UI.l25Money)}</small><b class="mn25">${Money17.fmt(ct)||"0"}</b><em>${T1(UI.l25Due)} ${Money17.fmt(due)||"0"}${any(pot)?` · ${T1(UI.l25Pot)} ${Money17.fmt(pot)}`:""}</em></span></div>`:""}</div>`;},
+  tools(sec,f){const views=[["mine",UI.view17Mine],["emp",UI.kbByEmp],["status",UI.kbByStatus],["list",UI.kbList]];const n=Flt11.advCount(sec,f)+(f.qMine?1:0);
+    const sel=SORT17.map(([k,l])=>`<option value="${esc(k)}"${String(f.sort)===String(k)?" selected":""}>${esc(T1(l))}</option>`).join("");
+    const chips=[["qMine",UI.qMine17],...this.Q.map(k=>[k,{qLate:UI.l25Late,qPay:UI.l25Pay,qStale:UI.l25Stale}[k]])].filter(([k])=>f[k]);
+    return `<div class="tl25"><label class="sr25"><svg viewBox="0 0 24 24"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM21 21l-4.3-4.3"/></svg><input type="search" class="q17" id="q17_${sec}" data-f11="q" value="${esc(f.q)}" placeholder="${T1(UI.q17)}" aria-label="${T1(UI.q17)}"></label>
+      <div class="sg25v" role="tablist">${views.map(([k,l])=>`<button type="button" class="${f.view===k?"on":""}" data-view11="${k}">${T1(l)}</button>`).join("")}</div>
+      <button type="button" class="fb25${f.adv?" on":""}" data-adv17="1" aria-expanded="${!!f.adv}">⚙ ${T1(UI.l25Filters)}${n?` <span class="c">${n}</span>`:""}</button>
+      <select class="fb25 f11" data-f11="sort" aria-label="${T1(UI.sort17)}">${sel}</select></div>
+      ${chips.length?`<div class="ch25">${chips.map(([k,l])=>`<button type="button" data-q17="${k}" title="${T1(UI.l25Clear)}">${T1(l)} <b>×</b></button>`).join("")}</div>`:""}`;},
+  menu(f){return `<span class="mo25"><button type="button" class="btn ib25" data-l25menu="1" title="${T1(UI.l25More)}" aria-haspopup="true">⋯</button><span class="mn25p" id="l25menu">
+    <button type="button" class="${f.svcAn?"on":""}" data-sa17="1">📈 ${T1(UI.saTitle17)}</button><button type="button" class="${f.analytics?"on":""}" data-an17="1">📊 ${T1(UI.an17)}</button><button type="button" data-csv17="1" title="${T1(UI.csvT17)}">⭳ CSV</button></span></span>`;},
+  page(sec,title,base,prev){const f=Flt11.st(sec);if(f.view==="mine"||f.view==="emp"||f.view==="status"||f.view==="list");else f.view="mine";const list=section17List(sec);
+    /* кнопки шапки — из прежней страницы (там их добавляют v17_pack и v24_pre_ui) */
+    const i=prev.indexOf('<div class="acts">');const j=i<0?-1:prev.indexOf("</div>",i);const acts=i<0||j<0?"":prev.slice(i+18,j);
+    const adv=f.adv?(()=>{const h=Flt11.html(sec,f,base);const k=h.indexOf('<div class="flt11">');return k<0?"":`<div class="ad25"><div class="ch25 q"><button type="button" class="${f.qMine?"on":""}" data-q17="qMine">${T1(UI.qMine17)}</button></div>`+h.slice(k)+"</div>";})():"";
+    let body;if(f.view==="emp")body=KB11.byEmp(list);else if(f.view==="status")body=KB11.byStatus(list,f);else if(f.view==="mine")body=this.cards(list);else body=this.table(list);
+    return `<div class="l25"><div class="ph hd25"><div class="t25"><h2>${T1(title)}</h2><span class="n25">${list.length}</span></div><div class="acts">${this.menu(f)}${acts}</div></div>`
+      +this.tiles(sec,f)+this.tools(sec,f)+adv+(f.svcAn&&typeof SvcAn17!=="undefined"?SvcAn17.html(f):"")+(f.analytics?Funnel17.html(base,f):"")+`<div class="bd25w v-${f.view}">${body}</div></div>`;}
+};
+const _sec11L25=section11;section11=function(sec,title,base){const h=_sec11L25.apply(this,arguments);if(sec!=="oneoff"||isClient())return h;try{return L25.page(sec,title,base||sec17Base(sec),h);}catch(e){console.error(e);return h;}};
+/* меню ⋯ и плитка «В работе» (снимает быстрые фильтры) */
+const _bindL25=Pages.bind;Pages.bind=function(vp){_bindL25.apply(this,arguments);if(!vp||Router.cur!=="oneoff"||isClient())return;const f=Flt11.st("oneoff");
+  const mb=vp.querySelector("[data-l25menu]");if(mb)mb.onclick=e=>{e.stopPropagation();const p=document.getElementById("l25menu");if(p)p.classList.toggle("on");};
+  const a=vp.querySelector("[data-l25all]");if(a)a.onclick=()=>{L25.Q.forEach(k=>f[k]=false);Router.render();};};
+document.addEventListener("pointerdown",e=>{const p=document.getElementById("l25menu");if(p&&p.classList.contains("on")&&!e.target.closest(".mo25"))p.classList.remove("on");});
+document.addEventListener("keydown",e=>{const p=document.getElementById("l25menu");if(e.key==="Escape"&&p&&p.classList.contains("on"))p.classList.remove("on");});
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
