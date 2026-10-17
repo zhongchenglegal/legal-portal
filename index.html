@@ -2589,6 +2589,60 @@ select.fb25{padding-right:12px}
   .mo25{position:static}.mn25p{right:12px;top:auto;margin-top:46px}
 }
 </style>
+<style>
+/* ═══ версия 1.3 · «Сообщить об ошибке» (v26_bugs.js) ═══ */
+.b26md{width:min(680px,100%)}
+.b26f{display:flex;flex-direction:column;gap:8px}
+.b26f label,.b26l{font:600 12.5px var(--font);color:var(--ink-2)}
+.b26f textarea{width:100%;resize:vertical;font:14px/1.45 var(--font)}
+.b26row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+.b26row>div{display:flex;flex-direction:column;gap:6px;min-width:0}
+.b26seg{display:flex;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+.b26seg button{flex:1;border:0;background:transparent;border-radius:7px;padding:7px 6px;font:600 12px var(--font);color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.b26seg button.on{background:var(--pri);color:#fff}
+.b26chk{display:flex!important;align-items:center;gap:8px;margin-top:6px;cursor:pointer}
+.b26prev{border:1px solid var(--line);border-radius:10px;overflow:hidden;max-height:220px;background:var(--surface2)}
+.b26prev img{display:block;width:100%;height:auto}
+.b26prev.off{opacity:.35;filter:grayscale(1)}
+.b26noshot{font-size:12.5px;color:var(--warn-d);background:var(--warn-soft);border-radius:8px;padding:8px 10px}
+.b26fl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.b26auto{font-size:12.5px;color:var(--ink-3)}.b26auto summary{cursor:pointer;font-weight:600;color:var(--ink-2)}.b26auto p{margin:6px 0 0}
+.b26err{background:var(--red-soft);color:var(--red-d,var(--red));border-radius:8px;padding:8px 10px;font-size:12.5px}
+.b26err code{font-size:12px;word-break:break-word}
+.b26demo{background:var(--info-soft);color:var(--info-d);border-radius:8px;padding:6px 10px;font-size:12px}
+.b26f .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+/* строка «Что-то пошло не так. Сообщить?» */
+.b26bar{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);z-index:140;display:flex;align-items:center;gap:10px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:10px 10px 10px 14px;font:600 13px var(--font);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;max-width:calc(100vw - 32px)}
+.b26bar.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.b26bx{border:0;background:transparent;color:var(--ink-3);font-size:18px;cursor:pointer;padding:0 4px;line-height:1}
+/* раздел «Ошибки» */
+.b26tabs{display:flex;gap:6px;margin:0 0 12px}
+.b26flt{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.b26flt .sp{flex:1}
+.b26t td{vertical-align:middle}.b26t tbody tr{cursor:pointer}.b26t tbody tr:hover{background:var(--surface2)}
+.b26w{max-width:420px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b26s,.b26sev{display:inline-flex;align-items:center;border-radius:999px;padding:2px 9px;font:700 11px var(--font-h);white-space:nowrap;background:var(--surface2);color:var(--ink-2)}
+.b26s.new{background:var(--info-soft);color:var(--info-d)}.b26s.accepted,.b26s.progress{background:var(--warn-soft);color:var(--warn-d)}
+.b26s.fixed,.b26s.closed{background:var(--ok-soft);color:var(--ok-d)}.b26s.notbug,.b26s.dup{background:var(--surface2);color:var(--ink-3)}
+.b26sev.block{background:var(--red-soft);color:var(--red)}.b26sev.annoy{background:var(--warn-soft);color:var(--warn-d)}
+.b26hint{font-size:12px;color:var(--ink-3);margin:10px 0 0}
+.b26ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.b26ch h3{margin:0;font:700 18px var(--font-h)}
+.b26meta{font-size:12.5px;color:var(--ink-3);margin:6px 0 12px}
+.b26txt p{margin:4px 0 10px;white-space:normal}
+.b26tr{background:var(--pri-soft);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:13.5px}
+.b26files{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 14px}
+.b26file{display:flex;flex-direction:column;gap:6px;max-width:100%}
+.b26file img{max-width:min(640px,100%);max-height:420px;border:1px solid var(--line);border-radius:10px;cursor:zoom-in;background:var(--surface2)}
+.b26ctl{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;background:var(--surface2);border-radius:12px;padding:12px;margin:6px 0 14px}
+.b26ctl label{display:flex;flex-direction:column;gap:4px;font:600 12px var(--font);color:var(--ink-2)}.b26ctl label.w{flex:1;min-width:200px}
+.b26ctl input,.b26ctl select{min-width:120px}
+.b26cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.b26cols textarea{width:100%;margin:8px 0 6px}
+.b26techd{margin-top:12px}.b26techd summary{cursor:pointer;font-weight:700}
+.b26dev{font-size:12.5px;color:var(--ink-2)}.b26dev small{color:var(--ink-3);word-break:break-all}
+.b26na{margin-top:10px}
+#bug26Set svg{color:var(--warn-d)}
+@media (max-width:700px){.b26row,.b26cols{grid-template-columns:1fr}.b26w{max-width:160px}.b26t th:nth-child(3),.b26t td:nth-child(3){display:none}}
+</style>
 
 <!-- вход -->
 <div class="login" id="login">
@@ -10207,7 +10261,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="9f5520e76e63";
+const ZC_BUILD="2c0f797f6ec8";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14316,6 +14370,267 @@ const _bindL25=Pages.bind;Pages.bind=function(vp){_bindL25.apply(this,arguments)
   const a=vp.querySelector("[data-l25all]");if(a)a.onclick=()=>{L25.Q.forEach(k=>f[k]=false);Router.render();};};
 document.addEventListener("pointerdown",e=>{const p=document.getElementById("l25menu");if(p&&p.classList.contains("on")&&!e.target.closest(".mo25"))p.classList.remove("on");});
 document.addEventListener("keydown",e=>{const p=document.getElementById("l25menu");if(e.key==="Escape"&&p&&p.classList.contains("on"))p.classList.remove("on");});
+
+/* ══ версия 1.3 · «Сообщить об ошибке» и тихий журнал сбоев (решения владельца 17.10.2026) ══
+   Только сотрудники (УП и адвокаты); у клиентов — «Подать жалобу». Логика — на сервере (миграция 20261017002000_bug_reports.sql:
+   bug_report_create / bug_report_status / bug_report_comment / crash_log_hit, права на чтение — RLS); портал только показывает и вызывает.
+   Где кнопка: «Настройки» (шестерёнка), «Помощь» (вкладка «Ошибки» и кнопка в шапке), под ответом ИИ-ассистента; при сбое портала —
+   строка «Что-то пошло не так. Сообщить?» (форма откроется с уже указанной ошибкой). Отдельной плавающей кнопки нет.
+   Форма: что случилось (обязательно), что ожидали, насколько мешает, вид, снимок экрана (включён, виден до отправки, можно снять галочку
+   и приложить свой файл). Автоматически: страница и дело, версия и сборка, время по Ташкенту, язык, устройство и размер экрана,
+   последние 20 действий (переходы и нажатия — подписи кнопок, без содержимого полей), последние ошибки портала и отказы сервера.
+   Логин и роль ставит сервер. Пароли и содержимое полей не собираются; на снимке поля ввода пустые.
+   Разбирает только УП: вкладка «Ошибки» — список с фильтрами, карточка со снимком, тех. данными, переводом, статусом и комментарием;
+   «Журнал сбоев» — сводка; «Выгрузить для Claude» — один файл (тексты, снимки, тех. данные). Адвокат видит свои сообщения.
+   Без сервера (демо) сообщения хранятся только в памяти браузера. */
+Object.assign(UI,{
+  b26Btn:"Сообщить об ошибке||报告错误",b26Title:"Сообщить об ошибке||报告错误",b26Sub:"Сообщение получит управляющий адвокат. Писать можно по-русски, по-узбекски или по-китайски.||消息将发送给管理律师。可用俄语、乌兹别克语或中文填写。",
+  b26What:"Что случилось||发生了什么",b26WhatPh:"Например: нажал «Сохранить» в деле — появилась ошибка, изменения пропали||例如：在案件中点击“保存”后出现错误，修改丢失",
+  b26Exp:"Что ожидали (по желанию)||期望的结果（可选）",b26Sev:"Насколько мешает||影响程度",b26Kind:"Вид||类型",
+  b26Shot:"Приложить снимок экрана||附上屏幕截图",b26NoShot:"Снимок не получился — приложите свой файл или фото||截图失败——请附上您自己的文件或照片",
+  b26File:"Приложить свой файл или фото||附上自己的文件或照片",b26FileBig:"Файл больше 10 МБ||文件超过10 MB",
+  b26Auto:"Что ещё приложится автоматически||还将自动附上",b26AutoL:"страница и дело, версия портала, время, ваш логин и роль, язык, устройство и размер экрана, последние 20 действий (переходы и нажатия), последние ошибки портала и сервера. Пароли и содержимое полей не собираются.||页面和案件、门户版本、时间、您的登录名和角色、语言、设备和屏幕尺寸、最近20个操作（跳转和点击）、门户和服务器的最近错误。不收集密码和输入框内容。",
+  b26ErrAtt:"Портал записал ошибку — она будет приложена||门户已记录错误——将一并附上",b26Send:"Отправить||发送",b26Sending:"Отправка…||发送中…",
+  b26NeedWhat:"Опишите, что случилось||请描述发生了什么",b26Sent:"Отправлено: {no}. Управляющий адвокат получил уведомление.||已发送：{no}。管理律师已收到通知。",
+  b26Prompt:"Что-то пошло не так. Сообщить?||出了点问题。要报告吗？",b26PromptBtn:"Сообщить||报告",
+  b26Tab:"Ошибки||错误",b26Mine:"Мои сообщения||我的报告",b26List:"Сообщения||报告",b26Crash:"Журнал сбоев||故障日志",
+  b26All:"Все||全部",b26Open:"Открытые||未完成",b26Export:"Выгрузить для Claude||导出给 Claude",b26ExportH:"Отметьте сообщения (или ничего — выгрузятся все показанные) и нажмите — скачается один файл. Положите его в папку проекта и напишите Claude «разбери ошибки».||勾选报告（不勾选则导出全部显示的报告）并点击——将下载一个文件。把它放进项目文件夹并告诉 Claude“разбери ошибки”。",
+  b26None:"Сообщений нет||暂无报告",b26NoCrash:"Сбоев не записано||暂无故障记录",b26Author:"Автор||作者",b26Date:"Дата||日期",b26St:"Статус||状态",b26No:"№||编号",
+  b26Translate:"Перевести||翻译",b26Shots:"Снимок и файлы||截图和文件",b26Tech:"Технические данные||技术数据",b26Hist:"История||历史",b26Comments:"Комментарии||评论",
+  b26Comment:"Комментарий||评论",b26AddComment:"Добавить комментарий||添加评论",b26SetSt:"Изменить статус||更改状态",b26FixedIn:"Исправлено в версии||修复版本",b26DupOf:"Повтор сообщения №||重复的报告编号",b26Note:"Пояснение для автора (по желанию)||给作者的说明（可选）",
+  b26Back:"← К списку||← 返回列表",b26Actions:"Последние действия||最近操作",b26Errors:"Ошибки портала и сервера||门户和服务器错误",b26Device:"Устройство||设备",
+  b26CrMsg:"Ошибка||错误",b26CrWhere:"Где||位置",b26CrPage:"Страница||页面",b26CrVer:"Версия||版本",b26CrCnt:"Раз||次数",b26CrWho:"Сотрудников||员工数",b26CrFirst:"Впервые||首次",b26CrLast:"Последний раз||最近一次",
+  b26NtNew:"Новое сообщение об ошибке||新的错误报告",b26NtSt:"Ваше сообщение||您的报告",b26Demo:"Демо: сообщения хранятся только в этом окне браузера||演示：报告只保存在此浏览器窗口中",
+  b26NoAns:"Не помогло? Сообщить об ошибке||没有帮助？报告错误",b26NoMig:"Сервер ещё не обновлён для сообщений об ошибках — нужна миграция 20261017002000_bug_reports.sql||服务器尚未为错误报告更新——需要执行迁移 20261017002000_bug_reports.sql",b26Exported:"Файл для Claude скачан: {n} сообщ.||已下载给 Claude 的文件：{n} 条"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Сообщить об ошибке":"Xato haqida xabar berish","Сообщение получит управляющий адвокат. Писать можно по-русски, по-узбекски или по-китайски.":"Xabarni boshqaruvchi advokat oladi. Rus, oʻzbek yoki xitoy tilida yozish mumkin.",
+  "Что случилось":"Nima boʻldi","Например: нажал «Сохранить» в деле — появилась ошибка, изменения пропали":"Masalan: ishda «Saqlash»ni bosdim — xato chiqdi, oʻzgarishlar yoʻqoldi",
+  "Что ожидали (по желанию)":"Nimani kutgan edingiz (ixtiyoriy)","Насколько мешает":"Qanchalik xalaqit beradi","Вид":"Turi",
+  "Приложить снимок экрана":"Ekran rasmini ilova qilish","Снимок не получился — приложите свой файл или фото":"Ekran rasmi olinmadi — oʻz faylingiz yoki rasmingizni ilova qiling",
+  "Приложить свой файл или фото":"Oʻz faylingiz yoki rasmingizni ilova qilish","Файл больше 10 МБ":"Fayl 10 MB dan katta","Что ещё приложится автоматически":"Yana avtomatik ilova qilinadi",
+  "страница и дело, версия портала, время, ваш логин и роль, язык, устройство и размер экрана, последние 20 действий (переходы и нажатия), последние ошибки портала и сервера. Пароли и содержимое полей не собираются.":"sahifa va ish, portal versiyasi, vaqt, loginingiz va rolingiz, til, qurilma va ekran oʻlchami, oxirgi 20 ta harakat (oʻtishlar va bosishlar), portal va serverning oxirgi xatolari. Parollar va maydonlar mazmuni yigʻilmaydi.",
+  "Портал записал ошибку — она будет приложена":"Portal xatoni qayd etdi — u ilova qilinadi","Отправить":"Yuborish","Отправка…":"Yuborilmoqda…","Опишите, что случилось":"Nima boʻlganini yozing",
+  "Отправлено: {no}. Управляющий адвокат получил уведомление.":"Yuborildi: {no}. Boshqaruvchi advokat bildirishnoma oldi.","Что-то пошло не так. Сообщить?":"Nimadir notoʻgʻri ketdi. Xabar berasizmi?","Сообщить":"Xabar berish",
+  "Ошибки":"Xatolar","Мои сообщения":"Mening xabarlarim","Сообщения":"Xabarlar","Журнал сбоев":"Nosozliklar jurnali","Открытые":"Ochiq","Выгрузить для Claude":"Claude uchun yuklab olish",
+  "Сообщений нет":"Xabarlar yoʻq","Сбоев не записано":"Nosozliklar qayd etilmagan","Автор":"Muallif","Дата":"Sana","Статус":"Holat","Перевести":"Tarjima qilish","Снимок и файлы":"Ekran rasmi va fayllar",
+  "Технические данные":"Texnik maʼlumotlar","История":"Tarix","Комментарии":"Izohlar","Комментарий":"Izoh","Добавить комментарий":"Izoh qoʻshish","Изменить статус":"Holatni oʻzgartirish",
+  "Исправлено в версии":"Versiyada tuzatildi","Повтор сообщения №":"Takroriy xabar №","Пояснение для автора (по желанию)":"Muallif uchun izoh (ixtiyoriy)","← К списку":"← Roʻyxatga",
+  "Последние действия":"Oxirgi harakatlar","Ошибки портала и сервера":"Portal va server xatolari","Устройство":"Qurilma","Ошибка":"Xato","Где":"Qayerda","Страница":"Sahifa","Версия":"Versiya","Раз":"Marta",
+  "Сотрудников":"Xodimlar","Впервые":"Birinchi marta","Последний раз":"Oxirgi marta","Новое сообщение об ошибке":"Xato haqida yangi xabar","Ваше сообщение":"Sizning xabaringiz",
+  "Демо: сообщения хранятся только в этом окне браузера":"Demo: xabarlar faqat shu brauzer oynasida saqlanadi","Не помогло? Сообщить об ошибке":"Yordam bermadimi? Xato haqida xabar bering","Сервер ещё не обновлён для сообщений об ошибках — нужна миграция 20261017002000_bug_reports.sql":"Server xato xabarlari uchun hali yangilanmagan — 20261017002000_bug_reports.sql migratsiyasi kerak",
+  "Новое":"Yangi","Принято":"Qabul qilindi","В работе":"Ishda","Исправлено":"Tuzatildi","Закрыто":"Yopildi","Не ошибка":"Xato emas","Повтор":"Takror",
+  "Не могу работать":"Ishlay olmayman","Мешает":"Xalaqit beradi","Мелочь":"Mayda narsa","Неудобно":"Noqulay","Предложение":"Taklif"});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{bugNew26:"{@b26NtNew} {no} — {a}: {t}",bugStatus26:"{@b26NtSt} {no}: {st}{c}"});
+
+const B26={
+  ST:[["new","Новое||新"],["accepted","Принято||已受理"],["progress","В работе||处理中"],["fixed","Исправлено||已修复"],["closed","Закрыто||已关闭"],["notbug","Не ошибка||不是错误"],["dup","Повтор||重复"]],
+  SEV:[["block","Не могу работать||无法工作"],["annoy","Мешает||有影响"],["minor","Мелочь||小问题"]],
+  KIND:[["bug","Ошибка||错误"],["ux","Неудобно||不方便"],["idea","Предложение||建议"]],
+  OPEN:["new","accepted","progress"],
+  /* сервер ещё без миграции 20261017002000 — понятное сообщение вместо технического */
+  eText(e){const m=String((e&&e.message)||e||"");return /bug_report|crash_log|PGRST20[25]|does not exist|Could not find|404/.test(m)?T1(UI.b26NoMig):m.replace(/^.*?ERROR:\s*/,"");},
+  acts:[],errs:[],local:[],rows:null,crash:null,f:{tab:"list",st:"open",sev:"all",sel:null},checked:{},trans:{},shotCache:{},crashSent:{},crashN:0,lastPrompt:0,
+  lbl(list,k){const x=list.find(y=>y[0]===k);return x?T1(x[1]):k;},
+  staff(){return !!U()&&!isClient();},
+  mp(){return this.staff()&&(isFounder()||hasF("managing"));},
+  srv(){return typeof SRV21==="function"&&SRV21();},
+  no(n){return "ОШ-"+String(n||0).padStart(4,"0");},
+  tz(){try{return new Date().toLocaleString("sv-SE",{timeZone:"Asia/Tashkent"}).slice(0,19);}catch(e){return new Date().toISOString().slice(0,19);}},
+  push(l,x,max){l.push(x);if(l.length>max)l.splice(0,l.length-max);},
+  act(t,l){this.push(this.acts,{at:this.tz().slice(11),t,l:String(l||"").replace(/\s+/g," ").trim().slice(0,60)},20);},
+  /* ── ошибки портала и отказы сервера ── */
+  tech(m){return !/[А-Яа-яЁё]/.test(m)||/Failed to fetch|NetworkError|network|timeout|Load failed|5\d\d|PGRST|JWT|internal/i.test(m);},
+  err(kind,msg,src){msg=String(msg||"").slice(0,300);const e={at:this.tz().slice(11),kind,msg,src:String(src||"").slice(0,200),route:Router.cur||""};this.push(this.errs,e,10);return e;},
+  sig(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(16);},
+  async crashHit(e){if(!this.srv()||!this.staff()||!SB19.T||this.crashN>=30)return;const sig=this.sig(e.kind+"|"+e.msg+"|"+e.src);if(this.crashSent[sig])return;this.crashSent[sig]=1;this.crashN++;
+    try{await (SB19.T._rpc26||SB19.T.rpc).call(SB19.T,"crash_log_hit",{p_sig:sig,p_msg:e.msg,p_src:e.src||e.kind,p_route:e.route,p_version:APP_VERSION21});}catch(x){}},
+  fail(kind,msg,src,ask){const e=this.err(kind,msg,src);this.crashHit(e);if(ask)this.prompt(e);},
+  /* строка «Что-то пошло не так. Сообщить?» — не чаще раза в минуту */
+  prompt(e){if(!this.staff()||this.isOpen())return;const t=Date.now();if(t-this.lastPrompt<60000)return;this.lastPrompt=t;this._pe=e;
+    let b=document.getElementById("bug26bar");if(!b){b=document.createElement("div");b.id="bug26bar";b.className="b26bar";b.setAttribute("role","alert");document.body.appendChild(b);}
+    b.innerHTML=`<span>⚠ ${T1(UI.b26Prompt)}</span><button type="button" class="btn sm pri" data-b26go="1">${T1(UI.b26PromptBtn)}</button><button type="button" class="b26bx" data-b26bx="1" aria-label="×">×</button>`;b.classList.add("on");
+    b.querySelector("[data-b26go]").onclick=()=>{b.classList.remove("on");this.open({from:"auto",error:this._pe});};b.querySelector("[data-b26bx]").onclick=()=>b.classList.remove("on");
+    clearTimeout(this._bt);this._bt=setTimeout(()=>b.classList.remove("on"),20000);},
+  info(o){const r=Router.cur||"",a=Router.arg||"";const th=document.documentElement.getAttribute("data-theme")||"";
+    return {route:r,arg:a?String(a).slice(0,60):"",matter:r==="matter"?a:"",tab:r==="help"&&typeof Help21!=="undefined"?Help21._t:"",version:APP_VERSION21,build:typeof ZC_BUILD!=="undefined"?ZC_BUILD:"",
+      time:this.tz(),tz:"Asia/Tashkent",lang,theme:th,online:navigator.onLine,server:!!this.srv(),from:o&&o.from||"",error:o&&o.error||null,
+      device:{ua:navigator.userAgent.slice(0,300),platform:(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||"",w:innerWidth,h:innerHeight,dpr:window.devicePixelRatio||1,touch:"ontouchstart" in window},
+      actions:this.acts.slice(-20),errors:this.errs.slice(-10)};},
+  /* ── снимок экрана: страница как SVG (foreignObject) → картинка; поля ввода — пустые ── */
+  async snap(){try{const W=innerWidth,H=innerHeight;const src=document.documentElement;const cl=src.cloneNode(true);
+      const so=src.querySelectorAll("*"),co=cl.querySelectorAll("*");
+      for(let i=0;i<so.length&&i<co.length;i++){const s=so[i],c=co[i];
+        if(s.scrollTop||s.scrollLeft){c.style.overflow="hidden";[...c.children].forEach(k=>{k.style.position=k.style.position||"relative";k.style.top=(-s.scrollTop)+"px";k.style.left=(-s.scrollLeft)+"px";});}
+        if(s.tagName==="CANVAS"){try{const im=document.createElement("img");im.src=s.toDataURL();im.style.cssText=s.style.cssText;im.width=s.width;im.height=s.height;im.className=s.className;c.replaceWith(im);}catch(e){}}}
+      cl.querySelectorAll("script,iframe,noscript,link,#ovB26,#bug26bar,template").forEach(x=>x.remove());
+      cl.querySelectorAll("input,textarea,select").forEach(x=>{x.removeAttribute("value");if(x.tagName==="TEXTAREA")x.textContent="";if(x.tagName==="SELECT")[...x.options].forEach(o=>o.removeAttribute("selected"));});
+      cl.querySelectorAll("img").forEach(x=>{const s=x.getAttribute("src")||"";if(!/^data:/.test(s)){x.removeAttribute("src");x.removeAttribute("srcset");x.style.background="#c9ced6";}});
+      cl.querySelectorAll("style").forEach(x=>{x.textContent=x.textContent.replace(/:root/g,"html");});
+      cl.style.width=W+"px";cl.style.height=H+"px";cl.style.overflow="hidden";const bd=cl.querySelector("body");if(bd&&(scrollY||scrollX)){bd.style.marginTop=(-scrollY)+"px";bd.style.marginLeft=(-scrollX)+"px";}
+      const xml=new XMLSerializer().serializeToString(cl);
+      const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><foreignObject x="0" y="0" width="100%" height="100%">${xml}</foreignObject></svg>`;
+      const img=new Image();await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);});
+      const k=Math.min(1.5,window.devicePixelRatio||1);const cv=document.createElement("canvas");cv.width=Math.round(W*k);cv.height=Math.round(H*k);const x=cv.getContext("2d");
+      x.fillStyle=getComputedStyle(document.body).backgroundColor||"#fff";x.fillRect(0,0,cv.width,cv.height);x.scale(k,k);x.drawImage(img,0,0);
+      return cv.toDataURL("image/jpeg",0.82);}catch(e){return null;}},
+  /* ── форма ── */
+  isOpen(){const o=document.getElementById("ovB26");return !!o&&o.classList.contains("open");},
+  async open(o){if(!this.staff())return;o=o||{};if(typeof Set21!=="undefined")Set21.close();const bar=document.getElementById("bug26bar");if(bar)bar.classList.remove("on");
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const shot=await this.snap();this.d={shot,useShot:!!shot,file:null,sev:"annoy",kind:"bug",o};this.render();this.act("form","Сообщить об ошибке");},
+  render(){let ov=document.getElementById("ovB26");if(!ov){ov=document.createElement("div");ov.className="ov";ov.id="ovB26";document.body.appendChild(ov);ov.addEventListener("mousedown",e=>{if(e.target===ov)this.close();});}
+    const d=this.d,er=d.o&&d.o.error;const seg=(g,list,cur)=>`<div class="b26seg" role="radiogroup">${list.map(([k,l])=>`<button type="button" role="radio" aria-checked="${cur===k}" class="${cur===k?"on":""}" data-b26${g}="${k}">${T1(l)}</button>`).join("")}</div>`;
+    ov.innerHTML=`<div class="md narrow b26md" role="dialog" aria-modal="true" aria-labelledby="b26h"><button type="button" class="close mx" data-b26x="1" aria-label="×"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="mh"><div><h2 id="b26h">${T1(UI.b26Title)}</h2><div class="mr2">${T1(UI.b26Sub)}</div></div></div>
+      <div class="mb2 b26f">${er?`<div class="b26err">⚠ ${T1(UI.b26ErrAtt)}: <code>${esc(er.msg)}</code></div>`:""}${this.srv()?"":`<div class="b26demo">${T1(UI.b26Demo)}</div>`}
+        <label for="b26what">${T1(UI.b26What)} *</label><textarea id="b26what" rows="4" maxlength="4000" placeholder="${esc(T1(UI.b26WhatPh))}">${esc(d.what||"")}</textarea>
+        <label for="b26exp">${T1(UI.b26Exp)}</label><textarea id="b26exp" rows="2" maxlength="4000">${esc(d.exp||"")}</textarea>
+        <div class="b26row"><div><span class="b26l">${T1(UI.b26Sev)}</span>${seg("sev",this.SEV,d.sev)}</div><div><span class="b26l">${T1(UI.b26Kind)}</span>${seg("kind",this.KIND,d.kind)}</div></div>
+        <label class="b26chk"><input type="checkbox" id="b26use"${d.useShot?" checked":""}${d.shot?"":" disabled"}> ${T1(UI.b26Shot)}</label>
+        ${d.shot?`<div class="b26prev${d.useShot?"":" off"}"><img src="${d.shot}" alt=""></div>`:`<div class="b26noshot">${T1(UI.b26NoShot)}</div>`}
+        <div class="b26fl"><button type="button" class="btn sm" data-b26file="1">📎 ${T1(UI.b26File)}</button>${d.file?`<span class="fchip22"><i>${esc((d.file.name.split(".").pop()||"").toUpperCase().slice(0,4))}</i>${esc(d.file.name)}<button type="button" data-b26fx="1" aria-label="×">×</button></span>`:""}</div>
+        <details class="b26auto"><summary>${T1(UI.b26Auto)}</summary><p>${T1(UI.b26AutoL)}</p></details>
+        <div class="actions"><button type="button" class="btn ghost" data-b26x="1">${T1(UI.cancel||"Отмена||取消")}</button><button type="button" class="btn pri" data-b26send="1"${this._busy?" disabled":""}>${T1(this._busy?UI.b26Sending:UI.b26Send)}</button></div></div></div>`;
+    ov.classList.add("open");
+    const keep=()=>{const w=document.getElementById("b26what"),x=document.getElementById("b26exp");if(w)d.what=w.value;if(x)d.exp=x.value;};
+    ov.querySelectorAll("[data-b26x]").forEach(b=>b.onclick=()=>this.close());
+    ov.querySelectorAll("[data-b26sev]").forEach(b=>b.onclick=()=>{keep();d.sev=b.dataset.b26sev;this.render();});
+    ov.querySelectorAll("[data-b26kind]").forEach(b=>b.onclick=()=>{keep();d.kind=b.dataset.b26kind;this.render();});
+    const u=document.getElementById("b26use");if(u)u.onchange=()=>{keep();d.useShot=u.checked;this.render();};
+    const fb=ov.querySelector("[data-b26file]");if(fb)fb.onclick=()=>{keep();const inp=document.createElement("input");inp.type="file";inp.accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt";inp.onchange=()=>{const f=inp.files[0];if(!f)return;if(f.size>10*1024*1024){toast(T1(UI.b26FileBig));return;}d.file=f;this.render();};inp.click();};
+    const fx=ov.querySelector("[data-b26fx]");if(fx)fx.onclick=()=>{keep();d.file=null;this.render();};
+    ov.querySelector("[data-b26send]").onclick=()=>{keep();this.send();};
+    const w=document.getElementById("b26what");if(w&&!this._busy){w.focus();const n=w.value.length;try{w.setSelectionRange(n,n);}catch(e){}}},
+  close(){const ov=document.getElementById("ovB26");if(ov)ov.classList.remove("open");this._busy=false;},
+  async putFile(name,type,dataUrl,size,shot){const me=U().login;const id="f"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    const rec={id,name,type,size,by:me,at:typeof ymdhmL==="function"?ymdhmL(new Date()):this.tz()};
+    if(this.srv())await SB19.docSet("files",id,Object.assign({},rec,{data:dataUrl}));else{S.filesMem=S.filesMem||{};S.filesMem[id]=Object.assign({},rec,{data:dataUrl});}
+    return Object.assign(rec,shot?{shot:true}:{});},
+  async send(){const d=this.d;if(this._busy)return;if(!String(d.what||"").trim()){toast(T1(UI.b26NeedWhat));const w=document.getElementById("b26what");if(w)w.focus();return;}
+    this._busy=true;this.render();
+    try{const files=[];
+      if(d.useShot&&d.shot)files.push(await this.putFile("screenshot-"+this.tz().replace(/[^0-9]/g,"").slice(0,12)+".jpg","image/jpeg",d.shot,Math.round(d.shot.length*0.75),true));
+      if(d.file){const url=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(d.file);});files.push(await this.putFile(d.file.name,d.file.type||"",url,d.file.size,false));}
+      const p={what:d.what.trim(),expected:(d.exp||"").trim(),severity:d.sev,kind:d.kind,lang,files,tech:this.info(d.o)};
+      let r;if(this.srv())r=await SB19.T.rpc("bug_report_create",{p});
+      else{const no=this.local.length+1;r={id:"bugdemo"+no,no};this.local.unshift({id:r.id,no,author:U().login,status:"new",severity:p.severity,kind:p.kind,created_at:new Date().toISOString(),
+        data:{what:p.what,expected:p.expected,files,tech:p.tech,login:U().login,role:this.mp()?"mp":"advocate",at:this.tz().slice(0,16),history:[{st:"new",at:this.tz().slice(0,16),by:U().login}],comments:[]}});}
+      this._busy=false;this.close();this.rows=null;toast(T1(UI.b26Sent).replace("{no}",this.no(r&&r.no)));this.act("send",this.no(r&&r.no));
+      if(Router.cur==="help"&&typeof Help21!=="undefined"&&Help21._t==="bugs")Router.render();}
+    catch(e){this._busy=false;this.render();toast(this.eText(e));}},
+  /* ── раздел «Ошибки» (в «Помощи») ── */
+  async load(){try{if(this.srv()){this.rows=(await SB19.T.select("bug_reports"))||[];if(this.mp())this.crash=(await SB19.T.select("crash_log"))||[];}else{this.rows=this.local;this.crash=[];}}catch(e){this.rows=[];this.crash=[];toast(this.eText(e));}
+    if(Router.cur==="help")Router.render();},
+  page(){if(!this.staff())return "";if(this.rows===null){setTimeout(()=>this.load(),0);return `<div class="card"><div class="empty2">…</div></div>`;}
+    const mp=this.mp(),f=this.f;const sel=f.sel&&this.rows.find(r=>r.id===f.sel);
+    const tabs=mp?`<div class="b26tabs">${[["list",UI.b26List],["crash",UI.b26Crash]].map(([k,l])=>`<button type="button" class="fc${f.tab===k?" on":""}" data-b26tab="${k}">${T1(l)}${k==="crash"&&(this.crash||[]).length?` <span class="nb">${this.crash.length}</span>`:""}</button>`).join("")}</div>`:"";
+    if(mp&&f.tab==="crash")return tabs+this.crashHtml();
+    if(sel)return tabs+this.card(sel);
+    const rows=this.rows.filter(r=>(f.st==="all"||(f.st==="open"?this.OPEN.includes(r.status):r.status===f.st))&&(f.sev==="all"||r.severity===f.sev)).sort((a,b)=>b.no-a.no);
+    const opt=(list,cur)=>list.map(([k,l])=>`<option value="${k}"${cur===k?" selected":""}>${T1(l)}</option>`).join("");
+    return tabs+`<div class="card"><div class="b26flt"><select class="f11" data-b26st="1" aria-label="${T1(UI.b26St)}">${opt([["open",UI.b26Open],["all",UI.b26All],...this.ST],f.st)}</select>
+      <select class="f11" data-b26sv="1" aria-label="${T1(UI.b26Sev)}">${opt([["all",UI.b26All],...this.SEV],f.sev)}</select><span class="sp"></span>
+      ${mp?`<button type="button" class="btn sm" data-b26exp="1" title="${esc(T1(UI.b26ExportH))}">⭳ ${T1(UI.b26Export)}</button>`:""}<button type="button" class="btn sm pri" data-b26new="1">${T1(UI.b26Btn)}</button></div>
+      ${rows.length?`<table class="tbl b26t"><thead><tr>${mp?"<th></th>":""}<th>${T1(UI.b26No)}</th><th>${T1(UI.b26Kind)}</th><th>${T1(UI.b26Sev)}</th><th>${T1(UI.b26What)}</th>${mp?`<th>${T1(UI.b26Author)}</th>`:""}<th>${T1(UI.b26Date)}</th><th>${T1(UI.b26St)}</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr data-b26row="${esc(r.id)}">${mp?`<td><input type="checkbox" data-b26ck="${esc(r.id)}"${this.checked[r.id]?" checked":""} aria-label="${this.no(r.no)}"></td>`:""}<td><b>${this.no(r.no)}</b></td><td>${this.lbl(this.KIND,r.kind)}</td><td><span class="b26sev ${r.severity}">${this.lbl(this.SEV,r.severity)}</span></td>
+          <td class="b26w">${esc(String((r.data||{}).what||"").slice(0,90))}</td>${mp?`<td>${esc(accName(r.author))}</td>`:""}<td>${fmtDT((r.data||{}).at||"")}</td><td><span class="b26s ${r.status}">${this.lbl(this.ST,r.status)}</span></td></tr>`).join("")}</tbody></table>`:`<div class="empty2">${T1(UI.b26None)}</div>`}
+      ${mp?`<p class="b26hint">${T1(UI.b26ExportH)}</p>`:""}</div>`;},
+  card(r){const mp=this.mp(),d=r.data||{},t=d.tech||{};const tr=this.trans[r.id];
+    const files=(d.files||[]).map(f=>`<div class="b26file" data-b26f="${esc(f.id)}">${f.shot||/^image\//.test(f.type||"")?`<img alt="" data-b26img="${esc(f.id)}"${this.shotCache[f.id]?` src="${this.shotCache[f.id]}"`:""}>`:""}<button type="button" class="btn sm ghost" data-b26open="${esc(f.id)}">${esc(f.name)}</button></div>`).join("");
+    const hist=(d.history||[]).map(h=>`<li><span class="ht">${fmtDT(h.at)}</span><b>${esc(accName(h.by))}</b> · ${this.lbl(this.ST,h.st)}${h.fixedIn?" "+esc(h.fixedIn):""}${h.dupOf?" "+this.no(h.dupOf):""}${h.note?" — "+esc(h.note):""}</li>`).join("");
+    const com=(d.comments||[]).map(c=>`<li><span class="ht">${fmtDT(c.at)}</span><b>${esc(accName(c.by))}</b>: ${esc(c.text)}</li>`).join("");
+    const acts=(t.actions||[]).map(a=>`<li><span class="ht">${esc(a.at||"")}</span>${esc(a.t)}: ${esc(a.l)}</li>`).join("");
+    const errs=[...(t.error?[t.error]:[]),...(t.errors||[])].map(e=>`<li><span class="ht">${esc(e.at||"")}</span>${esc(e.kind||"")}: <code>${esc(e.msg||"")}</code>${e.src?" · "+esc(e.src):""}</li>`).join("");
+    const dv=t.device||{};
+    return `<div class="card b26card"><div class="b26ch"><button type="button" class="btn sm ghost" data-b26back="1">${T1(UI.b26Back)}</button><h3>${this.no(r.no)}</h3><span class="b26s ${r.status}">${this.lbl(this.ST,r.status)}${d.fixedIn?" · "+esc(d.fixedIn):""}${d.dupOf?" · "+this.no(d.dupOf):""}</span>
+        <span class="b26sev ${r.severity}">${this.lbl(this.SEV,r.severity)}</span><span>${this.lbl(this.KIND,r.kind)}</span></div>
+      <div class="b26meta">${esc(accName(r.author))} · ${roleOf25(r.author)} · ${fmtDT(d.at||"")} · ${esc(t.route||"")}${t.matter?" · "+esc((S.matters&&S.matters[t.matter]&&S.matters[t.matter].no)||t.matter):""} · ${esc(t.version||"")}${t.build?" ("+esc(t.build)+")":""}</div>
+      <div class="b26txt"><div class="lbl9">${T1(UI.b26What)}</div><p>${esc(d.what||"").replace(/\n/g,"<br>")}</p>${d.expected?`<div class="lbl9">${T1(UI.b26Exp)}</div><p>${esc(d.expected).replace(/\n/g,"<br>")}</p>`:""}
+        <button type="button" class="btn sm" data-b26tr="1"${tr==="…"?" disabled":""}>🌐 ${T1(UI.b26Translate)}</button>${tr&&tr!=="…"?`<div class="b26tr">${esc(tr).replace(/\n/g,"<br>")}</div>`:""}</div>
+      ${files?`<div class="lbl9">${T1(UI.b26Shots)}</div><div class="b26files">${files}</div>`:""}
+      ${mp?`<div class="b26ctl"><label>${T1(UI.b26St)}<select id="b26nst">${this.ST.map(([k,l])=>`<option value="${k}"${r.status===k?" selected":""}>${T1(l)}</option>`).join("")}</select></label>
+        <label>${T1(UI.b26FixedIn)}<input id="b26fi" value="${esc(d.fixedIn||APP_VERSION21)}" maxlength="20"></label><label>${T1(UI.b26DupOf)}<input id="b26dup" type="number" min="1" value="${esc(d.dupOf||"")}"></label>
+        <label class="w">${T1(UI.b26Note)}<input id="b26note" maxlength="2000"></label><button type="button" class="btn pri" data-b26setst="1">${T1(UI.b26SetSt)}</button></div>`:""}
+      <div class="b26cols"><div><div class="lbl9">${T1(UI.b26Hist)}</div><ul class="hist">${hist}</ul></div>
+        <div><div class="lbl9">${T1(UI.b26Comments)}</div>${com?`<ul class="hist">${com}</ul>`:`<div class="empty2">—</div>`}${mp?`<textarea id="b26com" rows="2" maxlength="2000" placeholder="${esc(T1(UI.b26Comment))}"></textarea><button type="button" class="btn sm" data-b26com="1">${T1(UI.b26AddComment)}</button>`:""}</div></div>
+      <details class="b26techd"><summary>${T1(UI.b26Tech)}</summary><div class="b26cols"><div><div class="lbl9">${T1(UI.b26Actions)}</div><ul class="hist">${acts||"<li>—</li>"}</ul></div><div><div class="lbl9">${T1(UI.b26Errors)}</div><ul class="hist">${errs||"<li>—</li>"}</ul>
+        <div class="lbl9">${T1(UI.b26Device)}</div><p class="b26dev">${esc(dv.platform||"")} · ${dv.w||"?"}×${dv.h||"?"} · dpr ${dv.dpr||1}${dv.touch?" · touch":""} · ${esc(t.lang||"")} · ${esc(t.theme||"")}${t.online===false?" · offline":""}<br><small>${esc(dv.ua||"")}</small></p></div></div></details></div>`;},
+  crashHtml(){const L=(this.crash||[]).slice().sort((a,b)=>String(b.last_at).localeCompare(String(a.last_at)));const d=x=>x?fmtDT(String(new Date(x).toLocaleString("sv-SE",{timeZone:"Asia/Tashkent"})).slice(0,16).replace(" ","T")):"";
+    return `<div class="card">${L.length?`<table class="tbl b26t"><thead><tr><th>${T1(UI.b26CrMsg)}</th><th>${T1(UI.b26CrWhere)}</th><th>${T1(UI.b26CrPage)}</th><th>${T1(UI.b26CrVer)}</th><th class="num">${T1(UI.b26CrCnt)}</th><th class="num">${T1(UI.b26CrWho)}</th><th>${T1(UI.b26CrFirst)}</th><th>${T1(UI.b26CrLast)}</th></tr></thead><tbody>
+      ${L.map(c=>`<tr><td><code>${esc(c.msg)}</code></td><td>${esc(c.src||"")}</td><td>${esc(c.route||"")}</td><td>${esc(c.version||"")}</td><td class="num"><b>${c.count}</b></td><td class="num">${(c.logins||[]).length}</td><td>${d(c.first_at)}</td><td>${d(c.last_at)}</td></tr>`).join("")}</tbody></table>`:`<div class="empty2">${T1(UI.b26NoCrash)}</div>`}</div>`;},
+  async fileData(id){if(this.shotCache[id])return this.shotCache[id];let rec=S.filesMem&&S.filesMem[id];if(!rec&&S.db){try{const s=await S.db.doc("files/"+id).get();if(s.exists)rec=s.data();}catch(e){}}
+    if(rec&&rec.data){this.shotCache[id]=rec.data;return rec.data;}return null;},
+  async rpc(fn,args){if(!this.srv())return null;return SB19.T.rpc(fn,args);},
+  async setStatus(r){const st=(document.getElementById("b26nst")||{}).value,fi=((document.getElementById("b26fi")||{}).value||"").trim(),dup=+((document.getElementById("b26dup")||{}).value||0),note=((document.getElementById("b26note")||{}).value||"").trim();
+    try{if(this.srv())await this.rpc("bug_report_status",{rid:r.id,st,note:note||null,fixed_in:st==="fixed"?fi:null,dup_of:st==="dup"&&dup?dup:null});
+      else{if(st==="fixed"&&!fi)throw new Error(T1("Укажите, в какой версии исправлено||请填写修复版本"));r.status=st;r.data.history.push({st,at:this.tz().slice(0,16),by:U().login,note:note||undefined,fixedIn:st==="fixed"?fi:undefined,dupOf:st==="dup"?dup:undefined});if(st==="fixed")r.data.fixedIn=fi;if(st==="dup")r.data.dupOf=dup;}
+      await this.load();}catch(e){toast(this.eText(e));}},
+  async comment(r){const t=((document.getElementById("b26com")||{}).value||"").trim();if(!t)return;
+    try{if(this.srv())await this.rpc("bug_report_comment",{rid:r.id,body:t});else r.data.comments.push({at:this.tz().slice(0,16),by:U().login,text:t});await this.load();}catch(e){toast(this.eText(e));}},
+  async translate(r){const d=r.data||{};const text=[d.what,d.expected].filter(Boolean).join("\n\n");if(!text)return;
+    if(!this.srv()||!SB19.T.invoke){toast(T1("Перевод работает при подключении к серверу||翻译需要连接服务器"));return;}
+    this.trans[r.id]="…";Router.render();try{const x=await SB19.T.invoke("translate",{text,ui:lang==="zh"?"zh":lang==="uz"?"uz":"ru",mode:"fast"});this.trans[r.id]=(x&&x.translation)||"";}catch(e){delete this.trans[r.id];toast(String((e&&e.message)||e));}Router.render();},
+  /* «Выгрузить для Claude»: один файл — тексты, снимки и тех. данные (отмеченные или все показанные) */
+  async exportFile(){const ids=Object.keys(this.checked).filter(k=>this.checked[k]);const f=this.f;
+    const list=(ids.length?this.rows.filter(r=>ids.includes(r.id)):this.rows.filter(r=>(f.st==="all"||(f.st==="open"?this.OPEN.includes(r.status):r.status===f.st))&&(f.sev==="all"||r.severity===f.sev))).sort((a,b)=>a.no-b.no);
+    if(!list.length){toast(T1(UI.b26None));return;}
+    const out=[];for(const r of list){const d=r.data||{};const shots=[];for(const fl of (d.files||[])){const data=await this.fileData(fl.id);shots.push({name:fl.name,type:fl.type,shot:!!fl.shot,data});}
+      out.push({no:this.no(r.no),status:r.status,severity:r.severity,kind:r.kind,author:r.author,role:d.role,at:d.at,what:d.what,expected:d.expected,fixedIn:d.fixedIn,dupOf:d.dupOf,history:d.history,comments:d.comments,tech:d.tech,files:shots});}
+    const e=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+    const json=JSON.stringify(out.map(x=>Object.assign({},x,{files:x.files.map(f=>({name:f.name,type:f.type,shot:f.shot}))})),null,1).replace(/</g,"\\u003c");
+    const html=`<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>ZCL — ошибки для Claude ${this.tz().slice(0,10)}</title><style>body{font:14px/1.5 system-ui,sans-serif;max-width:980px;margin:20px auto;padding:0 16px;color:#1e2430}section{border:1px solid #d8dde4;border-radius:12px;padding:14px 18px;margin:0 0 16px}h2{margin:0 0 6px;font-size:18px}img{max-width:100%;border:1px solid #d8dde4;border-radius:8px}pre{white-space:pre-wrap;background:#f4f5f7;padding:10px;border-radius:8px;font-size:12px}.m{color:#737c8a;font-size:12.5px}</style></head><body>
+<h1>ZHONG CHENG LEGAL — сообщения об ошибках (${out.length})</h1><p class="m">Выгружено ${e(this.tz())} (Ташкент) · ${e(accName(U().login))} · портал ${e(APP_VERSION21)}${typeof ZC_BUILD!=="undefined"?" ("+e(ZC_BUILD)+")":""}. Положите файл в папку проекта и напишите Claude «разбери ошибки».</p>
+${out.map(x=>`<section><h2>${e(x.no)} · ${e(this.lbl(this.KIND,x.kind))} · ${e(this.lbl(this.SEV,x.severity))} · ${e(this.lbl(this.ST,x.status))}</h2><p class="m">${e(x.author)} (${e(x.role)}) · ${e(x.at)} · ${e((x.tech||{}).route)} · ${e((x.tech||{}).version)}</p>
+<p><b>Что случилось:</b><br>${e(x.what).replace(/\n/g,"<br>")}</p>${x.expected?`<p><b>Что ожидали:</b><br>${e(x.expected).replace(/\n/g,"<br>")}</p>`:""}
+${x.files.map(f=>f.data&&/^data:image\//.test(f.data)?`<p><b>${e(f.name)}</b><br><img src="${f.data}" alt=""></p>`:f.data?`<p><b>${e(f.name)}</b> — <a download="${e(f.name)}" href="${f.data}">скачать</a></p>`:`<p><b>${e(f.name)}</b> — нет доступа</p>`).join("")}
+<pre>${e(JSON.stringify({tech:x.tech,history:x.history,comments:x.comments},null,1))}</pre></section>`).join("")}
+<script type="application/json" id="zcl-bugs">${json}<\/script></body></html>`;
+    const b=new Blob([html],{type:"text/html;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=`zcl-oshibki-${this.tz().slice(0,10)}.html`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800);
+    toast(T1(UI.b26Exported).replace("{n}",out.length));},
+  bind(vp){if(!vp)return;const f=this.f;
+    vp.querySelectorAll("[data-b26tab]").forEach(b=>b.onclick=()=>{f.tab=b.dataset.b26tab;f.sel=null;Router.render();});
+    const st=vp.querySelector("[data-b26st]");if(st)st.onchange=()=>{f.st=st.value;Router.render();};const sv=vp.querySelector("[data-b26sv]");if(sv)sv.onchange=()=>{f.sev=sv.value;Router.render();};
+    vp.querySelectorAll("[data-b26new]").forEach(b=>b.onclick=()=>this.open({from:"help"}));
+    const ex=vp.querySelector("[data-b26exp]");if(ex)ex.onclick=()=>this.exportFile();
+    vp.querySelectorAll("[data-b26ck]").forEach(c=>{c.onclick=e=>e.stopPropagation();c.onchange=()=>{this.checked[c.dataset.b26ck]=c.checked;};});
+    vp.querySelectorAll("[data-b26row]").forEach(tr=>tr.onclick=()=>{f.sel=tr.dataset.b26row;Router.render();});
+    const bk=vp.querySelector("[data-b26back]");if(bk)bk.onclick=()=>{f.sel=null;Router.render();};
+    const r=f.sel&&(this.rows||[]).find(x=>x.id===f.sel);if(!r)return;
+    vp.querySelectorAll("[data-b26img]").forEach(async im=>{if(im.getAttribute("src"))return;const d=await this.fileData(im.dataset.b26img);if(d)im.src=d;});
+    vp.querySelectorAll("[data-b26open]").forEach(b=>b.onclick=async()=>{const fl=((r.data||{}).files||[]).find(x=>x.id===b.dataset.b26open);if(!fl)return;if(typeof Files!=="undefined"&&Files.open)Files.open(fl);});
+    const trb=vp.querySelector("[data-b26tr]");if(trb)trb.onclick=()=>this.translate(r);
+    const ss=vp.querySelector("[data-b26setst]");if(ss)ss.onclick=()=>this.setStatus(r);
+    const cm=vp.querySelector("[data-b26com]");if(cm)cm.onclick=()=>this.comment(r);}
+};
+/* ── учёт действий и ошибок ── */
+const _goB26=Router.go.bind(Router);Router.go=function(r,a){try{B26.act("page",r+(a?" · "+String(a).slice(0,40):""));}catch(e){}return _goB26.apply(Router,arguments);};
+document.addEventListener("click",e=>{try{if(!B26.staff())return;const t=e.target;if(!t||!t.closest||t.closest("#ovB26"))return;if(t.closest("input,textarea,select,[contenteditable]"))return;
+  const el=t.closest("button,a,[role=tab],[role=menuitem],[data-go],[data-matter],[data-act],[data-emp],.sn,.tile,.k25,.cv22,tr[data-b26row]");if(!el)return;
+  let l;if(el.dataset.matter){const m=S.matters&&S.matters[el.dataset.matter];l="дело "+(m?m.no:el.dataset.matter);}else l=el.getAttribute("aria-label")||el.getAttribute("title")||el.textContent;
+  const k=Object.keys(el.dataset||{})[0];B26.act("click",(k?"["+k+"] ":"")+l);}catch(x){}},true);
+window.addEventListener("error",e=>{try{if(!e||!e.message)return;B26.fail("js",e.message,(e.filename?String(e.filename).split("/").pop().slice(0,60):"")+(e.lineno?":"+e.lineno:""),true);}catch(x){}});
+window.addEventListener("unhandledrejection",e=>{try{const r=e&&e.reason;const m=String((r&&r.message)||r||"");if(!m)return;const tech=B26.tech(m);B26.fail(tech?"promise":"server",m,"",tech);}catch(x){}});
+/* отказы сервера при сохранении: записываются всегда; предложение «Сообщить?» — только при технических сбоях (не при понятных отказах вроде «нет прав») */
+const _docSetB26=SB19.docSet.bind(SB19);SB19.docSet=async function(name,id,obj){try{return await _docSetB26(name,id,obj);}catch(e){const m=String((e&&e.message)||e);B26.fail("server","docSet "+name+": "+m,"",B26.tech(m));throw e;}};
+B26.hookRpc=function(){const T=typeof SB19!=="undefined"&&SB19.T;if(!T||T._rpc26)return;T._rpc26=T.rpc;T.rpc=async function(fn,args){try{return await T._rpc26.call(T,fn,args);}catch(e){const m=String((e&&e.message)||e);if(fn!=="crash_log_hit")B26.fail("server","rpc "+fn+": "+m,"",B26.tech(m));throw e;}};};
+/* ── места кнопки ── */
+const _placeB26=Set21.place.bind(Set21);Set21.place=function(){_placeB26();try{B26.hookRpc();const acts=document.getElementById("sp21Acts");if(!acts)return;let b=document.getElementById("bug26Set");
+  if(!B26.staff()){if(b)b.remove();return;}
+  if(!b){b=document.createElement("button");b.type="button";b.id="bug26Set";b.className="sp21i";b.setAttribute("role","menuitem");b.onclick=()=>B26.open({from:"settings"});}
+  b.innerHTML=Set21.svg("M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z")+`<span>${T1(UI.b26Btn)}</span>`;acts.appendChild(b);acts.hidden=false;}catch(e){}};
+if(typeof Help21!=="undefined"){
+  const _tabsB26=Help21.tabs.bind(Help21);Help21.tabs=function(){const t=_tabsB26();return B26.staff()?t.concat([["bugs",B26.mp()?UI.b26Tab:UI.b26Mine]]):t;};
+  const _pageB26=Help21.page.bind(Help21);Help21.page=function(){B26.hookRpc();let h;
+    if(this._t==="bugs"&&B26.staff()){const tabs=this.tabs();h=F.hdr(T1(UI.nHelp21),T1(B26.mp()?UI.b26Tab:UI.b26Mine))+`<div class="ptabs">${tabs.map(([k,l])=>`<button class="${this._t===k?"on":""}" data-hl21="${k}">${T1(l)}</button>`).join("")}</div>`+B26.page();}
+    else h=_pageB26();
+    if(!B26.staff())return h;return h.replace('<div class="acts"></div>',`<div class="acts"><button type="button" class="btn" data-b26new="1">⚠ ${T1(UI.b26Btn)}</button></div>`);};
+  const _assistB26=Help21.assist.bind(Help21);Help21.assist=function(){const h=_assistB26();if(!this._ans||!B26.staff())return h;
+    return h.replace(/(<div class="hlp21ans">[\s\S]*?<\/div><\/div>)/,`$1<button type="button" class="btn sm ghost b26na" data-b26ask="1">⚠ ${T1(UI.b26NoAns)}</button>`);};}
+const _bindB26=Pages.bind;Pages.bind=function(vp){_bindB26.apply(this,arguments);if(!vp||!B26.staff()||Router.cur!=="help")return;B26.bind(vp);
+  const a=vp.querySelector("[data-b26ask]");if(a)a.onclick=()=>B26.open({from:"assistant",error:{kind:"assistant",msg:String(Help21._draft||"").slice(0,300),at:B26.tz().slice(11)}});};
+/* уведомление «bug:…» — открыть сообщение в «Помощи» → «Ошибки» */
+document.addEventListener("click",e=>{const g=e.target&&e.target.closest&&e.target.closest('[data-go^="bug:"]');if(!g||!B26.staff())return;const ref=g.dataset.go.slice(4);
+  setTimeout(()=>{try{if(typeof Notif!=="undefined"&&Notif.close)Notif.close();}catch(x){}if(typeof Help21!=="undefined")Help21._t="bugs";B26.f.tab="list";B26.f.st="all";B26.f.sel=ref;B26.rows=null;Router.go("help");},0);},true);
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
