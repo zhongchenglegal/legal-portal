@@ -10276,7 +10276,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="12d511acc5e4";
+const ZC_BUILD="338c0a47333b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14360,6 +14360,41 @@ const Price24={
   /* УП сам поменял цену на «Подписании договора» — подтверждение (как на сервере) */
   if(typeof Contract11!=="undefined"){const _ce=Contract11.edit;Contract11.edit=async function(id){const m0=matter(id);const k0=m0?Price24.key(m0):"";const r=await _ce.apply(this,arguments);const m=matter(id);
     if(m&&Pre24.mp()&&Price24.on(m)&&Price24.key(m)!==k0&&!Price24.ok(m)){m.price23={ok:{terms:Price24.cur(m),by:Pre24.me(),at:nowS(),own:true}};try{await saveDoc("matters",m);}catch(e){}Router.render();}return r;};}}
+
+/* В1 (18.10.2026, владелец: «в1»): контакт из «Создать заявку» (кто, телефон, WeChat / Telegram / e-mail) хранится в заявке —
+   УП переносит его в карточку клиента кнопкой «Сохранить в карточку клиента» на этапе «Приём заявки». Добавляется только новое:
+   телефон — в «Телефоны», e-mail — в «E-mail», @ник или t.me — в Telegram, остальное — в WeChat; имя — в «Контактное лицо»,
+   если оно пустое, иначе — строкой в «Заметки». Ничего из карточки не стирается. */
+Object.assign(UI,{ct27Save:"Сохранить в карточку клиента||保存到客户卡片",ct27Saved:"Контакт сохранён в карточке клиента||联系人已保存到客户卡片",
+  ct27Q:"В карточку клиента будет добавлено:||将添加到客户卡片：",ct27Phone:"Телефон||电话",ct27Mail:"E-mail||电子邮件",ct27Tg:"Telegram||Telegram",ct27Wc:"WeChat||微信",
+  ct27Who:"Контактное лицо||联系人",ct27Note:"Заметки||备注",ct27NoteL:"Контакт из заявки||申请中的联系人"});
+window.UZ21=Object.assign(window.UZ21||{},{"Сохранить в карточку клиента":"Mijoz kartasiga saqlash","Контакт сохранён в карточке клиента":"Kontakt mijoz kartasiga saqlandi",
+  "В карточку клиента будет добавлено:":"Mijoz kartasiga qoʻshiladi:","Телефон":"Telefon","Контактное лицо":"Aloqa uchun shaxs","Заметки":"Eslatmalar","Контакт из заявки":"Arizadagi kontakt"});
+const Ct27={
+  /* что нового добавится в карточку: [[поле, значение, применить]] */
+  plan(m,c){const ic=((m.intake23||{}).contact)||{};if(!c)return [];if(typeof normClient==="function")normClient(c);const K=c.contacts,out=[];const has=(a,v)=>(a||[]).some(x=>String(x&&x.v||x).replace(/\s+/g,"").toLowerCase()===String(v).replace(/\s+/g,"").toLowerCase());
+    const ph=String(ic.phone||"").trim();if(ph&&!has(K.phones,ph))out.push([UI.ct27Phone,ph,()=>{K.phones=(K.phones||[]).concat(ph);}]);
+    String(ic.msg||"").split(/[,;]+/).map(s=>s.trim()).filter(Boolean).forEach(x=>{
+      if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x)){if(!has(K.emails,x))out.push([UI.ct27Mail,x,()=>{K.emails=(K.emails||[]).concat(x);}]);}
+      else if(/^@|t\.me\//i.test(x)){if(String(K.telegram||"").trim()!==x)out.push([UI.ct27Tg,x,()=>{K.telegram=K.telegram?K.telegram+", "+x:x;}]);}
+      else if(!has(K.wechat,x))out.push([UI.ct27Wc,x,()=>{K.wechat=(K.wechat||[]).concat(x);}]);});
+    const who=String(ic.who||"").trim();const P=c.person||(c.person={});
+    if(who&&String(P.fio||"").trim()!==who){if(!String(P.fio||"").trim())out.push([UI.ct27Who,who,()=>{P.fio=who;}]);
+      else{const line=`${T1(UI.ct27NoteL)} ${m.no||""}: ${[who,ph,ic.msg].filter(Boolean).join(", ")}`;if(!String(c.notes||"").includes(line))out.push([UI.ct27Note,line,()=>{c.notes=(c.notes?c.notes+"\n":"")+line;}]);}}
+    return out;},
+  can(m){const ic=((m.intake23||{}).contact)||{};return Pre24.mp()&&m.svc==="oneoff"&&m.status!=="closed"&&!!(ic.who||ic.phone||ic.msg)&&!ic.saved27&&!!client(m.clientId);},
+  async save(id){const m=matter(id);if(!m||!this.can(m))return;const c=client(m.clientId);const pl=this.plan(m,c);
+    if(pl.length&&!await Dlg.ask({title:T1(UI.ct27Save)+" · "+clientName(c),text:T1(UI.ct27Q),okText:T1(UI.ct27Save),
+      fields:[{k:"l",type:"html",html:"<ul style=\"margin:6px 0 0 18px;padding:0;font-size:13.5px;line-height:1.7;color:var(--ink)\">"+pl.map(([l,v])=>"<li><b>"+esc(T1(l))+":</b> "+esc(v)+"</li>").join("")+"</ul>"}]}))return;
+    pl.forEach(x=>x[2]());if(pl.length){try{await saveDoc("clients",c);}catch(e){toast(String(e&&e.message||e));return;}}
+    m.intake23.contact.saved27={by:Pre24.me(),at:nowS()};m.history=m.history||[];m.history.push({at:nowS(),by:Pre24.me(),what:T1(UI.ct27Saved)});
+    try{await saveDoc("matters",m);}catch(e){toast(String(e&&e.message||e));}audit(`${m.no}: контакт из заявки сохранён в карточку клиента ${clientName(c)}`);toast(T1(UI.ct27Saved));Router.render();}
+};
+{const _p1c27=Pre24.p1;Pre24.p1=function(m){const h=_p1c27.apply(this,arguments);const ic=((m.intake23||{}).contact)||{};let x="";
+    if(Ct27.can(m))x=`<div style="margin-top:8px"><button type="button" class="btn sm" data-ct27="1">${esc(T1(UI.ct27Save))}</button></div>`;
+    else if(ic.saved27)x=`<div style="margin-top:6px;font-size:12px;color:var(--ok-d)">✓ ${esc(T1(UI.ct27Saved))}</div>`;
+    if(!x)return h;const i=h.indexOf(`<h4>${T1(UI.p24Client)}</h4>`);const j=i<0?-1:h.indexOf("</dl>",i);return j<0?h:h.slice(0,j+5)+x+h.slice(j+5);};
+  const _bdc27=Pre24.bind;Pre24.bind=function(vp,m){_bdc27.apply(this,arguments);vp.querySelectorAll("[data-ct27]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();Ct27.save(m.id);});};}
 
 /* ══ версия 1.3 · одна роль человека везде (решение владельца 17.10.2026: «нет никакой должности, есть только роль») ══
    Подпись под именем во всех списках, карточках, чате, кабинете, доступах — только роль: «Управляющий адвокат» или «Адвокат»
