@@ -2500,16 +2500,14 @@ body.ch22pg #ms21Btn{color:var(--pri);border-color:var(--pri);background:var(--p
 .mn25p button{border:0;background:transparent;text-align:left;padding:9px 12px;border-radius:8px;font:500 13px var(--font);color:var(--ink);cursor:pointer}
 .mn25p button:hover,.mn25p button.on{background:var(--pri-soft);color:var(--pri)}
 /* плитки */
-.ks25{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.5fr);gap:12px;margin:4px 0 16px}
+.ks25{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:4px 0 16px}
 .k25{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid transparent;border-radius:14px;padding:12px 14px;box-shadow:var(--sh-1);text-align:left;font:inherit;color:inherit;cursor:pointer;transition:border-color .15s,transform .12s;min-width:0}
 button.k25:hover{transform:translateY(-1px)}
 .k25.on{border-color:var(--pri)}
-.k25.mon{cursor:default}
 .k25 .ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-size:18px;flex:none}
 .k25 .tx{display:flex;flex-direction:column;min-width:0}
 .k25 small{color:var(--ink-3);font-size:12px}
 .k25 b{font:700 20px var(--font-h);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.k25 b.mn25{font-size:17px}
 .k25 em{font-style:normal;font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .k25.blue .ic{background:var(--pri-soft);color:var(--pri)}
 .k25.red .ic{background:var(--red-soft)}.k25.red b{color:var(--red)}.k25.red.zero b{color:var(--ink-3)}
@@ -2576,7 +2574,6 @@ select.fb25{padding-right:12px}
 .cd25 .r25 .ty25{flex:1}
 .cd25 .ft25{border-top:1px solid var(--line);padding-top:10px}
 /* планшет и телефон */
-@media (max-width:1280px){.ks25{grid-template-columns:repeat(4,minmax(0,1fr))}.ks25 .mon{grid-column:1/-1}}
 @media (max-width:1100px){.tr25{grid-template-columns:140px minmax(0,1fr) 140px minmax(150px,.8fr)}.tr25>.c-tm{display:none}}
 @media (max-width:700px){
   .ks25{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.k25{padding:10px 12px;gap:10px}.k25 .ic{width:34px;height:34px;font-size:16px}.k25 b{font-size:18px}
@@ -7427,11 +7424,14 @@ function status11(m,forClient){migrateMatter11(m);
   if(m.pipeline!=="contract"){const p=PIPE11.find(x=>x[0]===m.pipeline)||PIPE11[0];return {k:"p:"+p[0],l:T1(forClient?p[2]:p[1]),cls:"s-pipe"};}
   if(forClient){const s=m.stage;const map={received:UI.plContractC,team:UI.plContractC,work:isRework(m)?UI.stRework:UI.st3,approval:UI.st3,review:"Второй контроль||二次审核",translation:UI.st6,cn:UI.st7,ready:"Сделано||已完成",accepted:"Принято||已验收"};return {k:"s:"+s,l:T1(map[s]||UI.st3),cls:"s-stage"};}
   return {k:"s:"+m.stage,l:stLabel(m.stage,false,m),cls:m.stage==="ready"||m.stage==="accepted"?"s-done":"s-stage"};}
-const isWorking11=m=>m.status!=="closed"&&m.pipeline==="contract"&&!m.paused&&!["ready","accepted"].includes(m.stage);
-const isDone11=m=>m.status!=="closed"&&["ready","accepted"].includes(m.stage);
-const isLate11=m=>m.status!=="closed"&&m.pipeline!=="lost"&&!!m.deadline&&daysTo(m.deadline)<0&&!["ready","accepted"].includes(m.stage);
+/* Б11 (17.10.2026): «Отправление в архив» — работа сделана, как ready/accepted; Б12: у разовой услуги до договора «желаемый срок» заявки — не просрочка */
+const DONE11=["ready","accepted","archive"];
+const preC11=m=>m.svc==="oneoff"&&m.pipeline!=="contract";
+const isWorking11=m=>m.status!=="closed"&&m.pipeline==="contract"&&!m.paused&&!DONE11.includes(m.stage);
+const isDone11=m=>m.status!=="closed"&&DONE11.includes(m.stage);
+const isLate11=m=>m.status!=="closed"&&m.pipeline!=="lost"&&!preC11(m)&&!!m.deadline&&daysTo(m.deadline)<0&&!DONE11.includes(m.stage);
 const lastMove11=m=>{const a=[(m.history||[]).slice(-1)[0],(m.stageHistory||[]).slice(-1)[0],(m.pipelineHistory||[]).slice(-1)[0]].filter(Boolean).map(h=>h.at).sort().pop();return a||(m.opened||todayS())+"T09:00";};
-stale=m=>m.status!=="closed"&&m.pipeline!=="lost"&&!m.paused&&!["ready","accepted"].includes(m.stage)&&WD(lastMove11(m),nowS())>workSettings().staleWd;
+stale=m=>m.status!=="closed"&&m.pipeline!=="lost"&&!m.paused&&!DONE11.includes(m.stage)&&WD(lastMove11(m),nowS())>workSettings().staleWd;
 /* ── оплата: блокировки ── */
 const monthOf11=s=>(s||todayS()).slice(0,7);
 const prevMonth11=M=>{const [y,mo]=M.split("-").map(Number);const d=new Date(y,mo-2,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;};
@@ -7698,7 +7698,7 @@ const KB11={
     return `<div class="pk pk11">${emps.map(e=>{const mm=list.filter(m=>m.lead===e||execsOf(m).some(x=>x.emp===e)).sort((a,b)=>(a.paused?1:0)-(b.paused?1:0)||(a.deadline||"9").localeCompare(b.deadline||"9"));const late=mm.filter(isLate11).length;
       const share={};mm.filter(m=>costVisible(m)&&m.pipeline==="contract").forEach(m=>{const ex=execsOf(m);const x=ex.find(y=>y.emp===e);const pct=x?(+x.share||0):(ex.length?0:100);Money17.add(share,Money17.cur(m),Money17.cost(m)*pct/100);});const has=Object.values(share).some(Boolean);
       return `<div class="pc"><div class="ph2" data-emp="${e}" style="cursor:pointer">${photo(e)?`<img src="${photo(e)}" alt="">`:`<span class="vi">${initials(dispName(e))}</span>`}<div class="n">${dispName(e)}<small>${roleOf25(e)}</small></div><span class="cnt${late?" red":""}">${mm.length}${late?` <small>· ${late}</small>`:""}</span></div>${mm.map(m=>this.card(m)).join("")||`<div class="empty2">—</div>`}</div>`;}).join("")}</div>`;},
-  cols(){return [...PIPE11.filter(x=>x[0]!=="contract"&&x[0]!=="team_draft").map(([k,l])=>["p:"+k,l,"var(--info)"]),...STAGES10.map(([k,l])=>["s:"+k,l,k==="ready"||k==="accepted"?"var(--ok)":"var(--ink)"]),["paused",UI.plPaused,"var(--warn)"]];},
+  cols(){return [...PIPE11.filter(x=>x[0]!=="contract").map(([k,l])=>["p:"+k,l,"var(--info)"]),...STAGES10.map(([k,l])=>["s:"+k,l,k==="ready"||k==="accepted"?"var(--ok)":"var(--ink)"]),["paused",UI.plPaused,"var(--warn)"]];},
   /* по статусам: колонки переносятся на новую строку (без прокрутки вбок); пустые скрыты, их можно показать */
   byStatus(list,f){const all=this.cols();const filled=all.filter(([k])=>list.some(m=>status11(m).k===k));const cols=f&&f.showEmpty?all:filled;const hidden=all.length-filled.length;
     return `${hidden?`<div class="empty17"><button type="button" class="btn sm ghost" data-empty17="1">${T1(f&&f.showEmpty?UI.hideEmpty17:UI.showEmpty17)} (${hidden})</button></div>`:""}<div class="kb kb11">${cols.map(([k,l,c])=>{const col=list.filter(m=>status11(m).k===k);return `<div class="kcol" data-col11="${k}"><div class="kh"><span><i style="background:${c}"></i>${T1(l)}</span><b>${col.length}</b></div>${col.map(m=>this.card(m)).join("")}</div>`;}).join("")}</div>`;},
@@ -7954,7 +7954,7 @@ const KP={
     const acts=[];if(m.status!=="closed"&&m.pipeline!=="contract"){if(this.canStep(m,1)&&(!o||step===1))acts.push(`<button class="btn sm pri" data-act="kpPropose">${T1(UI.kpPropose)}</button>`);
       if(o){if(step===2&&this.canStep(m,2)){acts.push(`<button class="btn sm pri" data-act="kpOk2">${T1(UI.kpApprove)}</button>`,`<button class="btn sm ghost" data-act="kpRet2" style="color:var(--red)">${T1(UI.kpReturn)}</button>`);}if(step===3&&this.canStep(m,3)){acts.push(`<button class="btn sm pri" data-act="kpOk3">${T1(UI.kpFinal)}</button>`,`<button class="btn sm ghost" data-act="kpRet3" style="color:var(--red)">${T1(UI.kpReturn)}</button>`);}
         if(this.canStep(m,1)&&!o.sentAt){acts.push(`<button class="btn sm" data-act="kpFile">${o.file?"📎 "+esc(o.file.name):T1(UI.kpAttach)}</button>`);if(step===4&&o.file)acts.push(`<button class="btn sm pri" data-act="kpSend">${T1(UI.kpSend)}</button>`);}}}
-    const body=o?`<dl class="kvl"><dt>${T1(UI.kpSum)}</dt><dd>${vis?`<b class="money">${fmtN(o.sum)}</b> ${T1(UI.sum)}${o.recommended?` · <small>${T1(UI.kpRecommended)}: ${fmtN(o.recommended.min)} — ${fmtN(o.recommended.max)} (${T1(UI.kpPolicyV)} ${o.policyVersion})</small>`:""}${o.outOfRange?` <span class="payw">⚠ ${T1(UI.kpOut)}</span>`:""}`:"—"}</dd><dt>${T1(UI.kpCoefs)}</dt><dd><small>${Object.keys(COEF_OPTS).map(k=>T1(COEF_LBL[k])+": "+T1((COEF_OPTS[k].find(x=>x[0]===o.coefs[k])||["",""])[1])).join(" · ")}${o.coefs.regular?" · "+T1(UI.kpDiscountReg):""}${o.coefs.abon?" · "+T1(UI.kpDiscountAbon):""}</small></dd><dt>${T1(UI.kpVolume)}</dt><dd>${esc(o.volumeText||"")}</dd><dt>${T1(UI.kpRationale)}</dt><dd>${esc(o.rationale||"")}${o.outOfRange&&o.deviationNote?`<br><small><b>${T1(UI.kpDeviation)}:</b> ${esc(o.deviationNote)}</small>`:""}</dd><dt>${T1(UI.kpKind)}</dt><dd>${T1(o.kind==="new"?UI.kpKindNew:UI.kpKindExisting)} · ${T1(UI.ksAuthor)}: ${dispName(o.author)}</dd><dt>${T1(UI.kpStatus)}</dt><dd>${o.sentAt?`<b>${T1(UI.kpSent)}</b> ${fmtDT(o.sentAt)} · ${esc(o.channel||"")}`:this.approved(o)?T1(UI.kpDone)+" · "+T1(UI.kpNotSent):T1(UI.kpDraft)}${o.file?` · <span class="chipf" data-act="kpFileOpen">${esc(o.file.name)}</span>`:""}</dd><dt>${T1(UI.kpResult)}</dt><dd><span class="pay11 ${o.result==="won"?"paid":o.result==="lost"?"unpaid":"partial"}">${T1(o.result==="won"?UI.kpWon:o.result==="lost"?UI.kpLost:UI.kpPending)}</span>${o.result==="lost"&&o.lostReason?` · ${T1((LOST11.find(x=>x[0]===o.lostReason)||["",o.lostReason])[1])}${o.lostNote?" — "+esc(o.lostNote):""}`:""}${o.resultAt?` · ${fmtDT(o.resultAt)}`:""}</dd></dl>`:`<div class="empty2">${T1(UI.kpNone)}</div>`;
+    const body=o?`<dl class="kvl"><dt>${T1(UI.kpSum)}</dt><dd>${vis?`<b class="money">${Money17.offFmt(m)}</b>${o.recommended?` · <small>${T1(UI.kpRecommended)}: ${fmtN(o.recommended.min)} — ${fmtN(o.recommended.max)} (${T1(UI.kpPolicyV)} ${o.policyVersion})</small>`:""}${o.outOfRange?` <span class="payw">⚠ ${T1(UI.kpOut)}</span>`:""}`:"—"}</dd><dt>${T1(UI.kpCoefs)}</dt><dd><small>${Object.keys(COEF_OPTS).map(k=>T1(COEF_LBL[k])+": "+T1((COEF_OPTS[k].find(x=>x[0]===o.coefs[k])||["",""])[1])).join(" · ")}${o.coefs.regular?" · "+T1(UI.kpDiscountReg):""}${o.coefs.abon?" · "+T1(UI.kpDiscountAbon):""}</small></dd><dt>${T1(UI.kpVolume)}</dt><dd>${esc(o.volumeText||"")}</dd><dt>${T1(UI.kpRationale)}</dt><dd>${esc(o.rationale||"")}${o.outOfRange&&o.deviationNote?`<br><small><b>${T1(UI.kpDeviation)}:</b> ${esc(o.deviationNote)}</small>`:""}</dd><dt>${T1(UI.kpKind)}</dt><dd>${T1(o.kind==="new"?UI.kpKindNew:UI.kpKindExisting)} · ${T1(UI.ksAuthor)}: ${dispName(o.author)}</dd><dt>${T1(UI.kpStatus)}</dt><dd>${o.sentAt?`<b>${T1(UI.kpSent)}</b> ${fmtDT(o.sentAt)} · ${esc(o.channel||"")}`:this.approved(o)?T1(UI.kpDone)+" · "+T1(UI.kpNotSent):T1(UI.kpDraft)}${o.file?` · <span class="chipf" data-act="kpFileOpen">${esc(o.file.name)}</span>`:""}</dd><dt>${T1(UI.kpResult)}</dt><dd><span class="pay11 ${o.result==="won"?"paid":o.result==="lost"?"unpaid":"partial"}">${T1(o.result==="won"?UI.kpWon:o.result==="lost"?UI.kpLost:UI.kpPending)}</span>${o.result==="lost"&&o.lostReason?` · ${T1((LOST11.find(x=>x[0]===o.lostReason)||["",o.lostReason])[1])}${o.lostNote?" — "+esc(o.lostNote):""}`:""}${o.resultAt?` · ${fmtDT(o.resultAt)}`:""}</dd></dl>`:`<div class="empty2">${T1(UI.kpNone)}</div>`;
     return `<div class="card span kp12"><h4>${T1(UI.kpTitle)}${o&&o.outOfRange?`<span class="payw" style="margin-left:8px">⚠ ${T1(UI.kpOut)}</span>`:""}</h4>${body}<div class="kpsteps">${stepRow(1,UI.kpStep1,m.lead)}${stepRow(2,UI.kpStep2,this.step2Who(m))}${stepRow(3,UI.kpStep3,this.step3Who(m))}</div>${acts.length?`<div class="actions" style="justify-content:flex-start;margin-top:8px;flex-wrap:wrap;gap:6px">${acts.join("")}</div>`:""}${o&&!this.approved(o)&&!o.sentAt?`<div style="font-size:11.5px;color:var(--ink-3);margin-top:6px">${T1(UI.kpNeed3)}</div>`:""}</div>`;}
 };
 /* результат КП при смене воронки */
@@ -7969,24 +7969,26 @@ const KPStats={
   calc(list){const sent=list.length,sum=list.reduce((s,m)=>s+(+m.offer.sum||0),0);const won=list.filter(m=>m.offer.result==="won");const wonSum=won.reduce((s,m)=>s+(+m.offer.sum||0),0);const lost=list.filter(m=>m.offer.result==="lost");
     const days=won.map(m=>WD(m.offer.sentAt,m.contractSignedAt||m.offer.resultAt||nowS())).filter(x=>x>=0);const avg=days.length?r2(days.reduce((a,b)=>a+b,0)/days.length):null;
     const reasons={};lost.forEach(m=>{const r=m.offer.lostReason||"other";reasons[r]=(reasons[r]||0)+1;});const out=list.filter(m=>m.offer.outOfRange).length;
-    return {sent,sum,won:won.length,wonSum,conv:sent?Math.round(won.length/sent*100):0,avg,reasons,lost,out,outPct:sent?Math.round(out/sent*100):0};},
-  tiles(st){return `<div class="tiles">${F.tile(st.sent,UI.ksSentKp,"")}${F.tile(fmtN(st.sum),UI.ksSum,"blue")}${F.tile(st.won,UI.ksWon,"green")}${F.tile(fmtN(st.wonSum),UI.ksWonSum,"green")}${F.tile(st.conv+" %",UI.ksConv,"amber")}${F.tile(st.avg===null?"—":st.avg,UI.ksAvg,"")}${F.tile(st.outPct+" %",UI.ksOut,st.out?"red":"")}</div>`;},
-  table(rows,keyLabel){return `<table class="tbl"><thead><tr><th>${keyLabel}</th><th class="num">${T1(UI.ksSentKp)}</th><th class="num">${T1(UI.ksSum)}</th><th class="num">${T1(UI.ksWon)}</th><th class="num">${T1(UI.ksWonSum)}</th><th class="num">${T1(UI.ksConv)}</th><th class="num">${T1(UI.ksAvg)}</th><th class="num">${T1(UI.ksOut)}</th></tr></thead><tbody>${rows.map(([k,st])=>`<tr><td><b>${k}</b></td><td class="num">${st.sent}</td><td class="num">${fmtN(st.sum)}</td><td class="num">${st.won}</td><td class="num">${fmtN(st.wonSum)}</td><td class="num">${st.conv} %</td><td class="num">${st.avg===null?"—":st.avg}</td><td class="num">${st.outPct} %</td></tr>`).join("")||`<tr><td colspan="8" class="empty2">${T1(UI.noData)}</td></tr>`}</tbody></table>`;},
+    /* Б6: суммы КП — по валютам (сум, $, ¥), не складываются в одно число */
+    const sumA={},wonSumA={};list.forEach(m=>Money17.add(sumA,Money17.offCur(m),+m.offer.sum||0));won.forEach(m=>Money17.add(wonSumA,Money17.offCur(m),+m.offer.sum||0));
+    return {sent,sum,sumA,won:won.length,wonSum,wonSumA,conv:sent?Math.round(won.length/sent*100):0,avg,reasons,lost,out,outPct:sent?Math.round(out/sent*100):0};},
+  tiles(st){return `<div class="tiles">${F.tile(st.sent,UI.ksSentKp,"")}${F.tile(Money17.fmt(st.sumA),UI.ksSum,"blue")}${F.tile(st.won,UI.ksWon,"green")}${F.tile(Money17.fmt(st.wonSumA),UI.ksWonSum,"green")}${F.tile(st.conv+" %",UI.ksConv,"amber")}${F.tile(st.avg===null?"—":st.avg,UI.ksAvg,"")}${F.tile(st.outPct+" %",UI.ksOut,st.out?"red":"")}</div>`;},
+  table(rows,keyLabel){return `<table class="tbl"><thead><tr><th>${keyLabel}</th><th class="num">${T1(UI.ksSentKp)}</th><th class="num">${T1(UI.ksSum)}</th><th class="num">${T1(UI.ksWon)}</th><th class="num">${T1(UI.ksWonSum)}</th><th class="num">${T1(UI.ksConv)}</th><th class="num">${T1(UI.ksAvg)}</th><th class="num">${T1(UI.ksOut)}</th></tr></thead><tbody>${rows.map(([k,st])=>`<tr><td><b>${k}</b></td><td class="num">${st.sent}</td><td class="num">${Money17.fmt(st.sumA)}</td><td class="num">${st.won}</td><td class="num">${Money17.fmt(st.wonSumA)}</td><td class="num">${st.conv} %</td><td class="num">${st.avg===null?"—":st.avg}</td><td class="num">${st.outPct} %</td></tr>`).join("")||`<tr><td colspan="8" class="empty2">${T1(UI.noData)}</td></tr>`}</tbody></table>`;},
   block(list,opts){opts=opts||{};const st=this.calc(list);const byKind=[["new",UI.ksNew],["existing",UI.ksExisting]].map(([k,l])=>[T1(l),this.calc(list.filter(m=>m.offer.kind===k))]);
     const units=[...new Set(list.map(m=>famOf(m.unitId)))].map(u=>[unitName(u),this.calc(list.filter(m=>famOf(m.unitId)===u))]);const cns=[...new Set(list.map(m=>cnLawyerOf(m)).filter(Boolean))].map(e=>[dispName(e),this.calc(list.filter(m=>cnLawyerOf(m)===e))]);
     const reasons=Object.entries(st.reasons).sort((a,b)=>b[1]-a[1]).map(([r,n])=>`<span class="pill">${T1((LOST11.find(x=>x[0]===r)||["",r])[1])} · <b>${n}</b></span>`).join(" ")||"—";
-    const lostT=st.lost.length?`<table class="tbl"><thead><tr><th>${T1(UI.mNo)}</th><th>${T1(UI.mClient)}</th><th class="num">${T1(UI.kpSum)}</th><th>${T1(UI.ksAuthor)}</th><th>${T1(UI.kpLostWhy)}</th><th>${T1(UI.ctDate)}</th></tr></thead><tbody>${st.lost.map(m=>`<tr data-matter="${m.id}" style="cursor:pointer"><td><b>${esc(m.no)}</b></td><td>${esc((client(m.clientId)||{}).name||"")}</td><td class="num">${fmtN(m.offer.sum)}</td><td>${dispName(m.offer.author)}</td><td>${T1((LOST11.find(x=>x[0]===m.offer.lostReason)||["",m.offer.lostReason||"—"])[1])}${m.offer.lostNote?` <small>— ${esc(m.offer.lostNote)}</small>`:""}</td><td>${fmtD((m.offer.resultAt||"").slice(0,10))}</td></tr>`).join("")}</tbody></table>`:`<div class="empty2">${T1(UI.noData)}</div>`;
-    const outT=opts.mp?`<div class="card"><h4>${T1(UI.ksOutList)} · ${st.out}</h4>${st.out?`<div style="display:grid;gap:6px">${list.filter(m=>m.offer.outOfRange).map(m=>`<div class="reqrow" data-matter="${m.id}" style="cursor:pointer"><span class="tm">${esc(m.no)}</span><span><b>${fmtN(m.offer.sum)}</b> ${T1(UI.sum)} · ${m.offer.recommended?fmtN(m.offer.recommended.min)+" — "+fmtN(m.offer.recommended.max):"—"} · ${dispName(m.offer.author)}<br><small>${esc(m.offer.deviationNote||"")}</small></span><span class="rt${m.offer.result==="won"?"":m.offer.result==="lost"?" late":" open"}">${T1(m.offer.result==="won"?UI.kpWon:m.offer.result==="lost"?UI.kpLost:UI.kpPending)}</span></div>`).join("")}</div>`:`<div class="empty2">✓</div>`}</div>`:"";
+    const lostT=st.lost.length?`<table class="tbl"><thead><tr><th>${T1(UI.mNo)}</th><th>${T1(UI.mClient)}</th><th class="num">${T1(UI.kpSum)}</th><th>${T1(UI.ksAuthor)}</th><th>${T1(UI.kpLostWhy)}</th><th>${T1(UI.ctDate)}</th></tr></thead><tbody>${st.lost.map(m=>`<tr data-matter="${m.id}" style="cursor:pointer"><td><b>${esc(m.no)}</b></td><td>${esc((client(m.clientId)||{}).name||"")}</td><td class="num">${Money17.offFmt(m)}</td><td>${dispName(m.offer.author)}</td><td>${T1((LOST11.find(x=>x[0]===m.offer.lostReason)||["",m.offer.lostReason||"—"])[1])}${m.offer.lostNote?` <small>— ${esc(m.offer.lostNote)}</small>`:""}</td><td>${fmtD((m.offer.resultAt||"").slice(0,10))}</td></tr>`).join("")}</tbody></table>`:`<div class="empty2">${T1(UI.noData)}</div>`;
+    const outT=opts.mp?`<div class="card"><h4>${T1(UI.ksOutList)} · ${st.out}</h4>${st.out?`<div style="display:grid;gap:6px">${list.filter(m=>m.offer.outOfRange).map(m=>`<div class="reqrow" data-matter="${m.id}" style="cursor:pointer"><span class="tm">${esc(m.no)}</span><span><b>${Money17.offFmt(m)}</b> · ${m.offer.recommended?fmtN(m.offer.recommended.min)+" — "+fmtN(m.offer.recommended.max):"—"} · ${dispName(m.offer.author)}<br><small>${esc(m.offer.deviationNote||"")}</small></span><span class="rt${m.offer.result==="won"?"":m.offer.result==="lost"?" late":" open"}">${T1(m.offer.result==="won"?UI.kpWon:m.offer.result==="lost"?UI.kpLost:UI.kpPending)}</span></div>`).join("")}</div>`:`<div class="empty2">✓</div>`}</div>`:"";
     return `${this.tiles(st)}<div class="cols"><div style="display:grid;gap:14px"><div class="card"><h4>${T1(UI.ksNew)} / ${T1(UI.ksExisting)}</h4>${this.table(byKind,T1(UI.kpKind))}</div><div class="card"><h4>${T1(UI.ksByUnit)}</h4>${this.table(units,T1(UI.fUnit11))}</div></div><div style="display:grid;gap:14px"><div class="card"><h4>${T1(UI.ksByCn)}</h4>${this.table(cns,T1(UI.mCn))}</div><div class="card"><h4>${T1(UI.ksLost)}</h4><div style="display:flex;flex-wrap:wrap;gap:6px">${reasons}</div></div>${outT}</div></div><div class="card" style="margin-top:14px"><h4>${T1(UI.ksLostTable)} · ${st.lost.length}</h4>${lostT}</div>`;},
   page(){this._f=this._f||{from:"",to:"",unit:"all",author:"all"};const f=this._f;const all=MMall().filter(m=>m.offer&&m.offer.sentAt);const authors=[...new Set(all.map(m=>m.offer.author).filter(Boolean))];const units=[...new Set(all.map(m=>famOf(m.unitId)))];
     const sel=(k,opts)=>`<select class="search f11" data-ks="${k}"><option value="all">${T1(UI.fAll)}</option>${opts.map(([v,l])=>`<option value="${v}"${f[k]===v?" selected":""}>${l}</option>`).join("")}</select>`;
     const MP=isFounder()||hasF("managing");let list=this.rows(f);if(!MP){const me=U().emp;list=list.filter(m=>m.lead===me||execsOf(m).some(x=>x.emp===me)||cnLawyerOf(m)===me);}
     return F.hdr(T1(UI.ksTitle),`${list.length}`)+`<div class="flt11"><label>${T1(UI.ksPeriod)} ${T1(UI.fFrom)}<input type="date" class="f11" data-ks="from" value="${f.from}"></label><label>${T1(UI.fTo)}<input type="date" class="f11" data-ks="to" value="${f.to}"></label><label>${T1(UI.fUnit11)}${sel("unit",units.map(u=>[u,unitName(u)]))}</label><label>${T1(UI.ksAuthor)}${sel("author",authors.map(e=>[e,dispName(e)]))}</label></div>`+this.block(list,{mp:MP});},
-  forEmp(e){const list=MMall().map(migrateMatter11).filter(m=>m.offer&&m.offer.sentAt&&(m.offer.author===e||cnLawyerOf(m)===e));if(!list.length)return "";const st=this.calc(list);return `<div class="card"><h4>${T1(UI.ksTitle)}</h4><dl class="kvl"><dt>${T1(UI.ksSentKp)}</dt><dd>${st.sent} · ${fmtN(st.sum)} ${T1(UI.sum)}</dd><dt>${T1(UI.ksWon)}</dt><dd>${st.won} · ${fmtN(st.wonSum)} ${T1(UI.sum)} · ${T1(UI.ksConv)} ${st.conv} %</dd><dt>${T1(UI.ksAvg)}</dt><dd>${st.avg===null?"—":st.avg}</dd><dt>${T1(UI.ksOut)}</dt><dd>${st.outPct} %</dd></dl></div>`;}
+  forEmp(e){const list=MMall().map(migrateMatter11).filter(m=>m.offer&&m.offer.sentAt&&(m.offer.author===e||cnLawyerOf(m)===e));if(!list.length)return "";const st=this.calc(list);return `<div class="card"><h4>${T1(UI.ksTitle)}</h4><dl class="kvl"><dt>${T1(UI.ksSentKp)}</dt><dd>${st.sent} · ${Money17.fmt(st.sumA)}</dd><dt>${T1(UI.ksWon)}</dt><dd>${st.won} · ${Money17.fmt(st.wonSumA)} · ${T1(UI.ksConv)} ${st.conv} %</dd><dt>${T1(UI.ksAvg)}</dt><dd>${st.avg===null?"—":st.avg}</dd><dt>${T1(UI.ksOut)}</dt><dd>${st.outPct} %</dd></dl></div>`;}
 };
 /* главная руководителя отдела клиентов и управляющего: карточка КП */
 const _depthead12=Home.depthead;Home.depthead=function(){const h=_depthead12.call(this);const list=KPStats.rows({from:addDays(todayS(),-90)});return h+`<div class="dash2"><div class="card"><h4>${T1(UI.ksTitle)} · 90 ${T1(UI.days)}<button class="more" data-go="kpstats">${T1(UI.all)} →</button></h4>${KPStats.tiles(KPStats.calc(list))}</div><div></div></div>`;};
-const _founder12=Home.founder;const founder12=function(){const h=_founder12.call(this);const list=KPStats.rows({from:addDays(todayS(),-90)});const st=KPStats.calc(list);return h+`<div class="dash2"><div class="card"><h4>${T1(UI.ksTitle)} · 90 ${T1(UI.days)}<button class="more" data-go="kpstats">${T1(UI.all)} →</button></h4>${KPStats.tiles(st)}</div><div class="card"><h4>${T1(UI.ksOutList)} · ${st.out}</h4>${st.out?list.filter(m=>m.offer.outOfRange).slice(0,6).map(m=>`<div class="reqrow" data-matter="${m.id}" style="cursor:pointer"><span class="tm">${esc(m.no)}</span><span>${fmtN(m.offer.sum)} ${T1(UI.sum)} · ${dispName(m.offer.author)}</span></div>`).join(""):`<div class="empty2">✓</div>`}</div></div>`;};Home.founder=founder12;Home.coo=founder12;
+const _founder12=Home.founder;const founder12=function(){const h=_founder12.call(this);const list=KPStats.rows({from:addDays(todayS(),-90)});const st=KPStats.calc(list);return h+`<div class="dash2"><div class="card"><h4>${T1(UI.ksTitle)} · 90 ${T1(UI.days)}<button class="more" data-go="kpstats">${T1(UI.all)} →</button></h4>${KPStats.tiles(st)}</div><div class="card"><h4>${T1(UI.ksOutList)} · ${st.out}</h4>${st.out?list.filter(m=>m.offer.outOfRange).slice(0,6).map(m=>`<div class="reqrow" data-matter="${m.id}" style="cursor:pointer"><span class="tm">${esc(m.no)}</span><span>${Money17.offFmt(m)} · ${dispName(m.offer.author)}</span></div>`).join(""):`<div class="empty2">✓</div>`}</div></div>`;};Home.founder=founder12;Home.coo=founder12;
 /* карточка сотрудника: статистика КП */
 const _profWork12=Profile.work.bind(Profile);Profile.work=function(p,d,u){const h=_profWork12(p,d,u);const e=p&&p.emp||this.id;return h+(e?KPStats.forEmp(e):"");};
 /* ── файл КП в кабинете клиента ── */
@@ -8529,7 +8531,10 @@ const Money17={
   cost(m){return +m.cost||0;},
   paid(m){const c=this.cost(m);if(m.paymentStatus==="paid")return c;return Math.min(c,Math.max(0,(+m.paid||0)/this.rate(this.cur(m))));},
   due(m){if(m.pipeline!=="contract"||m.paymentStatus==="paid")return 0;return Math.max(0,this.cost(m)-this.paid(m));},
-  potential(m){if(m.pipeline==="contract"||m.pipeline==="lost"||m.status==="closed")return null;if(m.offer&&+m.offer.sum)return {v:+m.offer.sum,c:"UZS"};const v=this.cost(m);return v?{v,c:this.cur(m)}:null;},
+  potential(m){if(m.pipeline==="contract"||m.pipeline==="lost"||m.status==="closed")return null;if(m.offer&&+m.offer.sum)return {v:+m.offer.sum,c:this.offCur(m)};const v=this.cost(m);return v?{v,c:this.cur(m)}:null;},
+  /* Б6: валюта КП — у КП из условий (этапы до договора) валюта дела, у прежнего КП по ценовой политике — сум */
+  offCur(m){const o=m.offer;return o&&o.terms23?this.cur(m):"UZS";},
+  offFmt(m){const a={};a[this.offCur(m)]=+((m.offer||{}).sum)||0;return this.fmt(a);},
   add(acc,c,v){if(v)acc[c]=(acc[c]||0)+v;return acc;},
   inUzs(m){return this.cost(m)*this.rate(this.cur(m));},
   fmt(acc){const out=[];if(acc.UZS)out.push(fmtN(Math.round(acc.UZS))+" "+T1(UI.sum));if(acc.USD)out.push("$"+fmtN(Math.round(acc.USD)));if(acc.CNY)out.push("¥"+fmtN(Math.round(acc.CNY)));return out.join(" · ")||"0";}
@@ -8580,7 +8585,7 @@ Matter.apply=function(m,v){const keep={court:m.court,caseNo:m.caseNo,courtKind:m
 const SORT17=[["deadline","по сроку||按期限"],["opened","сначала новые||最新优先"],["cost","по стоимости||按金额"],["client","по клиенту||按客户"],["no","по номеру||按编号"],["stale","дольше без движения||最久无进展"]];
 const sort17=k=>{const cn=m=>{const c=client(m.clientId);return c?clientName(c):"";};
   return {deadline:(a,b)=>(a.deadline||"9").localeCompare(b.deadline||"9"),opened:(a,b)=>String(b.opened||"").localeCompare(String(a.opened||"")),
-    cost:(a,b)=>(costVisible(b)?Money17.inUzs(b):0)-(costVisible(a)?Money17.inUzs(a):0),client:(a,b)=>cn(a).localeCompare(cn(b)),no:(a,b)=>String(a.no||"").localeCompare(String(b.no||"")),
+    cost:(a,b)=>(costVisible(b)?Money17.inUzs(b):0)-(costVisible(a)?Money17.inUzs(a):0),client:(a,b)=>cn(a).localeCompare(cn(b)),no:(a,b)=>String(a.no||"").localeCompare(String(b.no||""),undefined,{numeric:true}),
     stale:(a,b)=>lastMove11(a).localeCompare(lastMove11(b))}[k]||((a,b)=>(a.deadline||"9").localeCompare(b.deadline||"9"));};
 
 /* ── выгрузка CSV: суммы только по делам, где они видны пользователю (costVisible) ── */
@@ -8624,7 +8629,7 @@ const Funnel17={
 /* ── «готово, но счёт или ЭСФ не выставлены» (за последние 90 дней) ── */
 const Inv17={
   readyAt(m){const h=(m.stageHistory||[]).slice().reverse().find(x=>x.stage==="ready"&&!x.skipped);return (m.readyAt||(h&&h.at)||m.closed||"").slice(0,10);},
-  missing(m){if(!m||m.pipeline==="lost"||!["oneoff","court"].includes(m.svc)||!["ready","accepted"].includes(m.stage))return false;
+  missing(m){if(!m||m.pipeline==="lost"||!["oneoff","court"].includes(m.svc)||!DONE11.includes(m.stage))return false;
     const d=this.readyAt(m);if(!d||d<addDays(todayS(),-90))return false;
     return !(m.invoices||[]).some(v=>v.status!=="cancelled")&&!(m.esf&&(m.esf.issuedAt||m.esf.acceptedAt));}
 };
@@ -8643,7 +8648,7 @@ const Remind17={last:0,busy:false,
   async tick(force){if(!U()||isClient()||this.busy)return;if(!force&&Date.now()-this.last<10*60000)return;this.busy=true;this.last=Date.now();
     try{const saves=[];
       /* сроки дел — только разовые услуги и суды: дело сопровождения и его задания сюда не попадают */
-      MMall().forEach(m=>{migrateMatter11(m);if(!["oneoff","court"].includes(m.svc))return;if(m.status==="closed"||m.pipeline==="lost"||m.paused||!m.deadline||["ready","accepted"].includes(m.stage))return;const w=wdLeft17(m.deadline);if(w<0||w>3||m.remind17===m.deadline)return;
+      MMall().forEach(m=>{migrateMatter11(m);if(!["oneoff","court"].includes(m.svc))return;if(m.status==="closed"||m.pipeline==="lost"||preC11(m)||m.paused||!m.deadline||DONE11.includes(m.stage))return;const w=wdLeft17(m.deadline);if(w<0||w>3||m.remind17===m.deadline)return;
         m.remind17=m.deadline;const txt=nt18("rmMatter",{no:m.no,when:L2(()=>w===0?T1(UI.rmToday17):T1(UI.rmIn17)+" "+w+" "+T1(UI.wd17)),d:{d:m.deadline},title:{m:m.id,s:m.title,n:60}});
         this.accts([m.lead,...execsOf(m).map(x=>x.emp)]).forEach(a=>notify(a.login,"task",txt,m.id));saves.push(()=>saveDoc("matters",m));});
       Object.values(S.tasks).forEach(t=>{if(t.status==="done"||!t.due)return;const w=wdLeft17(t.due);if(w<0||w>2||t.remind17===t.due)return;
@@ -10261,7 +10266,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="2c0f797f6ec8";
+const ZC_BUILD="5803505e7f96";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12934,7 +12939,7 @@ Object.assign(UI,{
   c22CorrAdvHint:"Входящее и исходящее письмо — с файлом. Входящее регистрируется как «Получено», исходящее — как «Отправлено».||收文和发文均须附文件。收文登记为“已收到”，发文登记为“已发出”。",c22CorrFile:"Файл письма (скан или PDF)||函件文件（扫描件或PDF）",c22CorrNeedFile:"Приложите файл письма||请附函件文件",
   c22CorrReg:"Письмо зарегистрировано||函件已登记",
   c22Collapse:"Свернуть ▴||收起 ▴",c22Expand:"Развернуть ▾||展开 ▾",c22ColDel:"Убрать колонку «На проверке»||移除“待审核”列",c22ColBack:"+ колонка «На проверке»||+ “待审核”列",c22ColBusy:"В колонке «На проверке» есть задачи — сначала перенесите их||“待审核”列中仍有任务，请先移走",
-  c22Fin:"Финансы по делу||案件财务",c22FinCost:"Стоимость услуги||服务费用",c22FinPaid:"Оплачено||已付",c22FinDue:"Осталось||剩余",c22FinOrder:"Порядок оплаты||付款方式",c22FinStatus:"Статус оплаты||付款状态",c22FinCur:"Валюта||币种",c22FinKp:"Сумма КП||报价金额",c22FinNone:"Стоимость ещё не указана — заполните «Договор и стоимость»||尚未填写费用",c22FinPct:"оплачено {p} %||已付 {p}%",
+  c22Fin:"Финансы по делу||案件财务",c22FinHid:"Суммы по делу вам не видны||您无权查看本案金额",c22FinCost:"Стоимость услуги||服务费用",c22FinPaid:"Оплачено||已付",c22FinDue:"Осталось||剩余",c22FinOrder:"Порядок оплаты||付款方式",c22FinStatus:"Статус оплаты||付款状态",c22FinCur:"Валюта||币种",c22FinKp:"Сумма КП||报价金额",c22FinNone:"Стоимость ещё не указана — заполните «Договор и стоимость»||尚未填写费用",c22FinPct:"оплачено {p} %||已付 {p}%",
   c22PoNone:"не выбран||未选择",c22CtInfo:"Сведения о договоре||合同信息",c22CtNo:"Номер договора||合同编号",c22CtDate:"Дата договора||合同日期",c22CtSubj:"Предмет||标的",c22CtTerm:"Срок действия||期限",c22CtSigned:"Подписан||已签署",c22CtFile:"Файл договора||合同文件",c22CtDl:"⬇ Скачать договор||⬇ 下载合同",c22CtUp:"⚠ Загрузить договор||⚠ 上传合同",c22CtNoFile:"файл договора не загружен||尚未上传合同文件",c22CtNone:"не указано||未填写",
   c22ChatFiles:"Файлы переписки||沟通文件",c22ChatNoFiles:"В переписке пока нет файлов||沟通中暂无文件",c22TplT:"Вставить шаблон||插入模板",c22TplMeet:"Предложить встречу||建议会面",c22TplStatus:"Сообщить о ходе дела||通报进展",
   c22DocSearch:"Поиск по файлам…||搜索文件…",c22DocAll:"Все файлы||全部文件",c22DocNewF:"+ Папка||+ 文件夹",c22DocFName:"Название папки||文件夹名称",c22DocNoFolder:"Без папки||未归类",c22DocMove:"Переместить в папку||移至文件夹",c22DocEmpty:"Файлов нет||无文件",c22DocFound:"Найдено: {n}||找到：{n}",c22DocBack:"← Все папки||← 全部文件夹",c22DocDelF:"Удалить папку (файлы останутся)||删除文件夹（文件保留）",
@@ -13126,7 +13131,7 @@ const Card22={
   finCard(m,payAdd){const card=this.el("div","card c22fin");const h=this.el("h4","",T1(UI.c22Fin));
     if(payAdd&&m.status!=="closed")h.appendChild(this.btn(payAdd.textContent.trim(),"more",{c22target:'[data-act="'+payAdd.dataset.act+'"]'}));card.appendChild(h);
     const cost=Money17.cost(m),paid=Money17.paid(m),due=Money17.due(m);
-    if(!(cost>0)){const o=m.offer;card.appendChild(this.el("div","c22hint",T1(UI.c22FinNone)));const dl0=this.el("dl","c22kv");if(o&&o.sum){dl0.appendChild(this.el("dt","",T1(UI.c22FinKp)));dl0.appendChild(this.el("dd","",fmtN(o.sum)+" "+T1(UI.sum)));}const po0=typeof payOrderLabel21==="function"?payOrderLabel21(m):"";dl0.appendChild(this.el("dt","",T1(UI.c22FinOrder)));dl0.appendChild(this.el("dd",po0?"":"c22red",po0||T1(UI.c22PoNone)));card.appendChild(dl0);return card;}
+    if(!(cost>0)){const o=m.offer;card.appendChild(this.el("div","c22hint",T1(UI.c22FinNone)));const dl0=this.el("dl","c22kv");if(o&&o.sum){dl0.appendChild(this.el("dt","",T1(UI.c22FinKp)));dl0.appendChild(this.el("dd","",Money17.offFmt(m)));}const po0=typeof payOrderLabel21==="function"?payOrderLabel21(m):"";dl0.appendChild(this.el("dt","",T1(UI.c22FinOrder)));dl0.appendChild(this.el("dd",po0?"":"c22red",po0||T1(UI.c22PoNone)));card.appendChild(dl0);return card;}
     const box=this.el("div","c22money");const cell=(v,l,cls)=>{const d=this.el("div",cls||"");d.appendChild(this.el("b","",v));d.appendChild(this.el("small","",T1(l)));box.appendChild(d);};
     cell(this.fmtM(m,cost),UI.c22FinCost);cell(this.fmtM(m,paid),UI.c22FinPaid,"ok");cell(this.fmtM(m,due),UI.c22FinDue,due>0?"due":"ok");card.appendChild(box);
     const pct=Math.min(100,Math.round(paid/cost*100));const bar=this.hx("div","c22bar2",'<i style="width:'+pct+'%"></i>');card.appendChild(bar);card.appendChild(this.el("div","c22hint",T1(UI.c22FinPct).replace("{p}",pct)));
@@ -13154,7 +13159,7 @@ const Card22={
       if(o.pipeBtns.length){const a=this.el("div","actions");a.style.justifyContent="flex-start";o.pipeBtns.forEach(b=>a.appendChild(b));card.appendChild(a);}
       const off=m.offer;const kpl=this.el("div","c22kp");
       if(!off){kpl.appendChild(this.el("span","",T1(UI.c22KpNone)));const pb=o.q('[data-act="kpPropose"]');if(pb)kpl.appendChild(this.btn(pb.textContent.trim(),"btn sm",{c22target:'[data-act="kpPropose"]'}));}
-      else{let s=fmtN(off.sum)+" "+T1(UI.sum)+" · "+(off.sentAt?T1(UI.kpSent)+" "+fmtDT(off.sentAt):(typeof KP!=="undefined"&&KP.approved(off))?T1(UI.kpDone):T1(UI.kpDraft));if(off.validUntil)s+=" · "+T1(UI.c22Until)+" "+fmtD(off.validUntil);kpl.appendChild(this.el("span","",T1(UI.kpTitle)+": "+s));}
+      else{let s=Money17.offFmt(m)+" · "+(off.sentAt?T1(UI.kpSent)+" "+fmtDT(off.sentAt):(typeof KP!=="undefined"&&KP.approved(off))?T1(UI.kpDone):T1(UI.kpDraft));if(off.validUntil)s+=" · "+T1(UI.c22Until)+" "+fmtD(off.validUntil);kpl.appendChild(this.el("span","",T1(UI.kpTitle)+": "+s));}
       card.appendChild(kpl);
     }
     return card;},
@@ -13351,7 +13356,9 @@ const Card22={
     panes[3].appendChild(this.ctCard(m,closed));if(what){const h4=what.querySelector(":scope>h4");if(h4)h4.textContent=T1(UI.c22Info);panes[3].appendChild(what);}
     if(svc)panes[3].appendChild(svc);if(kp){this.kpFiles(kp,m,closed);panes[3].appendChild(kp);}
     /* Финансы (4): сводка, поступления, качество и оплата (для УП) */
-    panes[4].appendChild(this.finCard(m,payAdd));if(pays)panes[4].appendChild(pays);if(qual&&MP)panes[4].appendChild(qual);
+    /* Б9 (17.10.2026): суммы — только тем, кому видны деньги дела (costVisible: УП, ведущий, исполнители, контролёр, переводчик, китайский юрист) */
+    if(typeof costVisible!=="function"||costVisible(m)){panes[4].appendChild(this.finCard(m,payAdd));if(pays)panes[4].appendChild(pays);}
+    else{const c=this.el("div","card c22fin");c.appendChild(this.el("h4","",T1(UI.c22Fin)));c.appendChild(this.el("div","c22hint",T1(UI.c22FinHid)));panes[4].appendChild(c);}if(qual&&MP)panes[4].appendChild(qual);
     if(sim&&!contract&&!closed&&!sim.querySelector(".sim17.empty"))panes[3].appendChild(sim);
     /* Клиент и команда (4): сведения о клиенте и команда рядом, ниже кабинет клиента; доступ выдаёт только УП */
     const g4=this.el("div","c22pair");g4.appendChild(this.clientCard(m,c,{unans,pend}));g4.appendChild(this.teamCard(m,MP,q));panes[5].appendChild(g4);
@@ -14152,6 +14159,8 @@ if(typeof Card22!=="undefined"){
     else if(todo){const h=todo.querySelector(":scope>h4");if(h&&h.firstChild&&h.firstChild.nodeType===3)h.firstChild.nodeValue=T1(UI.c22Todo)+" · "+todo.querySelectorAll(".trow").length;}
     if(m.pipeline==="contract"||m.status==="closed"){const d0=document.createElement("div");d0.appendChild(w.cloneNode(true));return d0.innerHTML;}
     const p=Pre24.prim(m);w.querySelectorAll(".c22acts .btn.pri,.c22bar .btn.pri").forEach(b=>{if(p){b.textContent=p.name+" →";b.dataset.c22target=`.p24 [data-p24a="${p.a}"]`;}else b.remove();});
+    /* Б15: действия нет — нижняя липкая панель телефона не остаётся пустой */
+    w.querySelectorAll(".c22bar").forEach(x=>{if(!x.querySelector(".btn"))x.remove();});
     if(p&&!w.querySelector(".c22acts .btn.pri")){const acts=w.querySelector(".c22acts");if(acts){const b=document.createElement("button");b.type="button";b.className="btn pri";b.dataset.c22target=`.p24 [data-p24a="${p.a}"]`;b.textContent=p.name+" →";acts.insertBefore(b,acts.firstChild);}}
     const d=document.createElement("div");d.appendChild(w.cloneNode(true));return d.innerHTML;};
   const _bd24=Card22.bind.bind(Card22);Card22.bind=function(vp,m){_bd24(vp,m);if(Pre24.on(m))Pre24.bind(vp,m);};
@@ -14268,6 +14277,75 @@ if(typeof CP!=="undefined"&&CP.creqPage){const _cq24=CP.creqPage.bind(CP);CP.cre
   const mark=esc(r.text).slice(0,40);const i=h.indexOf(mark);if(i<0)return;const j=h.indexOf("</div>",i);if(j<0)return;h=h.slice(0,j)+`<div class="q24" style="margin-top:4px">${esc(T1("Отклонено||已拒绝"))}: ${esc(r.reject23.msg)}</div>`+h.slice(j);});return h;};}
 /* прежние автопереходы v1.2 (выравнивание по КП и «КП отправлено → согласование условий») — для разовой услуги их делают этапы */
 if(typeof pr22heal!=="undefined"){Pre24._heal=true;}
+/* Б7 (17.10.2026): стоимость в $ или ¥ больше разумного порога — переспросить валюту (так появилось «$36 000 000» — сумы, введённые как доллары).
+   Любое окно с полями «стоимость» и «валюта»: «Отмена» — окно закрывается без сохранения, ввести заново. */
+UI.big24T="Проверьте валюту||请核对币种";UI.big24X="Стоимость {v} — очень большая для этой валюты. Возможно, сумма введена в сумах. Сохранить как есть?||金额 {v} 对该币种而言过大，可能是以苏姆输入的。仍按此保存？";
+window.UZ21=Object.assign(window.UZ21||{},{"Суммы по делу вам не видны":"Ish boʻyicha summalar sizga koʻrinmaydi","Проверьте валюту":"Valyutani tekshiring","Стоимость {v} — очень большая для этой валюты. Возможно, сумма введена в сумах. Сохранить как есть?":"Qiymat {v} — bu valyuta uchun juda katta. Ehtimol, summa soʻmda kiritilgan. Shundayligicha saqlansinmi?"});
+const BIG24={USD:1000000,CNY:5000000};
+{const _askBig24=Dlg.ask.bind(Dlg);Dlg.ask=async function(o){const v=await _askBig24(o);
+  if(v&&v.cost!=null&&BIG24[v.currency]&&+v.cost>=BIG24[v.currency]){const a={};a[v.currency]=+v.cost;
+    if(!await Dlg.confirm(T1(UI.big24T),T1(UI.big24X).replace("{v}",Money17.fmt(a)),true))return null;}
+  return v;};}
+
+/* Б3 (18.10.2026, решение владельца Г5): на «Подписании договора» цена, валюта и порядок оплаты — согласованные (terms23).
+   Ведущий может отступить (например, скидка), но «Договор подписан» — только после подтверждения УП. Сервер: public.price24_act
+   (миграция 20261018000100) и проверка при подписании; без сервера — то же в портале. Правка цены самим УП — уже подтверждение. */
+Object.assign(UI,{pr24Diff:"Цена отличается от согласованной||价格与已批准的不同",pr24Agreed:"согласовано||已批准",pr24Now:"сейчас||当前",
+  pr24Need:"«Договор подписан» — после подтверждения управляющего адвоката||须经管理合伙人确认后方可标记“合同已签署”",pr24Req:"Запросить подтверждение УП||请求管理合伙人确认",
+  pr24Wait:"Запрос отправлен — ждём подтверждения УП||已发送请求——等待管理合伙人确认",pr24Asks:"Ведущий просит подтвердить цену||负责人请求确认价格",
+  pr24Ok:"Подтвердить цену||确认价格",pr24No:"Вернуть согласованную||恢复已批准价格",pr24Done:"Цена подтверждена УП||价格已由管理合伙人确认",
+  pr24Why:"Причина отличия||差异原因",pr24NoWhy:"Комментарий ведущему||给负责人的备注",pr24Miss:"Подтверждение УП цены, отличной от согласованной||管理合伙人对不同于已批准价格的确认",
+  pr24MpHint:"Можно и самим поправить цену в «Договор и стоимость» — это будет подтверждением||也可在“合同与费用”中直接修改价格——即视为确认",
+  pr24Changed:"Цена изменилась после запроса — нужен новый запрос ведущего||请求后价格已变更——需负责人重新请求"});
+window.UZ21=Object.assign(window.UZ21||{},{"Цена отличается от согласованной":"Narx kelishilganidan farq qiladi","согласовано":"kelishilgan","сейчас":"hozir",
+  "«Договор подписан» — после подтверждения управляющего адвоката":"«Shartnoma imzolandi» — boshqaruvchi advokat tasdiqlaganidan keyin","Запросить подтверждение УП":"BA tasdigʻini soʻrash",
+  "Запрос отправлен — ждём подтверждения УП":"Soʻrov yuborildi — BA tasdigʻi kutilmoqda","Ведущий просит подтвердить цену":"Masʼul narxni tasdiqlashni soʻramoqda",
+  "Подтвердить цену":"Narxni tasdiqlash","Вернуть согласованную":"Kelishilganini qaytarish","Цена подтверждена УП":"Narx BA tomonidan tasdiqlangan",
+  "Причина отличия":"Farq sababi","Комментарий ведущему":"Masʼulga izoh","Подтверждение УП цены, отличной от согласованной":"Kelishilganidan farqli narxni BA tasdiqlashi",
+  "Можно и самим поправить цену в «Договор и стоимость» — это будет подтверждением":"Narxni «Shartnoma va qiymat»da oʻzingiz tuzatishingiz ham mumkin — bu tasdiq hisoblanadi",
+  "Цена изменилась после запроса — нужен новый запрос ведущего":"Soʻrovdan keyin narx oʻzgardi — masʼulning yangi soʻrovi kerak"});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{p24priceReq:"Дело {no}: ведущий просит подтвердить цену ({text})||案件 {no}：负责人请求确认价格（{text}）",
+  p24priceOk:"Дело {no}: УП подтвердил цену — можно подписывать||案件 {no}：管理合伙人已确认价格——可以签署",p24priceNo:"Дело {no}: УП вернул согласованную цену ({text})||案件 {no}：管理合伙人恢复了已批准价格（{text}）"});
+const Price24={
+  n(v){const x=+v;return v===""||v==null||isNaN(x)?"":String(x);},
+  key(x){x=x||{};const po=x.payOrder||"";return [this.n(x.cost)||"0",x.currency||"UZS",po,po==="prepay"?this.n(x.payPct21):po==="stages"?this.n(x.payFirst21):""].join("|");},
+  cur(m){return {cost:+m.cost||0,currency:m.currency||"UZS",payOrder:m.payOrder||"",payPct21:m.payPct21,payFirst21:m.payFirst21};},
+  terms(m){const t=Pre24.termsOf(m);return t&&typeof t==="object"?t:null;},
+  on(m){return m&&m.svc==="oneoff"&&m.pipeline==="team_draft"&&m.status!=="closed"&&!!this.terms(m);},
+  ok(m){const t=this.terms(m);if(!t)return true;const k=this.key(m);if(k===this.key(t))return true;const o=(m.price23||{}).ok;return !!(o&&this.key(o.terms)===k);},
+  fmt(x){const a={};a[x.currency||"UZS"]=+x.cost||0;const po=typeof payOrderLabel21==="function"?payOrderLabel21({payOrder:x.payOrder,payPct21:x.payPct21,payFirst21:x.payFirst21,currency:x.currency}):x.payOrder;return Money17.fmt(a)+(po?" · "+po:"");},
+  /* то же, что сервер: req — ведущий, ok / no — УП */
+  mut(m,act,a,me,at){const t=this.terms(m),p=m.price23||{};
+    if(act==="req"){if(m.lead!==me||this.ok(m))return T1(UI.stNoRight);m.price23={req:{terms:this.cur(m),by:me,at,text:String(a.text||"").slice(0,500)}};return {k:"p24priceReq",to:"mp"};}
+    if(!Pre24.mp())return T1(UI.stNoRight);
+    if(act==="ok"){if(!p.req||this.key(p.req.terms)!==this.key(m))return T1(UI.pr24Changed);m.price23={ok:{terms:this.cur(m),by:me,at,req:p.req}};return {k:"p24priceOk",to:m.lead};}
+    if(act==="no"){m.cost=+t.cost||0;m.currency=t.currency||"UZS";if(m.currency==="UZS")m.fee=m.cost;m.payOrder=t.payOrder||"";if(t.payPct21!=null&&t.payPct21!=="")m.payPct21=+t.payPct21;if(t.payFirst21!=null&&t.payFirst21!=="")m.payFirst21=+t.payFirst21;
+      m.price23={no:{by:me,at,text:String(a.text||"").slice(0,500),req:p.req||null}};return {k:"p24priceNo",to:m.lead};}
+    return T1(UI.stNoRight);},
+  async run(m,act,a){if(typeof StSrv23!=="undefined"&&StSrv23.on()&&!this.noSrv){const r=await StSrv23.call("price24_act",{mid:m.id,act,args:a});
+      if(r.err){toast(r.err);Router.render();return false;}if(r.d){StSrv23.apply(m,r.d);Router.render();return true;}if(r.skip)this.noSrv=true;}
+    const me=Pre24.me(),at=nowS();const n=this.mut(m,act,a,me,at);if(typeof n==="string"){toast(n);return false;}
+    m.history=m.history||[];m.history.push({at,by:me,what:a.w||act});
+    try{await saveDoc("matters",m);}catch(e){toast(String(e&&e.message||e));Router.render();return false;}audit(`${m.no}: цена ${act}`);
+    const p={no:m.no,text:String(a.text||"").slice(0,60)};const logins=n.to==="mp"?mgmtLogins10():[(accByEmp(n.to)||{}).login].filter(Boolean);logins.filter(l=>l!==U().login).forEach(l=>notify(l,"task",nt18(n.k,p),m.id));
+    Router.render();return true;},
+  box(m){if(!this.on(m)||this.ok(m))return (m.price23||{}).ok&&this.on(m)?`<div class="al24 ok">✓ ${T1(UI.pr24Done)}${m.price23.ok.own?"":" · "+esc(dispName(m.price23.ok.by))} · ${esc(fmtDT(m.price23.ok.at))}</div>`:"";
+    const t=this.terms(m),p=m.price23||{},MP=Pre24.mp(),L=m.lead===Pre24.me();const req=p.req&&this.key(p.req.terms)===this.key(m)?p.req:null;
+    const b=(a,l,c)=>`<button type="button" class="btn sm ${c||""}" data-pr24="${a}">${esc(T1(l))}</button>`;
+    let tail="";if(MP)tail=(req?`<div style="margin-top:6px">${T1(UI.pr24Asks)} · ${esc(dispName(req.by))}${req.text?": «"+esc(req.text)+"»":""}</div>`:`<div style="margin-top:6px;color:var(--ink-3)">${T1(UI.pr24MpHint)}</div>`)+`<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${req?b("ok",UI.pr24Ok,"pri"):""}${b("no",UI.pr24No)}</div>`;
+    else if(L)tail=req?`<div style="margin-top:6px"><b>${T1(UI.pr24Wait)}</b></div>`:`<div style="margin-top:8px">${b("req",UI.pr24Req,"pri")}</div>`;
+    return `<div class="al24 wait pr24"><b>⚠ ${T1(UI.pr24Diff)}</b>: ${T1(UI.pr24Agreed)} ${esc(this.fmt(t))} → ${T1(UI.pr24Now)} ${esc(this.fmt(this.cur(m)))}<div>${T1(UI.pr24Need)}</div>${tail}</div>`;}
+};
+{const _p5pr=Pre24.p5;Pre24.p5=function(m){const h=_p5pr.apply(this,arguments);const x=Price24.box(m);if(!x)return h;const i=h.indexOf('<div class="g24">');return i<0?x+h:h.slice(0,i)+x+h.slice(i);};
+  const _bdpr=Pre24.bind;Pre24.bind=function(vp,m){_bdpr.apply(this,arguments);vp.querySelectorAll("[data-pr24]").forEach(b=>b.onclick=async e=>{e.preventDefault();e.stopPropagation();const mm=matter(m.id);if(!mm)return;const a=b.dataset.pr24;
+    if(a==="ok"){if(!await Dlg.confirm(T1(UI.pr24Ok)+" · "+mm.no,Price24.fmt(Price24.cur(mm))))return;return Price24.run(mm,"ok",{w:T1(UI.pr24Ok)+": "+Price24.fmt(Price24.cur(mm))});}
+    const v=await Dlg.ask({title:T1(a==="req"?UI.pr24Req:UI.pr24No)+" · "+mm.no,fields:[{k:"text",label:T1(a==="req"?UI.pr24Why:UI.pr24NoWhy),type:"textarea",required:a==="req"}]});if(!v)return;
+    return Price24.run(mm,a,{text:v.text||"",w:T1(a==="req"?UI.pr24Req:UI.pr24No)+(a==="req"?": "+Price24.fmt(Price24.cur(mm)):"")+(v.text?" — "+v.text:"")});});};
+  /* «Договор подписан»: ведущему не хватает подтверждения цены */
+  if(typeof Sign22!=="undefined"){const _ms=Sign22.miss.bind(Sign22);Sign22.miss=function(m){const out=_ms(m);if(Price24.on(m)&&!Pre24.mp()&&!Price24.ok(m))out.push({l:UI.pr24Miss,w:"price"});return out;};}
+  /* УП сам поменял цену на «Подписании договора» — подтверждение (как на сервере) */
+  if(typeof Contract11!=="undefined"){const _ce=Contract11.edit;Contract11.edit=async function(id){const m0=matter(id);const k0=m0?Price24.key(m0):"";const r=await _ce.apply(this,arguments);const m=matter(id);
+    if(m&&Pre24.mp()&&Price24.on(m)&&Price24.key(m)!==k0&&!Price24.ok(m)){m.price23={ok:{terms:Price24.cur(m),by:Pre24.me(),at:nowS(),own:true}};try{await saveDoc("matters",m);}catch(e){}Router.render();}return r;};}}
 
 /* ══ версия 1.3 · одна роль человека везде (решение владельца 17.10.2026: «нет никакой должности, есть только роль») ══
    Подпись под именем во всех списках, карточках, чате, кабинете, доступах — только роль: «Управляющий адвокат» или «Адвокат»
@@ -14340,11 +14418,10 @@ const L25={
   tiles(sec,f){const base=this.cnt(sec,f,null);const n=k=>this.cnt(sec,f,k).length;const work=base.filter(isWorking11).length;
     const ps=base.filter(m=>m.paused&&m.status!=="closed").length,done=base.filter(isDone11).length,cl=base.filter(m=>m.status==="closed").length;
     const extra=[[ps,UI.l25Paused],[done,UI.l25Done],[cl,UI.l25Closed]].filter(x=>x[0]).map(([v,l])=>`${v} ${T1(l)}`).join(" · ");
-    const vis=base.filter(costVisible);const ct={},due={},pot={};vis.forEach(m=>{if(m.pipeline==="lost")return;if(m.pipeline==="contract"){Money17.add(ct,Money17.cur(m),Money17.cost(m));Money17.add(due,Money17.cur(m),Money17.due(m));}else{const p=Money17.potential(m);if(p)Money17.add(pot,p.c,p.v);}});
-    const any=o=>Object.values(o).some(Boolean);const on=this.Q.find(k=>f[k]);
+    /* А1 (решение владельца 17.10): денег над списком нет ни у кого — суммы смотрят в «Финансах» */
+    const on=this.Q.find(k=>f[k]);
     const t=(q,cls,ic,l,v,sub)=>`<button type="button" class="k25 ${cls}${(q&&f[q])||(q==="all"&&!on)?" on":""}${v===0?" zero":""}" ${q?(q==="all"?'data-l25all="1"':`data-q17="${q}"`):""} aria-pressed="${!!(q&&f[q])}"><span class="ic">${ic}</span><span class="tx"><small>${T1(l)}</small><b>${v}</b>${sub?`<em>${sub}</em>`:""}</span></button>`;
-    return `<div class="ks25">${t("all","blue","📂",UI.l25Work,work,extra)}${t("qLate","red","⏰",UI.l25Late,n("qLate"))}${t("qPay","warn","💳",UI.l25Pay,n("qPay"))}${t("qStale","grey","💤",UI.l25Stale,n("qStale"))}
-      ${vis.length?`<div class="k25 ok mon"><span class="ic">₸</span><span class="tx"><small>${T1(UI.l25Money)}</small><b class="mn25">${Money17.fmt(ct)||"0"}</b><em>${T1(UI.l25Due)} ${Money17.fmt(due)||"0"}${any(pot)?` · ${T1(UI.l25Pot)} ${Money17.fmt(pot)}`:""}</em></span></div>`:""}</div>`;},
+    return `<div class="ks25">${t("all","blue","📂",UI.l25Work,work,extra)}${t("qLate","red","⏰",UI.l25Late,n("qLate"))}${t("qPay","warn","💳",UI.l25Pay,n("qPay"))}${t("qStale","grey","💤",UI.l25Stale,n("qStale"))}</div>`;},
   tools(sec,f){const views=[["mine",UI.view17Mine],["emp",UI.kbByEmp],["status",UI.kbByStatus],["list",UI.kbList]];const n=Flt11.advCount(sec,f)+(f.qMine?1:0);
     const sel=SORT17.map(([k,l])=>`<option value="${esc(k)}"${String(f.sort)===String(k)?" selected":""}>${esc(T1(l))}</option>`).join("");
     const chips=[["qMine",UI.qMine17],...this.Q.map(k=>[k,{qLate:UI.l25Late,qPay:UI.l25Pay,qStale:UI.l25Stale}[k]])].filter(([k])=>f[k]);
@@ -14370,6 +14447,14 @@ const _bindL25=Pages.bind;Pages.bind=function(vp){_bindL25.apply(this,arguments)
   const a=vp.querySelector("[data-l25all]");if(a)a.onclick=()=>{L25.Q.forEach(k=>f[k]=false);Router.render();};};
 document.addEventListener("pointerdown",e=>{const p=document.getElementById("l25menu");if(p&&p.classList.contains("on")&&!e.target.closest(".mo25"))p.classList.remove("on");});
 document.addEventListener("keydown",e=>{const p=document.getElementById("l25menu");if(e.key==="Escape"&&p&&p.classList.contains("on"))p.classList.remove("on");});
+/* Б19 (18.10.2026, владелец: «пока убери такие подразделения»): в «Разовых услугах» подразделение дела не показывается — ни в «Фильтрах»,
+   ни в окне «Изменить дело»; значение у дела остаётся (поле в окне скрыто, но сохраняется как было). Суды и сопровождение — как раньше. */
+{const _fh25=Flt11.html.bind(Flt11);Flt11.html=function(sec,f,base){if(sec==="oneoff"&&f&&f.unit&&f.unit!=="all")f.unit="all";const h=_fh25.apply(this,arguments);if(sec!=="oneoff")return h;
+    return h.replace(/<label>[^<]*<select[^>]*data-f11="unit"[\s\S]*?<\/select><\/label>/,"");};
+  const _mfU25=Matter.fields;Matter.fields=function(m){const f=_mfU25.apply(this,arguments);if(!(m&&m.id&&m.svc==="oneoff"))return f;
+    return f.map(x=>x&&x.k==="practice"?Object.assign({},x,{_hideU25:true,required:false}):x);};
+  const _daU25=Dlg.ask.bind(Dlg);Dlg.ask=function(o){const p=_daU25(o);if(o&&(o.fields||[]).some(x=>x&&x._hideU25)){const form=(document.getElementById("mdD")||document).querySelector(".form");
+      if(form)o.fields.forEach((x,i)=>{const w=form.children[i];if(x&&x._hideU25&&w)w.hidden=true;});}return p;};}
 
 /* ══ версия 1.3 · «Сообщить об ошибке» и тихий журнал сбоев (решения владельца 17.10.2026) ══
    Только сотрудники (УП и адвокаты); у клиентов — «Подать жалобу». Логика — на сервере (миграция 20261017002000_bug_reports.sql:
