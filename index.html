@@ -10270,7 +10270,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="9a1739558a33";
+const ZC_BUILD="cf97be66d59a";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14744,6 +14744,106 @@ const _bindB26=Pages.bind;Pages.bind=function(vp){_bindB26.apply(this,arguments)
 /* уведомление «bug:…» — открыть сообщение в «Помощи» → «Ошибки» */
 document.addEventListener("click",e=>{const g=e.target&&e.target.closest&&e.target.closest('[data-go^="bug:"]');if(!g||!B26.staff())return;const ref=g.dataset.go.slice(4);
   setTimeout(()=>{try{if(typeof Notif!=="undefined"&&Notif.close)Notif.close();}catch(x){}if(typeof Help21!=="undefined")Help21._t="bugs";B26.f.tab="list";B26.f.st="all";B26.f.sel=ref;B26.rows=null;Router.go("help");},0);},true);
+
+/* ══ Раздел «Судебные дела» · этап 1 — главный экран списка (макет design-court.html, решение владельца 18.10.2026) ══
+   Как список разовых услуг (L25, v25_list.js): шапка с ⋯, плитки-фильтры, одна строка управления, таблица или карточки.
+   Своё у суда: колонка «Суд и инстанция», «Ближайшее» (заседание из календаря или срок дела — что раньше), «против» другой стороны,
+   плитка «Заседания на неделе», вид «По направлению» (уголовные · экономические · гражданские), сортировка «по ближайшему».
+   Плитки «Горит срок» и «Нет итога заседания» появятся с этапа 3 (процессуальные сроки и итоги заседаний); до этого — «Просрочено»
+   и «Нет движения», как у разовых. Деньги над списком не показываются (решение владельца А1, 17.10.2026).
+   Только вид: данные, фильтры и права — прежние (Flt11, section17List, KB11, Funnel17, CSV17). Правила — sections/court/ПРАВИЛА.md. */
+Object.assign(UI,{
+  c1Hear:"Заседания на неделе||本周庭审",c1Court:"Суд и инстанция||法院与审级",c1Near:"Ближайшее||最近事项",c1Vs:"против||对",
+  c1HearW:"заседание||庭审",c1DlW:"срок дела||案件期限",c1Today:"сегодня||今天",c1Tmr:"завтра||明天",c1NoDate:"нет даты||无日期",
+  c1gLate:"Просрочено||逾期",c1gNow:"Сегодня и завтра||今明两天",c1gWeek:"Эта неделя||本周",c1gLater:"Позже||稍后",c1gNone:"Без даты||无日期",
+  c1ByDir:"По направлению||按类别",c1SortNear:"по ближайшему||按最近事项",c1Q:"Поиск: номер, № в суде, суд, клиент, другая сторона||搜索：编号、案号、法院、客户、对方",c1NoCourt:"суд не указан||未填法院",c1NoCase:"№ дела в суде не указан||未填案号"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Заседания на неделе":"Haftadagi majlislar","Суд и инстанция":"Sud va instansiya","Ближайшее":"Eng yaqin","против":"qarshi",
+  "заседание":"majlis","срок дела":"ish muddati","сегодня":"bugun","завтра":"ertaga","нет даты":"sana yoʻq","Сегодня и завтра":"Bugun va ertaga","Эта неделя":"Shu hafta",
+  "Без даты":"Sanasiz","По направлению":"Yoʻnalish boʻyicha","по ближайшему":"eng yaqini boʻyicha","Поиск: номер, № в суде, суд, клиент, другая сторона":"Qidiruv: raqam, suddagi raqam, sud, mijoz, qarama-qarshi tomon","суд не указан":"sud koʻrsatilmagan","№ дела в суде не указан":"suddagi ish raqami koʻrsatilmagan"});
+const CL1={
+  /* следующее заседание по делу — событие календаря «Заседание» с сегодняшнего дня */
+  hear(m){const t=todayS();return EE().filter(e=>e.matterId===m.id&&e.type==="hearing"&&(e.date||"")>=t).sort((a,b)=>(a.date+(a.time||"")).localeCompare(b.date+(b.time||"")))[0]||null;},
+  fin(m){return m.status==="closed"||m.pipeline==="lost"||isDone11(m);},
+  /* «Ближайшее»: заседание или срок дела — что раньше */
+  near(m){if(this.fin(m))return null;const h=this.hear(m);const d=m.deadline||null;
+    if(h&&(!d||h.date<=d))return {k:"h",date:h.date,time:h.time||"",e:h};return d?{k:"d",date:d}:null;},
+  weekHear(m){const h=!this.fin(m)&&this.hear(m);return !!h&&daysTo(h.date)<=7;},
+  nearHtml(m){const n=this.near(m);if(this.fin(m)||m.paused)return L25.due(m)+(m.paused?"":"");if(!n)return `<span class="du25 g">${T1(UI.c1NoDate)}</span>`;
+    if(n.k==="d"){const h=this.hear(m);return `<div class="dn1">${L25.due(m)}<small>⏱ ${T1(UI.c1DlW)}${h?` · 📅 ${esc(fmtD(h.date).slice(0,5))}${h.time?" "+esc(h.time):""}`:""}</small></div>`;}
+    const dd=daysTo(n.date);const c=dd<=0?"w":dd<=2?"y":"b";const when=dd===0?T1(UI.c1Today):dd===1?T1(UI.c1Tmr):fmtD(n.date).slice(0,5);
+    return `<div class="dn1"><span class="du25 ${c}" title="${esc(fmtD(n.date))}"><i></i>📅 ${when}${n.time?" · "+esc(n.time):""}</span><small>${T1(UI.c1HearW)}${n.e.place?" · "+esc(n.e.place):""}</small></div>`;},
+  inst(m){const l=(m.instances||[]).filter(Boolean);return l.length?instLabel(l[l.length-1].kind):"";},
+  courtHtml(m){const inst=this.inst(m);
+    return `<div class="ct1"><b title="${esc(m.court||"")}">${esc(m.court||T1(UI.c1NoCourt))}</b><small>${m.caseNo?"№ "+esc(m.caseNo):T1(UI.c1NoCase)}${inst?" · "+esc(inst):""}</small></div>`;},
+  vs(m){const c=(m.counterparties||[]).filter(x=>x&&x.name);return c.length?` · ${T1(UI.c1Vs)} ${esc(c[0].name)}${c.length>1?" +"+(c.length-1):""}`:"";},
+  ttl(m){return L25.ttl(m).replace(/<\/div>$/,this.vs(m)+"</div>");},
+  /* группы карточек — по «Ближайшему» */
+  G:[["c1gLate","var(--red)"],["c1gNow","var(--warn)"],["c1gWeek","var(--pri)"],["c1gLater","var(--ink-3)"],["c1gNone","var(--ink-3)"],["l25gPaused","var(--warn)"],["l25gDone","var(--ok)"],["l25gClosed","var(--ink-3)"]],
+  grp(m){if(m.status==="closed"||m.pipeline==="lost")return 7;if(m.paused)return 5;if(isDone11(m))return 6;const n=this.near(m);if(!n)return 4;
+    if(n.k==="d"){const w=wdLeft17(n.date);if(w!==null&&w<0)return 0;}const dd=daysTo(n.date);return dd<0?0:dd<=1?1:dd<=7?2:3;},
+  nearKey(m){const n=this.near(m);return this.fin(m)?"9":n?n.date+(n.time||""):"8";},
+  row(m,ent){return `<div class="tr25 c1${isLate11(m)?" late":""}${m.invoiceDisputed?" disputed12":""}" data-matter="${m.id}"><div class="c-no">${L25.no(m,ent)}</div><div class="c-tt">${this.ttl(m)}</div><div class="c-ct">${this.courtHtml(m)}</div><div class="c-tm">${L25.who(m)}</div><div class="c-dl">${this.nearHtml(m)}</div><div class="c-sg">${L25.stage(m)}</div></div>`;},
+  head(){return `<div class="tr25 c1 h"><div>${T1(UI.l25No)}</div><div>${T1(UI.l25Case)}</div><div class="c-ct">${T1(UI.c1Court)}</div><div class="c-tm">${T1(UI.l25Team)}</div><div>${T1(UI.c1Near)}</div><div class="c-sg">${T1(UI.l25Stage)}</div></div>`;},
+  table(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const ent=new Set(list.map(m=>m.entity)).size>1;const [l,more]=L25.lim(list);
+    return `<div class="tb25">${this.head()}${l.map(m=>this.row(m,ent)).join("")}</div>${more}`;},
+  dir(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const ent=new Set(list.map(m=>m.entity)).size>1;
+    return [["criminal",UI.crim,"1"],["economic",UI.econ,"2"],["civil",UI.civ,"3"]].map(([k,l,n])=>{const x=list.filter(m=>courtKindOf(m)===k);if(!x.length)return "";
+      return `<div class="sec1"><span class="n">${n}</span>${T1(l)}<em>${x.length}</em></div><div class="tb25">${this.head()}${x.map(m=>this.row(m,ent)).join("")}</div>`;}).join("");},
+  cards(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const ent=new Set(list.map(m=>m.entity)).size>1;const [l,more]=L25.lim(list);
+    return this.G.map(([k,c],i)=>{const x=l.filter(m=>this.grp(m)===i);if(!x.length)return "";
+      return `<div class="gr25"><div class="gh25"><span style="background:${c}"></span>${T1(UI[k])}<em>${x.length}</em></div><div class="cs25">${x.map(m=>`<div class="cd25${isLate11(m)?" late":""}" data-matter="${m.id}">
+        <div class="r25">${ent?`<span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity])}</span>`:""}<b class="no25">${esc(m.no)}</b><span class="ty25">· ${esc(kindLabel17(m))}</span></div>
+        <div>${this.ttl(m)}</div>${this.courtHtml(m)}<div class="r25">${this.nearHtml(m)}<span class="sp25"></span>${L25.who(m)}</div><div class="ft25">${L25.stage(m)}</div></div>`).join("")}</div></div>`;}).join("")+more;},
+  /* плитки: «В работе» снимает фильтры; «Заседания на неделе» — свой фильтр раздела (qHear1); остальные — прежние быстрые фильтры */
+  tiles(sec,f){let h=L25.tiles(sec,f);const base=L25.cnt(sec,f,null);const n=base.filter(m=>this.weekHear(m)).length;
+    const tile=`<button type="button" class="k25 cal${f.qHear1?" on":""}${n?"":" zero"}" data-c1q="1" aria-pressed="${!!f.qHear1}"><span class="ic">📅</span><span class="tx"><small>${T1(UI.c1Hear)}</small><b>${n}</b></span></button>`;
+    if(f.qHear1)h=h.replace(/(<button type="button" class="k25 blue)( on)?/,"$1");
+    h=h.replace('<div class="ks25">','<div class="ks25 c1">');const k=h.indexOf('<button type="button" class="k25 red');return k<0?h:h.slice(0,k)+tile+h.slice(k);},
+  tools(sec,f){let h=L25.tools(sec,f).split(T1(UI.q17)).join(T1(UI.c1Q));
+    h=h.replace(/<button type="button" class="(on)?" data-view11="status">[^<]*<\/button>/,`<button type="button" class="${f.view==="dir"?"on":""}" data-view11="dir">${T1(UI.c1ByDir)}</button>`);
+    h=h.replace('<select class="fb25 f11" data-f11="sort" aria-label="'+T1(UI.sort17)+'">',m=>m+`<option value="near"${f.sort==="near"?" selected":""}>${T1(UI.c1SortNear)}</option>`);
+    if(f.qHear1)h=h.replace('<div class="ch25">',`<div class="ch25"><button type="button" data-c1q="1" title="${T1(UI.l25Clear)}">${T1(UI.c1Hear)} <b>×</b></button>`);
+    if(f.qHear1&&!h.includes('<div class="ch25">'))h+=`<div class="ch25"><button type="button" data-c1q="1" title="${T1(UI.l25Clear)}">${T1(UI.c1Hear)} <b>×</b></button></div>`;
+    return h;},
+  menu(f){return `<span class="mo25"><button type="button" class="btn ib25" data-l25menu="1" title="${T1(UI.l25More)}" aria-haspopup="true">⋯</button><span class="mn25p" id="l25menu">
+    <button type="button" class="${f.analytics?"on":""}" data-an17="1">📊 ${T1(UI.an17)}</button><button type="button" data-csv17="1" title="${T1(UI.csvT17)}">⭳ CSV</button></span></span>`;},
+  page(sec,title,base,prev){const f=Flt11.st(sec);if(!f._c1){f._c1=1;if(!f.sort||f.sort==="deadline")f.sort="near";if(!["mine","emp","dir","list"].includes(f.view))f.view="list";}
+    if(!["mine","emp","dir","list"].includes(f.view))f.view="list";
+    let list=section17List(sec);if(f.qHear1)list=list.filter(m=>this.weekHear(m));
+    if(f.sort==="near")list=list.slice().sort((a,b)=>this.nearKey(a).localeCompare(this.nearKey(b)));
+    const i=prev.indexOf('<div class="acts">');const j=i<0?-1:prev.indexOf("</div>",i);const acts=i<0||j<0?"":prev.slice(i+18,j);
+    const adv=f.adv?(()=>{const h=Flt11.html(sec,f,base);const k=h.indexOf('<div class="flt11">');return k<0?"":`<div class="ad25"><div class="ch25 q"><button type="button" class="${f.qMine?"on":""}" data-q17="qMine">${T1(UI.qMine17)}</button></div>`+h.slice(k)+"</div>";})():"";
+    const body=f.view==="emp"?KB11.byEmp(list):f.view==="dir"?this.dir(list):f.view==="mine"?this.cards(list):this.table(list);
+    return `<div class="l25 c1p"><div class="ph hd25"><div class="t25"><h2>${T1(title)}</h2><span class="n25">${list.length}</span></div><div class="acts">${this.menu(f)}${acts}</div></div>`
+      +this.tiles(sec,f)+this.tools(sec,f)+adv+(f.analytics?Funnel17.html(base,f):"")+`<div class="bd25w v-${f.view}">${body}</div></div>`;}
+};
+{const _secC1=section11;section11=function(sec,title,base){const h=_secC1.apply(this,arguments);if(sec!=="court"||isClient())return h;
+  try{return CL1.page(sec,title,base||sec17Base(sec),h);}catch(e){console.error(e);return h;}};}
+{const _pbC1=Pages.bind;Pages.bind=function(vp){_pbC1.apply(this,arguments);if(!vp||Router.cur!=="court"||isClient())return;const f=Flt11.st("court");
+  const mb=vp.querySelector("[data-l25menu]");if(mb)mb.onclick=e=>{e.stopPropagation();const p=document.getElementById("l25menu");if(p)p.classList.toggle("on");};
+  const a=vp.querySelector("[data-l25all]");if(a)a.onclick=()=>{L25.Q.forEach(k=>f[k]=false);f.qHear1=false;Router.render();};
+  vp.querySelectorAll("[data-c1q]").forEach(el=>el.onclick=()=>{f.qHear1=!f.qHear1;if(f.qHear1)L25.Q.forEach(k=>f[k]=false);Router.render();});
+  vp.querySelectorAll("[data-q17]").forEach(el=>{const k=el.dataset.q17;if(L25.Q.includes(k)){const o=el.onclick;el.onclick=e=>{f.qHear1=false;return o&&o.call(el,e);};}});};}
+/* стили раздела — здесь же, рядом с кодом (сборка подключает только *.js из папки раздела) */
+{const st=document.createElement("style");st.id="c1css";st.textContent=`
+.ks25.c1{grid-template-columns:repeat(5,minmax(0,1fr))}
+.k25.cal .ic{background:var(--info-soft);color:var(--info-d)}
+.tr25.c1{grid-template-columns:minmax(130px,165px) minmax(190px,1.5fr) minmax(160px,1.1fr) 92px 170px minmax(160px,1fr)}
+.ct1{min-width:0;font-size:12.5px;line-height:1.35}.ct1 b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct1 small{display:block;color:var(--ink-3);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cd25 .ct1{margin-top:-4px}
+.dn1{display:flex;flex-direction:column;gap:3px;align-items:flex-start;min-width:0}.dn1 small{font-size:11px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.du25.b{background:var(--info-soft);color:var(--info-d)}
+.sec1{display:flex;align-items:center;gap:10px;margin:18px 2px 10px;font:600 15px var(--font-h)}.sec1:first-child{margin-top:4px}
+.sec1 .n{width:28px;height:28px;border-radius:50%;background:var(--pri);color:#fff;display:grid;place-items:center;font:700 13px var(--font-h)}
+.sec1 em{font-style:normal;color:var(--ink-3);font:600 12px var(--font)}
+@media (max-width:1350px){.ks25.c1{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1100px){.tr25.c1{grid-template-columns:140px minmax(0,1fr) 150px minmax(150px,.8fr)}.tr25.c1>.c-tm,.tr25.c1>.c-ct{display:none}}
+@media (max-width:700px){.ks25.c1{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tr25.c1{grid-template-columns:minmax(0,1fr) auto}.tr25.c1>.c-no{grid-column:1/-1}.tr25.c1>.c-tt{grid-column:1}.tr25.c1>.c-dl{grid-column:2;grid-row:2}
+  .tr25.c1>.c-ct{display:block;grid-column:1/-1}.tr25.c1>.c-sg{grid-column:1/-1}}`;
+  (document.head||document.documentElement).appendChild(st);}
 
 /* ══ Раздел «Судебные дела» · этап 0 — исправление найденных ошибок (решение владельца 18.10.2026, правило С-20) ══
    Правила и их номера — sections/court/ПРАВИЛА.md, журнал — sections/court/ЖУРНАЛ.md.
