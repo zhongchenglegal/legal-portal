@@ -4808,8 +4808,8 @@ const Pages={
     this._ht=this._ht||"staff"; const ppl=staffIds();
     const tabs=[["staff",UI.tStaff],["vacation",UI.hVacation],["vac",UI.hVacs],["interns",UI.tInterns]];
     let body="";
-    /* 17.10.2026 (владелец): колонок «Должность» и «Практика» нет — в системе пока только роли УП и Адвокат */
-    if(this._ht==="staff") body=`<table class="tbl reg"><thead><tr><th>${T1(UI.aEmp)}</th><th>${T1(UI.cHired)}</th><th>${T1(UI.cNo)}</th><th>${T1(UI.sTenure)}</th></tr></thead><tbody>${ppl.map(e=>{const w=((S.profiles[e]||{}).work)||{};return `<tr data-emp="${e}"><td><b>${dispName(e)}</b></td><td>${fmtD(w.hired)||"—"}</td><td>${esc(w.contractNo||"—")}</td><td>${w.hired?tenure(w.hired):"—"}</td></tr>`;}).join("")}</tbody></table>`;
+    /* 17.10.2026 (владелец): колонок «Должность» и «Практика» нет; колонка «Роль» — та же роль, что даёт права (roleOf25) */
+    if(this._ht==="staff") body=`<table class="tbl reg"><thead><tr><th>${T1(UI.aEmp)}</th><th>${T1(UI.aRole)}</th><th>${T1(UI.cHired)}</th><th>${T1(UI.cNo)}</th><th>${T1(UI.sTenure)}</th></tr></thead><tbody>${ppl.map(e=>{const w=((S.profiles[e]||{}).work)||{};return `<tr data-emp="${e}"><td><b>${dispName(e)}</b></td><td>${roleOf25(e)}</td><td>${fmtD(w.hired)||"—"}</td><td>${esc(w.contractNo||"—")}</td><td>${w.hired?tenure(w.hired):"—"}</td></tr>`;}).join("")}</tbody></table>`;
     else if(this._ht==="vacation") body=this.vacationList(90);
     else if(this._ht==="vac") body=`<div class="qa"><button class="btn pri sm" data-act="newVac">+ ${T1(UI.vNew)}</button></div><div class="agl">${this.vacList(Object.values(S.vacancies))}</div>`;
     else body=ppl.filter(e=>ALL[e].type==="int").map(e=>`<div class="card" style="margin-bottom:12px"><h4>${dispName(e)}</h4>${this.internPlan(e,S.intern[e]||{plans:[],diary:[],referats:[]},false)}</div>`).join("")||`<div class="empty2">${T1(UI.noData)}</div>`;
@@ -10207,7 +10207,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="034754d49b8e";
+const ZC_BUILD="9f5520e76e63";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
