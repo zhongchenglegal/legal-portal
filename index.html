@@ -2584,6 +2584,11 @@ select.fb25{padding-right:12px}
   .l25 .hd25{flex-wrap:wrap;gap:10px}.l25 .hd25 .acts{width:100%;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;gap:6px}.l25 .hd25 .acts::-webkit-scrollbar{display:none}.l25 .hd25 .acts .btn{white-space:nowrap;flex:none}.l25 .hd25 .acts{align-items:center}.l25 .hd25 .acts .nw24{display:flex;flex-wrap:nowrap;gap:6px;flex:none;order:-1}.l25 .hd25 .acts .nw24 .pri{order:-1}.l25 .hd25 .acts .mo25{order:-2}
   .sr25{flex-basis:100%}.tl25 .fb25{flex:1;justify-content:center}
   .mo25{position:static}.mn25p{right:12px;top:auto;margin-top:46px}
+  /* Б17 (18.10.2026): телефон — плитки в одну строку (без значков и подписей снизу), чтобы дела были видны на первом экране */
+  .ks25{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:2px 0 10px}.k25{padding:8px 6px;gap:0;border-radius:12px;justify-content:center;text-align:center}
+  .k25 .ic,.k25 em{display:none}.k25 .tx{align-items:center}.k25 small{font-size:10.5px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.k25 b{font-size:17px}
+  /* Б18: метки статуса в шапке карточки дела — мельче, чтобы вставали по две в строку */
+  .c22chips{gap:6px}.c22chips .c22chip{font-size:11.5px;padding:3px 9px}
 }
 </style>
 <style>
@@ -8518,7 +8523,8 @@ Object.assign(UI,{
 });
 
 /* ── роли и «мои дела» ── */
-const isMgr17=()=>isFounder()||hasF("managing")||pos()==="coo"||headUnits().length>0;
+/* Б14 (18.10.2026): только две роли — «руководитель» здесь только УП (должности и руководство подразделением прав не дают) */
+const isMgr17=()=>isFounder()||hasF("managing");
 const isMine17=m=>{const me=(U()||{}).emp;if(!me)return false;return m.lead===me||execsOf(m).some(x=>x.emp===me)||(m.team||[]).includes(me)||m.reviewer===me||m.translator===me||cnLawyerOf(m)===me;};
 /* обрезать до экранирования — иначе «&amp;» может разрезаться посередине */
 const cut17=(s,n)=>{s=String(s||"");return s.length>n?s.slice(0,n-1)+"…":s;};
@@ -8640,7 +8646,7 @@ const Inv17={
 Pre17.mPred.noinv=m=>Inv17.missing(m);
 const _mLabel17=Pre17.mLabel.bind(Pre17);Pre17.mLabel=function(p){return p==="noinv"?UI.atNoInv17:_mLabel17(p);};
 const _attnW17=attnRows11;attnRows11=function(scope){const rows=_attnW17(scope);
-  if(isFounder()||hasF("managing")||["accountant","coo"].includes(pos())||headUnits().length){const n=MMall().filter(m=>Inv17.missing(m)&&(!scope||scope(m))).length;if(n)rows.push([n,T1(UI.atNoInv17),"matters:p=noinv"+(scope?"&sc=ufam":"")]);}
+  if(isFounder()||hasF("managing")){const n=MMall().filter(m=>Inv17.missing(m)&&(!scope||scope(m))).length;if(n)rows.push([n,T1(UI.atNoInv17),"matters:p=noinv"+(scope?"&sc=ufam":"")]);}
   return rows;};
 
 /* ── автонапоминания: за 3 рабочих дня до срока дела и за 2 — до срока задачи; сигнал о несчёте — бухгалтеру и ведущему.
@@ -10270,7 +10276,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="cf97be66d59a";
+const ZC_BUILD="12d511acc5e4";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14383,13 +14389,13 @@ Object.assign(UI,{
   l25No:"Номер||编号",l25Case:"Дело и клиент||案件与客户",l25Team:"Команда||团队",l25Dl:"Срок||期限",l25Stage:"Этап||阶段",
   l25gLate:"Просрочено||逾期",l25gToday:"Срок сегодня||今天到期",l25gSoon:"Ближайшие 5 рабочих дней||未来5个工作日",l25gLater:"Позже||稍后",
   l25gNone:"Без срока||无期限",l25gPaused:"Приостановлено||已暂停",l25gDone:"Сделано, ждёт приёмки||已完成，待验收",l25gClosed:"Закрыто и не состоялось||已关闭及未成交",
-  l25In:"через||还有",l25PreC:"до договора||签约前",l25Filters:"Фильтры||筛选",l25Clear:"Снять фильтр||取消筛选",l25Empty:"Ничего не найдено||未找到"
+  l25In:"через||还有",l25PreC:"до договора||签约前",l25Ct:"договор||合同",l25Filters:"Фильтры||筛选",l25Clear:"Снять фильтр||取消筛选",l25Empty:"Ничего не найдено||未找到"
 });
 window.UZ21=Object.assign(window.UZ21||{},{"В работе":"Ishda","Просрочено":"Muddati oʻtgan","Ждут оплаты":"Toʻlov kutilmoqda","Нет движения":"Harakat yoʻq","По договорам":"Shartnomalar boʻyicha",
   "к оплате":"toʻlanishi kerak","в воронке":"voronkada","Ещё":"Yana","приост.":"toʻxt.","сделано":"bajarildi","закрыто":"yopildi",
   "Номер":"Raqam","Дело и клиент":"Ish va mijoz","Команда":"Jamoa","Срок":"Muddat","Этап":"Bosqich",
   "Срок сегодня":"Muddat bugun","Ближайшие 5 рабочих дней":"Yaqin 5 ish kuni","Позже":"Keyinroq","Без срока":"Muddatsiz","Приостановлено":"Toʻxtatilgan",
-  "Сделано, ждёт приёмки":"Bajarildi, qabul kutilmoqda","Закрыто и не состоялось":"Yopilgan va amalga oshmagan","через":"qoldi","до договора":"shartnomagacha",
+  "Сделано, ждёт приёмки":"Bajarildi, qabul kutilmoqda","Закрыто и не состоялось":"Yopilgan va amalga oshmagan","через":"qoldi","до договора":"shartnomagacha","договор":"shartnoma",
   "Фильтры":"Filtrlar","Снять фильтр":"Filtrni olib tashlash","Ничего не найдено":"Hech narsa topilmadi"});
 const L25={
   Q:["qLate","qPay","qStale"],
@@ -14412,7 +14418,10 @@ const L25={
   who(m){return teamAv([m.lead,...(m.team||[])]);},
   ttl(m,two){const c=client(m.clientId);const msgs=Object.values(S.clientMessages||{}).some(x=>x.matterId===m.id);
     return `<div class="tt25${m.paused?" paused11":""}">${esc(mT18(m))}${msgs?` <span class="cmm" title="${T1(UI.ccMsgs)}">💬</span>`:""}</div><div class="cl25">${c?esc(clientName(c)):"—"}</div>`;},
-  no(m,ent){return `<div class="no25">${ent?`<span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity])}</span>`:""}${esc(m.no)}</div><div class="ty25">${esc(kindLabel17(m))}</div>`;},
+  /* Б16 (18.10.2026): новый номер дела (1, 2, 3…) — «№ 12»; рядом с видом услуги — номер договора, если он есть */
+  nm(m){return /^[0-9]+$/.test(String(m.no||""))?"№ "+m.no:String(m.no||"");},
+  ct(m){const c=(m.contract||{}).no;return c&&c!==m.no?`${T1(UI.l25Ct)} ${esc(c)} · `:"";},
+  no(m,ent){return `<div class="no25">${ent?`<span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity])}</span>`:""}${esc(this.nm(m))}</div><div class="ty25">${this.ct(m)}${esc(kindLabel17(m))}</div>`;},
   lim(list){Pages._more17=Pages._more17||{};const key=Router.cur+"|"+(Router.arg||"");const n=300;const lim=Math.min(list.length,n*(Pages._more17[key]||1));
     return [list.slice(0,lim),list.length>lim?`<div class="more17"><span>${T1(UI.shown17)} ${lim} ${T1(UI.of17)} ${list.length}</span><button class="btn sm" data-more17="1">${T1(UI.more17)}</button><button class="btn sm ghost" data-more17="all">${T1(UI.moreAll17)}</button></div>`:""];},
   table(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const ent=new Set(list.map(m=>m.entity)).size>1;const [l,more]=this.lim(list);
@@ -14421,7 +14430,7 @@ const L25={
   cards(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const ent=new Set(list.map(m=>m.entity)).size>1;const [l,more]=this.lim(list);
     return this.G.map(([k,c],i)=>{const x=l.filter(m=>this.grp(m)===i);if(!x.length)return "";
       return `<div class="gr25"><div class="gh25"><span style="background:${c}"></span>${T1(UI[k])}<em>${x.length}</em></div><div class="cs25">${x.map(m=>`<div class="cd25${isLate11(m)?" late":""}" data-matter="${m.id}">
-        <div class="r25">${ent?`<span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity])}</span>`:""}<b class="no25">${esc(m.no)}</b><span class="ty25">· ${esc(kindLabel17(m))}</span></div>
+        <div class="r25">${ent?`<span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity])}</span>`:""}<b class="no25">${esc(this.nm(m))}</b><span class="ty25">· ${this.ct(m)}${esc(kindLabel17(m))}</span></div>
         <div>${this.ttl(m,false)}</div><div class="r25">${this.due(m)}<span class="sp25"></span>${this.who(m)}</div><div class="ft25">${this.stage(m)}</div></div>`).join("")}</div></div>`;}).join("")+more;},
   tiles(sec,f){const base=this.cnt(sec,f,null);const n=k=>this.cnt(sec,f,k).length;const work=base.filter(isWorking11).length;
     const ps=base.filter(m=>m.paused&&m.status!=="closed").length,done=base.filter(isDone11).length,cl=base.filter(m=>m.status==="closed").length;
@@ -14483,6 +14492,10 @@ document.addEventListener("keydown",e=>{const p=document.getElementById("l25menu
   const _daS27=Dlg.ask.bind(Dlg);Dlg.ask=function(o){if(o&&Array.isArray(o.fields)&&o.fields.some(x=>x&&(x.k==="currency"||(x.type==="html"&&/id="payRate/.test(x.html||"")))))
       o=Object.assign({},o,{fields:o.fields.map(x=>x&&x.k==="currency"?Object.assign({},x,{value:"UZS",options:CURS,_hideU25:true,required:false}):x&&x.type==="html"&&/id="payRate/.test(x.html||"")?Object.assign({},x,{_hideU25:true}):x)});
     return _daS27(o);};}
+/* Б20 (18.10.2026): «КП пакета, КБ» в «Параметрах работы» действует только без сервера (на сайте файлы — в хранилище, лимита нет) —
+   на сайте поле не показывается; значение сохраняется как было */
+{const _daK27=Dlg.ask.bind(Dlg);Dlg.ask=function(o){if(o&&Array.isArray(o.fields)&&typeof FS20!=="undefined"&&FS20.on()&&o.fields.some(x=>x&&x.k==="packKpKb"))
+    o=Object.assign({},o,{fields:o.fields.map(x=>x&&x.k==="packKpKb"?Object.assign({},x,{_hideU25:true,required:false}):x)});return _daK27(o);};}
 
 /* ══ версия 1.3 · «Сообщить об ошибке» и тихий журнал сбоев (решения владельца 17.10.2026) ══
    Только сотрудники (УП и адвокаты); у клиентов — «Подать жалобу». Логика — на сервере (миграция 20261017002000_bug_reports.sql:
