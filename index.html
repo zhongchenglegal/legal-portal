@@ -10102,7 +10102,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="1c69c01da0df";
+const ZC_BUILD="e102a08ab3d9";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -13566,8 +13566,10 @@ const Pre24={
   mp(){return isFounder()||hasF("managing");},
   me(){return (U()||{}).emp||"";},
   idx(m){if(m.pipeline==="contract")return 5;const i=P24_STEPS.indexOf(m.pipeline);return i<0?0:i;},
-  I(m){m.intake23=m.intake23||{};return m.intake23;},
-  T(m){m.terms23=m.terms23||{rounds:[],st:{}};m.terms23.rounds=m.terms23.rounds||[];m.terms23.st=m.terms23.st||{};return m.terms23;},
+  /* 17.10.2026: только чтение — показ карточки дело не меняет (иначе обычное сохранение несёт пустые intake23/terms23, и сервер его отклоняет:
+     «Этапы до договора меняются действиями этапа»); поля заводит mut перед изменением */
+  I(m){return m.intake23||{};},
+  T(m){const t=m.terms23;if(t&&Array.isArray(t.rounds)&&t.st)return t;return Object.assign({},t||{},{rounds:(t&&t.rounds)||[],st:(t&&t.st)||{}});},
   /* новый ведущий не видит того, что было до передачи дела (УП видит всё) */
   since(m){const r=m.relead23;return r&&!this.mp()&&r.to===this.me()?String(r.at||""):"";},
   shortMode(m){const r=m.relead23;return !!(r&&r.mode==="short"&&m.pipeline!=="contract");},
@@ -13615,7 +13617,7 @@ const Pre24={
     }return false;},
   lastRound(m,ph){const rs=(this.T(m).rounds||[]).filter(r=>r.ph===ph);return rs[rs.length-1]||{};},
   /* ── изменение дела: то же, что делает сервер (public.pre24_act); a — аргументы, w — подпись для истории на языке нажавшего ── */
-  mut(m,act,a,ctx){const me=ctx.me,at=ctx.at,i=this.I(m),T=this.T(m),ph=this.phase(m);const hist=w=>{m.history=m.history||[];m.history.push({at,by:me,what:w});};
+  mut(m,act,a,ctx){const me=ctx.me,at=ctx.at;m.intake23=m.intake23||{};m.terms23=this.T(m);const i=m.intake23,T=m.terms23,ph=this.phase(m);const hist=w=>{m.history=m.history||[];m.history.push({at,by:me,what:w});};
     const pipe=to=>{const from=m.pipeline;if(from===to)return;m.pipeline=to;m.pipelineHistory=m.pipelineHistory||[];m.pipelineHistory.push({step:to,at,by:me,from});};
     const out={notify:[]};const mpTo=()=>out.notify.push({to:"mp",k:"p24turn"});
     switch(act){
