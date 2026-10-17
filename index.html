@@ -10267,7 +10267,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="8fab103a04ce";
+const ZC_BUILD="70e2192fe6b5";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14456,6 +14456,19 @@ document.addEventListener("keydown",e=>{const p=document.getElementById("l25menu
     return f.map(x=>x&&x.k==="practice"?Object.assign({},x,{_hideU25:true,required:false}):x);};
   const _daU25=Dlg.ask.bind(Dlg);Dlg.ask=function(o){const p=_daU25(o);if(o&&(o.fields||[]).some(x=>x&&x._hideU25)){const form=(document.getElementById("mdD")||document).querySelector(".form");
       if(form)o.fields.forEach((x,i)=>{const w=form.children[i];if(x&&x._hideU25&&w)w.hidden=true;});}return p;};}
+/* Б2 (18.10.2026, владелец: «оплачено или статус оплаты может только УП менять»): поступление «на проверке» входит в «Оплачено» только после
+   подтверждения УП; поле «Оплачено» в окне дела — только у УП; сотрудник «Оплачено» и статус оплаты не меняет. Сервер — то же
+   (миграция 20261018000300_stage_pay_only_buttons: «Оплачено» = база + подтверждённые поступления). */
+{const mp27=()=>isFounder()||hasF("managing");const t027=nowS();const done27=new Set();
+  const _sync27=Payment.syncMatter.bind(Payment);Payment.syncMatter=async function(p,sign){if(p&&p.pending)return;return _sync27.apply(this,arguments);};
+  /* подтверждение УП (кнопка или «Отправить в архив» без сервера) — поступление входит в «Оплачено» */
+  const _sd27=saveDoc;saveDoc=function(col,obj){const r=_sd27.apply(this,arguments);
+    if(col==="payments"&&obj&&!obj.pending&&obj.wasPending21&&obj.confirmedAt&&obj.confirmedAt>=t027&&U()&&obj.confirmedBy===U().login&&!done27.has(obj.id)){done27.add(obj.id);
+      Promise.resolve(r).then(()=>Payment.syncMatter(obj,+1)).catch(()=>{});}
+    return r;};
+  const _mf27=Matter.fields;Matter.fields=function(m){const f=_mf27.apply(this,arguments);if(mp27())return f;return f.map(x=>x&&x.k==="paid"?Object.assign({},x,{_hideU25:true,required:false}):x);};
+  const _ma27=Matter.apply;Matter.apply=function(m,v){if(mp27())return _ma27.apply(this,arguments);const had=!!(m&&(m.no||(S.matters||{})[m.id]));const p0=m.paid,s0=m.paymentStatus;
+    const r=_ma27.apply(this,arguments);if(had){m.paid=p0;m.paymentStatus=s0;}else{m.paid=0;if(["paid","prepaid","partial"].includes(m.paymentStatus))m.paymentStatus="unpaid";}return r;};}
 
 /* ══ версия 1.3 · «Сообщить об ошибке» и тихий журнал сбоев (решения владельца 17.10.2026) ══
    Только сотрудники (УП и адвокаты); у клиентов — «Подать жалобу». Логика — на сервере (миграция 20261017002000_bug_reports.sql:
