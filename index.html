@@ -5475,7 +5475,8 @@ const saveNotes=login=>dbWrite(db=>db.doc("notes/"+login).set(S.notes[login]));
 
 /* ── справочники и агрегации ── */
 const courtKindOf=m=>m.courtKind||(m.type==="criminal"?"criminal":m.type==="litigation"?(/кономич/i.test(m.court||"")?"economic":"civil"):null);
-const isCourt=m=>m.type==="litigation"||m.type==="criminal"||m.status==="court";
+/* 18.10.2026 (суд, этап 0, ошибка 4): судебное дело — по виду услуги svc; старые признаки type/status — только для дел без svc */
+const isCourt=m=>m.svc?m.svc==="court":(m.type==="litigation"||m.type==="criminal"||m.status==="court");
 const isSupport=m=>m.billing==="subscription"||m.type==="consulting";
 const catOf=m=>isCourt(m)?"court":isSupport(m)?"support":"oneoff";
 const closedDate=m=>m.closed||((m.history||[]).filter(h=>/закрыто/i.test(h.what)).map(h=>h.at.slice(0,10))[0])||(m.status==="closed"?m.deadline||m.opened:null);
@@ -7200,7 +7201,7 @@ const CP={
       </div>
       <div class="cols"><div style="display:grid;gap:14px">
         <div class="card"><h4>${T1(UI.hWhat)}</h4><dl class="kvl"><dt>${T1(UI.cpNo)}</dt><dd>${esc(m.no)}</dd><dt>${T1(UI.cpIn)}</dt><dd>${fmtD(m.opened)}</dd><dt>${T1(UI.cpKind)}</dt><dd>${mtLabel(m.type)}</dd><dt>${T1(UI.cpEntity)}</dt><dd>${T1(ENTITY[m.entity]||"")}</dd><dt>${T1(UI.cpContact)}</dt><dd>${contact?esc(accN18(contact)):"—"}</dd>${m.deadline?`<dt>${T1(UI.cpDue)}</dt><dd>${fmtD(m.deadline)}</dd>`:""}
-          ${cat==="court"?`<dt>${T1(UI.cpCourt)}</dt><dd>${esc(m.court||"—")}</dd><dt>${T1(UI.cpCase)}</dt><dd>${esc(m.caseNo||"—")}</dd><dt>${T1(UI.cpParties)}</dt><dd>${esc(m.parties||"—")}</dd><dt>${T1(UI.cpStageC)}</dt><dd>${msLabel(m.status)}</dd><dt>${T1(UI.cpHearing)}</dt><dd>${nextH?`<b>${fmtD(nextH.date)} ${nextH.time||""}</b>${nextH.place?" · "+esc(nextH.place):""}`:"—"}</dd><dt>${T1(UI.cpOutcome)}</dt><dd>${esc(bi18(m.lastOutcome,m.lastOutcomeZh)||(lastH&&lastH.note)||"—")}</dd><dt>${T1(UI.cpNextStep)}</dt><dd>${esc(bi18(m.nextStep,m.nextStepZh)||"—")}</dd>`:(m.nextStep?`<dt>${T1(UI.cpNextStep)}</dt><dd>${esc(bi18(m.nextStep,m.nextStepZh))}</dd>`:"")}</dl></div>
+          ${cat==="court"?`<dt>${T1(UI.cpCourt)}</dt><dd>${esc(m.court||"—")}</dd><dt>${T1(UI.cpCase)}</dt><dd>${esc(m.caseNo||"—")}</dd><dt>${T1(UI.cpParties)}</dt><dd>${esc(m.parties||"—")}</dd><dt>${T1(UI.cpStageC)}</dt><dd>${/* суд, этап 0, ошибка 5: этап дела, а не старое поле «Стадия» */typeof status11==="function"?status11(m,true).l:msLabel(m.status)}</dd><dt>${T1(UI.cpHearing)}</dt><dd>${nextH?`<b>${fmtD(nextH.date)} ${nextH.time||""}</b>${nextH.place?" · "+esc(nextH.place):""}`:"—"}</dd><dt>${T1(UI.cpOutcome)}</dt><dd>${esc(bi18(m.lastOutcome,m.lastOutcomeZh)||(lastH&&lastH.note)||"—")}</dd><dt>${T1(UI.cpNextStep)}</dt><dd>${esc(bi18(m.nextStep,m.nextStepZh)||"—")}</dd>`:(m.nextStep?`<dt>${T1(UI.cpNextStep)}</dt><dd>${esc(bi18(m.nextStep,m.nextStepZh))}</dd>`:"")}</dl></div>
         <div class="card"><h4>${cat==="oneoff"?T1(UI.cpResult):T1(UI.cpDocsC)} · ${files.length}</h4>${files.length?files.map((f,i)=>`<div class="reqrow"><span class="tm">${fmtD((f.publishedAt||"").slice(0,10))}</span><span><b>${esc(f.name)}</b> <small style="color:var(--ink-3)">${f.lang==="zh"?"ZH":f.lang==="both"?"RU · ZH":"RU"}${f.final?" · "+T1(UI.cpFinal):""}</small></span><button class="btn sm" data-cfile="${m.id}" data-fname="${esc(f.name)}">${T1(UI.cpDownload)}</button></div>`).join(""):`<div class="empty2">${cat==="oneoff"?T1(UI.cpNoResult):T1(UI.noData)}</div>`}</div>
         ${(m.clientActions||[]).filter(a=>!a.done).length?`<div class="card"><h4>${T1(UI.cpNeed)}</h4>${m.clientActions.filter(a=>!a.done).map(a=>`<div class="reqrow"><span class="tm">${fmtD(a.at.slice(0,10))}</span><span>${T1(a.kind==="docs"?UI.ccAskDocs:a.kind==="sign"?UI.ccAskSign:a.kind==="pay"?UI.ccAskPay:UI.ccAskOther)}: ${esc(bi18(a.text,a.textZh))}</span></div>`).join("")}</div>`:""}
         ${(m.invoices||[]).length?`<div class="card"><h4>${T1(UI.cpFinInv)}</h4>${m.invoices.map(v=>`<div class="reqrow"><span class="tm">${esc(v.no)} · ${fmtD(v.date)}</span><span>${T1(v.kind==="act"?UI.ccInvAct:UI.ccInvInvoice)} · <b>${fmtN(v.amount)} ${cur10(v.currency)}</b>${v.vat?" · "+T1(UI.ccInvVat):""}${v.due?" · "+T1(UI.ccInvDue)+" "+fmtD(v.due):""}</span><span class="rt${v.status==="paid"?"":" open"}">${T1(v.status==="paid"?UI.ccInvPaid:UI.ccInvOpen)}</span></div>`).join("")}</div>`:""}
@@ -10266,7 +10267,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="5803505e7f96";
+const ZC_BUILD="8fab103a04ce";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14716,6 +14717,104 @@ const _bindB26=Pages.bind;Pages.bind=function(vp){_bindB26.apply(this,arguments)
 /* уведомление «bug:…» — открыть сообщение в «Помощи» → «Ошибки» */
 document.addEventListener("click",e=>{const g=e.target&&e.target.closest&&e.target.closest('[data-go^="bug:"]');if(!g||!B26.staff())return;const ref=g.dataset.go.slice(4);
   setTimeout(()=>{try{if(typeof Notif!=="undefined"&&Notif.close)Notif.close();}catch(x){}if(typeof Help21!=="undefined")Help21._t="bugs";B26.f.tab="list";B26.f.st="all";B26.f.sel=ref;B26.rows=null;Router.go("help");},0);},true);
+
+/* ══ Раздел «Судебные дела» · этап 0 — исправление найденных ошибок (решение владельца 18.10.2026, правило С-20) ══
+   Правила и их номера — sections/court/ПРАВИЛА.md, журнал — sections/court/ЖУРНАЛ.md.
+   Сервер — миграция 20261018000200_court_stage0 (backend/sections/court.md): закрытие, организация и лицензия, конфликт,
+   «результат только после оплаты», файлы клиенту. Здесь — то же для показа, плюс то, что пока делает только портал.
+   Номера ошибок — как в ПРАВИЛА.md («Найденные ошибки»). */
+const crt0=m=>!!m&&m.svc==="court";
+const crt0MP=()=>isFounder()||hasF("managing");
+Object.assign(UI,{
+  crt0Close:"Судебное дело закрывается так: «Принято клиентом» → «Отправить в архив» (управляющий адвокат, с проверкой оплаты и приёмки)||诉讼案件结案流程：“客户已验收”→“归档”（由管理合伙人核对付款和验收）",
+  crt0Lost:"Дело до договора закрывается кнопкой «Отказ» в карточке услуги||签约前的案件请在服务卡中点击“拒绝”关闭",
+  crt0St:"Ход дела — по этапам и инстанциям; закрыть — через «Отправить в архив»||案件进度按阶段和审级；结案请通过“归档”",
+  crt0Cp:"Другая сторона в споре — по строке: название | название по-китайски | ИНН | роль||争议对方——每行：名称 | 中文名称 | 税号 | 角色",
+  crt0CpHint:"Например: «ООО Metall Savdo | | 207554301 | ответчик». Нужна для проверки конфликта интересов||例如：“ООО Metall Savdo | | 207554301 | 被告”。用于利益冲突检查",
+  crt0NoShift:"сроки дела не сдвигаются (судебное дело)||案件期限不顺延（诉讼案件）"
+});
+
+/* ── 1. «Закрыть дело» в шапке: не напрямую, а через отказ или архив с проверками (сервер проверяет то же, и у УП) ── */
+const Crt0={
+  async close(id){const m=matter(id);if(!m||m.status==="closed")return;
+    if(m.pipeline!=="contract"){toast(T1(UI.crt0Lost));return;}
+    if(crt0MP()&&["accepted","archive"].includes(m.stage)&&typeof Archive21!=="undefined")return Archive21.run(m);
+    toast(T1(UI.crt0Close));}
+};
+{const _pmC0=Pages.matter;Pages.matter=function(id){let h=_pmC0.apply(this,arguments);const m=matter(id);if(!crt0(m)||isClient())return h;
+  /* 1: адвокат кнопку не видит (закрывает только УП) */
+  if(!crt0MP())h=h.replace(/<button[^>]*data-act="closeMatter"[^>]*>[\s\S]*?<\/button>/g,"");
+  /* 5: в шапке — этап дела, а не старое поле «Стадия» («В суде» и т. п.) */
+  h=h.replace(new RegExp(`<span class="ms ${m.status}" style="align-self:center"><i></i>[^<]*</span>`),typeof stPill11==="function"?stPill11(m):"");
+  /* 8: без практики (подразделения) в шапке дела */
+  if(ALL[m.practice])h=h.replace(` · ${T1(ALL[m.practice].num)} · ${T1(ALL[m.practice].name)}`,"");
+  return h;};}
+{const _pbC0=Pages.bind;Pages.bind=function(vp){_pbC0.call(this,vp);if(isClient()||Router.cur!=="matter")return;const id=Router.arg;if(!crt0(matter(id)))return;
+  vp.querySelectorAll('[data-act="closeMatter"]').forEach(el=>el.onclick=e=>{e.preventDefault();e.stopPropagation();Crt0.close(id);});};}
+
+/* ── 2. «Изменить дело»: без старого поля «Стадия»; после подписания стоимость меняет УП; оплата — через «Поступления» ── */
+const crt0lock=(f,k,val,txt,hint)=>{const x=f.find(y=>y&&y.k===k);if(!x)return;x.type="select";x.value=String(val);x.options=[[String(val),txt]];x.hint=hint;};
+{const _mfC0=Matter.fields;Matter.fields=function(m){const f=_mfC0.apply(this,arguments);const pre=Matter._svc;const svcF=f.find(x=>x&&x.k==="svc");
+  const court=m&&m.id?crt0(m):(pre==="court"||(!pre&&svcF&&svcF.value==="court"));if(!court)return f;
+  if(m&&m.id){crt0lock(f,"status",m.status||"progress",T1(status11(m).l),T1(UI.crt0St));
+    if(!crt0MP()){if(m.contractSigned||m.pipeline==="contract")crt0lock(f,"fee",m.fee||0,fmtN(m.fee||0),T1(UI.ed22Fee));crt0lock(f,"paid",m.paid||0,fmtN(m.paid||0),T1(UI.ed22Paid));}}
+  /* 3: «Другая сторона» — для проверки конфликта интересов, как у разовых услуг */
+  if(!f.some(x=>x&&x.k==="counterparties")&&typeof Conflict17!=="undefined"){const i=f.findIndex(x=>x&&x.k==="court");
+    f.splice(i>=0?i+1:f.length,0,{k:"counterparties",label:T1(UI.crt0Cp),type:"textarea",span:true,value:Conflict17.text((m||{}).counterparties),hint:T1(UI.crt0CpHint)});}
+  return f;};}
+{const _maC0=Matter.apply;Matter.apply=function(m,v){const keep=m&&m.id&&crt0(m)?{status:m.status,fee:m.fee,cost:m.cost,paid:m.paid,signed:m.contractSigned||m.pipeline==="contract",mp:crt0MP()}:null;
+  const r=_maC0.apply(this,arguments);
+  if(keep&&crt0(m)){m.status=keep.status;if(!keep.mp){if(keep.signed){m.fee=keep.fee;m.cost=keep.cost;}m.paid=keep.paid;}}return r;};}
+
+/* ── 3. «Договор подписан» — не при возможном конфликте интересов и не после решения «отказ от дела» ── */
+if(typeof Pipe!=="undefined"&&typeof Conflict17!=="undefined"){const _psC0=Pipe.set.bind(Pipe);
+  Pipe.set=async function(id,step){const m=matter(id);if(crt0(m)&&step==="contract"){await Conflict17.run(m);
+      if(m.conflict&&(m.conflict.status==="possible"||m.conflict.status==="confirmed")){await saveDoc("matters",m);toast(T1(UI.cfBlock17));Router.render();return;}}
+    return _psC0(id,step);};}
+
+/* ── 6. пауза: у судебного дела сроки не сдвигаются (суд их не продлевает) ── */
+if(typeof Pipe!=="undefined"&&Pipe.resume){const _prC0=Pipe.resume.bind(Pipe);
+  Pipe.resume=async function(id){const m=matter(id);if(!crt0(m))return _prC0(id);if(!this.can(m)||!m.paused)return;
+    const p=m.paused;const days=Math.max(0,daysTo(todayS())-daysTo(p.since));m.pauses=m.pauses||[];m.pauses.push(Object.assign({},p,{to:todayS(),days,resumedBy:U().emp,resumedAt:nowS()}));m.paused=null;
+    m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:`Возобновлено · ${days} ${T1(UI.psDays)} · ${T1(UI.crt0NoShift)}`});
+    await saveDoc("matters",m);audit(`${m.no}: возобновлено (${days} дн., сроки не сдвигаются)`);notifyClients(m,"client",nt18("status",{no:m.no,st:L2(()=>status11(m,true).l)}));Router.render();};}
+
+/* ── 7. С-23: «Результат готов» без проверки полной оплаты (оплата по инстанциям); на сервере — zc.pay_block ── */
+{const _pbl0=payBlock11;payBlock11=function(m){if(crt0(m))return null;return _pbl0(m);};}
+
+/* ── 8. две роли (16.10.2026): должности прав не дают ── */
+/* события: менять может УП, ответственный за событие или участник дела (как на сервере: events_write) */
+{const _canC0=can;can=function(action){if(action==="eventsEdit")return !isClient();return _canC0.apply(this,arguments);};}
+if(typeof Ev!=="undefined"){Ev.open=async function(id){const e=S.events[id];if(!e)return;const u=U()||{};const mm=e.matterId?matter(e.matterId):null;
+  const ed=!isClient()&&(crt0MP()||e.emp===u.emp||(!!mm&&matterView(mm)==="full"));
+  if(!ed){await Dlg.ask({title:e.title,text:`${evLabel(e.type)} · ${fmtD(e.date)} ${e.time||""} · ${e.place||""} · ${dispName(e.emp)}${e.note?" · "+e.note:""}`,fields:[],okText:"ОК||确定"});return;}
+  const v=await Dlg.ask({title:e.title,fields:this.fields(e),okText:UI.save,cancelText:UI.cancel});if(!v)return;Object.assign(e,v);await saveDoc("events",e);Router.render();};}
+/* этапный акт инстанции подписывает УП (не «бухгалтер») */
+if(typeof StageAct13!=="undefined"){
+  StageAct13.sign=async function(id,i,j){const m=matter(id);if(!m)return;if(!crt0MP()){toast(T1(UI.noAccess));return;}const s=m.instances[i].stages[j];s.signedAt=nowS();s.signedBy=U().login;
+    m.history.push({at:nowS(),by:U().emp,what:`${T1(UI.saTitle)} «${s.title}» — ${T1(UI.saSigned)}`});await saveDoc("matters",m);Pay.cache={};Router.render();};
+  StageAct13.html=function(m){if(m.svc!=="court"||!paySettings().stageActs)return "";const ed=Pipe.can(m),acct=crt0MP();
+    return (m.instances||[]).map((x,i)=>`<div class="reqrow"><span class="tm">${instLabel(x.kind)}</span><span>${(x.stages||[]).map((s,j)=>`${esc(s.title)} · ${fmtN(s.sum)} · ${s.signedAt?T1(UI.saSigned):(acct?`<button class="lnk" data-sasign="${i}:${j}">${T1(UI.saSign)}</button>`:"—")}`).join("<br>")||"—"}</span>${ed?`<button class="btn sm ghost" data-saadd="${i}" style="margin-left:auto">${T1(UI.saAdd)}</button>`:""}</div>`).join("");};}
+/* «Передать в судебные дела»: без зашитых подразделения и ведущего; номер — как у новых дел (10) */
+toCourt11=async function(id){const m=matter(id);if(!m||!can("mattersCreate"))return;const u=U()||{};
+  const units=unitsAll().filter(x=>x.entity==="legal"&&x.kind==="practice"&&!x.umbrella);const unit0=(units.find(x=>x.id===m.unitId)||units[0]||{}).id||"";
+  const lead0=isLicensed(m.lead)?m.lead:isLicensed(u.emp)?u.emp:"";
+  const v=await Dlg.ask({title:T1(UI.crToCourt),text:T1(UI.crToCourtT),fields:[{k:"title",label:T1(UI.kTitle),value:m.title,required:true},
+    {k:"unit",label:T1(UI.fUnit),type:"select",value:unit0,options:units.map(x=>[x.id,unitName(x.id)])},
+    {k:"lead",label:T1(UI.mLead),type:"select",value:lead0,required:true,options:[["",""],...empSel(null,e=>isLicensed(e))]}]});if(!v)return;
+  if(!isLicensed(v.lead)){toast(T1(UI.crLeadLic));return;}
+  const no=typeof Pre24!=="undefined"&&Pre24.reserveNo?await Pre24.reserveNo():nextNo11("legal");
+  const n={id:uid("m"),no,title:v.title,clientId:m.clientId,practice:v.unit,unitId:v.unit,entity:"legal",type:"litigation",courtKind:"civil",lead:v.lead,team:[],executors:[{emp:v.lead,share:100}],status:"new",stage:"received",opened:todayS(),files:[],history:[{at:nowS(),by:u.emp,what:`Открыто из сопровождения ${m.no}`}],fromMatter:m.id,contractSigned:false,reviewPassed:false,claim:false,_v9b:1,svc:"court",pipeline:"negotiation",clientContactId:m.clientContactId||""};
+  migrateMatter11(n);n.pipelineHistory=[{step:"negotiation",at:nowS(),by:u.emp}];await saveDoc("matters",n);m.history.push({at:nowS(),by:u.emp,what:`${T1(UI.crToCourt)}: ${n.no}`});await saveDoc("matters",m);audit(`${m.no} → ${n.no}: передано в судебные дела`);Router.go("matter",n.id);};
+/* строка списка: без практики (подразделения) */
+{const _mtC0=F.mt;F.mt=m=>{const h=_mtC0(m);if(!crt0(m)||!ALL[m.practice])return h;return h.replace(` · ${T1(ALL[m.practice].num)} · `," · ");};}
+/* урезанный просмотр дела: «назад» ведёт в раздел дела, а не всегда в «Судебные дела» */
+{const _pmV0=Pages.matter;Pages.matter=function(id){const h=_pmV0.apply(this,arguments);const m=matter(id);if(!m||isClient()||matterView(m)==="full"||crt0(m))return h;
+  return h.replace('data-go="court"',`data-go="${["oneoff","support"].includes(m.svc)?m.svc:"court"}"`);};}
+
+/* ── 10. номер нового судебного дела: 1, 2, 3 … (общий счёт с разовыми услугами, сервер reserve_matter_no); договор — прежний номер ── */
+if(typeof Reg21!=="undefined"&&Reg21.number){const _numC0=Reg21.number.bind(Reg21);
+  Reg21.number=async function(m){const r=await _numC0(m);if(crt0(m)&&!((m.contract||{}).mode==="framework")&&typeof Pre24!=="undefined"&&Pre24.reserveNo)m.no=await Pre24.reserveNo();return r;};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
