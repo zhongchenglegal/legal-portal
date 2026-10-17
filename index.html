@@ -10106,7 +10106,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="0951a774d4ef";
+const ZC_BUILD="c8a3eabc6199";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -13695,9 +13695,10 @@ const Pre24={
     return "";},
   label(k){return T1({lead:UI.plLead,negotiation:UI.plNeg,offer:UI.plOffer,approval_terms:UI.plTerms,team_draft:UI.plTeam}[k]);},
   twoSteps(m){return this.shortMode(m)&&!this.mp()&&m.relead23&&m.relead23.to===this.me();},
-  card(m){const two=this.twoSteps(m);const steps=two?["lead","team_draft"]:P24_STEPS;const cur=P24_STEPS[Math.min(this.idx(m),4)];
-    /* открытый этап помнится, пока дело на том же этапе; этап сменился — открывается текущий */
-    const sv=this.sel[m.id];let sel=sv&&(sv.p===m.pipeline||sv.p==="*")?sv.k:null;if(sv&&sv.p==="*")this.sel[m.id]={k:sv.k,p:m.pipeline};if(!sel||!steps.includes(sel))sel=steps.includes(cur)?cur:steps[steps.length-1];
+  /* открытый этап помнится, пока дело на том же этапе; этап сменился — открывается текущий */
+  shown(m){const two=this.twoSteps(m);const steps=two?["lead","team_draft"]:P24_STEPS;const cur=P24_STEPS[Math.min(this.idx(m),4)];
+    const sv=this.sel[m.id];let sel=sv&&(sv.p===m.pipeline||sv.p==="*")?sv.k:null;if(sv&&sv.p==="*")this.sel[m.id]={k:sv.k,p:m.pipeline};if(!sel||!steps.includes(sel))sel=steps.includes(cur)?cur:steps[steps.length-1];return sel;},
+  card(m){const two=this.twoSteps(m);const steps=two?["lead","team_draft"]:P24_STEPS;const sel=this.shown(m);
     const bar=`<div class="p24bar${two?" two":""}">${steps.map((k,j)=>{let s=two?(k==="lead"?(m.pipeline==="lead"?"cur":"done"):(m.pipeline==="team_draft"?"cur":m.pipeline==="contract"?"done":"todo")):this.stepState(m,k);
       return `<button type="button" class="p24st ${s}${k===sel?" sel":""}" data-p24st="${k}"><div class="b"></div><span class="c">${s==="done"?"✓":s==="skip"?"✕":j+1}</span><span class="t">${esc(this.label(k))}</span><span class="m">${esc(this.stepMeta(m,k))}</span></button>`;}).join("")}</div>`;
     let body="";try{body=this.panel(m,sel);}catch(e){console.warn("pre24",e);body=`<div class="lk24">${esc(String(e&&e.message||e))}</div>`;}
@@ -13985,7 +13986,9 @@ if(typeof Card22!=="undefined"){
     const box=document.createElement("div");box.innerHTML=Pre24.card(m);pane.insertBefore(box.firstElementChild,pane.firstChild);
     /* главная кнопка шапки — действие текущего этапа */
     pane.querySelectorAll(".c22todo .trow").forEach(r=>{if(r.querySelector('[data-c22target*="kp"],[data-c22kprem],[data-c22target*="data-pipe"]'))r.remove();});
-    if(["lead","negotiation","offer","approval_terms"].includes(m.pipeline)){pane.querySelectorAll(":scope>.c22ct,:scope>.svc11").forEach(x=>x.remove());
+    /* 17.10.2026 (владелец): «Сведения о договоре», «Сведения о деле», «Разовая услуга», «Конфликт интересов» — только при открытом этапе «Подписание договора»;
+       открыт этап 1–4 (в том числе у подписанного дела) — этих блоков нет */
+    if(["lead","negotiation","offer","approval_terms"].includes(m.pipeline)||Pre24.shown(m)!=="team_draft"){pane.querySelectorAll(":scope>.c22ct,:scope>.svc11").forEach(x=>x.remove());
       pane.querySelectorAll(".c22todo .trow").forEach(r=>{if(r.querySelector('[data-c22target*="ctEdit"],[data-c22target*="ctFile21"]'))r.remove();});
       /* 17.10.2026 (владелец): «Сведения о деле» и блок «Конфликт интересов» — только на этапе «Подписание договора»; до него конфликт — на «Приёме заявки» */
       pane.querySelectorAll(":scope>.cfc17").forEach(x=>x.remove());pane.querySelectorAll(".c22todo .trow").forEach(r=>{if(r.querySelector(".cfc17"))r.remove();});
