@@ -9247,7 +9247,9 @@ const Pack17={
   seniors(svc){return Object.keys(ALL).filter(e=>isPerson(e)&&this.isSenior(svc,e));},
   /* пункт «Пакет услуг» виден, если есть видимые услуги или вопрос, на который меня уполномочили */
   hasEntry(){const u=U();if(!u||isClient())return false;return this.visible().length>0||Object.values(S.svcFaq||{}).some(q=>q.authorized&&q.authorized.emp===u.emp&&q.status!=="approved");},
-  kpLimitKb(){const w=ws17().packKpKb||700;return S.db?w:Math.min(w,350);},
+  /* 17.10.2026 (владелец): лимита на КП нет — файл уходит в хранилище одним файлом (предел хранилища 100 МБ); 0 — без лимита.
+     Лимит остаётся только без хранилища (демо / данные в браузере), где большой файл не поместится */
+  kpLimitKb(){if(typeof FS20!=="undefined"&&FS20.on())return 0;const w=ws17().packKpKb||700;return S.db?w:Math.min(w,350);},
   cleanName(n){let s=String(n||"").split(/[\\/]/).pop().replace(/[\u0000-\u001f\u007f<>:"|?*]+/g,"").replace(/\s+/g," ").trim().replace(/\.pdf$/i,"").slice(0,80).trim();return (s||"kp")+".pdf";},
   pick(accept){return new Promise(res=>{const inp=document.createElement("input");inp.type="file";inp.accept=accept;inp.style.display="none";document.body.appendChild(inp);let done=false;const fin=f=>{if(done)return;done=true;inp.remove();res(f);};
     inp.onchange=()=>fin(inp.files[0]||null);inp.addEventListener("cancel",()=>fin(null));inp.click();});},
@@ -9264,11 +9266,11 @@ const Pack17={
     await this.save(rec,key?"изменена":"создана");toast(T1(UI.pkSaved17));Router.go("pack",rec.id);},
   async archive(key){if(!this.MP()){toast(T1(UI.pkOnlyMp17));return;}if(key==="other"){toast(T1(UI.pkOtherKeep17));return;}const rec=this.stored(key);if(!rec)return;rec.archived=!rec.archived;await this.save(rec,rec.archived?"в архиве":"возвращена из архива");Router.render();},
   async uploadKp(key){if(!this.MP()){toast(T1(UI.pkOnlyMp17));return;}const x=this.get(key);if(!x)return;
-    const v=await Dlg.ask({title:T1(UI.pkKpUp17)+" · "+this.name(x),okText:T1(UI.pkKpPick17),text:`PDF · ≤ ${this.kpLimitKb()} KB`+(S.db?"":". "+T1(UI.pkKpLocal17).replace("{l}",this.kpLimitKb())),
+    const v=await Dlg.ask({title:T1(UI.pkKpUp17)+" · "+this.name(x),okText:T1(UI.pkKpPick17),text:(this.kpLimitKb()?`PDF · ≤ ${this.kpLimitKb()} KB`:"PDF")+(S.db?"":". "+T1(UI.pkKpLocal17).replace("{l}",this.kpLimitKb())),
       fields:[{k:"lang",label:T1(UI.pkKpLang17),type:"select",value:"all",options:[["all",T1(UI.pkKpAll17)],["ru",T1(UI.pkKpRu17)],["zh",T1(UI.pkKpZh17)]]},{k:"note",label:T1(UI.pkKpNote17)}]});if(!v)return;
     const f=await this.pick(".pdf,application/pdf");if(!f)return;
     if(!/\.pdf$/i.test(f.name)&&f.type!=="application/pdf"){toast(T1(UI.pkKpOnlyPdf17));return;}
-    const lim=this.kpLimitKb();if(f.size>lim*1024){toast(T1(UI.pkKpBig17).replace("{n}",Math.ceil(f.size/1024)).replace("{l}",lim)+(S.db?"":". "+T1(UI.pkKpLocal17).replace("{l}",lim)));return;}
+    const lim=this.kpLimitKb();if(lim&&f.size>lim*1024){toast(T1(UI.pkKpBig17).replace("{n}",Math.ceil(f.size/1024)).replace("{l}",lim)+(S.db?"":". "+T1(UI.pkKpLocal17).replace("{l}",lim)));return;}
     const head=new Uint8Array(await f.slice(0,5).arrayBuffer());if(String.fromCharCode(...head)!=="%PDF-"){toast(T1(UI.pkKpBadSig17));return;}
     const data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);}).catch(()=>null);if(!data){toast(T1(UI.pkKpErr17));return;}
     const clean=this.cleanName(f.name);const stored=await this.putFile(clean,String(data).replace(/^data:[^;,]*/,"data:application/pdf"),f.size);if(!stored)return;
@@ -9622,7 +9624,9 @@ const SB19={
       async invoke(fn,body){const r=await c.functions.invoke(fn,{body});if(r.error){let msg=r.error.message,st=0,code="";try{const res=r.error.context;st=(res&&res.status)||0;const j=await res.json();msg=j.error||j.message||msg;code=j.code||"";}catch(e){}const er=new Error(msg);er.status=st;er.code=code;throw er;}return r.data;},
       /* v20: файлы — в закрытой корзине хранилища; открываются по ссылке ограниченного срока */
       async uploadBlob(path,b,type){chk(await c.storage.from("portal-files").upload(path,b,{contentType:type||b.type||"application/octet-stream",upsert:false}));},
-    async upload(path,dataUrl,type){const b=await (await fetch(dataUrl)).blob();chk(await c.storage.from("portal-files").upload(path,b,{contentType:type||b.type||"application/octet-stream",upsert:false}));},
+    /* 17.10.2026: data:-ссылка разбирается без fetch — на сайте политика CSP (connect-src) не пускает fetch("data:…"), и загрузка КП падала «Failed to fetch» */
+    async upload(path,dataUrl,type){const mt=/^data:([^;,]*)(;base64)?,/.exec(String(dataUrl));if(!mt)throw new Error("bad data url");const body=String(dataUrl).slice(mt[0].length);
+      const raw=mt[2]?atob(body):decodeURIComponent(body);const u8=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)u8[i]=raw.charCodeAt(i);const b=new Blob([u8],{type:mt[1]||type||"application/octet-stream"});chk(await c.storage.from("portal-files").upload(path,b,{contentType:type||b.type||"application/octet-stream",upsert:false}));},
       async signedUrl(path,sec){return chk(await c.storage.from("portal-files").createSignedUrl(path,sec||60)).signedUrl;},
       async removeFile(path){chk(await c.storage.from("portal-files").remove([path]));},
       /* v20: второй фактор входа (TOTP) — для учредителей и УП */
@@ -10102,7 +10106,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="e102a08ab3d9";
+const ZC_BUILD="0951a774d4ef";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -13931,7 +13935,7 @@ Object.assign(Pre24,{
     mm.files=mm.files||[];mm.files.push(Object.assign({},f,{kind:"kp",at:nowS(),by:this.me()}));mm.history.push({at:nowS(),by:this.me(),what:T1(UI.p24KpBuilt).replace("{n}",name)});await saveDoc("matters",mm);Router.render();return f;},
   async kpUpload(m){if(typeof Pack17==="undefined")return;const f=await Pack17.pick(".pdf,application/pdf");if(!f)return;
     if(!/\.pdf$/i.test(f.name)&&f.type!=="application/pdf"){toast(T1(UI.pkKpOnlyPdf17));return;}const head=new Uint8Array(await f.slice(0,5).arrayBuffer());if(String.fromCharCode(...head)!=="%PDF-"){toast(T1(UI.pkKpBadSig17));return;}
-    const lim=Pack17.kpLimitKb();if(f.size>lim*1024){toast(T1(UI.pkKpBig17).replace("{n}",Math.ceil(f.size/1024)).replace("{l}",lim));return;}
+    const lim=Pack17.kpLimitKb();if(lim&&f.size>lim*1024){toast(T1(UI.pkKpBig17).replace("{n}",Math.ceil(f.size/1024)).replace("{l}",lim));return;}
     const data=await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res(null);r.readAsDataURL(f);});if(!data)return;
     return this.kpStore(m,Pack17.cleanName(f.name),String(data).replace(/^data:[^;,]*/,"data:application/pdf"),f.size);},
   /* КП из согласованных условий: страница A4 рисуется (русский + китайский — шрифтами устройства) и сохраняется PDF-документом */
