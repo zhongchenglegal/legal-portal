@@ -5769,10 +5769,11 @@ function mapOldUnit(m){
   if(p==="p2"||p==="p3"){if(t==="litigation")return ck==="criminal"?"u_p3":(build?"u_build":"u_p4");if(t==="licensing")return "u_lic";if(t==="realty")return "u_build";return "u_p2";}
   return t==="licensing"?"u_lic":t==="realty"?"u_build":(t==="litigation"?"u_p4":"u_p2");
 }
-/* лицензия адвоката (16.10.2026 — не роль и не доступ): отметка учётки licensed; пока её нет — по прежней должности
-   (адвокат или старший юрист). Нужна для законных правил: судебное дело, налог в расчёте зарплаты. */
+/* 18.10.2026 (решение владельца, С-28): «если он в системе как адвокат — значит, у него есть лицензия». Ролей две (УП и Адвокат),
+   поэтому лицензия — у каждой активной учётки сотрудника; отметка учётки (licensed) и прежняя должность не учитываются. Сервер — zc.licensed_of. */
 function licensedOf(e){if(e==="shahzod")return true;const a=typeof accByEmp==="function"?accByEmp(e):null;
-  if(a){if(typeof a.licensed==="boolean")return a.licensed;return ["advocate","senior"].includes(a.pos);}const d=ALL[e]||{};return d.type==="adv";}
+  if(a)return a.active!==false&&a.kind!=="client"&&a.role!=="client"&&!a.clientId;
+  return typeof isPerson==="function"&&!!isPerson(e);}/* без учётки (демо, «Структура») — человек в оргструктуре */
 function migrateMatter9(m){
   if(!m)return m;
   if(!m.unitId||!/^u_/.test(m.unitId)){const nu=mapOldUnit(m);if(m.practice!==nu)m.practiceOld=m.practiceOld||m.practice;m.unitId=nu;m.practice=nu;}
@@ -10267,7 +10268,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="70e2192fe6b5";
+const ZC_BUILD="4abb68463ebd";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10500,7 +10501,6 @@ if(typeof Acc20!=="undefined"){const _newStaff21=Acc20.newStaff.bind(Acc20);Acc2
     {k:"slot",label:T1("Позиция в «Структуре» (кому подчиняется)||架构职位（上级）"),type:"select",value:"",options:[["",T1("— без позиции —||— 无职位 —")],...(typeof Slot21!=="undefined"?Slot21.free():[])]},
     {k:"unit",label:T1(UI.nsUnit21),type:"select",value:"",options:[["","—"],...units.map(u=>[u.id,T1((u.nameRu||u.id)+"||"+(u.nameZh||u.nameRu||u.id))])]},
     {k:"access",label:T1(UI.nsAccess21),type:"select",value:"advocate",options:[["advocate",T1("Адвокат||律师")],["mp",T1("Управляющий адвокат||管理律师")]]},
-    {k:"lic",label:T1(UI.acc21Lic),type:"select",value:"1",options:[["1",T1(UI.yes)],["0",T1(UI.no)]],hint:T1(UI.acc21LicHint)},
     {k:"login",label:T1(UI.aLogin),required:true,hint:T1("латиница, цифры, точка||拉丁字母、数字、点")},
     {k:"pw",label:T1(UI.lgP),value:genPw(),required:true,check:x=>Acc20.pwCheck(x.pw,x.login)}]});
   if(!v)return;const login=String(v.login).trim().toLowerCase();
@@ -10511,7 +10511,7 @@ if(typeof Acc20!=="undefined"){const _newStaff21=Acc20.newStaff.bind(Acc20);Acc2
   if(v.slot&&ALL[v.slot]&&ALL[v.slot].unit)v.unit=ALL[v.slot].unit;
   const unit=units.find(u=>u.id===v.unit);const name=v.nameZh?v.name+"||"+v.nameZh:v.name;
   try{await this.rpc("admin_create_account",{acc:{kind:"staff",login,emp:null,pos,funcs,unitId:v.unit||null,entity:unit?unit.entity:null,lang:"ru",
-      data:{name,nameZh:v.nameZh||undefined,role:v.role,slot:v.slot||undefined,access:v.access,licensed:v.lic==="1"}},pw:v.pw});}
+      data:{name,nameZh:v.nameZh||undefined,role:v.role,slot:v.slot||undefined,access:v.access}},pw:v.pw});}/* лицензия — по роли (С-28) */
   catch(e){toast(this.msg(e));return;}
   await this.reload();await this.showOnce(login,v.pw);Cabinet.render&&Cabinet.render();};}
 /* после создания или изменения учётки сотрудника — сразу в структуре, кадрах и расчёте */
@@ -10840,18 +10840,17 @@ const _nextNoAdv21=nextNo11;nextNo11=function(ent){const no=_nextNoAdv21(ent);if
 /* ── «Доступы»: роль в списке и «Изменить доступ» ── */
 if(typeof Acc20!=="undefined"){
   /* роль (УП / адвокат) и отметка «Лицензия адвоката» (16.10.2026); свою роль управляющий адвокат не меняет */
-  Acc20.setAccess=async function(login){const a=S.accounts[login];if(!a)return;const cur=Adv21.kind(a),self=login===U().login&&cur==="mp",lic=licensedOf(a.emp);
+  Acc20.setAccess=async function(login){const a=S.accounts[login];if(!a)return;const cur=Adv21.kind(a),self=login===U().login&&cur==="mp";
     const v=await Dlg.ask({title:T1(UI.acc21Change)+" · "+login,text:esc(a.name||"")+(self?" · "+T1(UI.acc21Self):""),fields:[
-      ...(self?[]:[{k:"access",label:T1(UI.acc21Access),type:"select",value:cur,options:[["advocate",T1(UI.acc21Adv)],["mp",T1(UI.acc21Mp)]]}]),
-      {k:"lic",label:T1(UI.acc21Lic),type:"select",value:lic?"1":"0",options:[["1",T1(UI.yes)],["0",T1(UI.no)]],hint:T1(UI.acc21LicHint)}]});if(!v)return;
-    const acc=self?cur:v.access,nl=v.lic==="1";if(acc===cur&&nl===lic)return;
-    const patch={data:{access:acc,licensed:nl}};
+      ...(self?[]:[{k:"access",label:T1(UI.acc21Access),type:"select",value:cur,options:[["advocate",T1(UI.acc21Adv)],["mp",T1(UI.acc21Mp)]]}])]});if(!v)return;/* лицензия — по роли (С-28, 18.10.2026), отметки нет */
+    const acc=self?cur:v.access;if(acc===cur)return;
+    const patch={data:{access:acc}};
     if(acc!==cur)patch.funcs=acc==="mp"?[...new Set([...(a.funcs||[]).filter(f=>f!=="founder"),"managing"])]:(a.funcs||[]).filter(f=>f!=="managing"&&f!=="founder");
     try{await this.rpc("admin_update_account",{target:login,patch});}catch(e){toast(this.msg(e));return;}
-    audit(`Доступ ${login}: ${Adv21.label(acc)} · ${T1(UI.acc21Lic)}: ${T1(nl?UI.yes:UI.no)}`);await this.reload();toast(T1(UI.saved));Cabinet.render&&Cabinet.render();};
+    audit(`Доступ ${login}: ${Adv21.label(acc)}`);await this.reload();toast(T1(UI.saved));Cabinet.render&&Cabinet.render();};
   const _cabAccAdv21=Cabinet.acc.bind(Cabinet);Cabinet.acc=function(){let h=_cabAccAdv21();if(!Acc20.on())return h;
     Object.values(S.accounts).forEach(a=>{if(!a||!a.login)return;const btn=`<button class="btn sm" data-pw="${esc(a.login)}">`;
-      h=h.replace(btn,`<button class="btn sm ghost" data-acc21="${esc(a.login)}">${T1(UI.acc21Access)}: ${Adv21.label(Adv21.kind(a))}${licensedOf(a.emp)?" · "+T1(UI.acc21LicShort):""}</button> `+btn);});return h;};
+      h=h.replace(btn,`<button class="btn sm ghost" data-acc21="${esc(a.login)}">${T1(UI.acc21Access)}: ${Adv21.label(Adv21.kind(a))}</button> `+btn);});return h;};
   const _cabBindAdv21=Cabinet.bind.bind(Cabinet);Cabinet.bind=function(b){_cabBindAdv21(b);if(!Acc20.on())return;b.querySelectorAll("[data-acc21]").forEach(el=>el.onclick=()=>Acc20.setAccess(el.dataset.acc21));};
 }
 /* ── «Матрица прав» по разделам меню ── */
