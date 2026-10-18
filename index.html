@@ -10276,7 +10276,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="03778c00f0de";
+const ZC_BUILD="8e7380831d1b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14820,6 +14820,27 @@ const _bindB26=Pages.bind;Pages.bind=function(vp){_bindB26.apply(this,arguments)
 document.addEventListener("click",e=>{const g=e.target&&e.target.closest&&e.target.closest('[data-go^="bug:"]');if(!g||!B26.staff())return;const ref=g.dataset.go.slice(4);
   setTimeout(()=>{try{if(typeof Notif!=="undefined"&&Notif.close)Notif.close();}catch(x){}if(typeof Help21!=="undefined")Help21._t="bugs";B26.f.tab="list";B26.f.st="all";B26.f.sel=ref;B26.rows=null;Router.go("help");},0);},true);
 
+/* ══ Раздел «Судебные дела» · черновик справочника процессуальных сроков (С-24) ══
+   Собран 18.10.2026 по текстам кодексов на lex.uz (ЭПК — lex.uz/docs/3523895, ГПК — lex.uz/docs/3517334, УПК — lex.uz/docs/111463,
+   Закон № 258-II «Об исполнении судебных актов…» — lex.uz/docs/13896). ЧЕРНОВИК: не действует, пока управляющий адвокат не проверит и не утвердит.
+   Сроки, которые считаются не от документа (кассация — от вступления решения в силу, ревизия), сюда не включены: их ставят вручную.
+   base: doc — от даты документа (дня принятия / вынесения / провозглашения), recv — от даты получения (вручения) копии.
+   На сервер черновик не записывается: строка настройки courtDl24 появляется, когда УП сохранит справочник (сервер учитывает только утверждённый). */
+const C3DRAFT=[
+  {id:"e1",dir:"economic",doc:"decision",what:"Апелляционная жалоба на решение",n:1,unit:"months",base:"doc",from:"со дня принятия решения",art:"ЭПК ст. 262 ч. 1",url:"https://lex.uz/docs/3523895",note:"проверить: «день принятия» — резолютивная часть или полный текст (ст. 186, Пленум ВХС № 283)"},
+  {id:"e2",dir:"economic",doc:"decision_simpl",what:"Апелляционная жалоба (упрощённое производство и др. по ч. 2)",n:10,unit:"days",base:"doc",from:"после принятия решения",art:"ЭПК ст. 262 ч. 2",url:"https://lex.uz/docs/3523895"},
+  {id:"e3",dir:"economic",doc:"ruling",what:"Жалоба на определение (если обжалование предусмотрено ЭПК)",n:1,unit:"months",base:"doc",from:"со дня вынесения определения",art:"ЭПК ст. 199 ч. 1, 3; ст. 281",url:"https://lex.uz/docs/3523895",note:"для отдельных определений ЭПК может устанавливать иной срок"},
+  {id:"e4",dir:"economic",doc:"ruling_prep",what:"Отзыв на иск",n:20,unit:"days",base:"doc",from:"со дня вынесения определения о подготовке дела",art:"ЭПК ст. 156 ч. 1",url:"https://lex.uz/docs/3523895"},
+  {id:"e5",dir:"economic",doc:"ruling_appacc",what:"Отзыв на апелляционную жалобу",n:20,unit:"days",base:"doc",from:"со дня вынесения определения о принятии жалобы",art:"ЭПК ст. 270 ч. 1",url:"https://lex.uz/docs/3523895"},
+  {id:"c1",dir:"civil",doc:"decision",what:"Апелляционная жалоба на решение",n:1,unit:"months",base:"doc",from:"со дня принятия решения",art:"ГПК ст. 385¹ ч. 1",url:"https://lex.uz/docs/3517334",note:"проверить момент при отложенном мотивированном решении (ст. 249 ч. 4–5)"},
+  {id:"c2",dir:"civil",doc:"decision_simpl",what:"Апелляционная жалоба (упрощённое производство и др. по ч. 2)",n:10,unit:"days",base:"doc",from:"после принятия решения",art:"ГПК ст. 385¹ ч. 2",url:"https://lex.uz/docs/3517334"},
+  {id:"c3",dir:"civil",doc:"ruling",what:"Частная жалоба на определение",n:20,unit:"days",base:"recv",from:"со дня вручения (направления) определения",art:"ГПК ст. 400 ч. 1",url:"https://lex.uz/docs/3517334"},
+  {id:"c4",dir:"civil",doc:"court_order",what:"Возражение на судебный приказ",n:10,unit:"days",base:"recv",from:"со дня получения копии приказа",art:"ГПК ст. 181",url:"https://lex.uz/docs/3517334"},
+  {id:"k1",dir:"criminal",doc:"verdict",what:"Апелляционная жалоба на приговор",n:10,unit:"days",base:"doc",from:"со дня провозглашения (для осуждённого, оправданного, потерпевшего — со дня вручения копии)",art:"УПК ст. 497⁴ ч. 1",url:"https://lex.uz/docs/111463",note:"10 суток; пропуск — жалоба без рассмотрения (ч. 3)"},
+  {id:"k2",dir:"criminal",doc:"ruling",what:"Частная жалоба на определение",n:10,unit:"days",base:"doc",from:"со дня вынесения определения",art:"УПК ст. 497¹¹ ч. 1",url:"https://lex.uz/docs/111463",note:"проверить счёт «дней» при правилах ст. 314 (сутки)"},
+  {id:"x1",dir:"all",doc:"writ",what:"Предъявить исполнительный лист к исполнению",n:36,unit:"months",base:"doc",from:"со дня вступления акта в силу",art:"Закон № 258-II ст. 27; ЭПК ст. 338; ГПК ст. 451",url:"https://lex.uz/docs/13896",note:"3 года; срок считается от вступления в силу — проверьте дату документа"}
+];
+
 /* ══ Раздел «Судебные дела» · этап 1 — главный экран списка (макет design-court.html, решение владельца 18.10.2026) ══
    Как список разовых услуг (L25, v25_list.js): шапка с ⋯, плитки-фильтры, одна строка управления, таблица или карточки.
    Своё у суда: колонка «Суд и инстанция», «Ближайшее» (заседание из календаря или срок дела — что раньше), «против» другой стороны,
@@ -15157,6 +15178,262 @@ toCourt11=async function(id){const m=matter(id);if(!m||!can("mattersCreate"))ret
   return h.replace('data-go="court"',`data-go="${["oneoff","support"].includes(m.svc)?m.svc:"court"}"`);};}
 
 /* ── 10. номер нового судебного дела: 1, 2, 3 … — с этапа 2 выдаёт pre.js (вместе с номером договора на «Подписании») ── */
+
+/* ══ Раздел «Судебные дела» · этап 3 (stage3.js; файлы раздела подключаются по алфавиту — этот после list.js и pre.js) — ход дела по инстанциям, заседания с итогами, процессуальные документы и сроки ══
+   Решения владельца 18.10.2026 (С-41 … С-48, sections/court/ПРАВИЛА.md). Логика — на сервере: public.court_act / public.court_client
+   (миграция 20261018007000_court_flow); без сервера (демо) — то же в портале (CF3.mut). Здесь — показ, окна и вызовы.
+   В инстанции: Подготовка позиции → Подача → Заседания → Акт суда получен → Решение «что дальше» (ведущий → клиент → УП). */
+const crt3=m=>!!m&&m.svc==="court";
+Object.assign(UI,{
+  f3Flow:"Ход дела по инстанциям||按审级的案件进展",f3Prep:"Подготовка позиции||准备立场",f3Filed:"Подача||提交",f3Hear:"Заседания||庭审",f3Act:"Акт суда получен||已收到法院文书",f3Dec:"Решение: что дальше||决定：下一步",
+  f3Open:"Открыть инстанцию||开启审级",f3OpenFirst:"Открыть 1-ю инстанцию||开启一审",f3Next:"Открыть следующую инстанцию||开启下一审级",f3ToFiled:"Позиция готова||立场已准备好",f3ToHear:"Подано в суд||已提交法院",
+  f3GotAct:"Акт суда получен||已收到法院文书",f3Decide:"Решение: что дальше||决定：下一步",f3CliOk:"Клиент согласен по WeChat||客户已通过微信同意",f3MpOk:"Согласовать решение||批准方案",f3MpBack:"Замечание ведущему||给负责人的意见",
+  f3Tab:"Заседания и сроки||庭审与期限",f3Hearings:"Заседания||庭审",f3Dls:"Процессуальные сроки||诉讼期限",f3Docs:"Процессуальные документы||诉讼文书",
+  f3HearAdd:"+ Заседание||+ 庭审",f3DocAdd:"+ Документ суда||+ 法院文书",f3DlAdd:"+ Срок||+ 期限",f3Result:"Внести итог||填写结果",f3Conf:"Подтвердить итог для клиента||确认给客户的结果",
+  f3Date:"Дата||日期",f3Time:"Время||时间",f3Room:"Зал||法庭",f3Judge:"Судья||法官",f3Who:"Кто идёт от нас||我方出庭人员",f3Plan:"Что планируем||计划",f3What:"Что||内容",f3Res:"Итог||结果",f3ForCli:"Клиенту||给客户",
+  f3RHeld:"Состоялось||已开庭",f3RPost:"Отложено||延期",f3RBreak:"Объявлен перерыв||休庭",f3RDec:"Вынесено решение||已作出判决",f3RFail:"Не состоялось||未开庭",
+  f3RHeldH:"следующее заседание — если назначено||如已安排下次庭审",f3RPostH:"следующее заседание создаётся сразу||立即创建下次庭审",f3RDecH:"дальше — «Документ суда» с актом||下一步——上传法院文书",f3RFailH:"причина обязательна||须说明原因",
+  f3NextD:"Следующее заседание||下次庭审",f3Was:"Что было (для команды)||经过（团队内部）",f3CliText:"Итог для клиента (по-русски)||给客户的结果（俄文）",f3CliZh:"Итог для клиента по-китайски||给客户的结果（中文）",
+  f3NoRes:"нет итога||无结果",f3Planned:"назначено||已安排",f3ConfOk:"клиенту отправлено||已发送给客户",f3ConfWait:"ждёт подтверждения ведущего||待负责人确认",
+  f3DocKind:"Вид документа||文书类型",f3Dir:"Подан или получен||提交或收到",f3DirIn:"получен из суда||从法院收到",f3DirOut:"подан нами||我方提交",f3DocDate:"Дата документа||文书日期",f3RecvDate:"Дата получения||收到日期",
+  f3File:"Файл||文件",f3Cv:"Виден клиенту||客户可见",f3Final:"Этим актом инстанция закончилась||本文书结束本审级",f3DlWhat:"Срок вручную: что сделать||手动期限：内容",f3DlDue:"до какой даты||截止日期",
+  f3DlH:"Если вид документа есть в утверждённом справочнике — срок поставит сервер сам. Здесь — срок вручную, если нужен.||如文书类型在已批准的目录中，系统将自动设置期限。此处可手动添加。",
+  f3Due:"Срок||期限",f3Resp:"Ответственный||负责人",f3State:"Состояние||状态",f3Open2:"открыт||进行中",f3Done:"выполнен||已完成",f3Na:"не нужен||不需要",f3Late:"просрочен||已逾期",f3Close:"Закрыть срок||关闭期限",
+  f3DoneBasis:"Документ-основание или как выполнен||依据文书或完成方式",f3NaWhy:"Почему не нужен||不需要的原因",
+  f3ChAppeal:"Обжалуем||上诉",f3ChNo:"Не обжалуем||不上诉",f3ChWait:"Ждём жалобы другой стороны||等待对方上诉",f3ChExec:"Сразу исполнение||直接执行",
+  f3ChAppealH:"откроется следующая инстанция; если её нет в договоре — новое КП||将开启下一审级；如不在合同内——需新报价",f3ChNoH:"ждём вступления в силу, затем исполнение или закрытие||等待生效，然后执行或结案",
+  f3ChWaitH:"следим за сроком жалобы другой стороны||关注对方上诉期限",f3ChExecH:"решение в пользу клиента — исполнительный лист||判决有利于客户——执行书",
+  f3Why:"Почему (для клиента и УП)||原因（给客户和管理合伙人）",f3CliWait:"ждём клиента||等待客户",f3CliYes:"клиент согласен||客户同意",f3CliNo:"клиент не согласен||客户不同意",f3MpWait:"ждём УП||等待管理合伙人",
+  f3Near:"Ближайшее||最近事项",f3None:"Пока ничего не назначено||暂无安排",f3NotIn:"не входит в договор||不在合同内",f3Opt:"по решению||视决定",f3Ref:"Справочник процессуальных сроков||诉讼期限目录",
+  f3RefDraft:"Черновик — не действует, пока УП не утвердит||草稿——管理合伙人批准前不生效",f3RefOn:"Утверждён — сроки ставятся автоматически||已批准——自动设置期限",f3RefApprove:"Утвердить справочник||批准目录",f3RefUnapprove:"Снять утверждение||取消批准",
+  f3Saved:"Сохранено||已保存"
+});
+const F3STEPS=[["prep","f3Prep"],["filed","f3Filed"],["hearings","f3Hear"],["act","f3Act"],["decision","f3Dec"]];
+const F3RES=[["held","f3RHeld","f3RHeldH"],["postponed","f3RPost","f3RPostH"],["break","f3RBreak","f3RPostH"],["decision","f3RDec","f3RDecH"],["failed","f3RFail","f3RFailH"]];
+const F3CH=[["appeal","f3ChAppeal","f3ChAppealH"],["noappeal","f3ChNo","f3ChNoH"],["wait","f3ChWait","f3ChWaitH"],["exec","f3ChExec","f3ChExecH"]];
+const F3DOC=[["claim","Исковое заявление||起诉书",0],["response","Отзыв||答辩状",0],["motion","Ходатайство||申请",0],["appeal_c","Апелляционная жалоба||上诉状",0],["cassation_c","Кассационная жалоба||再审申请",0],
+  ["ruling","Определение суда||法院裁定",1],["ruling_prep","Определение о подготовке дела||案件准备裁定",1],["ruling_appacc","Определение о принятии апелляционной жалобы||受理上诉裁定",1],["decision","Решение суда||法院判决",1],["decision_simpl","Решение (упрощённое производство)||判决（简易程序）",1],["court_order","Судебный приказ||法院令",1],["resolution","Постановление суда||法院决定",1],["verdict","Приговор||刑事判决",1],["protocol","Протокол заседания||庭审笔录",1],["writ","Исполнительный лист||执行书",1],["other","Другое||其他",0]];
+const f3docL=k=>T1((F3DOC.find(x=>x[0]===k)||["",k||"—"])[1]);
+const CF3={
+  cur(m){const l=m.instances||[];for(let i=l.length-1;i>=0;i--){if((l[i]||{}).step!=="done")return i;}return -1;},
+  inst(m){const i=this.cur(m);return i<0?null:m.instances[i];},
+  step(x){return (x&&x.step)||"hearings";},
+  on(m){return crt3(m)&&m.pipeline==="contract"&&m.status!=="closed";},
+  can(m){const u=U()||{};return !isClient()&&(isFounder()||hasF("managing")||m.lead===u.emp||execsOf(m).some(x=>x.emp===u.emp));},
+  mp(){return isFounder()||hasF("managing");},
+  hears(m){return EE().filter(e=>e.matterId===m.id&&e.type==="hearing").sort((a,b)=>(a.date+(a.time||"")).localeCompare(b.date+(b.time||"")));},
+  dls(m){return (m.courtDl24||[]).slice().sort((a,b)=>(a.st==="open"?0:1)-(b.st==="open"?0:1)||String(a.due).localeCompare(String(b.due)));},
+  noRes(m){const t=todayS();return this.hears(m).filter(e=>e.date<t&&!e.result24);},
+  burn(m){return (m.courtDl24||[]).filter(x=>x.st==="open"&&daysTo(x.due)<=3);},
+  price(m,k){return (m.instPrices24||[]).find(x=>x.k===k)||null;},
+  /* ── выполнение: сервер или (демо) то же в портале ── */
+  async run(m,act,args){args=args||{};if(typeof StSrv23!=="undefined"&&StSrv23.on()&&!this.noSrv){const r=await StSrv23.call("court_act",{mid:m.id,act,args});
+      if(r.err){toast(r.err);Router.render();return false;}if(r.d){StSrv23.apply(m,r.d);if(/^hear_/.test(act)&&typeof SB19!=="undefined"&&SB19.docGet)await this.pullEvents(m);Router.render();return true;}if(r.skip)this.noSrv=true;}
+    try{const err=await this.mut(m,act,args);if(err){toast(err);return false;}}catch(e){toast(String(e&&e.message||e));return false;}
+    try{await saveDoc("matters",m);}catch(e){toast(String(e&&e.message||e));Router.render();return false;}audit(`${m.no}: ${act}`);Router.render();return true;},
+  async pullEvents(m){try{if(typeof SB19==="undefined"||!SB19.T)return;const {data}=await SB19.T.from("events").select("id,data").eq("matter_id",m.id);(data||[]).forEach(r=>{S.events[r.id]=Object.assign({},r.data,{id:r.id});});}catch(e){}},
+  /* то же, что сервер (court_act), — для демо и без сервера */
+  async mut(m,act,a){const me=(U()||{}).emp,at=nowS(),td=todayS();m.instances=m.instances||[];const ci=this.cur(m),x=ci<0?null:m.instances[ci];const hist=w=>{m.history=m.history||[];m.history.push({at,by:me,what:w||act});};
+    switch(act){
+      case "inst_open":{const p=this.price(m,a.kind);if(ci>=0)return T1("Сначала завершите текущую инстанцию||请先完成当前审级");if(p&&p.inc==="no")return T1("Эта инстанция не входит в договор — нужно новое КП||该审级不在合同内——需新报价");
+        if(p&&p.inc==="opt"&&!m.instances.some(i=>i.decision&&i.decision.choice==="appeal"&&i.decision.mp))return T1("Инстанция «по решению» открывается после согласованного решения «обжалуем»||须先批准“上诉”决定");
+        m.instances.push({kind:a.kind,start:td,step:"prep",opened:{by:me,at}});hist(a.w);return "";}
+      case "inst_step":{if(!x)return T1(UI.noData);const s=this.step(x);if(!((s==="prep"&&a.to==="filed")||(s==="filed"&&a.to==="hearings")))return T1(UI.stNoRight);x.step=a.to;x[a.to+"At"]=at;hist(a.w);return "";}
+      case "doc_add":{const id=uid("cd");const cv=a.cv!=null?!!a.cv:a.dir==="in";const d={id,kind:a.kind,title:a.title||undefined,dir:a.dir,docDate:a.docDate||undefined,recvDate:a.recvDate||undefined,inst:x?x.kind:undefined,file:a.file,note:a.note||undefined,cv,final:!!a.final,by:me,at};
+        (m.courtDocs24=m.courtDocs24||[]).push(d);const fn="Процессуальные документы";m.files=m.files||[];m.files.push(Object.assign({},a.file,{folder:fn,clientVisible:cv,by:me,at,kind:"court24",doc24:id}));m.folders22=m.folders22||[];if(!m.folders22.includes(fn))m.folders22.push(fn);
+        const st=(S.settings||{}).courtDl24||{};
+        if(st.approved)(st.rows||[]).forEach(r=>{const base=(r.base==="recv"?a.recvDate:a.docDate)||a.docDate||a.recvDate;if(base&&r.doc===a.kind&&["all",m.courtKind||""].includes(r.dir||"all")&&+r.n>0)(m.courtDl24=m.courtDl24||[]).push({id:uid("dl"),what:r.what,due:this.due(base,+r.n,r.unit||"days"),doc:id,resp:m.lead,st:"open",auto:r.id,art:r.art,by:me,at});});
+        if(a.dl&&a.dl.due&&a.dl.what)(m.courtDl24=m.courtDl24||[]).push({id:uid("dl"),what:a.dl.what,due:a.dl.due,doc:id,resp:m.lead,st:"open",by:me,at});
+        if(a.final){if(!x)return T1("Нет открытой инстанции для акта суда||没有可用的审级");Object.assign(x,{step:"act",actAt:at,actDate:a.docDate||td,actFile:a.file,actDoc:id});}hist(a.w);return "";}
+      case "dl_add":(m.courtDl24=m.courtDl24||[]).push({id:uid("dl"),what:a.what,due:a.due,resp:a.resp||m.lead,st:"open",by:me,at});hist(a.w);return "";
+      case "dl_close":{const y=(m.courtDl24||[]).find(z=>z.id===a.id&&z.st==="open");if(!y)return T1(UI.noData);y.st=a.st;y.closed={by:me,at,doc:a.doc||undefined,text:a.text||undefined};hist(a.w);return "";}
+      case "appeal":{if(!x||this.step(x)!=="act")return T1(UI.stNoRight);x.step="decision";x.decision={choice:a.choice,text:a.text,by:me,at};hist(a.w);return "";}
+      case "appeal_client":{if(!x||x.step!=="decision")return T1(UI.stNoRight);x.decision.client={ok:true,via:a.text,by:me,at};hist(a.w);return "";}
+      case "appeal_mp":{if(!this.mp()||!x||x.step!=="decision")return T1(UI.stNoRight);if(a.ok){if(!(x.decision.client||{}).ok)return T1("Сначала подтверждение клиента||须先获得客户确认");x.decision.mp={by:me,at};x.step="done";x.closedAt=at;}
+        else{x.decisionBack={by:me,at,text:a.text,was:x.decision};delete x.decision;x.step="act";}hist(a.w);return "";}
+      case "hear_add":{const e={id:uid("e"),type:"hearing",title:a.title||"Заседание",date:a.date,time:a.time||"",matterId:m.id,emp:a.emp||m.lead,place:a.place||m.court||"",note:a.plan||undefined,court24:{inst:x?x.kind:undefined,judge:a.judge||undefined,room:a.room||undefined,who:a.who||undefined,plan:a.plan||undefined,by:me,at}};
+        S.events[e.id]=e;await saveDoc("events",e);if(x&&["prep","filed"].includes(this.step(x))){x.step="hearings";x.hearingsAt=at;}hist(a.w);return "";}
+      case "hear_result":{const e=S.events[a.eid];if(!e)return T1(UI.noData);let nx=null;if(a.next&&a.next.date){nx={id:uid("e"),type:"hearing",title:"Заседание",date:a.next.date,time:a.next.time||"",matterId:m.id,emp:e.emp,place:e.place,court24:Object.assign({},e.court24||{},{plan:undefined,after:e.id,by:me,at})};S.events[nx.id]=nx;await saveDoc("events",nx);}
+        e.result24={kind:a.kind,text:a.text,client:a.client||undefined,clientZh:a.clientZh||undefined,next:nx?nx.id:undefined,by:me,at};await saveDoc("events",e);if(a.client)m.lastOutcome=a.client;hist(a.w);return "";}
+      case "hear_conf":{const e=S.events[a.eid];if(!e||!e.result24)return T1(UI.noData);e.result24.client=a.client||e.result24.client;e.result24.clientZh=a.clientZh||e.result24.clientZh;e.result24.conf={by:me,at};await saveDoc("events",e);m.lastOutcome=e.result24.client;
+        if(typeof notifyClients==="function")notifyClients(m,"client",nt18("c3res",{no:m.no,text:{r:String(e.result24.client||"").slice(0,120),z:String(e.result24.clientZh||e.result24.client||"").slice(0,120)}}));hist(a.w);return "";}
+    }return T1(UI.stNoRight);},
+  due(base,n,unit){if(unit==="months"){const d=new Date(base+"T00:00:00");d.setMonth(d.getMonth()+n);return d.toISOString().slice(0,10);}if(unit==="wd"){let d=new Date(base+"T00:00:00"),k=0;while(k<n){d.setDate(d.getDate()+1);const w=d.getDay();if(w!==0&&w!==6)k++;}return d.toISOString().slice(0,10);}return addDays(base,n);},
+  /* ── показ: «Ход дела по инстанциям» ── */
+  flowCard(m){const L=m.instances||[],ci=this.cur(m),x=ci<0?null:L[ci],can=this.can(m);
+    const plan=(m.instPrices24||[]).filter(p=>!L.some(i=>i.kind===p.k));
+    const items=[...L.map((i,j)=>{const s=j===ci?"cur":i.step==="done"||j<ci?"done":"todo";const meta=i.actDate?T1("акт||文书")+" "+fmtD(i.actDate):i.start?T1("с||自")+" "+fmtD(i.start):"";return `<div class="fi3 ${s}"><span class="c">${s==="done"?"✓":j+1}</span><span class="t">${esc(instLabel(i.kind))}</span><span class="m">${esc(meta)}</span></div>`;}),
+      ...plan.map(p=>`<div class="fi3 todo ${p.inc==="opt"?"opt":p.inc==="no"?"no":""}"><span class="c">·</span><span class="t">${esc(instLabel(p.k))}</span><span class="m">${esc(p.inc==="opt"?T1(UI.f3Opt):p.inc==="no"?T1(UI.f3NotIn):"")}</span></div>`)];
+    const cyc=x?`<div class="cy3"><div class="lb">${esc(instLabel(x.kind))}</div>${F3STEPS.map(([k,l],j)=>{const i=F3STEPS.findIndex(s=>s[0]===this.step(x));return `${j?'<span class="ar">›</span>':""}<span class="s ${j<i?"done":j===i?"cur":""}"><i>${j<i?"✓":j+1}</i>${esc(T1(UI[l]))}</span>`;}).join("")}</div>`:"";
+    const dec=x&&x.step==="decision"&&x.decision?this.decBox(m,x):x&&x.decisionBack?`<div class="reqonly warn11">↩ ${esc(T1(UI.f3MpBack))}: ${esc(x.decisionBack.text||"")} · ${esc(dispName(x.decisionBack.by))}</div>`:"";
+    const acts=can?this.actBtns(m).map(([a,l,pri])=>`<button type="button" class="btn sm${pri?" pri":""}" data-f3="${a}">${esc(T1(l))}</button>`).join(""):"";
+    return `<div class="card f3card"><h4>${T1(UI.f3Flow)}</h4><div class="fs3">${items.join("")||`<div class="empty2">${T1(UI.f3None)}</div>`}</div>${cyc}${dec}${this.nearBox(m)}${acts?`<div class="actions" style="justify-content:flex-start;margin-top:10px">${acts}</div>`:""}</div>`;},
+  /* главное действие хода дела — первое в списке */
+  actBtns(m){const ci=this.cur(m),x=ci<0?null:m.instances[ci],MP=this.mp(),out=[];
+    if(!x){out.push(["inst_open",(m.instances||[]).length?UI.f3Next:UI.f3OpenFirst,1]);return out;}
+    const s=this.step(x);if(s==="prep")out.push(["to_filed",UI.f3ToFiled,1]);if(s==="filed")out.push(["to_hear",UI.f3ToHear,1]);
+    if(s==="hearings"||s==="filed")out.push(["got_act",UI.f3GotAct,s==="hearings"]);if(s==="act")out.push(["appeal",UI.f3Decide,1]);
+    if(s==="decision"){const d=x.decision||{};if(!(d.client||{}).ok)out.push(["appeal_client",UI.f3CliOk,!MP]);if(MP)out.push(["appeal_mp",UI.f3MpOk,1],["appeal_back",UI.f3MpBack,0]);}
+    out.push(["hear_add",UI.f3HearAdd,0],["doc_add",UI.f3DocAdd,0]);return out;},
+  decBox(m,x){const d=x.decision,c=d.client||{},ch=F3CH.find(y=>y[0]===d.choice)||F3CH[0];
+    return `<div class="dc3"><b>${esc(T1(UI[ch[1]]))}</b> · ${esc(d.text||"")} <small>${esc(dispName(d.by))} · ${esc(fmtDT(d.at))}</small>
+      <ul class="czchk3"><li class="${c.ok?"ok":c.ok===false?"no":""}">${esc(T1(c.ok?UI.f3CliYes:c.ok===false?UI.f3CliNo:UI.f3CliWait))}${c.via?" · "+esc(c.via):""}${c.text?" · «"+esc(c.text)+"»":""}</li><li class="${d.mp?"ok":""}">${esc(T1(d.mp?UI.f3MpOk:UI.f3MpWait))}</li></ul></div>`;},
+  nearBox(m){const t=todayS();const h=this.hears(m).filter(e=>e.date>=t&&!e.result24)[0];const dl=this.dls(m).filter(x=>x.st==="open")[0];if(!h&&!dl)return "";
+    const one=(cls,d,head,sub)=>`<div class="nx3 ${cls}"><div class="d"><b>${esc(d.slice(8,10))}</b><small>${esc(d.slice(5,7))}</small></div><div class="x"><b>${head}</b><span>${sub}</span></div></div>`;
+    return `<div class="nb3">${h?one(daysTo(h.date)<=2?"w":"",h.date,"📅 "+esc(T1("Заседание||庭审"))+(h.time?" · "+esc(h.time):""),esc([(h.court24||{}).room?T1(UI.f3Room)+" "+h.court24.room:"",(h.court24||{}).judge||"",h.place||""].filter(Boolean).join(" · "))):""}
+      ${dl?one(daysTo(dl.due)<0?"r":daysTo(dl.due)<=3?"w":"",dl.due,"⏱ "+esc(dl.what),esc(dispName(dl.resp||m.lead))+(dl.art?" · "+esc(dl.art):"")):""}</div>`;},
+  /* ── вкладка «Заседания и сроки» ── */
+  tabHtml(m){const can=this.can(m),t=todayS();const H=this.hears(m);
+    const hr=H.map(e=>{const r=e.result24,c=e.court24||{};const past=e.date<t;const RL=r?(F3RES.find(y=>y[0]===r.kind)||[])[1]:null;
+      const res=r?`<span class="czres3 ${r.kind==="postponed"||r.kind==="break"?"w":r.kind==="failed"?"r":r.kind==="decision"?"v":"ok"}">${esc(T1(UI[RL]||r.kind))}</span>`:past?`<span class="czres3 r">${T1(UI.f3NoRes)}</span>`:`<span class="czres3 b">${T1(UI.f3Planned)}</span>`;
+      const cl=r?(r.conf?`✓ ${T1(UI.f3ConfOk)}`:r.client?T1(UI.f3ConfWait):"—"):"—";
+      const btn=can?(!r&&past||!r&&e.date<=t?`<button type="button" class="btn sm pri" data-f3r="${esc(e.id)}">${T1(UI.f3Result)}</button>`:r&&r.client&&!r.conf&&(this.mp()||m.lead===(U()||{}).emp)?`<button type="button" class="btn sm" data-f3c="${esc(e.id)}">${T1(UI.f3Conf)}</button>`:!r?`<button type="button" class="btn sm ghost" data-f3r="${esc(e.id)}">${T1(UI.f3Result)}</button>`:""):"";
+      return `<tr class="${!r&&past?"miss":!r&&e.date>=t?"next":""}"><td><b>${esc(fmtD(e.date))}</b>${e.time?" · "+esc(e.time):""}</td><td>${esc([c.room?T1(UI.f3Room)+" "+c.room:"",c.judge||"",e.place||""].filter(Boolean).join(" · ")||"—")}${c.plan?`<small>${esc(c.plan)}</small>`:""}</td><td>${res}</td><td>${r?esc(r.text||""):"—"}</td><td>${esc(cl)}</td><td>${btn}</td></tr>`;}).join("");
+    const D=this.dls(m);const dr=D.map(x=>{const late=x.st==="open"&&daysTo(x.due)<0;const st=x.st==="open"?(late?["r",UI.f3Late]:[daysTo(x.due)<=3?"w":"b",UI.f3Open2]):x.st==="done"?["ok",UI.f3Done]:["n",UI.f3Na];
+      const doc=(m.courtDocs24||[]).find(d=>d.id===x.doc);return `<tr class="${late?"miss":""}"><td><b>${esc(fmtD(x.due))}</b></td><td>${esc(x.what)}${x.art?`<small>${esc(x.art)}</small>`:""}</td><td>${doc?esc(f3docL(doc.kind))+(doc.docDate?" · "+esc(fmtD(doc.docDate)):""):"—"}</td><td>${esc(dispName(x.resp||m.lead))}</td><td><span class="czres3 ${st[0]}">${esc(T1(st[1]))}</span>${x.closed&&x.closed.text?`<small>${esc(x.closed.text)}</small>`:""}</td><td>${can&&x.st==="open"?`<button type="button" class="btn sm" data-f3d="${esc(x.id)}">${T1(UI.f3Close)}</button>`:""}</td></tr>`;}).join("");
+    return `<div class="card"><h4>${T1(UI.f3Hearings)} · ${H.length}${can?`<button class="more" type="button" data-f3="hear_add">${T1(UI.f3HearAdd)}</button>`:""}</h4>${H.length?`<div class="tw3"><table class="tb3"><thead><tr><th>${T1(UI.f3Date)}</th><th>${T1(UI.f3Room)} · ${T1(UI.f3Judge)}</th><th>${T1(UI.f3Res)}</th><th>${T1(UI.f3Was)}</th><th>${T1(UI.f3ForCli)}</th><th></th></tr></thead><tbody>${hr}</tbody></table></div>`:`<div class="empty2">${T1(UI.f3None)}</div>`}</div>
+      <div class="card"><h4>${T1(UI.f3Dls)} · ${D.filter(x=>x.st==="open").length}${can?`<button class="more" type="button" data-f3="dl_add">${T1(UI.f3DlAdd)}</button>`:""}</h4>${D.length?`<div class="tw3"><table class="tb3"><thead><tr><th>${T1(UI.f3Due)}</th><th>${T1(UI.f3What)}</th><th>${T1(UI.f3Docs).split(" ")[0]}</th><th>${T1(UI.f3Resp)}</th><th>${T1(UI.f3State)}</th><th></th></tr></thead><tbody>${dr}</tbody></table></div>`:`<div class="empty2">${T1(UI.f3None)}</div>`}</div>`;},
+  docsCard(m){const can=this.can(m),L=(m.courtDocs24||[]).slice().sort((a,b)=>String(b.docDate||b.at).localeCompare(String(a.docDate||a.at)));
+    return `<div class="card"><h4>${T1(UI.f3Docs)} · ${L.length}${can?`<button class="more" type="button" data-f3="doc_add">${T1(UI.f3DocAdd)}</button>`:""}</h4>${L.length?`<div class="tw3"><table class="tb3"><thead><tr><th>${T1(UI.f3DocKind)}</th><th>${T1(UI.f3Dir)}</th><th>${T1(UI.f3DocDate)}</th><th>${T1(UI.crInst)}</th><th>${T1(UI.f3Cv)}</th></tr></thead><tbody>${L.map(d=>`<tr><td><b>📄 ${esc(d.title||f3docL(d.kind))}</b>${d.file?` <span class="chipf" data-f3file="${esc(d.id)}">${esc(d.file.name||"")}</span>`:""}${d.note?`<small>${esc(d.note)}</small>`:""}</td><td>${esc(T1(d.dir==="in"?UI.f3DirIn:UI.f3DirOut))}</td><td>${d.docDate?esc(fmtD(d.docDate)):"—"}</td><td>${d.inst?esc(instLabel(d.inst)):"—"}</td><td>${d.cv?"✓":"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.f3None)}</div>`}</div>`;},
+  /* ── окна ── */
+  async open(m,a,el){const id=m.id;const ask=o=>Dlg.ask(o);const ci=this.cur(m),x=ci<0?null:m.instances[ci];
+    switch(a){
+      case "inst_open":{const L=m.instances||[];const opts=INST11.filter(([k])=>{const p=this.price(m,k);return !(p&&p.inc==="no");}).map(([k,l])=>[k,T1(l)]);
+        const def=(opts.find(o=>!L.some(i=>i.kind===o[0]))||opts[0]||["first"])[0];const v=await ask({title:T1(UI.f3Open)+" · "+m.no,fields:[{k:"kind",label:T1(UI.crInst),type:"select",value:def,options:opts}]});if(!v)return;
+        return this.run(m,"inst_open",{kind:v.kind,w:T1(UI.f3Open)+": "+instLabel(v.kind)});}
+      case "to_filed":return this.run(m,"inst_step",{to:"filed",w:T1(UI.f3ToFiled)});
+      case "to_hear":return this.run(m,"inst_step",{to:"hearings",w:T1(UI.f3ToHear)});
+      case "hear_add":{const v=await ask({title:T1("Новое заседание||新庭审")+" · "+m.no,fields:[{k:"date",label:T1(UI.f3Date),type:"date",value:todayS(),required:true},{k:"time",label:T1(UI.f3Time),type:"time",value:"10:00"},
+          {k:"room",label:T1(UI.f3Room)},{k:"judge",label:T1(UI.f3Judge)},{k:"place",label:T1(UI.c2Court||"Суд||法院"),value:m.court||""},{k:"plan",label:T1(UI.f3Plan),type:"textarea"}]});if(!v)return;
+        return this.run(m,"hear_add",{date:v.date,time:v.time,room:v.room,judge:v.judge,place:v.place,plan:v.plan,w:T1("Заседание||庭审")+" "+fmtD(v.date)+" "+(v.time||"")});}
+      case "got_act":return this.docDlg(m,{kind:"decision",final:true});
+      case "doc_add":return this.docDlg(m,{});
+      case "dl_add":{const v=await ask({title:T1(UI.f3DlAdd).replace("+ ","")+" · "+m.no,fields:[{k:"what",label:T1(UI.f3What),required:true},{k:"due",label:T1(UI.f3DlDue),type:"date",required:true}]});if(!v)return;
+        return this.run(m,"dl_add",{what:v.what,due:v.due,w:T1(UI.f3DlAdd).replace("+ ","")+": "+v.what+" — "+fmtD(v.due)});}
+      case "appeal":{const v=await ask({title:T1(UI.f3Decide)+" · "+m.no,fields:[{k:"choice",label:T1(UI.f3Decide),type:"select",value:"wait",options:F3CH.map(([k,l,h])=>[k,T1(UI[l])+" — "+T1(UI[h])])},{k:"text",label:T1(UI.f3Why),type:"textarea",required:true}]});if(!v)return;
+        return this.run(m,"appeal",{choice:v.choice,text:v.text,w:T1(UI.f3Decide)+": "+T1(UI[(F3CH.find(y=>y[0]===v.choice)||F3CH[0])[1]])});}
+      case "appeal_client":{const v=await ask({title:T1(UI.f3CliOk)+" · "+m.no,fields:[{k:"text",label:T1(UI.p24MarkCh||"Как подтвердил||确认方式"),value:"WeChat",required:true}]});if(!v)return;return this.run(m,"appeal_client",{text:v.text,w:T1(UI.f3CliYes)+" · "+v.text});}
+      case "appeal_mp":{if(!await Dlg.confirm(T1(UI.f3MpOk)+" · "+m.no,""))return;return this.run(m,"appeal_mp",{ok:true,w:T1(UI.f3MpOk)});}
+      case "appeal_back":{const v=await ask({title:T1(UI.f3MpBack)+" · "+m.no,fields:[{k:"text",label:T1(UI.f3MpBack),type:"textarea",required:true}]});if(!v)return;return this.run(m,"appeal_mp",{ok:false,text:v.text,w:T1(UI.f3MpBack)});}
+    }},
+  async docDlg(m,pre){const v=await Dlg.ask({title:T1(UI.f3DocAdd).replace("+ ","")+" · "+m.no,text:T1(UI.f3DlH),fields:[
+      {k:"kind",label:T1(UI.f3DocKind),type:"select",value:pre.kind||"ruling",options:F3DOC.map(([k,l])=>[k,T1(l)])},{k:"dir",label:T1(UI.f3Dir),type:"select",value:"in",options:[["in",T1(UI.f3DirIn)],["out",T1(UI.f3DirOut)]]},
+      {k:"docDate",label:T1(UI.f3DocDate),type:"date",value:todayS()},{k:"recvDate",label:T1(UI.f3RecvDate),type:"date",value:todayS()},{k:"files",label:T1(UI.f3File),type:"files",required:true},{k:"title",label:T1(UI.kTitle)},{k:"note",label:T1(UI.f3Was).split(" (")[0],type:"textarea"},
+      {k:"cv",label:T1(UI.f3Cv),type:"select",value:"auto",options:[["auto",T1("Как обычно (акты суда — да, наши — нет)||默认（法院文书——是，我方——否）")],["1",T1(UI.yes)],["0",T1(UI.no)]]},
+      {k:"final",label:T1(UI.f3Final),type:"select",value:pre.final?"1":"0",options:[["0",T1(UI.no)],["1",T1(UI.yes)]]},{k:"dlWhat",label:T1(UI.f3DlWhat)},{k:"dlDue",label:T1(UI.f3DlDue),type:"date"}]});if(!v)return;
+    const file=(v.files||[])[0];if(!file){toast(T1(UI.f3File));return;}const act=(F3DOC.find(y=>y[0]===v.kind)||[])[2];
+    return this.run(m,"doc_add",{kind:v.kind,dir:v.dir,docDate:v.docDate,recvDate:v.dir==="in"?v.recvDate:"",file,title:v.title,note:v.note,cv:v.cv==="auto"?!!(act&&v.dir==="in"):v.cv==="1",final:v.final==="1",
+      dl:v.dlWhat&&v.dlDue?{what:v.dlWhat,due:v.dlDue}:null,w:T1(UI.f3DocAdd).replace("+ ","")+": "+f3docL(v.kind)});},
+  async result(m,eid){const e=S.events[eid];if(!e)return;const v=await Dlg.ask({title:T1(UI.f3Result)+" · "+fmtD(e.date)+(e.time?" "+e.time:""),fields:[
+      {k:"kind",label:T1(UI.f3Res),type:"select",value:"postponed",options:F3RES.map(([k,l,h])=>[k,T1(UI[l])+" — "+T1(UI[h])])},{k:"nd",label:T1(UI.f3NextD),type:"date"},{k:"nt",label:T1(UI.f3Time),type:"time",value:"10:00"},
+      {k:"text",label:T1(UI.f3Was),type:"textarea",required:true},{k:"client",label:T1(UI.f3CliText),type:"textarea"},{k:"clientZh",label:T1(UI.f3CliZh),type:"textarea"}],
+      check:v=>["postponed","break"].includes(v.kind)&&!v.nd?T1(UI.f3NextD):""});if(!v)return;
+    if(["postponed","break"].includes(v.kind)&&!v.nd){toast(T1(UI.f3NextD));return;}
+    return this.run(m,"hear_result",{eid,kind:v.kind,text:v.text,client:v.client,clientZh:v.clientZh,next:v.nd?{date:v.nd,time:v.nt}:null,w:T1(UI.f3Result)+" · "+fmtD(e.date)});},
+  async conf(m,eid){const e=S.events[eid];if(!e||!e.result24)return;const r=e.result24;const v=await Dlg.ask({title:T1(UI.f3Conf),fields:[{k:"client",label:T1(UI.f3CliText),type:"textarea",value:r.client||"",required:true},{k:"clientZh",label:T1(UI.f3CliZh),type:"textarea",value:r.clientZh||""}]});if(!v)return;
+    return this.run(m,"hear_conf",{eid,client:v.client,clientZh:v.clientZh,w:T1(UI.f3Conf)});},
+  async closeDl(m,id){const v=await Dlg.ask({title:T1(UI.f3Close),fields:[{k:"st",label:T1(UI.f3State),type:"select",value:"done",options:[["done",T1(UI.f3Done)],["na",T1(UI.f3Na)]]},{k:"text",label:T1(UI.f3DoneBasis)+" / "+T1(UI.f3NaWhy),type:"textarea",required:true}]});if(!v)return;
+    return this.run(m,"dl_close",{id,st:v.st,text:v.text,w:T1(UI.f3Close)});},
+  bind(vp,m){const self=this;vp.querySelectorAll("[data-f3]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();self.open(matter(m.id),b.dataset.f3,b);});
+    vp.querySelectorAll("[data-f3r]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.result(matter(m.id),b.dataset.f3r);});
+    vp.querySelectorAll("[data-f3c]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.conf(matter(m.id),b.dataset.f3c);});
+    vp.querySelectorAll("[data-f3d]").forEach(b=>b.onclick=e=>{e.stopPropagation();self.closeDl(matter(m.id),b.dataset.f3d);});
+    vp.querySelectorAll("[data-f3file]").forEach(b=>b.onclick=e=>{e.stopPropagation();const d=(m.courtDocs24||[]).find(x=>x.id===b.dataset.f3file);if(d&&d.file)Files.open(d.file);});}
+};
+/* ── в карточку (Card22): «Ход дела по инстанциям», вкладка «Заседания и сроки», процессуальные документы, главная кнопка ── */
+if(typeof Card22!=="undefined"){
+  const _bC3=Card22.build.bind(Card22);Card22.build=function(id,html,m){let out=_bC3(id,html,m);if(!CF3.on(m))return out;try{
+    const tpl=document.createElement("template");tpl.innerHTML=out;const w=tpl.content;
+    const p0=w.querySelector('[data-c22pane="0"]');if(p0){const b=document.createElement("div");b.innerHTML=CF3.flowCard(m);const todo=p0.querySelector(":scope>.c22todo");p0.insertBefore(b.firstElementChild,todo?todo.nextSibling:p0.firstChild);}
+    const p2=w.querySelector('[data-c22pane="2"]');if(p2){const b=document.createElement("div");b.innerHTML=CF3.docsCard(m);p2.insertBefore(b.firstElementChild,p2.firstChild);}
+    /* вкладка «Заседания и сроки» — сразу после «Хода дела» */
+    const tabs=w.querySelector(".c22tabs");const pane0=w.querySelector('[data-c22pane="0"]');
+    if(tabs&&pane0){const nr=CF3.noRes(m).length,bn=CF3.burn(m).length;const bt=document.createElement("button");bt.className="btn sm";bt.type="button";bt.dataset.c22tab="7";bt.textContent=T1(UI.f3Tab);
+      if(nr+bn){const s=document.createElement("span");s.className="nb";s.textContent=String(nr+bn);bt.appendChild(s);}const b0=tabs.querySelector('[data-c22tab="0"]');tabs.insertBefore(bt,b0?b0.nextSibling:tabs.firstChild);
+      if((Card22.tab||{})[id]===7){tabs.querySelectorAll(".on").forEach(x=>x.classList.remove("on"));bt.classList.add("on");}
+      const pane=document.createElement("div");pane.className="c22tab"+((Card22.tab||{})[id]===7?" on":"");pane.dataset.c22pane="7";pane.innerHTML=CF3.tabHtml(m);
+      if((Card22.tab||{})[id]===7)w.querySelectorAll(".c22tab.on").forEach(x=>x.classList.remove("on"));pane0.parentNode.insertBefore(pane,pane0.nextSibling);}
+    /* главная кнопка шапки — действие хода дела (кроме этапов закрытия) */
+    const pr=CF3.can(m)&&!["accepted","archive"].includes(m.stage)?CF3.actBtns(m)[0]:null;
+    if(pr){w.querySelectorAll(".c22acts .btn.pri,.c22bar .btn.pri").forEach(b=>{b.textContent=T1(pr[1])+" →";delete b.dataset.c22target;b.dataset.f3=pr[0];});
+      if(!w.querySelector(".c22acts .btn.pri")){const acts=w.querySelector(".c22acts");if(acts){const b=document.createElement("button");b.type="button";b.className="btn pri";b.dataset.f3=pr[0];b.textContent=T1(pr[1])+" →";acts.insertBefore(b,acts.firstChild);}}}
+    const d=document.createElement("div");d.appendChild(w.cloneNode(true));return d.innerHTML;}catch(e){console.warn("court flow",e);return out;}};
+  const _bdC3=Card22.bind.bind(Card22);Card22.bind=function(vp,m){_bdC3(vp,m);if(CF3.on(m))CF3.bind(vp,m);};}
+/* ── кабинет клиента: решение после акта суда — подтвердить или не согласиться (С-27) ── */
+if(typeof CP!=="undefined"){
+  const _cpmC3=CP.matter.bind(CP);CP.matter=function(id){let h=_cpmC3(id);const m=matter(id);if(!crt3(m)||!clientCan(m))return h;const x=CF3.inst(m);if(!x||x.step!=="decision"||!x.decision||(x.decision.client||{}).ok!=null)return h;
+    const ch=F3CH.find(y=>y[0]===x.decision.choice)||F3CH[0];
+    const box=`<div class="card p24" data-f3cp="${esc(m.id)}"><h4>${T1(UI.f3Decide)}</h4><div style="font-size:13.5px"><b>${esc(T1(UI[ch[1]]))}</b> — ${esc(x.decision.text||"")}</div>
+      <div class="ac24"><button type="button" class="btn sm pri" data-f3cl="ok">${T1("Согласен||同意")}</button><button type="button" class="btn sm" data-f3cl="no" style="color:var(--red)">${T1("Не согласен||不同意")}</button></div></div>`;
+    const i=h.indexOf('<div class="cols">');return i>0?h.slice(0,i)+box+h.slice(i):h+box;};
+  const _cpbC3=CP.bind.bind(CP);CP.bind=function(vp){_cpbC3(vp);vp.querySelectorAll("[data-f3cp]").forEach(box=>{const m=matter(box.dataset.f3cp);if(!m)return;box.querySelectorAll("[data-f3cl]").forEach(b=>b.onclick=async()=>{const a=b.dataset.f3cl;let text="";
+    if(a==="no"){const v=await Dlg.ask({title:T1("Не согласен||不同意"),fields:[{k:"text",label:T1("С чем вы не согласны||您不同意什么"),type:"textarea",required:true}]});if(!v)return;text=v.text;}else if(!await Dlg.confirm(T1("Подтвердить решение?||确认该方案？"),""))return;
+    if(typeof StSrv23!=="undefined"&&StSrv23.on()){const r=await StSrv23.call("court_client",{mid:m.id,act:a,text});if(r.err){toast(r.err);return;}if(r.d){StSrv23.apply(m,r.d);toast(T1(UI.saved));Router.render();return;}}
+    const x=CF3.inst(m);if(!x||!x.decision)return;x.decision.client={ok:a==="ok",via:"кабинет",by:(U()||{}).login,at:nowS(),text:text||undefined};try{await saveDoc("matters",m);}catch(e){toast(String(e&&e.message||e));return;}toast(T1(UI.saved));Router.render();});});};}
+/* ── справочник процессуальных сроков (С-24): ведёт и утверждает УП; действует только утверждённый ── */
+const Ref3={
+  get(){const s=(S.settings||{}).courtDl24;if(s)return s;return {rows:typeof C3DRAFT!=="undefined"?C3DRAFT.map(x=>Object.assign({},x)):[],approved:false,draft:true};},
+  async save(o){o=Object.assign({id:"courtDl24"},o);S.settings=S.settings||{};S.settings.courtDl24=o;try{await saveDoc("settings",o);}catch(e){toast(String(e&&e.message||e));return false;}toast(T1(UI.f3Saved));return true;},
+  html(){const r=this.get(),MP=CF3.mp();const dirL={all:"все||全部",criminal:UI.crim,economic:UI.econ,civil:UI.civ};
+    return `<div class="ref3"><div class="${r.approved?"al24 ok":"al24 wait"}">${esc(T1(r.approved?UI.f3RefOn:UI.f3RefDraft))}${r.approvedBy?" · "+esc(dispName(r.approvedBy))+" "+esc(fmtDT(r.approvedAt||"")):""}</div>
+      <div class="tw3"><table class="tb3"><thead><tr><th>${T1(UI.c2Kind)}</th><th>${T1(UI.f3DocKind)}</th><th>${T1(UI.f3What)}</th><th>${T1(UI.f3Due)}</th><th>${T1("С какого момента||起算")}</th><th>${T1("Статья||条款")}</th>${MP?"<th></th>":""}</tr></thead><tbody>
+      ${(r.rows||[]).map((x,i)=>`<tr><td>${esc(T1(dirL[x.dir]||dirL.all))}</td><td>${esc(f3docL(x.doc))}</td><td>${esc(x.what||"")}</td><td><b>${esc(x.n||"—")}</b> ${esc({days:T1("дн.||天"),months:T1("мес.||月"),wd:T1("раб. дн.||工作日")}[x.unit]||"")}</td><td>${esc(x.from||"")}</td><td>${esc(x.art||"")}${x.url?` <a href="${esc(x.url)}" target="_blank" rel="noopener">↗</a>`:""}${x.note?`<small>${esc(x.note)}</small>`:""}</td>${MP?`<td><button type="button" class="btn sm ghost" data-r3e="${i}">✎</button><button type="button" class="btn sm ghost" data-r3x="${i}">✕</button></td>`:""}</tr>`).join("")||`<tr><td colspan="7"><div class="empty2">${T1(UI.noData)}</div></td></tr>`}</tbody></table></div>
+      ${MP?`<div class="actions" style="justify-content:flex-start;margin-top:10px"><button type="button" class="btn sm" data-r3e="new">+ ${T1("Строка||行")}</button><button type="button" class="btn sm ${r.approved?"":"pri"}" data-r3a="1">${T1(r.approved?UI.f3RefUnapprove:UI.f3RefApprove)}</button></div>`:""}</div>`;},
+  async open(){const self=this;const p=Dlg.ask({title:T1(UI.f3Ref),wide:true,fields:[{k:"h",type:"html",html:this.html()}],okText:T1("Закрыть||关闭")});setTimeout(()=>self.bind(),60);await p;},
+  rebind(){const md=document.getElementById("mdD");if(!md)return;const box=md.querySelector(".ref3");if(box){box.outerHTML=this.html();this.bind();}},
+  bind(){const md=document.getElementById("mdD");if(!md)return;const self=this;
+    md.querySelectorAll("[data-r3e]").forEach(b=>b.onclick=async e=>{e.preventDefault();const r=self.get();const i=b.dataset.r3e==="new"?-1:+b.dataset.r3e;const x=i<0?{dir:"all",doc:"decision",unit:"days"}:r.rows[i];
+      const v=await Dlg.ask({title:T1(UI.f3Ref),fields:[{k:"dir",label:T1(UI.c2Kind),type:"select",value:x.dir||"all",options:[["all",T1("все||全部")],["criminal",T1(UI.crim)],["economic",T1(UI.econ)],["civil",T1(UI.civ)]]},
+        {k:"doc",label:T1(UI.f3DocKind),type:"select",value:x.doc||"decision",options:F3DOC.map(([k,l])=>[k,T1(l)])},{k:"what",label:T1(UI.f3What),value:x.what||"",required:true},{k:"n",label:T1(UI.f3Due),type:"number",value:x.n??"",required:true},
+        {k:"unit",label:T1("Единица||单位"),type:"select",value:x.unit||"days",options:[["days",T1("календарных дней||日历日")],["months",T1("месяцев||月")],["wd",T1("рабочих дней||工作日")]]},{k:"base",label:T1("Считать от||起算日"),type:"select",value:x.base||"doc",options:[["doc",T1("даты документа||文书日期")],["recv",T1("даты получения||收到日期")]]},{k:"from",label:T1("С какого момента||起算"),value:x.from||""},{k:"art",label:T1("Статья||条款"),value:x.art||""},{k:"url",label:"URL",value:x.url||""},{k:"note",label:T1(UI.p24Note||"Примечание||备注"),value:x.note||""}]});
+      if(!v)return self.open();const row=Object.assign({},x,{id:x.id||uid("r3"),dir:v.dir,doc:v.doc,what:v.what,n:+v.n||0,unit:v.unit,base:v.base,from:v.from,art:v.art,url:v.url,note:v.note});const rows=(r.rows||[]).slice();if(i<0)rows.push(row);else rows[i]=row;
+      await self.save(Object.assign({},r,{rows,approved:false,approvedBy:null,approvedAt:null}));self.open();});
+    md.querySelectorAll("[data-r3x]").forEach(b=>b.onclick=async e=>{e.preventDefault();const r=self.get();const rows=(r.rows||[]).filter((y,j)=>j!==+b.dataset.r3x);await self.save(Object.assign({},r,{rows,approved:false}));self.rebind();});
+    md.querySelectorAll("[data-r3a]").forEach(b=>b.onclick=async e=>{e.preventDefault();const r=self.get();const on=!r.approved;if(on&&!await Dlg.confirm(T1(UI.f3RefApprove)+"?",T1("Сроки по этим строкам будут ставиться автоматически во всех судебных делах.||这些期限将自动应用于所有诉讼案件。")))return self.open();
+      await self.save(Object.assign({},r,{approved:on,approvedBy:on?(U()||{}).emp:null,approvedAt:on?nowS():null}));self.open();});}
+};
+/* меню ⋯ в списке «Судебные дела»: справочник сроков */
+{const _pbR3=Pages.bind;Pages.bind=function(vp){_pbR3.apply(this,arguments);if(!vp||Router.cur!=="court"||isClient())return;const mn=document.getElementById("l25menu");if(mn&&!mn.querySelector("[data-r3open]")){const b=document.createElement("button");b.type="button";b.dataset.r3open="1";b.textContent="📚 "+T1(UI.f3Ref);mn.appendChild(b);b.onclick=e=>{e.stopPropagation();mn.classList.remove("on");Ref3.open();};}};}
+/* список: «Ближайшее» — и процессуальные сроки; плитки «Горит срок» и «Нет итога заседания» (С-30) */
+if(typeof CL1!=="undefined"){
+  const _nearC3=CL1.near.bind(CL1);CL1.near=function(m){const n=_nearC3(m);if(this.fin(m))return n;const dl=(m.courtDl24||[]).filter(x=>x.st==="open").sort((a,b)=>String(a.due).localeCompare(String(b.due)))[0];
+    if(dl&&(!n||dl.due<n.date))return {k:"p",date:dl.due,what:dl.what};return n;};
+  const _nhC3=CL1.nearHtml.bind(CL1);CL1.nearHtml=function(m){const n=this.near(m);if(!n||n.k!=="p"||this.fin(m)||m.paused)return _nhC3(m);const dd=daysTo(n.date);const c=dd<0?"r":dd<=1?"w":dd<=3?"y":"g";
+    return `<div class="dn1"><span class="du25 ${c}" title="${esc(fmtD(n.date))}"><i></i>⏱ ${dd<0?T1(UI.f3Late):esc(fmtD(n.date).slice(0,5))}</span><small>${esc(n.what)}</small></div>`;};
+  const _grpC3=CL1.grp.bind(CL1);CL1.grp=function(m){const n=this.near(m);if(n&&n.k==="p"&&!(m.status==="closed"||m.pipeline==="lost"||m.paused||isDone11(m))){const dd=daysTo(n.date);return dd<0?0:dd<=1?1:dd<=7?2:3;}return _grpC3(m);};
+  const _tC3=CL1.tiles.bind(CL1);CL1.tiles=function(sec,f){let h=_tC3(sec,f);const base=L25.cnt(sec,f,null);const nb=base.filter(m=>CF3.burn(m).length).length,nr=base.filter(m=>CF3.noRes(m).length).length;
+    const t=(q,cls,ic,l,v)=>`<button type="button" class="k25 ${cls}${f[q]?" on":""}${v?"":" zero"}" data-c3q="${q}"><span class="ic">${ic}</span><span class="tx"><small>${T1(l)}</small><b>${v}</b></span></button>`;
+    h=h.replace(/<button type="button" class="k25 red[^"]*" data-q17="qLate"[\s\S]*?<\/button>/,t("qBurn3","red","⏱","Горит срок||期限紧迫",nb)+t("qNoRes3","red","❗","Нет итога заседания||庭审无结果",nr));
+    h=h.replace('<div class="ks25 c1">','<div class="ks25 c1 c3">');return h;};
+  const _pageC3=CL1.page.bind(CL1);CL1.page=function(sec,title,base,prev){const f=Flt11.st(sec);if(f.qBurn3||f.qNoRes3){const keep=section17List;section17List=s=>keep(s).filter(m=>(!f.qBurn3||CF3.burn(m).length)&&(!f.qNoRes3||CF3.noRes(m).length));try{return _pageC3(sec,title,base,prev);}finally{section17List=keep;}}return _pageC3(sec,title,base,prev);};
+  const _pbL3=Pages.bind;Pages.bind=function(vp){_pbL3.apply(this,arguments);if(!vp||Router.cur!=="court"||isClient())return;const f=Flt11.st("court");
+    vp.querySelectorAll("[data-c3q]").forEach(b=>b.onclick=()=>{const k=b.dataset.c3q;const on=!f[k];f.qBurn3=false;f.qNoRes3=false;f.qHear1=false;L25.Q.forEach(q=>f[q]=false);f[k]=on;Router.render();});
+    const a=vp.querySelector("[data-l25all]");if(a){const o=a.onclick;a.onclick=e=>{f.qBurn3=false;f.qNoRes3=false;return o&&o.call(a,e);};}};}
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{c3hear:"Заседание {d} {time} · дело {no}||庭审 {d} {time} · 案件 {no}",c3hearC:"Назначено заседание {d} {time} · дело {no}||已安排庭审 {d} {time} · 案件 {no}",
+  c3res:"Итог заседания по делу {no}: {text}||案件 {no} 庭审结果：{text}",c3appeal:"Дело {no}: решение после акта суда — ваш ответ||案件 {no}：法院裁决后的方案——请回复",c3appealmp:"Дело {no}: решение после акта суда — ответ УП||案件 {no}：管理合伙人已回复方案",c3appealC:"Дело {no}: клиент ответил по решению после акта суда||案件 {no}：客户已回复方案"});
+{const st=document.createElement("style");st.id="c3css";st.textContent=`
+.f3card .fs3{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 6px}
+.fi3{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:120px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
+.fi3 .c{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--font-h);background:var(--surface2);color:var(--ink-3)}
+.fi3.done .c{background:var(--ok);color:#fff}.fi3.cur{border-color:var(--red)}.fi3.cur .c{background:var(--red);color:#fff}.fi3.opt{border-style:dashed}.fi3.no{opacity:.55}
+.fi3 .t{font-size:12.5px;font-weight:600}.fi3 .m{font-size:11px;color:var(--ink-3)}
+.cy3{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px;padding:10px;background:var(--surface2);border-radius:10px;align-items:center}
+.cy3 .lb{width:100%;font:800 10px var(--font-h);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.cy3 .s{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:8px;font-size:12.5px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
+.cy3 .s i{font-style:normal;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font:700 10px var(--font-h);background:var(--surface2);color:var(--ink-3)}
+.cy3 .s.done{color:var(--ok-d)}.cy3 .s.done i{background:var(--ok);color:#fff}.cy3 .s.cur{border-color:var(--red);color:var(--ink);font-weight:600}.cy3 .s.cur i{background:var(--red);color:#fff}.cy3 .ar{color:var(--ink-3)}
+.dc3{margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--pri-soft);font-size:13px}.dc3 small{color:var(--ink-3)}
+.czchk3{list-style:none;margin:6px 0 0;padding:0;font-size:12.5px}.czchk3 li::before{content:"… ";color:var(--ink-3)}.czchk3 li.ok::before{content:"✓ ";color:var(--ok-d)}.czchk3 li.no::before{content:"✕ ";color:var(--red)}
+.nb3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:10px}
+.nx3{display:flex;gap:10px;padding:10px;border-radius:10px;background:var(--surface2);border:1px solid var(--line)}.nx3.w{background:var(--warn-soft);border-color:transparent}.nx3.r{background:var(--red-soft);border-color:transparent}
+.nx3 .d{flex:none;width:46px;text-align:center;border-radius:8px;background:var(--surface);border:1px solid var(--line);padding:4px 0}.nx3 .d b{display:block;font:700 18px var(--font-h)}.nx3 .d small{font-size:10.5px;color:var(--ink-3)}
+.nx3 .x{min-width:0;font-size:12.5px;line-height:1.4}.nx3 .x b{display:block;font-size:13px}.nx3 .x span{color:var(--ink-2)}
+.tw3{overflow-x:auto}.tb3{width:100%;border-collapse:collapse;font-size:13px}.tb3 th{text-align:left;font:600 10.5px var(--font-h);letter-spacing:.5px;text-transform:uppercase;color:var(--ink-3);padding:8px;border-bottom:1px solid var(--line);background:var(--surface2);white-space:nowrap}
+.tb3 td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}.tb3 td small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:2px}.tb3 tr.next td{background:var(--warn-soft)}.tb3 tr.miss td{background:var(--red-soft)}
+.czres3{display:inline-flex;border-radius:999px;padding:2px 8px;font:600 11.5px var(--font);white-space:nowrap}.czres3.ok{background:var(--ok-soft);color:var(--ok-d)}.czres3.w{background:var(--warn-soft);color:var(--warn-d)}
+.czres3.r{background:var(--red-soft);color:var(--red-d)}.czres3.b{background:var(--info-soft);color:var(--info-d)}.czres3.n{background:var(--surface2);color:var(--ink-2)}.czres3.v{background:var(--pri-soft);color:var(--pri)}
+.ks25.c1.c3{grid-template-columns:repeat(6,minmax(0,1fr))}@media (max-width:1350px){.ks25.c1.c3{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (max-width:700px){.ks25.c1.c3{grid-template-columns:repeat(2,minmax(0,1fr))}}`;
+  (document.head||document.documentElement).appendChild(st);}
 
 /* ══ Раздел «Разовые услуги» · КП-PDF текстом (В4, решение владельца 18.10.2026: «вариант Б — настоящий текстовый PDF со встроенным
    свободным шрифтом») ══
