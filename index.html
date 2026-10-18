@@ -10277,7 +10277,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="d4e641fdf897";
+const ZC_BUILD="575a2119aa59";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -15434,6 +15434,161 @@ if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{c3hear:"Заседание 
 .czres3{display:inline-flex;border-radius:999px;padding:2px 8px;font:600 11.5px var(--font);white-space:nowrap}.czres3.ok{background:var(--ok-soft);color:var(--ok-d)}.czres3.w{background:var(--warn-soft);color:var(--warn-d)}
 .czres3.r{background:var(--red-soft);color:var(--red-d)}.czres3.b{background:var(--info-soft);color:var(--info-d)}.czres3.n{background:var(--surface2);color:var(--ink-2)}.czres3.v{background:var(--pri-soft);color:var(--pri)}
 .ks25.c1.c3{grid-template-columns:repeat(6,minmax(0,1fr))}@media (max-width:1350px){.ks25.c1.c3{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (max-width:700px){.ks25.c1.c3{grid-template-columns:repeat(2,minmax(0,1fr))}}`;
+  (document.head||document.documentElement).appendChild(st);}
+
+/* ══ Раздел «Судебные дела» · этап 4 (stage4.js; подключается после stage3.js — нужен CF3) — «Судебный контроль», кабинет клиента, тексты напоминаний ══
+   Решения владельца 18.10.2026 (С-49 … С-52, sections/court/ПРАВИЛА.md). Напоминания рассылает сервер (public.court_remind_run,
+   миграция 20261018008000_court_remind, каждый день в 08:00 по Ташкенту); здесь — только шаблоны их текста на языке читателя.
+   «Судебный контроль» — одна страница на неделю: заседания и сроки по дням, плитки, «Требует внимания», «Кто что получает».
+   УП видит все судебные дела, адвокат — только свои (ведущий или в команде, С-19). Кабинет клиента: инстанции, следующее заседание,
+   итоги заседаний — только подтверждённый ведущим текст «для клиента» (С-44). */
+Object.assign(UI,{
+  c4Ctl:"Судебный контроль||诉讼监控",c4Week:"неделя||周",c4Mine:"мои дела||我的案件",c4Prev:"← пред. неделя||← 上一周",c4NextW:"след. неделя →||下一周 →",c4This:"эта неделя||本周",
+  c4HearW:"Заседаний на неделе||本周庭审",c4HearWMy:"Мои заседания на неделе||本周我的庭审",c4Burn:"Горит срок||期限紧迫",c4NoRes:"Нет итога заседания||庭审无结果",
+  c4Stale:"Без движения > {n} р.д.||超过 {n} 个工作日无进展",c4WaitMp:"Ждут решения УП||待管理合伙人决定",c4WaitMe:"Ждут моего ответа||待我回复",
+  c4AdvN:"у {n} адв.||涉及 {n} 名律师",c4LateN:"{n} просрочен||{n} 项已逾期",c4Free:"свободно||无安排",c4Attn:"Требует внимания||需要关注",c4AllOk:"Сейчас ничего не требует внимания||目前无需关注事项",
+  c4Open:"Открыть||打开",c4RLate:"просрочен||已逾期",c4RNoRes:"нет итога||无结果",c4RMp:"решение УП||待批准",c4RMe:"ваш ход||轮到您",c4RStale:"без движения||无进展",
+  c4Expired:"срок истёк||期限已过",c4Until:"до||截止",c4HearOn:"заседание||庭审",c4Rem:"напоминания: за 5, 3, 1 р.д. и в день срока||提醒：提前5、3、1个工作日及当天",
+  c4WaitDec:"решение после акта суда||法院裁决后的方案",c4WaitAct:"акт суда получен — решите, что дальше||已收到法院文书——请决定下一步",c4WaitPre:"до договора||签约前",
+  c4Who:"Кто что получает (сервер, 08:00 по Ташкенту)||谁收到什么（服务器，塔什干时间08:00）",c4WhoMe:"Что вы получаете (сервер, 08:00 по Ташкенту)||您收到什么（服务器，塔什干时间08:00）",
+  c4wMorning:"Каждое утро||每天早上",c4wDay:"За день||前一天",c4wDl:"Срок||期限",c4wNoRes:"Нет итога||无结果",c4wClient:"Клиенту||客户",
+  c4tMorning:"ведущему и команде: заседания сегодня, сроки, заседания без итога||负责人和团队：今天的庭审、期限、无结果的庭审",
+  c4tDay:"до заседания — ведущему и тем, кто идёт; в портале, Telegram и push||庭审前——负责人及出庭人员；门户、Telegram和推送",
+  c4tDl:"за 5, 3, 1 р.д. и в день срока — ответственному и ведущему; пропущен — и УП||提前5、3、1个工作日及当天——责任人和负责人；逾期——同时通知管理合伙人",
+  c4tNoRes:"утром следующего р.д. — ведущему; через 2 р.д. — УП||下一个工作日早上——负责人；2个工作日后——管理合伙人",
+  c4tClient:"новое заседание и подтверждённый итог — на языке клиента||新庭审及已确认的结果——以客户语言",
+  c4tMorningMe:"ваши заседания сегодня, сроки, заседания без итога||您今天的庭审、期限、无结果的庭审",c4tDayMe:"до заседания, где вы ведущий или идёте; Telegram и push||您负责或出庭的庭审前；Telegram和推送",
+  c4tDlMe:"за 5, 3, 1 р.д. и в день срока; если пропущен — и вам, и УП||提前5、3、1个工作日及当天；逾期——同时通知您和管理合伙人",c4tNoResMe:"утром следующего р.д.; через 2 р.д. — сообщают УП||下一个工作日早上；2个工作日后——通知管理合伙人",
+  c4OnlyMine:"Другие адвокаты и их дела здесь не видны — только дела, где вы ведущий или в команде.||此处不显示其他律师及其案件——仅显示您负责或参与的案件。",
+  c4CliFlow:"Ход дела||案件进展",c4CliNext:"Следующее заседание||下次开庭",c4CliRes:"Итоги заседаний||开庭结果",c4CliLawyer:"наш адвокат||我方律师",c4CliNone:"Пока не назначено||暂未安排"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Судебный контроль":"Sud nazorati","неделя":"hafta","мои дела":"mening ishlarim","← пред. неделя":"← oldingi hafta","след. неделя →":"keyingi hafta →","эта неделя":"shu hafta",
+  "Заседаний на неделе":"Haftadagi majlislar","Мои заседания на неделе":"Haftadagi majlislarim","Горит срок":"Muddat yonmoqda","Нет итога заседания":"Majlis natijasi yoʻq","Ждут решения УП":"BH qarorini kutmoqda","Ждут моего ответа":"Javobimni kutmoqda",
+  "свободно":"boʻsh","Требует внимания":"Eʼtibor talab qiladi","Сейчас ничего не требует внимания":"Hozir eʼtibor talab qiladigan narsa yoʻq","Открыть":"Ochish","просрочен":"muddati oʻtgan","нет итога":"natija yoʻq",
+  "решение УП":"BH qarori","ваш ход":"sizning navbatingiz","без движения":"harakatsiz","срок истёк":"muddat tugadi","до":"gacha","заседание":"majlis","Каждое утро":"Har kuni ertalab","За день":"Bir kun oldin","Срок":"Muddat",
+  "Нет итога":"Natija yoʻq","Клиенту":"Mijozga","Ход дела":"Ish borishi","Следующее заседание":"Keyingi majlis","Итоги заседаний":"Majlis natijalari","наш адвокат":"bizning advokat","Пока не назначено":"Hali belgilanmagan"});
+/* тексты серверных напоминаний (tpl из court_remind_run) — на языке читателя */
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{
+  c4hear:"Заседание {when} {time} · дело {no}||庭审 {when} {time} · 案件 {no}",
+  c4dl:"Процессуальный срок {when} ({d}): {what} · дело {no}||诉讼期限{when}（{d}）：{what} · 案件 {no}",
+  c4dlLate:"Пропущен процессуальный срок ({d}): {what} · дело {no}||已逾期诉讼期限（{d}）：{what} · 案件 {no}",
+  c4nores:"Нет итога заседания {d} по делу {no} — внесите итог сегодня||案件 {no} {d} 庭审尚无结果——请今天填写",
+  c4nomp:"Нет итога заседания {d} по делу {no} уже 2 рабочих дня · ведущий {who}||案件 {no} {d} 庭审已2个工作日无结果 · 负责人 {who}"});
+const C4DOW=["пн||周一","вт||周二","ср||周三","чт||周四","пт||周五","сб||周六","вс||周日"];
+const Ctrl4={
+  wk:0,
+  mp(){return CF3.mp();},
+  /* дела страницы: УП — все судебные в работе; адвокат — где он ведущий или в команде */
+  list(){return MM().filter(m=>m.svc==="court"&&m.status!=="closed"&&m.pipeline!=="lost"&&CF3.can(m));},
+  /* неделя пн–пт; в субботу и воскресенье «эта неделя» — следующая */
+  mon(){const t=todayS();const d=new Date(t+"T00:00:00");const k=(d.getDay()+6)%7;return addDays(t,-k+(k>=5?7:0)+7*this.wk);},
+  ini(e){const n=e?String(dispName(e)||""):"";return n.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();},
+  hearIn(L,a,b){const ids=new Set(L.map(m=>m.id));return EE().filter(e=>e.type==="hearing"&&ids.has(e.matterId)&&(e.date||"")>=a&&(e.date||"")<=b);},
+  /* ход за мной (или за УП): до договора — действие этапа; после акта суда — решение «что дальше» */
+  wait(m){const MP=this.mp(),u=(U()||{}).emp;const x=CF3.inst(m);
+    if(m.pipeline!=="contract"&&typeof Pre24!=="undefined"&&Pre24.prim){try{const p=Pre24.prim(m);if(p)return {k:"pre",l:p.name};}catch(e){}}
+    if(x&&x.step==="decision"&&x.decision&&!x.decision.mp&&MP)return {k:"dec",l:T1(UI.c4WaitDec)};
+    if(x&&x.step==="act"&&(m.lead===u||MP))return {k:"act",l:T1(UI.c4WaitAct)};return null;},
+  stl(m){return typeof stale==="function"&&m.pipeline==="contract"&&stale(m);},
+  tile(cls,ic,l,v,em){return `<div class="k25 ${cls}${v?"":" zero"}"><span class="ic">${ic}</span><span class="tx"><small>${l}</small><b>${v}</b>${em?`<em>${esc(em)}</em>`:""}</span></div>`;},
+  page(){if(isClient())return "";const MP=this.mp(),L=this.list(),t=todayS();const a=this.mon(),f=addDays(a,4),sun=addDays(a,6);
+    const H=this.hearIn(L,a,sun);const byId=Object.fromEntries(L.map(m=>[m.id,m]));
+    const DL=[];L.forEach(m=>(m.courtDl24||[]).forEach(x=>{if(x.st==="open"&&x.due)DL.push({m,x});}));
+    const burn=DL.filter(o=>daysTo(o.x.due)<=3),late=DL.filter(o=>daysTo(o.x.due)<0);
+    const NR=[];L.forEach(m=>CF3.noRes(m).forEach(e=>NR.push({m,e})));
+    const W=L.map(m=>({m,w:this.wait(m)})).filter(o=>o.w);const ST=L.filter(m=>this.stl(m));
+    const advs=new Set(H.map(e=>byId[e.matterId]&&byId[e.matterId].lead||e.emp).filter(Boolean)).size;
+    const staleWd=(typeof workSettings==="function"&&workSettings().staleWd)||5;
+    const tiles=`<div class="ks25 cz5">${this.tile("cal","📅",T1(MP?UI.c4HearW:UI.c4HearWMy),H.length,MP?(advs?T1(UI.c4AdvN).replace("{n}",advs):""):[...new Set(H.map(e=>e.date))].sort().slice(0,2).map(d=>T1(C4DOW[(new Date(d+"T00:00:00").getDay()+6)%7])+" "+fmtD(d).slice(0,5)).join(", "))}
+      ${this.tile("red","⏱",T1(UI.c4Burn),burn.length,late.length?T1(UI.c4LateN).replace("{n}",late.length):"")}${this.tile("red","❗",T1(UI.c4NoRes),NR.length,"")}
+      ${this.tile("grey","💤",T1(UI.c4Stale).replace("{n}",staleWd),ST.length,"")}${this.tile("warn","🗳",T1(MP?UI.c4WaitMp:UI.c4WaitMe),W.length,[...new Set(W.map(o=>o.w.l))].slice(0,2).join(", "))}</div>`;
+    /* неделя по дням: пн–пт всегда, сб и вс — если что-то есть */
+    const days=[];for(let i=0;i<7;i++){const d=addDays(a,i);const E=[];
+      H.filter(e=>e.date===d).sort((p,q)=>String(p.time||"").localeCompare(String(q.time||""))).forEach(e=>{const m=byId[e.matterId];const c=e.court24||{};const who=[e.emp,...(c.who||[])].filter((v,j,s)=>v&&s.indexOf(v)===j);
+        E.push({c:/допрос/i.test(e.title||"")?"q":"h",id:m.id,b:(e.time?e.time+" · ":"")+String(e.title||T1(UI.c4HearOn)).toLowerCase(),t:m.no+(c.room?" · "+T1(UI.f3Room).toLowerCase()+" "+c.room:"")+(e.result24?" · ✓":""),s:MP?who.map(x=>this.ini(x)).join(", "):""});});
+      DL.filter(o=>o.x.due===d).forEach(o=>E.push({c:"d",id:o.m.id,b:"⏱ "+o.x.what,t:o.m.no+(CF3.inst(o.m)?" · "+instLabel(CF3.inst(o.m).kind).toLowerCase():""),s:MP?this.ini(o.x.resp||o.m.lead):""}));
+      if(i<5||E.length)days.push({d,E});}
+    const wk=`<div class="czwk" style="grid-template-columns:repeat(${days.length},minmax(0,1fr))">${days.map(({d,E})=>`<div class="czdy${d===t?" td":""}"><h5>${esc(T1(C4DOW[(new Date(d+"T00:00:00").getDay()+6)%7]))} ${esc(fmtD(d).slice(0,5))}<em>${E.length}</em></h5>${E.length?E.map(e=>`<div class="czev ${e.c}" data-c4m="${esc(e.id)}"><b>${esc(e.b)}</b>${esc(e.t)}${e.s?`<br><small>${esc(e.s)}</small>`:""}</div>`).join(""):`<div class="czhint">${T1(UI.c4Free)}</div>`}</div>`).join("")}</div>`;
+    /* требует внимания */
+    const rw=(cls,tag,id,t,s)=>`<div class="rw"><span class="czres ${cls}">${esc(tag)}</span><div class="t">${t}<small>${esc(s||"")}</small></div><button type="button" class="btn sm" data-c4m="${esc(id)}">${T1(UI.c4Open)}</button></div>`;
+    const rows=[...late.sort((p,q)=>p.x.due.localeCompare(q.x.due)).map(o=>rw("r",T1(UI.c4RLate),o.m.id,`${esc(o.m.no)} · ${esc(o.x.what)} — ${T1(UI.c4Expired)} ${esc(fmtD(o.x.due))}`,dispName(o.x.resp||o.m.lead))),
+      ...NR.sort((p,q)=>p.e.date.localeCompare(q.e.date)).map(o=>rw("r",T1(UI.c4RNoRes),o.m.id,`${esc(o.m.no)} · ${T1(UI.c4HearOn)} ${esc(fmtD(o.e.date))}`,dispName(o.m.lead||o.e.emp))),
+      ...DL.filter(o=>{const k=daysTo(o.x.due);return k>=0&&k<=1;}).map(o=>rw("w",T1(daysTo(o.x.due)===0?UI.c1Today:UI.c1Tmr),o.m.id,`${esc(o.m.no)} · ${esc(o.x.what)} — ${T1(UI.c4Until)} ${esc(fmtD(o.x.due))}`,T1(UI.c4Rem))),
+      ...W.map(o=>rw("v",T1(o.w.k==="dec"&&MP?UI.c4RMp:UI.c4RMe),o.m.id,`${esc(o.m.no)} · ${esc(o.w.l)}`,mT18(o.m))),
+      ...ST.map(m=>rw("n",T1(UI.c4RStale),m.id,`${esc(m.no)} · ${esc(mT18(m))}`,dispName(m.lead)))];
+    const attn=`<div class="card"><h4>${T1(UI.c4Attn)}</h4><div class="czlist">${rows.join("")||`<div class="empty2">${T1(UI.c4AllOk)}</div>`}</div></div>`;
+    const R=MP?[[UI.c4wMorning,UI.c4tMorning],[UI.c4wDay,UI.c4tDay],[UI.c4wDl,UI.c4tDl],[UI.c4wNoRes,UI.c4tNoRes],[UI.c4wClient,UI.c4tClient]]:[[UI.c4wMorning,UI.c4tMorningMe],[UI.c4wDay,UI.c4tDayMe],[UI.c4wDl,UI.c4tDlMe],[UI.c4wNoRes,UI.c4tNoResMe]];
+    const who=`<div class="card"><h4>${T1(MP?UI.c4Who:UI.c4WhoMe)}</h4><table class="czrm">${R.map(([k,v])=>`<tr><td>${T1(k)}</td><td>${T1(v)}</td></tr>`).join("")}</table>${MP?"":`<div class="czhint">${T1(UI.c4OnlyMine)}</div>`}</div>`;
+    const sub=(MP?"":T1(UI.c4Mine)+" · ")+T1(UI.c4Week)+" "+fmtD(a).slice(0,2)+"–"+fmtD(f).slice(0,5);
+    return `<div class="c4p"><div class="ph hd25"><div class="t25"><button type="button" class="btn ghost sm" data-go="court">← ${T1(UI.nCourt11)}</button><h2>${T1(UI.c4Ctl)}</h2><span class="n25">${esc(sub)}</span></div>
+      <div class="acts">${this.wk?`<button type="button" class="btn" data-c4w="0">${T1(UI.c4This)}</button>`:""}<button type="button" class="btn" data-c4w="-1">${T1(UI.c4Prev)}</button><button type="button" class="btn" data-c4w="1">${T1(UI.c4NextW)}</button></div></div>
+      ${tiles}${wk}<div class="czg2" style="margin-top:14px">${attn}${who}</div></div>`;},
+  bind(vp){vp.querySelectorAll("[data-c4w]").forEach(b=>b.onclick=()=>{const k=+b.dataset.c4w;this.wk=k===0?0:this.wk+k;Router.render();});
+    vp.querySelectorAll("[data-c4m]").forEach(b=>b.onclick=e=>{e.stopPropagation();Router.go("matter",b.dataset.c4m);});}
+};
+Router.extra.courtctl=()=>Ctrl4.page();
+{const _pbC4=Pages.bind;Pages.bind=function(vp){_pbC4.apply(this,arguments);if(!vp||isClient())return;
+  if(Router.cur==="courtctl")Ctrl4.bind(vp);
+  if(Router.cur==="court"){const b=vp.querySelector("[data-c4open]");if(b)b.onclick=()=>{Ctrl4.wk=0;Router.go("courtctl");};}};}
+/* кнопка «Судебный контроль» в шапке списка «Судебные дела» */
+if(typeof CL1!=="undefined"){const _pgC4=CL1.page.bind(CL1);CL1.page=function(sec,title,base,prev){const h=_pgC4(sec,title,base,prev);
+  return h.replace('<div class="acts">',`<div class="acts"><button type="button" class="btn" data-c4open="1">📋 ${T1(UI.c4Ctl)}</button>`);};}
+/* в боковом меню на странице контроля подсвечены «Судебные дела» */
+{const _sdC4=renderSide;renderSide=function(){_sdC4();if(Router.cur!=="courtctl"||isClient())return;const side=document.getElementById("side");if(side)side.querySelectorAll(".sn").forEach(b=>b.classList.toggle("on",b.dataset.r==="court"));};}
+/* ── кабинет клиента по судебному делу: ход дела, следующее заседание, подтверждённые итоги ── */
+if(typeof CP!=="undefined"){
+  const _cpmC4=CP.matter.bind(CP);CP.matter=function(id){let h=_cpmC4(id);const m=matter(id);if(!crt3(m)||!clientCan(m)||m.pipeline!=="contract")return h;
+    const t=todayS(),H=CF3.hears(m);const conf=H.filter(e=>e.result24&&e.result24.conf&&e.result24.client).sort((p,q)=>(q.date+(q.time||"")).localeCompare(p.date+(p.time||"")));
+    const nx=H.filter(e=>e.date>=t&&!e.result24)[0];
+    /* «Итог»: только подтверждённый ведущим текст для клиента (С-44) — не черновик и не заметки команды */
+    const last=conf[0];const k=h.indexOf(`<dt>${T1(UI.cpOutcome)}</dt><dd>`);
+    if(k>=0){const s=k+`<dt>${T1(UI.cpOutcome)}</dt><dd>`.length,e=h.indexOf("</dd>",s);if(e>s)h=h.slice(0,s)+esc(last?bi18(last.result24.client,last.result24.clientZh):"—")+h.slice(e);}
+    const L=m.instances||[],ci=CF3.cur(m);const plan=(m.instPrices24||[]).filter(p=>p.inc!=="no"&&!L.some(i=>i.kind===p.k));
+    const steps=[...L.map((i,j)=>{const s=j===ci?"cur":"done";return `<div class="it ${s}"><span class="c">${s==="done"?"✓":j+1}</span><span class="t">${esc(instLabel(i.kind))}</span></div>`;}),
+      ...plan.map((p,j)=>`<div class="it todo${p.inc==="opt"?" opt":""}"><span class="c">${L.length+j+1}</span><span class="t">${esc(instLabel(p.k))}</span>${p.inc==="opt"?`<span class="m">${T1(UI.f3Opt)}</span>`:""}</div>`)];
+    const dd=nx?new Date(nx.date+"T00:00:00"):null;const c=(nx&&nx.court24)||{};
+    const next=nx?`<div class="cznext${daysTo(nx.date)<=2?" w":""}"><div class="d"><small>${esc(T1(C4DOW[(dd.getDay()+6)%7]))}</small><b>${esc(nx.date.slice(8,10))}</b><small>${esc(nx.date.slice(5,7))}</small></div><div class="x"><b>${esc([nx.time,c.room?T1(UI.f3Room)+" "+c.room:""].filter(Boolean).join(" · ")||fmtD(nx.date))}</b><span>${esc([m.court||nx.place||"",nx.emp?T1(UI.c4CliLawyer)+": "+dispName(nx.emp):""].filter(Boolean).join(" · "))}</span></div></div>`:`<div class="empty2">${T1(UI.c4CliNone)}</div>`;
+    const res=conf.length?`<ul class="tl4">${conf.map(e=>`<li><b>${esc(fmtD(e.date))}</b>${esc(bi18(e.result24.client,e.result24.clientZh))}</li>`).join("")}</ul>`:`<div class="empty2">${T1(UI.noData)}</div>`;
+    const box=`<div class="card c4cab"><h4>${T1(UI.c4CliFlow)}</h4>${steps.length?`<div class="czinst" style="grid-template-columns:repeat(${Math.max(steps.length,2)},minmax(0,1fr))">${steps.join("")}</div>`:`<div class="empty2">${T1(UI.c4CliNone)}</div>`}
+      <div class="czg2" style="margin-top:14px"><div><h5>${T1(UI.c4CliNext)}</h5>${next}</div><div><h5>${T1(UI.c4CliRes)}</h5>${res}</div></div></div>`;
+    const i=h.indexOf('<div class="cols">');return i>0?h.slice(0,i)+box+h.slice(i):h+box;};}
+{const st=document.createElement("style");st.id="c4css";st.textContent=`
+.ks25.cz5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.c4p .k25{cursor:default}.c4p .k25 .tx{min-width:0;max-width:100%;overflow:hidden}.c4p .k25 em{display:block;font-style:normal;font-size:11px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c4p .t25 .btn.ghost{margin-right:4px}
+.czg2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.czhint{font-size:12px;color:var(--ink-3);margin-top:6px;line-height:1.45}
+.czwk{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}
+.czwk .czdy{background:var(--surface);border-radius:12px;box-shadow:var(--sh-1);padding:10px;min-height:150px;min-width:0}
+.czwk .czdy h5{margin:0 0 8px;font:600 12.5px var(--font-h);display:flex;justify-content:space-between}
+.czwk .czdy h5 em{font-style:normal;color:var(--ink-3);font:500 11.5px var(--font)}
+.czwk .czdy.td{outline:2px solid var(--pri)}
+.czwk .czev{border-left:3px solid var(--pri);background:var(--surface2);border-radius:6px;padding:6px 8px;font-size:12px;margin-bottom:6px;line-height:1.35;cursor:pointer;overflow-wrap:anywhere}
+.czwk .czev b{display:block;font-size:12px}.czwk .czev.h{border-left-color:var(--red)}.czwk .czev.d{border-left-color:var(--warn)}.czwk .czev.q{border-left-color:var(--violet-d)}
+.czwk .czev small{color:var(--ink-3)}
+.czlist .rw{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.czlist .rw:last-child{border-bottom:0}
+.czlist .rw .t{flex:1;min-width:0}.czlist .rw .t small{display:block;color:var(--ink-3);font-size:11.5px}
+.czres{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 9px;font:600 11.5px var(--font);white-space:nowrap}
+.czres.w{background:var(--warn-soft);color:var(--warn-d)}.czres.r{background:var(--red-soft);color:var(--red-d)}.czres.n{background:var(--surface2);color:var(--ink-2)}.czres.v{background:var(--violet-soft);color:var(--violet-d)}
+.czrm{font-size:12.5px;border-collapse:collapse;width:100%}.czrm td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}.czrm td:first-child{white-space:nowrap;font-weight:600;color:var(--ink)}
+.czinst{display:grid;gap:0;margin:4px 0 2px;position:relative}
+.czinst .it{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;padding:0 4px}
+.czinst .it::before{content:"";position:absolute;top:15px;left:-50%;width:100%;height:2px;background:var(--line-2);z-index:0}.czinst .it:first-child::before{display:none}
+.czinst .it.done::before,.czinst .it.cur::before{background:var(--ok)}
+.czinst .c{position:relative;z-index:1;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:700 13px var(--font-h);background:var(--surface);border:2px solid var(--line-2);color:var(--ink-3)}
+.czinst .done .c{background:var(--ok);border-color:var(--ok);color:#fff}.czinst .cur .c{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 0 0 5px var(--red-soft)}
+.czinst .opt .c{border-style:dashed}.czinst .t{font-size:12.5px;font-weight:600;line-height:1.25}.czinst .cur .t{color:var(--red-d)}.czinst .m{font-size:11px;color:var(--ink-3)}
+.cznext{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:10px;background:var(--surface2);border:1px solid var(--line)}
+.cznext .d{flex:none;width:58px;text-align:center;border-radius:10px;background:var(--surface);border:1px solid var(--line);padding:6px 0}
+.cznext .d b{display:block;font:700 20px var(--font-h);line-height:1.1}.cznext .d small{font-size:11px;color:var(--ink-3);text-transform:uppercase}
+.cznext .x{min-width:0;font-size:13px;line-height:1.45}.cznext .x b{display:block;font-size:13.5px}.cznext .x span{color:var(--ink-2)}
+.cznext.w{background:var(--warn-soft);border-color:transparent}
+.c4cab h5{margin:0 0 8px;font:600 12.5px var(--font-h);color:var(--ink-2)}
+.tl4{list-style:none;margin:0;padding:0}.tl4 li{padding:8px 0 8px 14px;border-left:2px solid var(--line-2);position:relative;font-size:13px;line-height:1.45}
+.tl4 li::before{content:"";position:absolute;left:-5px;top:13px;width:8px;height:8px;border-radius:50%;background:var(--pri)}.tl4 li b{display:block;font-size:12px;color:var(--ink-3)}
+@media (max-width:1350px){.ks25.cz5{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:900px){.czg2{grid-template-columns:1fr}.czwk{grid-template-columns:1fr!important}.czwk .czdy{min-height:0}}
+@media (max-width:700px){.ks25.cz5{grid-template-columns:repeat(2,minmax(0,1fr))}.c4p .hd25{flex-wrap:wrap}.c4p .acts{flex-wrap:wrap}}`;
   (document.head||document.documentElement).appendChild(st);}
 
 /* ══ Раздел «Разовые услуги» · КП-PDF текстом (В4, решение владельца 18.10.2026: «вариант Б — настоящий текстовый PDF со встроенным
