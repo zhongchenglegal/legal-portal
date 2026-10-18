@@ -10276,7 +10276,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="f26f0b679982";
+const ZC_BUILD="35b0d369e1ff";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14411,6 +14411,17 @@ UI.cn27New="+ Новый клиент||+ 新客户";window.UZ21=Object.assign(wi
     if(cid){Matter._mode24=mode;Matter._svc="oneoff";try{r=await Matter.create(cid);}finally{Matter._mode24=null;}}else r=await _nm27.apply(this,arguments);
     if(want27){want27=false;const c=typeof Cli21!=="undefined"&&await Cli21.quickNew();if(c)return Pre24.newMatter(mode,c.id);}
     return r;};}
+
+/* В3 (18.10.2026, владелец: «в3»): заявка не принята ведущим к сроку принятия — напоминание ведущему и УП, один раз на назначение.
+   На сайте рассылает сервер (public.remind_run, миграция 20261018000600_intake_remind); без серверных напоминаний — портал
+   (в сессии УП, отметка intake23.assign.late27). */
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{p24intakeLate:"Заявка {no} не принята в срок ({d}): {title}||申请 {no} 未按期受理（{d}）：{title}"});
+if(typeof Remind17!=="undefined"){const _tkI27=Remind17.tick.bind(Remind17);Remind17.tick=async function(force){const r=await _tkI27(force);
+  try{if(!U()||isClient()||!Pre24.mp()||(typeof SB19!=="undefined"&&SB19.remindServer))return r;const today=todayS();
+    for(const m of MMall()){const i=m.intake23||{},a=i.assign||{};if(m.svc!=="oneoff"||m.status==="closed"||m.pipeline!=="lead"||!a.to||i.accepted||!a.due||String(a.due).slice(0,10)>=today||a.late27)continue;
+      a.late27=nowS();const txt=nt18("p24intakeLate",{no:m.no,d:{d:String(a.due).slice(0,10)},title:{m:m.id,s:m.title,n:60}});
+      [...new Set([(accByEmp(a.to)||{}).login,...mgmtLogins10()].filter(Boolean))].forEach(l=>notify(l,"task",txt,m.id));try{await saveDoc("matters",m);}catch(e){}}}catch(e){}
+  return r;};}
 
 /* ══ версия 1.3 · одна роль человека везде (решение владельца 17.10.2026: «нет никакой должности, есть только роль») ══
    Подпись под именем во всех списках, карточках, чате, кабинете, доступах — только роль: «Управляющий адвокат» или «Адвокат»
