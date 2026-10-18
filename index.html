@@ -10277,7 +10277,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="18f99b796d63";
+const ZC_BUILD="7c4556b0a094";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14820,6 +14820,35 @@ const _bindB26=Pages.bind;Pages.bind=function(vp){_bindB26.apply(this,arguments)
 /* уведомление «bug:…» — открыть сообщение в «Помощи» → «Ошибки» */
 document.addEventListener("click",e=>{const g=e.target&&e.target.closest&&e.target.closest('[data-go^="bug:"]');if(!g||!B26.staff())return;const ref=g.dataset.go.slice(4);
   setTimeout(()=>{try{if(typeof Notif!=="undefined"&&Notif.close)Notif.close();}catch(x){}if(typeof Help21!=="undefined")Help21._t="bugs";B26.f.tab="list";B26.f.st="all";B26.f.sel=ref;B26.rows=null;Router.go("help");},0);},true);
+
+/* ══ Кабинет клиента — только клиентская часть данных (решение владельца 19.10.2026, правила К-1 … К-6 — sections/client/ПРАВИЛА.md) ══
+   Сервер (миграция 20261019003000_client_view) ведёт клиентские копии дел, заседаний, жалоб и обращений; прямое чтение и прямая
+   запись дела клиенту закрыты. Здесь: кабинет читает копии (и получает по ним живые обновления), пишет — как раньше, в свои таблицы;
+   «Принять результат» и «Есть замечания» — серверным действием public.client_accept. Без сервера (демо) — всё по-прежнему. */
+const CV26={matters:"cv_matters",events:"cv_events",complaints:"cv_complaints",clientRequests:"cv_requests"};
+if(typeof SB19!=="undefined"){
+  /* чтение у клиента — из копий; запись (жалоба, обращение) — в прежние таблицы */
+  const _tb26=SB19.table.bind(SB19);SB19._w26=0;
+  SB19.table=function(n){if(this.kind==="client"&&!this._w26&&CV26[n])return CV26[n];return _tb26(n);};
+  const _ds26=SB19.docSet.bind(SB19);SB19.docSet=async function(){this._w26++;try{return await _ds26.apply(this,arguments);}finally{this._w26--;}};
+  const _dd26=SB19.docDel.bind(SB19);SB19.docDel=async function(){this._w26++;try{return await _dd26.apply(this,arguments);}finally{this._w26--;}};}
+/* ── «Принять результат» / «Есть замечания» — на сервере (в демо — прежний путь) ── */
+const Acc26={
+  on(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&SB19.kind==="client";},
+  async call(m,act,text){try{const d=await SB19.T.rpc("client_accept",{mid:m.id,act,text:text||""});if(d&&typeof d==="object")StSrv23.apply(m,d);return true;}
+    catch(e){toast(String((e&&e.message)||e).replace(/^.*?ERROR:\s*/,""));return false;}},
+  async reloadAcc(){try{if(typeof StSrv23!=="undefined"&&StSrv23.reload)await StSrv23.reload("clientAcceptance");}catch(e){}}
+};
+if(typeof CP!=="undefined"){
+  const _acc26=CP.accept.bind(CP);CP.accept=async function(m){if(!Acc26.on())return _acc26(m);if(!clientCan(m)||m.stage!=="ready")return;
+    if(!await Dlg.confirm(T1(UI.cpAcceptQ),T1(UI.cpAcceptNote)))return;const u=U();
+    if(!await Acc26.call(m,"accept",""))return;await Acc26.reloadAcc();audit(`Приёмка результата по ${m.no}`);
+    const v=await Dlg.ask({title:T1(UI.cpRate),fields:[{k:"rating",label:T1(UI.cpRateT),type:"select",value:"5",options:[["5","★★★★★"],["4","★★★★"],["3","★★★"],["2","★★"],["1","★"]]},{k:"text",label:T1(UI.cpFb),type:"textarea"}],okText:UI.save,cancelText:T1("Позже||稍后")});
+    if(v){const c=client(m.clientId);if(c){migrateClient9c(c);c.feedback.push({id:uid("fb"),date:todayS(),matterId:m.id,rating:Math.max(1,Math.min(5,+v.rating||5)),text:v.text||"",by:u.login,byName:u.name});await saveDoc("clients",c);audit(`Отзыв клиента по ${m.no}: ${v.rating}/5`);}}
+    toast(T1(UI.cpThanks));Router.go("cmatter",m.id);};
+  const _rem26=CP.remarks.bind(CP);CP.remarks=async function(m){if(!Acc26.on())return _rem26(m);if(!clientCan(m)||m.stage!=="ready")return;
+    const v=await Dlg.ask({title:T1(UI.cpRemarksT),fields:[{k:"text",label:T1(UI.cpRemarksT),type:"textarea",required:true}]});if(!v)return;
+    if(!await Acc26.call(m,"remarks",v.text))return;await Acc26.reloadAcc();audit(`Замечания клиента по ${m.no}`);toast(T1(UI.cpRemarkSent));Router.render();};}
 
 /* ══ Раздел «Судебные дела» · черновик справочника процессуальных сроков (С-24) ══
    Собран 18.10.2026 по текстам кодексов на lex.uz (ЭПК — lex.uz/docs/3523895, ГПК — lex.uz/docs/3517334, УПК — lex.uz/docs/111463,
