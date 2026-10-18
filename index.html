@@ -2515,6 +2515,16 @@ button.k25:hover{transform:translateY(-1px)}
 .k25.grey .ic{background:var(--surface2)}
 .k25.ok .ic{background:var(--ok-soft);color:var(--ok);font-weight:700}
 .k25.zero b{color:var(--ink-3)}
+/* 19.10.2026, вариант A (design-tiles.html): спокойные плитки — линейные значки системы одного цвета, рамка вместо тени, ниже;
+   цвет — только у цифры просрочки; выбранная — синяя рамка. Действует во всех разделах с плитками .k25 (разовые услуги, суды). */
+.k25{border:1px solid var(--line);box-shadow:none;border-radius:12px;padding:11px 14px;transition:border-color .15s}
+button.k25:hover{transform:none;border-color:var(--line-2,var(--ink-3))}
+.k25.on{border-color:var(--pri);box-shadow:inset 0 0 0 1px var(--pri)}
+.k25 .ic{width:34px;height:34px;border-radius:9px;font-size:16px;background:var(--surface2)!important;color:var(--ink-2)!important;font-weight:400!important}
+.k25.on .ic{background:var(--pri-soft)!important;color:var(--pri)!important}
+.k25 .ic svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.k25 b{font:600 19px var(--font-h)}
+.k25.blue b,.k25.cal b,.k25.warn b,.k25.grey b,.k25.ok b{color:var(--ink)}.k25.zero b{color:var(--ink-3)!important}
 /* строка управления */
 .tl25{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
 .sr25{flex:1;min-width:220px;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 12px;height:40px;transition:border-color .15s,box-shadow .15s}
@@ -10277,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="7c4556b0a094";
+const ZC_BUILD="0aa691c19aae";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14501,7 +14511,7 @@ const L25={
     /* А1 (решение владельца 17.10): денег над списком нет ни у кого — суммы смотрят в «Финансах» */
     const on=this.Q.find(k=>f[k]);
     const t=(q,cls,ic,l,v,sub)=>`<button type="button" class="k25 ${cls}${(q&&f[q])||(q==="all"&&!on)?" on":""}${v===0?" zero":""}" ${q?(q==="all"?'data-l25all="1"':`data-q17="${q}"`):""} aria-pressed="${!!(q&&f[q])}"><span class="ic">${ic}</span><span class="tx"><small>${T1(l)}</small><b>${v}</b>${sub?`<em>${sub}</em>`:""}</span></button>`;
-    return `<div class="ks25">${t("all","blue","📂",UI.l25Work,work,extra)}${t("qLate","red","⏰",UI.l25Late,n("qLate"))}${t("qPay","warn","💳",UI.l25Pay,n("qPay"))}${t("qStale","grey","💤",UI.l25Stale,n("qStale"))}</div>`;},
+    return `<div class="ks25">${t("all","blue",L25.ico("folder"),UI.l25Work,work,extra)}${t("qLate","red",L25.ico("clock"),UI.l25Late,n("qLate"))}${t("qPay","warn",L25.ico("wallet"),UI.l25Pay,n("qPay"))}${t("qStale","grey",L25.ico("pause"),UI.l25Stale,n("qStale"))}</div>`;},
   tools(sec,f){const views=[["mine",UI.view17Mine],["emp",UI.kbByEmp],["status",UI.kbByStatus],["list",UI.kbList]];const n=Flt11.advCount(sec,f)+(f.qMine?1:0);
     const sel=SORT17.map(([k,l])=>`<option value="${esc(k)}"${String(f.sort)===String(k)?" selected":""}>${esc(T1(l))}</option>`).join("");
     const chips=[["qMine",UI.qMine17],...this.Q.map(k=>[k,{qLate:UI.l25Late,qPay:UI.l25Pay,qStale:UI.l25Stale}[k]])].filter(([k])=>f[k]);
@@ -14559,6 +14569,19 @@ document.addEventListener("keydown",e=>{const p=document.getElementById("l25menu
    на сайте поле не показывается; значение сохраняется как было */
 {const _daK27=Dlg.ask.bind(Dlg);Dlg.ask=function(o){if(o&&Array.isArray(o.fields)&&typeof FS20!=="undefined"&&FS20.on()&&o.fields.some(x=>x&&x.k==="packKpKb"))
     o=Object.assign({},o,{fields:o.fields.map(x=>x&&x.k==="packKpKb"?Object.assign({},x,{_hideU25:true,required:false}):x)});return _daK27(o);};}
+
+/* ── плитки-счётчики (владелец 19.10.2026, вариант A макета design-tiles.html): линейные значки системы вместо эмодзи ──
+   L25.ico(имя) — значок для плитки .k25 («Разовые услуги», «Судебные дела» и др.). Эмодзи, которые разделы ещё передают
+   в плитку (📂 ⏰ ⏱ 💳 💤 📅 ❗ 🗳 ⚖ 🆕 ✓), при показе заменяются на тот же набор значков — файлы разделов не меняются. */
+const ICO25={folder:"M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",clock:"M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 7.5V12l3 2",
+  wallet:"M4 7h15a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zM4 7l11-3v3M16 13h2",pause:"M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM10 9v6M14 9v6",
+  calendar:"M4 6h16v14H4zM4 10h16M8 3v4M16 3v4",alert:"M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8v5M12 16h.01",inbox:"M4 13l2.5-7h11L20 13v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zM4 13h4.5l1.5 2h4l1.5-2H20",
+  scales:"M12 4v16M8 20h8M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l-3 6a3 3 0 0 0 6 0z",plus:"M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM12 8.5v7M8.5 12h7",check:"M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM8.5 12.2l2.4 2.3 4.6-4.8"};
+const EMO25={"📂":"folder","⏰":"clock","⏱":"clock","💳":"wallet","💤":"pause","📅":"calendar","❗":"alert","🗳":"inbox","⚖":"scales","🆕":"plus","✓":"check"};
+L25.ico=function(n){const d=ICO25[n];return d?`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`:"";};
+L25.fixIco=function(root){(root||document).querySelectorAll(".k25 .ic").forEach(el=>{if(el.firstElementChild)return;const k=EMO25[(el.textContent||"").replace(/️/g,"").trim()];if(k)el.innerHTML=L25.ico(k);});};
+{const vp=()=>document.getElementById("viewPage");let mo=null;const go=()=>{const v=vp();if(!v||mo)return;L25.fixIco(v);mo=new MutationObserver(()=>L25.fixIco(v));mo.observe(v,{childList:true,subtree:true});};
+  const _pbI25=Pages.bind;Pages.bind=function(v){_pbI25.apply(this,arguments);try{L25.fixIco(v||vp());go();}catch(e){}};}
 
 /* ══ версия 1.3 · «Сообщить об ошибке» и тихий журнал сбоев (решения владельца 17.10.2026) ══
    Только сотрудники (УП и адвокаты); у клиентов — «Подать жалобу». Логика — на сервере (миграция 20261017002000_bug_reports.sql:
