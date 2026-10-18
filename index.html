@@ -10277,7 +10277,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="014dd7d35dc5";
+const ZC_BUILD="dfebe0e2e650";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -15695,6 +15695,59 @@ if(typeof Card22!=="undefined"){
 .c5card .kv24 small{color:var(--ink-3);font-size:11.5px}.c5card .du25{margin-left:4px}
 .c5card .rc5 .reqrow{align-items:center}.c5card .rc5 .btn.ghost{margin-left:auto;padding:2px 8px}`;
   (document.head||document.documentElement).appendChild(st);}
+
+/* ══ Раздел «Судебные дела» · этап 5б (stage5b.js; после stage5.js) — оплата по инстанциям, привязка платежей, зарплата, ЭСФ ══
+   Решения владельца 19.10.2026 (С-61 … С-64, sections/court/ПРАВИЛА.md). Логика — на сервере (миграция 20261019001000_court_stage5b):
+   court_act не откроет неоплаченную инстанцию (УП — с причиной), триггер платежей сам относит подтверждённый платёж к инстанции,
+   акт суда сразу ставит УП задачу на ЭСФ. Здесь — показ, окно открытия инстанции, то же для демо (без сервера) и учёт привязки в зарплате
+   (расчёт зарплаты остаётся в портале). */
+Object.assign(UI,{
+  c5bPay:"Оплата по инстанциям||按审级付款",c5bCost:"Цена||价格",c5bCovered:"Покрыто оплатой||已付款覆盖",c5bState:"Состояние||状态",c5bPaid:"оплачена||已付清",c5bPart:"частично||部分",c5bNot:"не оплачена||未付款",
+  c5bTotal:"Оплачено всего||已付合计",c5bUnpaidOpen:"открыта без оплаты||未付款即开启",c5bH:"Платёж сервер относит к инстанции сам — к первой, цена которой ещё не покрыта; изменить может УП. В зарплату платёж попадает после акта суда по своей инстанции.||服务器自动将付款归入首个未覆盖价格的审级；管理合伙人可修改。付款在其审级法院文书后计入工资。",
+  c5bNeed:"Чтобы открыть, нужно оплатить||开启所需付款",c5bPaidSum:"оплачено||已付",c5bShort:"не хватает||尚缺",c5bOk:"оплачено достаточно||付款充足",c5bUnpaid:"Открыть без оплаты (решение УП)||未付款开启（管理合伙人决定）",c5bWhy:"Причина||原因",
+  c5bWhyNeed:"Укажите причину||请说明原因",c5bOnlyMp:"Не оплачено по договору. Открыть без оплаты может управляющий адвокат.||合同款项未付。仅管理合伙人可在未付款时开启。"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Оплата по инстанциям":"Instansiyalar boʻyicha toʻlov","Цена":"Narx","Покрыто оплатой":"Toʻlov bilan qoplangan","оплачена":"toʻlangan","частично":"qisman","не оплачена":"toʻlanmagan","Оплачено всего":"Jami toʻlangan","Причина":"Sabab"});
+const Pay5={
+  /* то же, что сервер (zc.court5_plan, zc.court5_need), — для показа и демо */
+  on(m){return Array.isArray(m.instPrices24)&&m.instPrices24.length>0;},
+  cost(m,k){const x=(m.instPrices24||[]).find(y=>y.k===k);return x?(+x.cost||0):0;},
+  plan(m){const L=(m.instances||[]).map((x,i)=>({k:x.kind,cost:this.cost(m,x.kind),opened:i,unpaid:x.unpaid}));
+    (m.instPrices24||[]).filter(y=>(y.inc==="yes"||y.inc==="opt")&&!L.some(z=>z.k===y.k)).forEach(y=>L.push({k:y.k,cost:+y.cost||0,opened:null,opt:y.inc==="opt"}));return L;},
+  need(m,k){const paid=+m.paid||0;if(!this.on(m)||m.payOrder==="postpay")return {need:0,paid,short:0};const prev=this.plan(m).filter(x=>x.opened!==null).reduce((s,x)=>s+x.cost,0);const c=this.cost(m,k);
+    const part=m.payOrder==="prepay"?Math.round(c*(m.payPct21??100))/100:m.payOrder==="monthly"?Math.min(c,1):c;return {need:prev+part,paid,short:Math.max(0,prev+part-paid),cost:c};},
+  cover(m){let left=+m.paid||0;return this.plan(m).map(x=>{const c=Math.min(x.cost,Math.max(0,left));left-=x.cost;return Object.assign({},x,{covered:c,st:x.cost<=0||c>=x.cost?"paid":c>0?"part":"not"});});},
+  card(m){if(!this.on(m))return "";const R=this.cover(m),cur=T1(UI.sum);const st={paid:["ok",UI.c5bPaid],part:["w",UI.c5bPart],not:["r",UI.c5bNot]};
+    return `<div class="card c5bcard"><h4>${T1(UI.c5bPay)}</h4><div class="tw3"><table class="tb3"><thead><tr><th>${T1(UI.crInst)}</th><th class="num">${T1(UI.c5bCost)}</th><th class="num">${T1(UI.c5bCovered)}</th><th>${T1(UI.c5bState)}</th></tr></thead><tbody>
+      ${R.map(x=>`<tr><td><b>${esc(instLabel(x.k))}</b>${x.opened===null?` <small>${T1(x.opt?UI.f3Opt:UI.c2InstInc||"входит||包含")}</small>`:""}</td><td class="num">${esc(fmtN(x.cost))}</td><td class="num">${esc(fmtN(x.covered))}</td>
+        <td><span class="czres ${st[x.st][0]}">${T1(st[x.st][1])}</span>${x.unpaid?` <small title="${esc(x.unpaid.why||"")}">· ${T1(UI.c5bUnpaidOpen)}</small>`:""}</td></tr>`).join("")}
+      <tr class="tot"><td>${T1(UI.c5bTotal)}</td><td></td><td class="num"><b>${esc(fmtN(+m.paid||0)+" "+cur)}</b></td><td></td></tr></tbody></table></div><div class="czhint">${T1(UI.c5bH)}</div></div>`;}
+};
+/* окно «Открыть инстанцию»: сколько нужно оплатить; УП — открыть без оплаты с причиной */
+{const _opC5b=CF3.open.bind(CF3);CF3.open=async function(m,a,el){if(a!=="inst_open"||!Pay5.on(m))return _opC5b(m,a,el);
+  const L=m.instances||[];const opts=c2kinds(m).filter(([k])=>{const p=this.price(m,k);return !(p&&p.inc==="no");}).map(([k,l])=>[k,T1(l)]);
+  const def=(opts.find(o=>!L.some(i=>i.kind===o[0]))||opts[0]||["first"])[0];const MP=this.mp();
+  const info=k=>{const n=Pay5.need(m,k);return n.short>0?`<div class="c2hint" style="color:var(--red-d)">${T1(UI.c5bNeed)}: <b>${esc(fmtN(n.need))}</b> · ${T1(UI.c5bPaidSum)} ${esc(fmtN(n.paid))} · ${T1(UI.c5bShort)} <b>${esc(fmtN(n.short))} ${T1(UI.sum)}</b>${MP?"":"<br>"+T1(UI.c5bOnlyMp)}</div>`:`<div class="c2hint">${T1(UI.c5bOk)} (${esc(fmtN(n.paid))} / ${esc(fmtN(n.need))})</div>`;};
+  const fields=[{k:"kind",label:T1(UI.crInst),type:"select",value:def,options:opts},{k:"pinfo",type:"html",span:true,html:`<div data-c5binfo>${info(def)}</div>`}];
+  if(MP)fields.push({k:"unpaid",label:T1(UI.c5bUnpaid),type:"select",value:"0",options:[["0",T1(UI.no)],["1",T1(UI.yes)]]},{k:"why",label:T1(UI.c5bWhy),type:"textarea"});
+  setTimeout(()=>{const md=document.getElementById("mdD");const sel=md&&md.querySelector('[name="kind"],[data-k="kind"] select,select');const box=md&&md.querySelector("[data-c5binfo]");if(sel&&box)sel.addEventListener("change",()=>{box.innerHTML=info(sel.value);});},60);
+  const v=await Dlg.ask({title:T1(UI.f3Open)+" · "+m.no,fields,check:x=>x.unpaid==="1"&&!String(x.why||"").trim()?T1(UI.c5bWhyNeed):""});if(!v)return;
+  return this.run(m,"inst_open",{kind:v.kind,unpaid:v.unpaid==="1",why:v.why||"",w:T1(UI.f3Open)+": "+instLabel(v.kind)});};}
+/* демо (без сервера): та же проверка оплаты, что в court_act */
+{const _mtC5b=CF3.mut.bind(CF3);CF3.mut=async function(m,act,a){if(act!=="inst_open"||!Pay5.on(m))return _mtC5b(m,act,a);const n=Pay5.need(m,a.kind);
+  if(n.short>0){if(!(this.mp()&&a.unpaid))return T1("Инстанция не оплачена по договору: нужно ещё||审级合同款未付：尚需")+" "+fmtN(n.short)+" "+T1(UI.sum)+" ("+fmtN(n.paid)+" / "+fmtN(n.need)+")";if(!String(a.why||"").trim())return T1(UI.c5bWhyNeed);}
+  const err=await _mtC5b(m,act,a);if(err)return err;if(n.short>0){const x=m.instances[m.instances.length-1];x.unpaid={by:(U()||{}).emp,at:nowS(),why:a.why,short:n.short};}return "";};}
+/* в карточку: «Оплата по инстанциям» — под «Ходом дела» (и над «Данными дела») */
+if(typeof Card22!=="undefined"){const _bC5b=Card22.build.bind(Card22);Card22.build=function(id,html,m){const out=_bC5b(id,html,m);if(!CF3.on(m)||!Pay5.on(m))return out;
+  const k=out.indexOf('<div class="card c5card">');if(k>=0)return out.slice(0,k)+Pay5.card(m)+out.slice(k);return out;};}
+/* зарплата (расчёт — в портале): платёж, отнесённый сервером к ещё не открытой инстанции, не учитывается до её акта */
+if(typeof Pay!=="undefined"&&Pay.eligibility){const _elC5b=Pay.eligibility.bind(Pay);Pay.eligibility=function(p){const m=p&&p.matterId&&S.matters[p.matterId];
+  if(m&&m.svc==="court"&&p.instKind&&p.kind!=="translation"){const i=(m.instances||[]).findIndex(x=>x.kind===p.instKind);if(i<0){const w=_elC5b(Object.assign({},p,{instance:0}));return w||"instOpen";}
+    if(+p.instance!==i)return _elC5b(Object.assign({},p,{instance:i}));}return _elC5b(p);};}
+/* окно платежа: инстанцию у судебного дела выбирает только УП (остальным сервер относит сам) */
+if(typeof Payment!=="undefined"){const _pfC5b=Payment.fields.bind(Payment);Payment.fields=function(p,pre){const f=_pfC5b(p,pre);const mid=(p&&p.matterId)||(pre&&pre.matterId)||"";const m=mid&&S.matters[mid];
+  if(m&&m.svc==="court"&&Pay5.on(m)&&!CF3.mp())return f.filter(x=>x.k!=="instance");return f;};}
+{const st=document.createElement("style");st.id="c5bcss";st.textContent=`.c5bcard td small{color:var(--ink-3);font-size:11px}.c5bcard .czres.ok{background:var(--ok-soft);color:var(--ok-d)}`;(document.head||document.documentElement).appendChild(st);}
 
 /* ══ Раздел «Разовые услуги» · КП-PDF текстом (В4, решение владельца 18.10.2026: «вариант Б — настоящий текстовый PDF со встроенным
    свободным шрифтом») ══
