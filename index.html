@@ -10277,7 +10277,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="575a2119aa59";
+const ZC_BUILD="014dd7d35dc5";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14965,10 +14965,12 @@ const C2ROLE=[["plaintiff","истец||原告"],["defendant","ответчик|
 const C2STAGE=[["pre","до суда — претензия, проверка||诉前——索赔、调查"],["first","идёт 1-я инстанция||一审进行中"],["decided","решение уже есть||已有判决"],["appeal","идёт апелляция или кассация||上诉或再审进行中"],["exec","исполнение решения||判决执行"]];
 const c2lbl=(L,k)=>{const x=L.find(y=>y[0]===k);return x?T1(x[1]):"";};
 const C2INC=()=>[["yes",T1(UI.c2InstInc)],["opt",T1(UI.c2InstOpt)],["no",T1(UI.c2InstNo)]];
+/* этап 5а: стадии до суда (проверка, следствие) — только в уголовном деле; их названия добавляет stage5.js */
+const C2PRE_K=["check","investigation"];const c2kinds=m=>INST11.filter(([k])=>!C2PRE_K.includes(k)||(!!m&&m.courtKind==="criminal"));
 const c2inc=k=>(C2INC().find(x=>x[0]===k)||["",""])[1];
 /* цена по инстанциям: строки по видам инстанций (INST11), по умолчанию — 1-я входит, апелляция по решению, остальное не входит */
 const C2={
-  instDef(){return INST11.map(([k])=>({k,inc:k==="first"?"yes":k==="appeal"?"opt":"no",cost:""}));},
+  instDef(m){return c2kinds(m).map(([k])=>({k,inc:k==="first"||k==="investigation"?"yes":k==="appeal"?"opt":"no",cost:""}));},
   sum(inst){return (inst||[]).filter(x=>x.inc==="yes"||x.inc==="opt").reduce((s,x)=>s+(+x.cost||0),0);},
   /* строки цены по инстанциям — для условий, КП, договора */
   rows(inst,cur){return (inst||[]).filter(x=>x.inc!=="no").map(x=>`<tr><td>${esc(instLabel(x.k))}${x.inc==="opt"?` <span class="tg24 wait">${esc(T1(UI.c2Opt))}</span>`:""}</td><td class="num">${esc(fmtN(+x.cost||0)+" "+(cur||T1(UI.sum)))}</td></tr>`).join("");},
@@ -15042,15 +15044,15 @@ Pre24.newCourt=async function(mode){Matter._mode24=mode;Matter._svc="court";try{
 
 /* ── цена по инстанциям: окно условий, показ, КП ── */
 {const _tfC2=Pre24.termFields.bind(Pre24);Pre24.termFields=function(m,t,needWhy){const f=_tfC2(m,t,needWhy);if(!crt2(m))return f;t=t||{};
-  const cur=Array.isArray(t.inst)&&t.inst.length?t.inst:C2.instDef();const by=k=>cur.find(x=>x.k===k)||{k,inc:"no",cost:""};
+  const cur=Array.isArray(t.inst)&&t.inst.length?t.inst:C2.instDef(m);const by=k=>cur.find(x=>x.k===k)||{k,inc:"no",cost:""};
   const rows=[{k:"c2h",type:"html",span:true,html:`<div class="c2hint">${esc(T1(UI.c2InstH))}</div>`}];
-  INST11.forEach(([k])=>{const x=by(k);rows.push({k:"ii_"+k,label:instLabel(k),type:"select",value:x.inc||"no",options:C2INC()},{k:"ic_"+k,label:instLabel(k)+" — "+T1(UI.c2Cost),type:"number",value:x.cost??""});});
+  c2kinds(m).forEach(([k])=>{const x=by(k);rows.push({k:"ii_"+k,label:instLabel(k),type:"select",value:x.inc||"no",options:C2INC()},{k:"ic_"+k,label:instLabel(k)+" — "+T1(UI.c2Cost),type:"number",value:x.cost??""});});
   const out=f.filter(x=>x.k!=="cost");const i=out.findIndex(x=>x.k==="currency");out.splice(i>=0?i:0,0,...rows);
-  const last=out[out.length-1];const ch=last.check;last.check=v=>{const inst=INST11.map(([k])=>({k,inc:v["ii_"+k],cost:+v["ic_"+k]||0}));if(!inst.some(x=>x.inc==="yes"))return T1(UI.c2InstNeed);
+  const last=out[out.length-1];const ch=last.check;last.check=v=>{const inst=c2kinds(m).map(([k])=>({k,inc:v["ii_"+k],cost:+v["ic_"+k]||0}));if(!inst.some(x=>x.inc==="yes"))return T1(UI.c2InstNeed);
     return ch?ch(Object.assign({},v,{cost:C2.sum(inst)})):"";};
   return out;};
  const _tFC2=Pre24.tFrom.bind(Pre24);Pre24.tFrom=function(v){const t=_tFC2(v);if(!("ii_first" in v))return t;
-   t.inst=INST11.map(([k])=>({k,inc:v["ii_"+k]||"no",cost:v["ii_"+k]==="no"?0:(+v["ic_"+k]||0)}));t.cost=C2.sum(t.inst);return t;};
+   t.inst=INST11.filter(([k])=>("ii_"+k) in v).map(([k])=>({k,inc:v["ii_"+k]||"no",cost:v["ii_"+k]==="no"?0:(+v["ic_"+k]||0)}));t.cost=C2.sum(t.inst);return t;};
  const _trC2=Pre24.terms.bind(Pre24);Pre24.terms=function(t,base){let h=_trC2(t,base);if(!t||!Array.isArray(t.inst))return h;
    return h.replace(/(<dt>[^<]*<\/dt><dd><span class="big[^"]*">)[^<]*(<\/span><\/dd>)/,`$1${esc(this.tCost(t))}$2<dt></dt><dd>${C2.table(t)}</dd>`);};
  /* КП (PDF): цена по инстанциям — строкой в «Объёме работ» (итог — в «Стоимости») */
@@ -15219,6 +15221,8 @@ const CF3={
   cur(m){const l=m.instances||[];for(let i=l.length-1;i>=0;i--){if((l[i]||{}).step!=="done")return i;}return -1;},
   inst(m){const i=this.cur(m);return i<0?null:m.instances[i];},
   step(x){return (x&&x.step)||"hearings";},
+  /* название шага в инстанции (stage5.js — свои для стадий до суда) */
+  stepL(x,k,l){return l;},
   on(m){return crt3(m)&&m.pipeline==="contract"&&m.status!=="closed";},
   can(m){const u=U()||{};return !isClient()&&(isFounder()||hasF("managing")||m.lead===u.emp||execsOf(m).some(x=>x.emp===u.emp));},
   mp(){return isFounder()||hasF("managing");},
@@ -15236,8 +15240,8 @@ const CF3={
   /* то же, что сервер (court_act), — для демо и без сервера */
   async mut(m,act,a){const me=(U()||{}).emp,at=nowS(),td=todayS();m.instances=m.instances||[];const ci=this.cur(m),x=ci<0?null:m.instances[ci];const hist=w=>{m.history=m.history||[];m.history.push({at,by:me,what:w||act});};
     switch(act){
-      case "inst_open":{const p=this.price(m,a.kind);if(ci>=0)return T1("Сначала завершите текущую инстанцию||请先完成当前审级");if(p&&p.inc==="no")return T1("Эта инстанция не входит в договор — нужно новое КП||该审级不在合同内——需新报价");
-        if(p&&p.inc==="opt"&&!m.instances.some(i=>i.decision&&i.decision.choice==="appeal"&&i.decision.mp))return T1("Инстанция «по решению» открывается после согласованного решения «обжалуем»||须先批准“上诉”决定");
+      case "inst_open":{const p=this.price(m,a.kind);if(C2PRE_K.includes(a.kind)&&m.courtKind!=="criminal")return T1("Проверка и следствие — только в уголовном деле||调查和侦查仅限刑事案件");if(ci>=0)return T1("Сначала завершите текущую инстанцию||请先完成当前审级");if(p&&p.inc==="no")return T1("Эта инстанция не входит в договор — нужно новое КП||该审级不在合同内——需新报价");
+        if(p&&p.inc==="opt"&&!m.instances.some(i=>i.decision&&["appeal","next"].includes(i.decision.choice)&&i.decision.mp))return T1("Инстанция «по решению» открывается после согласованного решения «обжалуем»||须先批准“上诉”决定");
         m.instances.push({kind:a.kind,start:td,step:"prep",opened:{by:me,at}});hist(a.w);return "";}
       case "inst_step":{if(!x)return T1(UI.noData);const s=this.step(x);if(!((s==="prep"&&a.to==="filed")||(s==="filed"&&a.to==="hearings")))return T1(UI.stNoRight);x.step=a.to;x[a.to+"At"]=at;hist(a.w);return "";}
       case "doc_add":{const id=uid("cd");const cv=a.cv!=null?!!a.cv:a.dir==="in";const d={id,kind:a.kind,title:a.title||undefined,dir:a.dir,docDate:a.docDate||undefined,recvDate:a.recvDate||undefined,inst:x?x.kind:undefined,file:a.file,note:a.note||undefined,cv,final:!!a.final,by:me,at};
@@ -15248,7 +15252,7 @@ const CF3={
         if(a.final){if(!x)return T1("Нет открытой инстанции для акта суда||没有可用的审级");Object.assign(x,{step:"act",actAt:at,actDate:a.docDate||td,actFile:a.file,actDoc:id});}hist(a.w);return "";}
       case "dl_add":(m.courtDl24=m.courtDl24||[]).push({id:uid("dl"),what:a.what,due:a.due,resp:a.resp||m.lead,st:"open",by:me,at});hist(a.w);return "";
       case "dl_close":{const y=(m.courtDl24||[]).find(z=>z.id===a.id&&z.st==="open");if(!y)return T1(UI.noData);y.st=a.st;y.closed={by:me,at,doc:a.doc||undefined,text:a.text||undefined};hist(a.w);return "";}
-      case "appeal":{if(!x||this.step(x)!=="act")return T1(UI.stNoRight);x.step="decision";x.decision={choice:a.choice,text:a.text,by:me,at};hist(a.w);return "";}
+      case "appeal":{if(!x||this.step(x)!=="act")return T1(UI.stNoRight);if(a.choice==="next"&&!C2PRE_K.includes(x.kind))return T1(UI.stNoRight);x.step="decision";x.decision={choice:a.choice,text:a.text,by:me,at};hist(a.w);return "";}
       case "appeal_client":{if(!x||x.step!=="decision")return T1(UI.stNoRight);x.decision.client={ok:true,via:a.text,by:me,at};hist(a.w);return "";}
       case "appeal_mp":{if(!this.mp()||!x||x.step!=="decision")return T1(UI.stNoRight);if(a.ok){if(!(x.decision.client||{}).ok)return T1("Сначала подтверждение клиента||须先获得客户确认");x.decision.mp={by:me,at};x.step="done";x.closedAt=at;}
         else{x.decisionBack={by:me,at,text:a.text,was:x.decision};delete x.decision;x.step="act";}hist(a.w);return "";}
@@ -15265,7 +15269,7 @@ const CF3={
     const plan=(m.instPrices24||[]).filter(p=>!L.some(i=>i.kind===p.k));
     const items=[...L.map((i,j)=>{const s=j===ci?"cur":i.step==="done"||j<ci?"done":"todo";const meta=i.actDate?T1("акт||文书")+" "+fmtD(i.actDate):i.start?T1("с||自")+" "+fmtD(i.start):"";return `<div class="fi3 ${s}"><span class="c">${s==="done"?"✓":j+1}</span><span class="t">${esc(instLabel(i.kind))}</span><span class="m">${esc(meta)}</span></div>`;}),
       ...plan.map(p=>`<div class="fi3 todo ${p.inc==="opt"?"opt":p.inc==="no"?"no":""}"><span class="c">·</span><span class="t">${esc(instLabel(p.k))}</span><span class="m">${esc(p.inc==="opt"?T1(UI.f3Opt):p.inc==="no"?T1(UI.f3NotIn):"")}</span></div>`)];
-    const cyc=x?`<div class="cy3"><div class="lb">${esc(instLabel(x.kind))}</div>${F3STEPS.map(([k,l],j)=>{const i=F3STEPS.findIndex(s=>s[0]===this.step(x));return `${j?'<span class="ar">›</span>':""}<span class="s ${j<i?"done":j===i?"cur":""}"><i>${j<i?"✓":j+1}</i>${esc(T1(UI[l]))}</span>`;}).join("")}</div>`:"";
+    const cyc=x?`<div class="cy3"><div class="lb">${esc(instLabel(x.kind))}</div>${F3STEPS.map(([k,l],j)=>{const i=F3STEPS.findIndex(s=>s[0]===this.step(x));return `${j?'<span class="ar">›</span>':""}<span class="s ${j<i?"done":j===i?"cur":""}"><i>${j<i?"✓":j+1}</i>${esc(T1(UI[this.stepL(x,k,l)]))}</span>`;}).join("")}</div>`:"";
     const dec=x&&x.step==="decision"&&x.decision?this.decBox(m,x):x&&x.decisionBack?`<div class="reqonly warn11">↩ ${esc(T1(UI.f3MpBack))}: ${esc(x.decisionBack.text||"")} · ${esc(dispName(x.decisionBack.by))}</div>`:"";
     const acts=can?this.actBtns(m).map(([a,l,pri])=>`<button type="button" class="btn sm${pri?" pri":""}" data-f3="${a}">${esc(T1(l))}</button>`).join(""):"";
     return `<div class="card f3card"><h4>${T1(UI.f3Flow)}</h4><div class="fs3">${items.join("")||`<div class="empty2">${T1(UI.f3None)}</div>`}</div>${cyc}${dec}${this.nearBox(m)}${acts?`<div class="actions" style="justify-content:flex-start;margin-top:10px">${acts}</div>`:""}</div>`;},
@@ -15299,7 +15303,7 @@ const CF3={
   /* ── окна ── */
   async open(m,a,el){const id=m.id;const ask=o=>Dlg.ask(o);const ci=this.cur(m),x=ci<0?null:m.instances[ci];
     switch(a){
-      case "inst_open":{const L=m.instances||[];const opts=INST11.filter(([k])=>{const p=this.price(m,k);return !(p&&p.inc==="no");}).map(([k,l])=>[k,T1(l)]);
+      case "inst_open":{const L=m.instances||[];const opts=c2kinds(m).filter(([k])=>{const p=this.price(m,k);return !(p&&p.inc==="no");}).map(([k,l])=>[k,T1(l)]);
         const def=(opts.find(o=>!L.some(i=>i.kind===o[0]))||opts[0]||["first"])[0];const v=await ask({title:T1(UI.f3Open)+" · "+m.no,fields:[{k:"kind",label:T1(UI.crInst),type:"select",value:def,options:opts}]});if(!v)return;
         return this.run(m,"inst_open",{kind:v.kind,w:T1(UI.f3Open)+": "+instLabel(v.kind)});}
       case "to_filed":return this.run(m,"inst_step",{to:"filed",w:T1(UI.f3ToFiled)});
@@ -15311,7 +15315,7 @@ const CF3={
       case "doc_add":return this.docDlg(m,{});
       case "dl_add":{const v=await ask({title:T1(UI.f3DlAdd).replace("+ ","")+" · "+m.no,fields:[{k:"what",label:T1(UI.f3What),required:true},{k:"due",label:T1(UI.f3DlDue),type:"date",required:true}]});if(!v)return;
         return this.run(m,"dl_add",{what:v.what,due:v.due,w:T1(UI.f3DlAdd).replace("+ ","")+": "+v.what+" — "+fmtD(v.due)});}
-      case "appeal":{const v=await ask({title:T1(UI.f3Decide)+" · "+m.no,fields:[{k:"choice",label:T1(UI.f3Decide),type:"select",value:"wait",options:F3CH.map(([k,l,h])=>[k,T1(UI[l])+" — "+T1(UI[h])])},{k:"text",label:T1(UI.f3Why),type:"textarea",required:true}]});if(!v)return;
+      case "appeal":{const v=await ask({title:T1(UI.f3Decide)+" · "+m.no,fields:[{k:"choice",label:T1(UI.f3Decide),type:"select",value:x&&C2PRE_K.includes(x.kind)?"next":"wait",options:F3CH.filter(([k])=>k!=="next"||(x&&C2PRE_K.includes(x.kind))).map(([k,l,h])=>[k,T1(UI[l])+" — "+T1(UI[h])])},{k:"text",label:T1(UI.f3Why),type:"textarea",required:true}]});if(!v)return;
         return this.run(m,"appeal",{choice:v.choice,text:v.text,w:T1(UI.f3Decide)+": "+T1(UI[(F3CH.find(y=>y[0]===v.choice)||F3CH[0])[1]])});}
       case "appeal_client":{const v=await ask({title:T1(UI.f3CliOk)+" · "+m.no,fields:[{k:"text",label:T1(UI.p24MarkCh||"Как подтвердил||确认方式"),value:"WeChat",required:true}]});if(!v)return;return this.run(m,"appeal_client",{text:v.text,w:T1(UI.f3CliYes)+" · "+v.text});}
       case "appeal_mp":{if(!await Dlg.confirm(T1(UI.f3MpOk)+" · "+m.no,""))return;return this.run(m,"appeal_mp",{ok:true,w:T1(UI.f3MpOk)});}
@@ -15589,6 +15593,107 @@ if(typeof CP!=="undefined"){
 @media (max-width:1350px){.ks25.cz5{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:900px){.czg2{grid-template-columns:1fr}.czwk{grid-template-columns:1fr!important}.czwk .czdy{min-height:0}}
 @media (max-width:700px){.ks25.cz5{grid-template-columns:repeat(2,minmax(0,1fr))}.c4p .hd25{flex-wrap:wrap}.c4p .acts{flex-wrap:wrap}}`;
+  (document.head||document.documentElement).appendChild(st);}
+
+/* ══ Раздел «Судебные дела» · этап 5а (stage5.js; подключается после stage3.js и stage4.js — нужны CF3, F3CH, F3DOC) — уголовные дела, суммы, исполнение ══
+   Решения владельца 19.10.2026 (С-54 … С-58, sections/court/ПРАВИЛА.md). Логика — на сервере: public.court_info и public.court_act
+   (миграция 20261018009000_court_stage5a); без сервера (демо) — то же в портале (Info5.mut). Здесь — показ, окна и вызовы.
+   Уголовное дело: стадии до суда («Доследственная проверка», «Следствие») — в «Ходе дела по инстанциям», до 1-й инстанции;
+   данные: подзащитный / потерпевший, статья, орган, мера пресечения (её срок — процессуальный срок дела).
+   Экономические и гражданские: сумма иска, присуждено, госпошлина, исполнительный лист, МИБ, фактически взыскано. */
+Object.assign(UI,{
+  c5Check:"доследственная проверка||调查前审查",c5Inv:"следствие||侦查",c5Filed:"Заявления и ходатайства||申请与请求",c5Acts:"Следственные действия||侦查行为",c5Act:"Итоговое постановление||最终决定",
+  c5ToActs:"Поданы — идут следственные действия||已提交——进行侦查行为",c5GotAct:"Итоговое постановление получено||已收到最终决定",
+  c5ChNext:"Следующая стадия||进入下一阶段",c5ChNextH:"дело идёт дальше: следствие или суд||案件进入下一阶段：侦查或法院",
+  c5Data:"Данные дела||案件资料",c5Edit:"Изменить||修改",c5Person:"Подзащитный||被辩护人",c5PersonV:"Потерпевший||被害人",c5Art:"Статья||条款",c5Body:"Орган (следствие, суд)||机关（侦查、法院）",
+  c5Measure:"Мера пресечения||强制措施",c5MFrom:"с какой даты||起始日期",c5MUntil:"до какой даты (срок)||截止日期（期限）",c5MText:"Какая мера (если «другая»)||何种措施（如“其他”）",
+  c5MH:"Срок меры пресечения станет процессуальным сроком дела: напоминания за 5, 3, 1 р.д. и в день срока, пропуск — УП.||强制措施期限将成为案件诉讼期限：提前5、3、1个工作日及当天提醒，逾期通知管理合伙人。",
+  c5Claim:"Сумма иска||诉讼金额",c5Award:"Присуждено по решению||判决金额",c5Duty:"Госпошлина||诉讼费",c5Enf:"Исполнение||执行",c5Writ:"Исполнительный лист||执行令",c5WritNo:"№ исполнительного листа||执行令编号",
+  c5WritDate:"Дата исполнительного листа||执行令日期",c5Mib:"МИБ||强制执行局",c5MibDept:"Отдел МИБ||强制执行局部门",c5MibNo:"№ исполнительного производства||执行程序编号",c5MibDate:"Дата возбуждения производства||立案日期",
+  c5Rec:"Фактически взыскано||实际追回",c5RecAdd:"+ Взыскано||+ 追回",c5RecDate:"Дата поступления||到账日期",c5RecSum:"Сумма, сум||金额（苏姆）",c5RecNote:"Откуда (кратко)||来源（简述）",c5OfAward:"от присуждённого||占判决金额",
+  c5Sums:"Суммы||金额",c5None:"не указано||未填写",c5Del:"Удалить запись?||删除记录？"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"доследственная проверка":"tergovgacha tekshiruv","следствие":"tergov","Следственные действия":"Tergov harakatlari","Итоговое постановление":"Yakuniy qaror",
+  "Следующая стадия":"Keyingi bosqich","Данные дела":"Ish maʼlumotlari","Изменить":"Oʻzgartirish","Подзащитный":"Himoyadagi shaxs","Потерпевший":"Jabrlanuvchi","Статья":"Modda","Мера пресечения":"Ehtiyot chorasi",
+  "Сумма иска":"Daʼvo summasi","Присуждено по решению":"Hal qiluv qarori boʻyicha undirilgan","Госпошлина":"Davlat boji","Исполнение":"Ijro","Исполнительный лист":"Ijro varaqasi","МИБ":"MIB",
+  "Фактически взыскано":"Haqiqatda undirilgan","+ Взыскано":"+ Undirildi","Суммы":"Summalar","не указано":"koʻrsatilmagan"});
+/* стадии до суда — в начало списка видов инстанций (в цене и в ходе дела они есть только у уголовного дела: c2kinds) */
+if(typeof INST11!=="undefined"&&!INST11.some(x=>x[0]==="check"))INST11.unshift(["check",UI.c5Check],["investigation",UI.c5Inv]);
+if(typeof F3CH!=="undefined"&&!F3CH.some(x=>x[0]==="next"))F3CH.push(["next","c5ChNext","c5ChNextH"]);
+if(typeof F3DOC!=="undefined")[["res_init","Постановление о возбуждении уголовного дела||立案决定",1],["res_refuse","Постановление об отказе в возбуждении дела||不予立案决定",1],["res_stop","Постановление о прекращении дела||终止案件决定",1],
+  ["indictment","Обвинительное заключение||起诉书（检察）",1],["res_measure","Постановление о мере пресечения||强制措施决定",1],["writ_exec","Исполнительный лист||执行令",1]].forEach(x=>{if(!F3DOC.some(y=>y[0]===x[0]))F3DOC.push(x);});
+const C5M=[["undertaking","подписка о невыезде||取保（不离境具结）"],["surety","поручительство||担保"],["bail","залог||保证金"],["house","домашний арест||居家监视"],["custody","заключение под стражу||羁押"],["other","другая мера||其他措施"]];
+const c5pre=x=>!!x&&C2PRE_K.includes(x.kind);
+CF3.stepL=function(x,k,l){if(!c5pre(x))return l;return {filed:"c5Filed",hearings:"c5Acts",act:"c5Act"}[k]||l;};
+{const _abC5=CF3.actBtns.bind(CF3);CF3.actBtns=function(m){const out=_abC5(m);const x=this.inst(m);if(!c5pre(x))return out;
+  return out.map(b=>b[1]===UI.f3ToHear?[b[0],UI.c5ToActs,b[2]]:b[1]===UI.f3GotAct?[b[0],UI.c5GotAct,b[2]]:b);};}
+const Info5={
+  crim(m){return m.courtKind==="criminal";},
+  sum(v){return v===null||v===undefined||v===""?`<span class="c2no">${T1(UI.c5None)}</span>`:esc(fmtN(+v)+" "+T1(UI.sum));},
+  rec(m){return (m.recovered24||[]).reduce((s,x)=>s+(+x.sum||0),0);},
+  mLabel(c){if(!c||!c.measure)return "";const l=(C5M.find(x=>x[0]===c.measure)||["",""])[1];return c.measure==="other"&&c.measureText?c.measureText:T1(l);},
+  card(m){const can=CF3.can(m),dd=v=>v?esc(v):`<span class="c2no">${T1(UI.c5None)}</span>`;
+    if(this.crim(m)){const c=m.crim24||{};const ml=this.mLabel(c);const left=c.measureUntil?daysTo(c.measureUntil):null;
+      const due=c.measureUntil?`<span class="du25 ${left<0?"r":left<=3?"w":"g"}"><i></i>${T1(UI.c4Until||"до||截止")} ${esc(fmtD(c.measureUntil))}</span>`:"";
+      return `<div class="card c5card"><h4>${T1(UI.c5Data)}${can?`<button class="more" type="button" data-c5="crim">${T1(UI.c5Edit)}</button>`:""}</h4><dl class="kv24">
+        <dt>${T1(m.courtRole24==="victim"?UI.c5PersonV:UI.c5Person)}</dt><dd>${dd(c.person)}</dd><dt>${T1(UI.c5Art)}</dt><dd>${dd(c.art)}</dd><dt>${T1(UI.c5Body)}</dt><dd>${dd(c.body)}</dd>
+        <dt>${T1(UI.c5Measure)}</dt><dd>${ml?esc(ml)+(c.measureFrom?` <small>${T1("с||自")} ${esc(fmtD(c.measureFrom))}</small>`:"")+" "+due:dd("")}</dd></dl></div>`;}
+    const s=m.sums24||{},e=m.enf24||{},R=(m.recovered24||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))),tot=this.rec(m),me=(U()||{}).emp,MP=CF3.mp();
+    const pct=s.award>0?` <small>${Math.round(tot/s.award*100)}% ${T1(UI.c5OfAward)}</small>`:"";
+    return `<div class="card c5card"><h4>${T1(UI.c5Sums)}${can?`<button class="more" type="button" data-c5="sums">${T1(UI.c5Edit)}</button>`:""}</h4><dl class="kv24">
+      <dt>${T1(UI.c5Claim)}</dt><dd>${this.sum(m.claimSum24)}</dd><dt>${T1(UI.c5Award)}</dt><dd>${this.sum(s.award)}</dd><dt>${T1(UI.c5Duty)}</dt><dd>${this.sum(s.duty)}</dd></dl>
+      <h4 style="margin-top:12px">${T1(UI.c5Enf)}${can?`<button class="more" type="button" data-c5="enf">${T1(UI.c5Edit)}</button>`:""}</h4><dl class="kv24">
+      <dt>${T1(UI.c5Writ)}</dt><dd>${e.writNo?esc(e.writNo)+(e.writDate?" · "+esc(fmtD(e.writDate)):""):dd("")}</dd>
+      <dt>${T1(UI.c5Mib)}</dt><dd>${e.mibNo||e.mibDept?esc([e.mibDept,e.mibNo?"№ "+e.mibNo:"",e.mibDate?fmtD(e.mibDate):""].filter(Boolean).join(" · ")):dd("")}</dd>
+      <dt>${T1(UI.c5Rec)}</dt><dd><b>${esc(fmtN(tot)+" "+T1(UI.sum))}</b>${pct}</dd></dl>
+      ${R.length?`<div class="rc5">${R.map(x=>`<div class="reqrow"><span class="tm">${esc(fmtD(x.date))}</span><span><b>${esc(fmtN(+x.sum)+" "+T1(UI.sum))}</b>${x.note?" · "+esc(x.note):""}</span>${MP||x.by===me?`<button type="button" class="btn ghost sm" data-c5del="${esc(x.id)}" title="${T1(UI.c5Del)}">×</button>`:""}</div>`).join("")}</div>`:""}
+      ${can?`<div class="actions" style="justify-content:flex-start;margin-top:8px"><button type="button" class="btn sm" data-c5="rec_add">${T1(UI.c5RecAdd)}</button></div>`:""}</div>`;},
+  async open(m,a){const ask=o=>Dlg.ask(o);
+    if(a==="crim"){const c=m.crim24||{};const v=await ask({title:T1(UI.c5Data)+" · "+m.no,fields:[{k:"person",label:T1(m.courtRole24==="victim"?UI.c5PersonV:UI.c5Person),value:c.person||""},{k:"art",label:T1(UI.c5Art),value:c.art||""},
+        {k:"body",label:T1(UI.c5Body),value:c.body||""},{k:"measure",label:T1(UI.c5Measure),type:"select",value:c.measure||"",options:[["","—"],...C5M.map(([k,l])=>[k,T1(l)])]},{k:"measureText",label:T1(UI.c5MText),value:c.measureText||""},
+        {k:"measureFrom",label:T1(UI.c5Measure)+" — "+T1(UI.c5MFrom),type:"date",value:c.measureFrom||""},{k:"measureUntil",label:T1(UI.c5Measure)+" — "+T1(UI.c5MUntil),type:"date",value:c.measureUntil||""},
+        {k:"h",type:"html",span:true,html:`<div class="c2hint">${esc(T1(UI.c5MH))}</div>`}]});if(!v)return;
+      return this.run(m,"crim",{person:v.person,art:v.art,body:v.body,measure:v.measure,measureText:v.measureText,measureFrom:v.measureFrom,measureUntil:v.measureUntil});}
+    if(a==="sums"){const s=m.sums24||{};const v=await ask({title:T1(UI.c5Sums)+" · "+m.no,fields:[{k:"claim",label:T1(UI.c5Claim),type:"number",value:m.claimSum24??""},{k:"award",label:T1(UI.c5Award),type:"number",value:s.award??""},{k:"duty",label:T1(UI.c5Duty),type:"number",value:s.duty??""}]});if(!v)return;
+      return this.run(m,"sums",{claim:String(v.claim??""),award:String(v.award??""),duty:String(v.duty??"")});}
+    if(a==="enf"){const e=m.enf24||{};const v=await ask({title:T1(UI.c5Enf)+" · "+m.no,fields:[{k:"writNo",label:T1(UI.c5WritNo),value:e.writNo||""},{k:"writDate",label:T1(UI.c5WritDate),type:"date",value:e.writDate||""},
+        {k:"mibDept",label:T1(UI.c5MibDept),value:e.mibDept||""},{k:"mibNo",label:T1(UI.c5MibNo),value:e.mibNo||""},{k:"mibDate",label:T1(UI.c5MibDate),type:"date",value:e.mibDate||""}]});if(!v)return;
+      return this.run(m,"enf",v);}
+    if(a==="rec_add"){const v=await ask({title:T1(UI.c5Rec)+" · "+m.no,fields:[{k:"date",label:T1(UI.c5RecDate),type:"date",value:todayS(),required:true},{k:"sum",label:T1(UI.c5RecSum),type:"number",required:true},{k:"note",label:T1(UI.c5RecNote)}]});if(!v)return;
+      return this.run(m,"rec_add",{date:v.date,sum:String(v.sum),note:v.note});}},
+  /* сервер или (демо) то же в портале */
+  async run(m,act,args){if(typeof StSrv23!=="undefined"&&StSrv23.on()&&!this.noSrv){const r=await StSrv23.call("court_info",{mid:m.id,act,args});
+      if(r.err){toast(r.err);Router.render();return false;}if(r.d){StSrv23.apply(m,r.d);toast(T1(UI.f3Saved));Router.render();return true;}if(r.skip)this.noSrv=true;}
+    const err=this.mut(m,act,args);if(err){toast(err);return false;}try{await saveDoc("matters",m);}catch(e){toast(String(e&&e.message||e));Router.render();return false;}audit(`${m.no}: court_info ${act}`);toast(T1(UI.f3Saved));Router.render();return true;},
+  num(v){const s=String(v??"").replace(/\s/g,"").replace(",",".");if(s==="")return null;const n=+s;return isFinite(n)&&n>=0?n:NaN;},
+  mut(m,act,a){const me=(U()||{}).emp,at=nowS();if(!CF3.can(m))return T1(UI.stNoRight);if(m.status==="closed"||m.pipeline==="lost")return T1(UI.stNoRight);let w=act;
+    if(act==="crim"){if(!this.crim(m))return T1(UI.stNoRight);if(a.measureUntil&&!a.measure)return T1(UI.c5Measure);if(a.measure==="other"&&!String(a.measureText||"").trim())return T1(UI.c5MText);
+      if(a.measureUntil&&a.measureFrom&&a.measureUntil<a.measureFrom)return T1(UI.c5MUntil);
+      const o=m.crim24||{};const c={};["person","art","body","measure","measureText","measureFrom","measureUntil"].forEach(k=>{const v=String(a[k]||"").trim();if(v)c[k]=v;});c.by=me;c.at=at;m.crim24=c;
+      if((c.measureUntil||"")!==(o.measureUntil||"")||(c.measure||"")!==(o.measure||"")){m.courtDl24=(m.courtDl24||[]).map(y=>y.auto==="measure"&&y.st==="open"?Object.assign({},y,{st:"na",closed:{by:me,at,text:c.measure?"Срок меры пресечения изменён":"Мера пресечения отменена"}}):y);
+        if(c.measureUntil)m.courtDl24.push({id:uid("dl"),what:"Срок меры пресечения: "+(c.measure==="other"?(c.measureText||"другая мера"):String((C5M.find(x=>x[0]===c.measure)||["","",""])[1]).split("||")[0]),due:c.measureUntil,resp:m.lead,st:"open",auto:"measure",by:me,at});}
+      w=T1(UI.c5Data)+(c.art?": "+c.art:"");}
+    else if(act==="sums"){if(this.crim(m))return T1(UI.stNoRight);const cl=this.num(a.claim),aw=this.num(a.award),du=this.num(a.duty);if([cl,aw,du].some(Number.isNaN))return T1(UI.c5Sums);
+      m.sums24=Object.assign({},aw!==null?{award:aw}:{},du!==null?{duty:du}:{},{by:me,at});m.claimSum24=cl===null?"":cl;w=T1(UI.c5Sums);}
+    else if(act==="enf"){if(this.crim(m))return T1(UI.stNoRight);const e={};["writNo","writDate","mibDept","mibNo","mibDate"].forEach(k=>{const v=String(a[k]||"").trim();if(v)e[k]=v;});e.by=me;e.at=at;m.enf24=e;w=T1(UI.c5Enf);}
+    else if(act==="rec_add"){if(this.crim(m))return T1(UI.stNoRight);const s=this.num(a.sum);if(!a.date)return T1(UI.c5RecDate);if(!(s>0))return T1(UI.c5RecSum);
+      m.recovered24=(m.recovered24||[]).concat([Object.assign({id:uid("rc"),date:a.date,sum:s,by:me,at},a.note?{note:a.note}:{})]);w=T1(UI.c5Rec)+": "+fmtN(s);}
+    else if(act==="rec_del"){const x=(m.recovered24||[]).find(y=>y.id===a.id);if(!x)return T1(UI.noData);if(!(CF3.mp()||x.by===me))return T1(UI.stNoRight);m.recovered24=m.recovered24.filter(y=>y.id!==a.id);w="−"+fmtN(+x.sum);}
+    else return T1(UI.stNoRight);
+    m.history=m.history||[];m.history.push({at,by:me,what:w});return "";},
+  bind(vp,m){vp.querySelectorAll("[data-c5]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();this.open(matter(m.id),b.dataset.c5);});
+    vp.querySelectorAll("[data-c5del]").forEach(b=>b.onclick=async e=>{e.stopPropagation();if(!await Dlg.confirm(T1(UI.c5Del),""))return;this.run(matter(m.id),"rec_del",{id:b.dataset.c5del});});}
+};
+/* в карточку: «Данные дела» — под «Ходом дела по инстанциям» */
+if(typeof Card22!=="undefined"){
+  const _bC5=Card22.build.bind(Card22);Card22.build=function(id,html,m){let out=_bC5(id,html,m);if(!CF3.on(m))return out;try{
+    const k=out.indexOf('<div class="card f3card">');if(k<0)return out;let depth=0,i=k,end=-1;const re=/<div\b|<\/div>/g;re.lastIndex=k;let t;
+    while((t=re.exec(out))){depth+=t[0]==="</div>"?-1:1;if(depth===0){end=re.lastIndex;break;}}
+    return end<0?out:out.slice(0,end)+Info5.card(m)+out.slice(end);}catch(e){console.warn("court info",e);return out;}};
+  const _bdC5=Card22.bind.bind(Card22);Card22.bind=function(vp,m){_bdC5(vp,m);if(CF3.on(m))Info5.bind(vp,m);};}
+{const st=document.createElement("style");st.id="c5css";st.textContent=`
+.c5card .kv24 small{color:var(--ink-3);font-size:11.5px}.c5card .du25{margin-left:4px}
+.c5card .rc5 .reqrow{align-items:center}.c5card .rc5 .btn.ghost{margin-left:auto;padding:2px 8px}`;
   (document.head||document.documentElement).appendChild(st);}
 
 /* ══ Раздел «Разовые услуги» · КП-PDF текстом (В4, решение владельца 18.10.2026: «вариант Б — настоящий текстовый PDF со встроенным
