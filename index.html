@@ -7433,7 +7433,7 @@ function status11(m,forClient){migrateMatter11(m);
   return {k:"s:"+m.stage,l:stLabel(m.stage,false,m),cls:m.stage==="ready"||m.stage==="accepted"?"s-done":"s-stage"};}
 /* Б11 (17.10.2026): «Отправление в архив» — работа сделана, как ready/accepted; Б12: у разовой услуги до договора «желаемый срок» заявки — не просрочка */
 const DONE11=["ready","accepted","archive"];
-const preC11=m=>m.svc==="oneoff"&&m.pipeline!=="contract";
+const preC11=m=>(m.svc==="oneoff"||m.svc==="court")&&m.pipeline!=="contract";/* 18.10.2026: и у суда (этапы до договора, sections/court/pre.js) */
 const isWorking11=m=>m.status!=="closed"&&m.pipeline==="contract"&&!m.paused&&!DONE11.includes(m.stage);
 const isDone11=m=>m.status!=="closed"&&DONE11.includes(m.stage);
 const isLate11=m=>m.status!=="closed"&&m.pipeline!=="lost"&&!preC11(m)&&!!m.deadline&&daysTo(m.deadline)<0&&!DONE11.includes(m.stage);
@@ -10276,7 +10276,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="3a66e9aed982";
+const ZC_BUILD="f26f0b679982";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14909,6 +14909,148 @@ const CL1={
   .tr25.c1>.c-ct{display:block;grid-column:1/-1}.tr25.c1>.c-sg{grid-column:1/-1}}`;
   (document.head||document.documentElement).appendChild(st);}
 
+/* ══ Раздел «Судебные дела» · этап 2 — карточка дела и 5 этапов до договора (решения владельца 18.10.2026) ══
+   Карточка (Card22, v22_card.js) и этапы до договора (Pre24, v24_pre*.js) — те же, что у разовой услуги. Своё у суда:
+   • заявка и «Изменить дело»: направление, наша роль, другая сторона, суд, № дела, сумма иска, где сейчас дело, срочный срок у клиента;
+   • приём заявки (С-36): вместо услуги из каталога — направление и наша роль; «Похожие услуги» не показываются;
+   • условия, КП и договор — цена по инстанциям (С-35): «входит» / «входит, по решению» / «не входит — новое КП»; стоимость — сумма первых двух;
+   • номер договора — при переходе на «Подписание договора» (как у разовых), номер дела — 1, 2, 3 …;
+   • новое дело — «+ Создать заявку» и «Регистрация договора» (вместо «+ Новое дело»).
+   Сервер — миграция 20261018006000_court_pre24 (те же действия этапов, что у разовых, с правками для суда). Правила — sections/court/ПРАВИЛА.md. */
+const crt2=m=>!!m&&m.svc==="court";
+Object.assign(UI,{
+  c2Role:"Наша роль в процессе||我方诉讼地位",c2Claim:"Сумма иска, сум||诉讼金额（苏姆）",c2Stage:"Где сейчас дело||案件目前阶段",c2UrgD:"Срок у клиента — до||客户期限截至",c2UrgW:"Что за срок||期限说明",
+  c2UrgH:"Если у клиента уже идёт срок (например, на жалобу) — он виден с первого этапа||如客户已有进行中的期限（如上诉期），从第一阶段即显示",
+  c2Kind:"Направление||类别",c2Court:"Суд или орган||法院或机关",c2CaseNo:"№ дела в суде||法院案号",c2Vs:"Другая сторона||对方",c2Case:"Судебное дело||诉讼案件",
+  c2NeedKind:"Направление судебного дела||诉讼类别",c2NeedRole:"Наша роль в процессе||我方诉讼地位",
+  c2InstInc:"входит в договор||包含在合同中",c2InstOpt:"входит, по решению||包含，视决定而定",c2InstNo:"не входит — новое КП||不包含——需新报价",
+  c2InstH:"Цена по инстанциям: «входит» — оплата до начала инстанции; «по решению» — инстанция откроется, если решим обжаловать; «не входит» — понадобится новое КП. Стоимость договора = «входит» + «по решению».||按审级定价：“包含”——审级开始前付款；“视决定而定”——决定上诉时开启；“不包含”——需新报价。合同金额 = 包含 + 视决定而定。",
+  c2InstNeed:"Хотя бы одна инстанция должна входить в договор||至少一个审级须包含在合同中",c2Total:"Итого по договору||合同合计",c2Opt:"по решению||视决定",c2NotIn:"Не входит (новое КП)||不包含（需新报价）",c2Cost:"стоимость||费用",
+  c2NewReq:"Создать заявку||创建申请",c2NewReg:"Регистрация договора||登记合同"
+});
+const C2ROLE=[["plaintiff","истец||原告"],["defendant","ответчик||被告"],["third","третье лицо||第三人"],["applicant","заявитель||申请人"],["defender","защитник||辩护人"],["victim","представитель потерпевшего||被害人代理人"],["other","другое||其他"]];
+const C2STAGE=[["pre","до суда — претензия, проверка||诉前——索赔、调查"],["first","идёт 1-я инстанция||一审进行中"],["decided","решение уже есть||已有判决"],["appeal","идёт апелляция или кассация||上诉或再审进行中"],["exec","исполнение решения||判决执行"]];
+const c2lbl=(L,k)=>{const x=L.find(y=>y[0]===k);return x?T1(x[1]):"";};
+const C2INC=()=>[["yes",T1(UI.c2InstInc)],["opt",T1(UI.c2InstOpt)],["no",T1(UI.c2InstNo)]];
+const c2inc=k=>(C2INC().find(x=>x[0]===k)||["",""])[1];
+/* цена по инстанциям: строки по видам инстанций (INST11), по умолчанию — 1-я входит, апелляция по решению, остальное не входит */
+const C2={
+  instDef(){return INST11.map(([k])=>({k,inc:k==="first"?"yes":k==="appeal"?"opt":"no",cost:""}));},
+  sum(inst){return (inst||[]).filter(x=>x.inc==="yes"||x.inc==="opt").reduce((s,x)=>s+(+x.cost||0),0);},
+  /* строки цены по инстанциям — для условий, КП, договора */
+  rows(inst,cur){return (inst||[]).filter(x=>x.inc!=="no").map(x=>`<tr><td>${esc(instLabel(x.k))}${x.inc==="opt"?` <span class="tg24 wait">${esc(T1(UI.c2Opt))}</span>`:""}</td><td class="num">${esc(fmtN(+x.cost||0)+" "+(cur||T1(UI.sum)))}</td></tr>`).join("");},
+  table(t){const cur=t.currency==="UZS"||!t.currency?T1(UI.sum):t.currency;const no=(t.inst||[]).filter(x=>x.inc==="no").map(x=>instLabel(x.k));
+    return `<table class="it2"><tbody>${this.rows(t.inst,cur)}<tr class="tot"><td>${T1(UI.c2Total)}</td><td class="num">${esc(fmtN(this.sum(t.inst))+" "+cur)}</td></tr></tbody></table>${no.length?`<div class="c2nin">${esc(T1(UI.c2NotIn))}: ${esc(no.join(", "))}</div>`:""}`;},
+  text(t){return (t.inst||[]).map(x=>`${withLang18("ru",()=>instLabel(x.k))} — ${x.inc==="no"?withLang18("ru",()=>T1(UI.c2InstNo)):fmtN(+x.cost||0)+" ("+withLang18("ru",()=>c2inc(x.inc))+")"}`).join("; ");}
+};
+
+/* ── включаем карточку и этапы до договора для суда ── */
+if(typeof Card22!=="undefined"){const _onC2=Card22.on.bind(Card22);Card22.on=function(m){return _onC2(m)||(crt2(m)&&!isClient()&&typeof matterView==="function"&&matterView(m)==="full");};}
+if(typeof Pre24!=="undefined"){const _poC2=Pre24.on.bind(Pre24);Pre24.on=function(m){return _poC2(m)||(crt2(m)&&!isClient());};}
+/* до договора — прежние кнопки воронки не показываются (действия на этапах); «Отказ» остаётся в меню «⋯» */
+if(typeof Pipe!=="undefined"){const _pnC2=Pipe.next.bind(Pipe);Pipe.next=function(m){const out=_pnC2(m);if(!crt2(m)||isClient()||["contract","lost"].includes(m.pipeline))return out;
+  return out.filter(a=>a.danger||a.to==="lostconfirm"||a.to==="lostreturn"||(m.pipeline==="team_draft"&&a.to==="contract"));};
+  /* «Договор подписан» — сначала проверка, что договор оформлен (как у разовых, Sign22) */
+  const _psC2=Pipe.set.bind(Pipe);Pipe.set=async function(id,step){const m=matter(id);if(crt2(m)&&step==="contract"&&m.pipeline!=="contract"&&typeof Sign22!=="undefined"){if(!await Sign22.run(id))return;}return _psC2(id,step);};}
+/* подтверждение цены УП, если на «Подписании» цена отличается от согласованной (Price24) */
+if(typeof Price24!=="undefined"){const _p24on=Price24.on.bind(Price24);Price24.on=function(m){return _p24on(m)||(crt2(m)&&m.pipeline==="team_draft"&&m.status!=="closed"&&!!this.terms(m));};}
+
+/* ── поля суда: заявка и «Изменить дело» ── */
+const C2F=["courtRole24","claimSum24","courtStage24","urgent24d","urgent24w"];
+{const _mfC2=Matter.fields;Matter.fields=function(m){const pre=Matter._svc;const f=_mfC2.apply(this,arguments);const sv=f.find(x=>x&&x.k==="svc");
+  const court=m&&m.id?crt2(m):(pre==="court"||(!pre&&sv&&sv.value==="court"));if(!court)return f;m=m||{};const md=Matter._mode24;
+  const add=[{k:"courtRole24",label:T1(UI.c2Role),type:"select",value:m.courtRole24||"",options:[["","—"],...C2ROLE.map(([k,l])=>[k,T1(l)])],required:md==="req"},
+    {k:"claimSum24",label:T1(UI.c2Claim),type:"number",value:m.claimSum24??""},
+    {k:"courtStage24",label:T1(UI.c2Stage),type:"select",value:m.courtStage24||"",options:[["","—"],...C2STAGE.map(([k,l])=>[k,T1(l)])]},
+    {k:"urgent24d",label:T1(UI.c2UrgD),type:"date",value:(m.urgent24||{}).d||"",hint:T1(UI.c2UrgH)},{k:"urgent24w",label:T1(UI.c2UrgW),value:(m.urgent24||{}).w||""}];
+  const out=f.filter(x=>!(x&&C2F.includes(x.k)));const i=out.findIndex(x=>x&&x.k==="courtKind");out.splice(i>=0?i+1:out.length,0,...add);
+  /* порядок: направление · роль · суд · № дела (за судом — «Другая сторона», её ставит stage0.js) · сумма иска · где сейчас · срок у клиента */
+  ["caseNo","court"].forEach(k=>{const j=out.findIndex(x=>x&&x.k===k);if(j<0)return;const [x]=out.splice(j,1);const r=out.findIndex(y=>y&&y.k==="courtRole24");out.splice(r+1,0,x);});
+  if(md==="req"){const ck=out.find(x=>x&&x.k==="courtKind");if(ck)ck.required=true;}
+  /* новое дело: «Этап воронки» не нужен — заявка начинается с «Приёма заявки» */
+  if(!(m&&m.id))return out.filter(x=>!(x&&x.k==="pipeline"));
+  return out;};}
+{const _maC2=Matter.apply;Matter.apply=function(m,v){const isNew=!m.no&&!(S.matters||{})[m.id];const r=_maC2.apply(this,arguments);if(!crt2(m))return r;
+  if(v.courtRole24!==undefined)m.courtRole24=v.courtRole24||"";if(v.claimSum24!==undefined)m.claimSum24=v.claimSum24===""?"":+v.claimSum24||0;
+  if(v.courtStage24!==undefined)m.courtStage24=v.courtStage24||"";if(v.urgent24d!==undefined||v.urgent24w!==undefined){const d=String(v.urgent24d||""),w=String(v.urgent24w||"").trim();m.urgent24=d||w?{d,w}:null;}
+  if(m.courtKind==="criminal")m.type="criminal";
+  /* новое судебное дело: этап «Приём заявки» ставится при создании (как у разовой услуги, v24_pre_ui.js) */
+  if(!isNew||m.intake23||isClient())return r;const me=Pre24.me(),at=nowS();
+  m.intake23={src:Pre24.mp()?"mp":"adv",by:me,at,text:String(v.notes||m.notes||""),files:(Array.isArray(v.files)?v.files:[]).map(x=>Object.assign({},x))};
+  if(Matter._mode24==="reg"){m.intake23.src="reg";if(!(m.counterparties||[]).length)delete m.conflict;m.intake23.accepted={by:me,at};v.pipeline=m.contractSigned?"contract":"team_draft";m.pipeline=v.pipeline;return r;}
+  const ct={who:String(v.p24who||"").trim(),phone:String(v.p24phone||"").trim(),msg:String(v.p24msg||"").trim()};if(ct.who||ct.phone||ct.msg)m.intake23.contact=ct;
+  if(m.lead===me){m.intake23.accepted={by:me,at};v.pipeline="negotiation";const fn=withLang18("ru",()=>T1(UI.p24DocsFolder));if(m.intake23.files.length){m.folders22=[fn];m.intake23.folder=fn;(v.files||[]).forEach(x=>{x.folder=fn;});}}
+  else{m.intake23.assign={to:m.lead,by:me,at,due:typeof addWD==="function"?addWD(todayS(),1):todayS(),note:""};v.pipeline="lead";}
+  m.pipeline=v.pipeline;return r;};}
+/* окно «Создать заявку» суда: поля суда вместо услуги из каталога; «Регистрация договора» — как у разовых */
+{const REQC2=["title","clientId","courtKind","courtRole24","counterparties","court","caseNo","claimSum24","courtStage24","urgent24d","urgent24w","lead","deadline","notes","files","p24who","p24phone","p24msg"];
+  const _mfC2b=Matter.fields;Matter.fields=function(m){const sv0=Matter._svc;const f=_mfC2b.apply(this,arguments);const md=Matter._mode24;if(!md||sv0!=="court"||(m&&m.id))return f;
+    return f.map(x=>{if(!x)return x;const y=Object.assign({},x);if(md==="req"){if(y.type==="section")return y;y._hide24=!REQC2.includes(y.k);if(y._hide24){delete y.required;delete y.check;}}
+      else if(C2F.includes(y.k)||y.k==="courtKind"||y.k==="court"||y.k==="caseNo")y._hide24=false;
+      if(y.k==="catalog"||y.k==="catalogOther"){y._hide24=true;delete y.required;delete y.check;}return y;});};}
+Pre24.newCourt=async function(mode){Matter._mode24=mode;Matter._svc="court";try{return await Matter.create();}finally{Matter._mode24=null;}};
+{const _sC2=section11;section11=function(sec){let h=_sC2.apply(this,arguments);if(sec!=="court"||isClient())return h;
+  return h.replace(/<button class="btn pri" data-act="newMatter11" data-svc="court">[^<]*<\/button>/,()=>`<span class="nw24"><button class="btn" data-c2new="reg">${T1(UI.c2NewReg)}</button><button class="btn pri" data-c2new="req">+ ${T1(UI.c2NewReq)}</button></span>`);};
+  const _pbC2=Pages.bind;Pages.bind=function(vp){_pbC2.apply(this,arguments);if(!vp)return;vp.querySelectorAll("[data-c2new]").forEach(b=>b.onclick=e=>{e.stopPropagation();Pre24.newCourt(b.dataset.c2new);});};}
+
+/* ── этап 1 «Приём заявки»: что проверить и блок «Судебное дело» ── */
+{const _ckC2=Pre24.checks.bind(Pre24);Pre24.checks=function(m){const l=_ckC2(m);if(!crt2(m))return l;
+  return l.filter(x=>x[0]!==UI.p24NeedSvc).concat([[UI.c2NeedKind,["criminal","economic","civil"].includes(m.courtKind)],[UI.c2NeedRole,!!m.courtRole24]]);};
+ const _sbC2=Pre24.simBox.bind(Pre24);Pre24.simBox=function(m){return crt2(m)?"":_sbC2(m);};
+ const _p1C2=Pre24.p1.bind(Pre24);Pre24.p1=function(m){let h=_p1C2(m);if(!crt2(m))return h;
+   const re=new RegExp(`<div class="bx24"><h4>${T1(UI.p24Case).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}</h4>[\\s\\S]*?</dl><div[^>]*>[^<]*</div></div>`);
+   const cps=(m.counterparties||[]).map(x=>esc(x.name||"")+(x.inn?" · "+esc(x.inn):"")).join("<br>");const u=m.urgent24||{};
+   const kind={criminal:UI.crim,economic:UI.econ,civil:UI.civ}[m.courtKind];const ed=Pipe.can(m)?`<div class="ac24" style="border:0;margin-top:6px;padding-top:0"><button type="button" class="btn sm" data-act="editMatter">${T1(UI.mEdit)}</button></div>`:"";
+   const box=`<div class="bx24 c2case"><h4>${T1(UI.c2Case)}</h4><dl class="kv24"><dt>${T1(UI.c2Kind)}</dt><dd>${kind?esc(T1(kind)):"<span class=\"c2no\">—</span>"}</dd><dt>${T1(UI.c2Role)}</dt><dd>${m.courtRole24?esc(c2lbl(C2ROLE,m.courtRole24)):"<span class=\"c2no\">—</span>"}</dd>
+     <dt>${T1(UI.c2Vs)}</dt><dd>${cps||"—"}</dd><dt>${T1(UI.c2Claim)}</dt><dd>${m.claimSum24!==""&&m.claimSum24!=null?esc(fmtN(+m.claimSum24)):"—"}</dd><dt>${T1(UI.c2Stage)}</dt><dd>${m.courtStage24?esc(c2lbl(C2STAGE,m.courtStage24)):"—"}</dd>
+     <dt>${T1(UI.c2Court)}</dt><dd>${esc(m.court||"—")}</dd><dt>${T1(UI.c2CaseNo)}</dt><dd>${esc(m.caseNo||"—")}</dd><dt>${T1(UI.p24Essence)}</dt><dd>${esc(String(this.I(m).text||m.notes||"—"))}</dd>
+     ${u.d||u.w?`<dt>${T1(UI.c2UrgD)}</dt><dd><span class="tg24 red">⏱ ${esc(u.d?fmtD(u.d):"—")}</span>${u.w?" · "+esc(u.w):""}</dd>`:""}</dl>${ed}</div>`;
+   return re.test(h)?h.replace(re,box):h;};}
+
+/* ── цена по инстанциям: окно условий, показ, КП ── */
+{const _tfC2=Pre24.termFields.bind(Pre24);Pre24.termFields=function(m,t,needWhy){const f=_tfC2(m,t,needWhy);if(!crt2(m))return f;t=t||{};
+  const cur=Array.isArray(t.inst)&&t.inst.length?t.inst:C2.instDef();const by=k=>cur.find(x=>x.k===k)||{k,inc:"no",cost:""};
+  const rows=[{k:"c2h",type:"html",span:true,html:`<div class="c2hint">${esc(T1(UI.c2InstH))}</div>`}];
+  INST11.forEach(([k])=>{const x=by(k);rows.push({k:"ii_"+k,label:instLabel(k),type:"select",value:x.inc||"no",options:C2INC()},{k:"ic_"+k,label:instLabel(k)+" — "+T1(UI.c2Cost),type:"number",value:x.cost??""});});
+  const out=f.filter(x=>x.k!=="cost");const i=out.findIndex(x=>x.k==="currency");out.splice(i>=0?i:0,0,...rows);
+  const last=out[out.length-1];const ch=last.check;last.check=v=>{const inst=INST11.map(([k])=>({k,inc:v["ii_"+k],cost:+v["ic_"+k]||0}));if(!inst.some(x=>x.inc==="yes"))return T1(UI.c2InstNeed);
+    return ch?ch(Object.assign({},v,{cost:C2.sum(inst)})):"";};
+  return out;};
+ const _tFC2=Pre24.tFrom.bind(Pre24);Pre24.tFrom=function(v){const t=_tFC2(v);if(!("ii_first" in v))return t;
+   t.inst=INST11.map(([k])=>({k,inc:v["ii_"+k]||"no",cost:v["ii_"+k]==="no"?0:(+v["ic_"+k]||0)}));t.cost=C2.sum(t.inst);return t;};
+ const _trC2=Pre24.terms.bind(Pre24);Pre24.terms=function(t,base){let h=_trC2(t,base);if(!t||!Array.isArray(t.inst))return h;
+   return h.replace(/(<dt>[^<]*<\/dt><dd><span class="big[^"]*">)[^<]*(<\/span><\/dd>)/,`$1${esc(this.tCost(t))}$2<dt></dt><dd>${C2.table(t)}</dd>`);};
+ /* КП (PDF): цена по инстанциям — строкой в «Объёме работ» (итог — в «Стоимости») */
+ const _kbC2=Pre24.kpBuild.bind(Pre24);Pre24.kpBuild=async function(m){const a=crt2(m)&&(this.approved(m,"neg")||{}).terms;if(!a||!Array.isArray(a.inst))return _kbC2(m);
+   const sc=a.scope;a.scope=C2.text(a)+(sc?". "+sc:"");try{return await _kbC2(m);}finally{a.scope=sc;}};}
+
+/* без сервера — то же, что сервер (pre24_apply): цены по инстанциям — в дело */
+{const _atC2=Pre24.applyTerms.bind(Pre24);Pre24.applyTerms=function(m,t,ph,a){if(t&&Array.isArray(t.inst)){t=Object.assign({},t,{cost:C2.sum(t.inst)});m.instPrices24=t.inst.map(x=>Object.assign({},x));}return _atC2(m,t,ph,a);};}
+/* ── номер дела и договора: как у разовых — номер дела 1, 2, 3 …; номер договора — на «Подписании» ── */
+if(typeof Reg21!=="undefined"&&Reg21.number){const _numC2=Reg21.number.bind(Reg21);Reg21.number=async function(m){const fw=(m.contract||{}).mode==="framework";const cn=m._cn21||"new";
+  if(crt2(m)&&!fw&&cn==="new"&&Matter._mode24!=="reg"){delete m._cn21;m.no=await Pre24.reserveNo();m.contract=Object.assign({},m.contract||{},{mode:"new",no:"",party:m.entity||"legal"});return null;}
+  const r=await _numC2(m);if(crt2(m)&&!fw)m.no=await Pre24.reserveNo();return r;};}
+{const _ctC2=Pre24.ctNo.bind(Pre24);Pre24.ctNo=async function(m){if(!crt2(m))return _ctC2(m);const k=m.contract||{};if(m.pipeline!=="team_draft"||k.no||k.mode==="framework"||typeof Reg21==="undefined")return;
+  const no=await Reg21.reserve(m.entity||"legal");const rec={id:uid("ct"),no,reg21:true,party:m.entity||"legal",svc:"court",subject:k.subject||m.title||"",date:"",status:"active",matterIds:[m.id],createdAt:nowS(),createdBy:this.me()};
+  m.contract=Object.assign({},k,{mode:"existing",existingId:rec.id,no,party:rec.party});const c=client(m.clientId);if(c){migrateClient11(c);c.contracts=c.contracts||[];c.contracts.push(rec);try{await saveDoc("clients",c);}catch(e){}}};}
+
+/* ── кабинет клиента: КП судебного дела — принять, задать вопрос, отказаться ── */
+if(typeof CP!=="undefined"&&typeof Pre24C!=="undefined"){
+  const _cpmC2=CP.matter.bind(CP);CP.matter=function(id){let h=_cpmC2(id);const m=matter(id);if(!crt2(m)||!m.offer||!m.offer.sentAt||!clientCan(m)||h.includes('data-p24cp="'))return h;
+    const o=m.offer,cl=o.client23||{},open=!cl.decision&&m.pipeline==="offer";const exp=o.validUntil&&o.validUntil<todayS();const t=(Pre24.approved(m,"neg")||{}).terms;
+    const st=cl.decision==="accept"?`<span class="tg24 ok">${T1("Вы приняли предложение||您已接受报价")} ${esc(fmtD(String(cl.at).slice(0,10)))}</span>`:cl.decision==="refuse"?`<span class="tg24 red">${T1("Вы отказались от предложения||您已拒绝报价")}</span>`:"";
+    const box=`<div class="card cp24 p24" data-p24cp="${esc(m.id)}"><h4>${T1(UI.kpTitle)}</h4><div style="font-size:13px">${o.validUntil?esc(T1(UI.kpValid17)+" "+fmtD(o.validUntil)):""} ${st}</div>${t&&Array.isArray(t.inst)?C2.table(t):""}
+      ${(o.qs23||[]).filter(q=>q.by===(U()||{}).login).map(q=>`<div class="q24">«${esc(q.text)}»${q.answer?`<br><b>${esc(q.answer)}</b>`:""}</div>`).join("")}
+      ${open&&!exp?`<div class="ac24"><button type="button" class="btn sm pri" data-p24c="accept">${T1("Принять предложение||接受报价")}</button><button type="button" class="btn sm" data-p24c="question">${T1("Задать вопрос||提问")}</button><button type="button" class="btn sm" data-p24c="refuse" style="color:var(--red)">${T1("Отказаться||拒绝")}</button></div>`:""}</div>`;
+    const i=h.indexOf('<div class="cols">');return i>0?h.slice(0,i)+box+h.slice(i):h+box;};
+  const _cpbC2=CP.bind.bind(CP);CP.bind=function(vp){_cpbC2(vp);vp.querySelectorAll("[data-kpfile]").forEach(el=>el.addEventListener("click",()=>{const m=matter(el.dataset.kpfile);if(crt2(m))Pre24C.call(m,"dl");}));};}
+
+/* стили раздела (этап 2) */
+{const st=document.createElement("style");st.id="c2css";st.textContent=`
+.it2{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}.it2 td{padding:5px 6px;border-bottom:1px solid var(--line)}.it2 td.num{text-align:right;white-space:nowrap}
+.it2 tr.tot td{font-weight:700;border-bottom:0}.c2hint{font-size:12px;color:var(--ink-3);line-height:1.45;background:var(--surface2);border-radius:8px;padding:8px 10px}
+.c2case .c2no{color:var(--red);font-weight:600}.c2nin{font-size:12px;color:var(--ink-3);margin-top:4px}`;(document.head||document.documentElement).appendChild(st);}
+
 /* ══ Раздел «Судебные дела» · этап 0 — исправление найденных ошибок (решение владельца 18.10.2026, правило С-20) ══
    Правила и их номера — sections/court/ПРАВИЛА.md, журнал — sections/court/ЖУРНАЛ.md.
    Сервер — миграция 20261018000200_court_stage0 (backend/sections/court.md): закрытие, организация и лицензия, конфликт,
@@ -15003,9 +15145,7 @@ toCourt11=async function(id){const m=matter(id);if(!m||!can("mattersCreate"))ret
 {const _pmV0=Pages.matter;Pages.matter=function(id){const h=_pmV0.apply(this,arguments);const m=matter(id);if(!m||isClient()||matterView(m)==="full"||crt0(m))return h;
   return h.replace('data-go="court"',`data-go="${["oneoff","support"].includes(m.svc)?m.svc:"court"}"`);};}
 
-/* ── 10. номер нового судебного дела: 1, 2, 3 … (общий счёт с разовыми услугами, сервер reserve_matter_no); договор — прежний номер ── */
-if(typeof Reg21!=="undefined"&&Reg21.number){const _numC0=Reg21.number.bind(Reg21);
-  Reg21.number=async function(m){const r=await _numC0(m);if(crt0(m)&&!((m.contract||{}).mode==="framework")&&typeof Pre24!=="undefined"&&Pre24.reserveNo)m.no=await Pre24.reserveNo();return r;};}
+/* ── 10. номер нового судебного дела: 1, 2, 3 … — с этапа 2 выдаёт pre.js (вместе с номером договора на «Подписании») ── */
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
