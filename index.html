@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="21d11e24fd09";
+const ZC_BUILD="37eeafe67c13";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -16421,6 +16421,8 @@ window.UZ21=Object.assign(window.UZ21||{},{"Закрыть месяц":"Oyni yop
   "Договор":"Shartnoma","Клиент":"Mijoz","ЭСФ":"ESF","выставлена":"chiqarilgan","задача УП":"BA topshirigʻi","нет":"yoʻq","За этот месяц договоров сопровождения нет":"Bu oyda kuzatuv shartnomalari yoʻq","Экран — только для УП":"Ekran — faqat BA uchun"});
 const SP4={
   mp(){return isFounder()||hasF("managing");},
+  /* сумма месяца; этап 6 (stage6.js) — с историей абонплаты */
+  sum(m,M){return monthlySum(m,M);},
   cur(){return monthOf11(todayS());},
   days(m,M){const [y,mo]=M.split("-").map(Number);const dim=new Date(y,mo,0).getDate();const f=`${M}-01`,l=`${M}-${String(dim).padStart(2,"0")}`;const a=(m.opened||f)>f?m.opened:f;const b=m.deadline&&m.deadline<l?m.deadline:l;return [Math.max(0,daysTo(b)-daysTo(a)+1),dim];},
   /* оплачено за месяц — подтверждённые поступления (как zc.support_month_paid) */
@@ -16433,10 +16435,10 @@ const SP4={
     return MP&&can?`<button type="button" class="btn sm pri" data-mclose="${M}" data-mid="${m.id}">${T1(UI.mcClose)}</button>`:`<span class="r4 n">${T1(UI.s4Open)}</span>`;},
   /* вкладка «Месяцы и оплата» */
   card(m){const ms=supportMonths(m);if(!ms.length)return "";const c=this.cur(),vis=costVisible(m),MP=this.mp(),cur=T1(UI.sum);
-    const strip=`<div class="mst4">${ms.map(M=>{const s=this.st(m,M);const [d,dim]=this.days(m,M);return `<div class="m ${s}${d<dim?" pr":""}"${MP?` data-paymonth="${M}"`:""} title="${esc(fmtM(M))}"><b>${esc(fmtM(M))}</b>${vis?`<span>${esc(fmtN(monthlySum(m,M)))}</span>`:""}<em>${T1(s==="p"?UI.s4PaidSt:s==="u"?UI.s4Unpaid:s==="c"?UI.s4Cur:UI.s4Future)}</em></div>`;}).join("")}</div>`;
+    const strip=`<div class="mst4">${ms.map(M=>{const s=this.st(m,M);const [d,dim]=this.days(m,M);return `<div class="m ${s}${d<dim?" pr":""}"${MP?` data-paymonth="${M}"`:""} title="${esc(fmtM(M))}"><b>${esc(fmtM(M))}</b>${vis?`<span>${esc(fmtN(this.sum(m,M)))}</span>`:""}<em>${T1(s==="p"?UI.s4PaidSt:s==="u"?UI.s4Unpaid:s==="c"?UI.s4Cur:UI.s4Future)}</em></div>`;}).join("")}</div>`;
     const rows=ms.filter(M=>M<=c).reverse().map(M=>{const s=this.st(m,M);const [d,dim]=this.days(m,M);const src=(m.monthsPaidSrc||{})[M];
       return `<tr class="${s==="u"?"miss":""}"><td><b>${esc(fmtM(M))}</b></td><td>${d} ${T1(UI.s4Of)} ${dim}${d<dim&&m.opened&&m.opened.slice(0,7)===M?` · ${T1(UI.s4From)} ${esc(fmtD(m.opened).slice(0,5))}`:""}</td>
-        ${vis?`<td class="num">${esc(fmtN(monthlySum(m,M)))}</td><td class="num">${esc(fmtN(this.paid(m,M)))}</td>`:""}
+        ${vis?`<td class="num">${esc(fmtN(this.sum(m,M)))}</td><td class="num">${esc(fmtN(this.paid(m,M)))}</td>`:""}
         <td><span class="r4 ${s==="p"?"ok":s==="u"?"r":"n"}">${T1(s==="p"?UI.s4PaidSt:s==="u"?UI.s4Unpaid:UI.s4Cur)}</span>${s==="p"&&src?`<small>${T1(src==="mp"?UI.s4Hand:UI.s4Auto)}</small>`:""}${MP&&M<=c?` <button type="button" class="btn sm ghost" data-paymonth="${M}">${T1(UI.s3Edit)}</button>`:""}</td>
         <td>${M<c?this.closeCell(m,M,MP):`<span class="r4 n">${T1(UI.s4Cur)}</span>`}</td></tr>`;}).join("");
     return `<div class="card s4"><h4>${T1(UI.s4Title)}</h4>${strip}<div class="tw4"><table class="tb4"><thead><tr><th>${T1(UI.s4Month)}</th><th>${T1(UI.s4Days)}</th>${vis?`<th class="num">${T1(UI.s4Acc)}, ${cur}</th><th class="num">${T1(UI.s4Paid)}, ${cur}</th>`:""}<th>${T1(UI.s4Mark)}</th><th>${T1(UI.s4Close)}</th></tr></thead><tbody>${rows}</tbody></table></div>
@@ -16445,10 +16447,10 @@ const SP4={
   M:null,
   page(){if(!this.mp())return `<div class="card"><div class="empty2" style="padding:24px">${T1(UI.s4OnlyMp)}</div></div>`;
     const M=this.M||prevMonth11(this.cur());const L=MM().filter(m=>m.svc==="support"&&m.pipeline==="contract"&&supportMonths(m).includes(M));const cur=T1(UI.sum);
-    const acc=r2(L.reduce((s,m)=>s+monthlySum(m,M),0)),pd=r2(L.reduce((s,m)=>s+this.paid(m,M),0));const notPaid=L.filter(m=>this.st(m,M)!=="p"&&M<this.cur()),noEsf=L.filter(m=>this.esf(m,M)!=="ok"&&M<this.cur()),cl=L.filter(m=>((m.monthsClosed||{})[M]||{}).closedAt);
+    const acc=r2(L.reduce((s,m)=>s+this.sum(m,M),0)),pd=r2(L.reduce((s,m)=>s+this.paid(m,M),0));const notPaid=L.filter(m=>this.st(m,M)!=="p"&&M<this.cur()),noEsf=L.filter(m=>this.esf(m,M)!=="ok"&&M<this.cur()),cl=L.filter(m=>((m.monthsClosed||{})[M]||{}).closedAt);
     const t=(cls,ic,l,v,em)=>`<div class="k25 ${cls}${v==="0"||v===0?" zero":""}"><span class="ic">${L25.ico(ic)}</span><span class="tx"><small>${T1(l)}</small><b>${v}</b>${em?`<em>${em}</em>`:""}</span></div>`;
     const rows=L.map(m=>{const c=client(m.clientId);const s=this.st(m,M),e=this.esf(m,M);
-      return `<tr class="${s==="u"?"miss":""}" data-s4m="${m.id}"><td><b>${esc(L25.nm(m))}</b><small>${esc(L25.ct(m).replace(/ · $/,""))}</small></td><td>${c?esc(clientName(c)):"—"}</td><td class="num">${esc(fmtN(monthlySum(m,M)))}</td><td class="num">${esc(fmtN(this.paid(m,M)))}</td>
+      return `<tr class="${s==="u"?"miss":""}" data-s4m="${m.id}"><td><b>${esc(L25.nm(m))}</b><small>${esc(L25.ct(m).replace(/ · $/,""))}</small></td><td>${c?esc(clientName(c)):"—"}</td><td class="num">${esc(fmtN(this.sum(m,M)))}</td><td class="num">${esc(fmtN(this.paid(m,M)))}</td>
         <td><span class="r4 ${s==="p"?"ok":s==="u"?"r":"n"}">${T1(s==="p"?UI.s4PaidSt:s==="u"?UI.s4Unpaid:UI.s4Cur)}</span></td><td><span class="r4 ${e==="ok"?"ok":e==="task"?"w":e==="cancel"?"r":"n"}">${T1(e==="ok"?UI.s4EsfOk:e==="task"?UI.s4EsfTask:e==="cancel"?UI.esfCancel:UI.s4EsfNo)}</span></td>
         <td>${M<this.cur()?this.closeCell(m,M,true):`<span class="r4 n">${T1(UI.s4Cur)}</span>`}</td></tr>`;}).join("");
     return `<div class="l25 s4p"><div class="ph hd25"><div class="t25"><h2>${T1(UI.s4Page)}</h2><span class="n25">${esc(fmtM(M))} · ${T1(UI.s4PageSub)}</span></div><div class="acts"><button type="button" class="btn" data-s4go="-1">${T1(UI.s4Prev)}</button><button type="button" class="btn" data-s4go="1">${T1(UI.s4Next)}</button></div></div>
@@ -16490,6 +16492,224 @@ if(typeof SL1!=="undefined"){const _mS4=SL1.menu.bind(SL1);SL1.menu=function(f){
 .r4.r{background:var(--red-soft);color:var(--red-d)}.r4.n{background:var(--surface2);color:var(--ink-2)}
 .h4t{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.45}
 .ks25.s4k{grid-template-columns:repeat(5,minmax(0,1fr))}@media(max-width:1100px){.ks25.s4k{grid-template-columns:repeat(2,minmax(0,1fr))}}`;
+  (document.head||document.documentElement).appendChild(st);}
+
+/* ══ Раздел «Юридическое сопровождение» · этап 6 — пакеты, продление, отчёт клиенту, кабинет (решения владельца 19.10.2026) ══
+   • справочник пакетов (Сп-52): только УП, без лимита по числу заданий; пакет выбирают в условиях — название и «что входит» подставляет сервер;
+   • абонплата по месяцам (Сп-53): после продления с новой абонплатой прошлые месяцы — по старой, новые — по новой (costHist24);
+   • продление (Сп-54) — доп. соглашение: номер договора и дела тот же; ведущий предлагает срок (и новую абонплату), УП согласует,
+     подписанное доп. соглашение — обязательно файлом; срок действующего договора прямой правкой не меняется;
+   • отчёт клиенту (Сп-55): 1-го числа сервер собирает отчёт за прошлый месяц (задания «видно клиенту», выполненные в месяце), ведущий проверяет и отправляет;
+   • кабинет клиента (Сп-56): пакет и срок, мои обращения и ответы, задания с итогами, оплата по месяцам, отчёты о работе;
+   • подсказка «вне пакета» — только подсказка: создать задание можно.
+   Логика — на сервере (миграция 20261019009000_support_final: public.support_act, public.support_report_run); без миграции и в демо — то же в портале.
+   Правила — sections/support/ПРАВИЛА.md. */
+Object.assign(UI,{
+  s6Packs:"Пакеты сопровождения||法律顾问套餐",s6PacksSub:"справочник||目录",s6PackAdd:"Новый пакет||新套餐",s6PackName:"Название пакета||套餐名称",s6Inc:"Что входит||包含内容",s6Exc:"Что не входит (подсказка «вне пакета»)||不包含内容（“超出套餐”提示）",
+  s6Min:"Абонплата от, сум||顾问费起，苏姆",s6Max:"Абонплата до, сум||顾问费至，苏姆",s6Arch:"В архиве||已归档",s6ArchY:"в архиве — в условиях не выбирается||已归档——不可在条件中选择",s6ArchN:"действует||有效",
+  s6PacksHint:"Пакет — что входит в абонентское сопровождение. Число заданий не ограничено. Пакет выбирают в условиях договора: название и «что входит» подставляются сами, текст можно уточнить. «Что не входит» — слова для подсказки «вне пакета» при новом задании.||套餐即法律顾问服务所含内容，任务数量不限。在合同条件中选择套餐：名称和内容自动填入，可修改。“不包含内容”用于新任务的“超出套餐”提示。",
+  s6PacksNone:"Пакетов пока нет||暂无套餐",s6OnlyMp:"Справочник пакетов меняет только УП||套餐目录仅管理合伙人可修改",s6Saved:"Сохранено||已保存",s6Edit:"Изменить||修改",s6Used:"договоров||合同",
+  s6Pack:"Пакет||套餐",s6Own:"Свой пакет — описать ниже||自定义套餐——在下方描述",s6ScopeNeed:"Выберите пакет или опишите, что входит||请选择套餐或描述包含内容",s6PackCard:"Пакет||套餐",s6PackOwn:"свой пакет||自定义套餐",s6NoLimit:"число заданий не ограничено||任务数量不限",
+  s6Out:"Похоже, это вне пакета||这似乎超出套餐范围",s6OutText:"В пакет «{p}» это может не входить: «{w}». Работа сверх пакета — отдельной разовой услугой со скидкой абонента. Это только подсказка — задание можно создать.||“{w}”可能不在套餐“{p}”内。超出套餐的工作作为单独的单项服务办理，享受顾问客户折扣。这只是提示——仍可创建任务。",
+  s6OutOk:"Всё равно создать||仍然创建",
+  s6Renew:"Продление договора||合同续约",s6Till:"Договор до||合同有效期至",s6Prop:"Предложить продление||提出续约",s6RnMonths:"Продлить на, месяцев||续约月数",s6RnCost:"Новая абонплата в месяц (если меняется), сум||新的每月顾问费（如变更），苏姆",
+  s6RnText:"Комментарий для УП||给管理合伙人的说明",s6RnHint:"Продление — доп. соглашением к тому же договору: номер договора и дела не меняются. Новый срок — с {f} (следующий день после окончания). Согласует УП, затем прикрепите подписанное доп. соглашение.||续约以同一合同的补充协议办理：合同号和案件号不变。新期限自{f}起（到期次日）。由管理合伙人批准后，上传已签署的补充协议。",
+  s6StMp:"На согласовании у УП||待管理合伙人批准",s6StSign:"Согласовано УП — прикрепите подписанное доп. соглашение||管理合伙人已批准——请上传已签署的补充协议",s6StBack:"Замечание УП||管理合伙人意见",
+  s6Ok:"Согласовать||批准",s6Back:"Замечание||提出意见",s6BackT:"Замечание ведущему||给负责律师的意见",s6Sign:"Прикрепить доп. соглашение||上传补充协议",s6Cancel:"Отменить продление||取消续约",s6CancelQ:"Отменить продление?||取消续约？",
+  s6Period:"Новый срок||新期限",s6NewCost:"новая абонплата||新顾问费",s6Same:"абонплата прежняя||顾问费不变",s6Addenda:"Доп. соглашения||补充协议",s6AdN:"№ {n} от {d}: до {t}||第{n}号 {d}：至{t}",
+  s6Renewed:"Договор продлён||合同已续约",s6Sent:"Отправлено на согласование УП||已提交管理合伙人批准",s6MonthsErr:"Срок продления — от 1 до 60 месяцев||续约期限为1至60个月",s6LockDl:"Срок договора сопровождения меняется продлением (доп. соглашение)||法律顾问合同期限通过续约（补充协议）变更",
+  s6Reps:"Отчёты клиенту||客户报告",s6RepHint:"1-го числа сервер собирает отчёт за прошлый месяц — задания «видно клиенту», выполненные в месяце, с итогами и файлами. Ведущий проверяет и отправляет — отчёт появляется в кабинете клиента.||每月1日系统生成上月报告——当月完成且客户可见的任务及其结果和文件。负责律师检查后发送——报告显示在客户账户中。",
+  s6Draft:"черновик — проверьте и отправьте||草稿——请检查并发送",s6SentAt:"отправлен {d}||已于{d}发送",s6Check:"Проверить и отправить||检查并发送",s6Send:"Отправить клиенту||发送给客户",s6Note:"Сопроводительный текст клиенту||给客户的说明",s6NoteZh:"Текст по-китайски||中文说明",
+  s6Tasks:"заданий||项任务",s6RepNone:"Отчётов пока нет — первый соберётся 1-го числа следующего месяца||暂无报告——首份报告将于下月1日生成",s6RepSent:"Отчёт отправлен клиенту||报告已发送给客户",s6RepT:"Отчёт о работе за {m}||{m}工作报告",
+  cpMyReq:"Мои обращения||我的咨询",cpAns:"Ответ||回复",cpTasks6:"Работа по договору||合同工作",cpOpen6:"в работе||进行中",cpDone6:"выполнено||已完成",cpPay6:"Оплата по месяцам||按月付款",cpReps6:"Отчёты о работе||工作报告",
+  cpTerm6:"Срок||期限",cpMonthN:"месяц {i} из {n}||第{i}个月，共{n}个月",cpNoTasks:"Заданий пока нет||暂无任务",cpComm6:"Комментарий||评论"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Пакеты сопровождения":"Kuzatuv paketlari","справочник":"maʼlumotnoma","Новый пакет":"Yangi paket","Название пакета":"Paket nomi","Что входит":"Nimalar kiradi",
+  "Что не входит (подсказка «вне пакета»)":"Nimalar kirmaydi («paketdan tashqari» maslahati)","Абонплата от, сум":"Abonent toʻlovi dan, soʻm","Абонплата до, сум":"Abonent toʻlovi gacha, soʻm","В архиве":"Arxivda",
+  "в архиве — в условиях не выбирается":"arxivda — shartlarda tanlanmaydi","действует":"amalda","Пакетов пока нет":"Hozircha paketlar yoʻq","Справочник пакетов меняет только УП":"Paketlar maʼlumotnomasini faqat BA oʻzgartiradi",
+  "Сохранено":"Saqlandi","Изменить":"Oʻzgartirish","договоров":"shartnoma","Пакет":"Paket","Свой пакет — описать ниже":"Oʻz paketi — quyida tavsiflang","Выберите пакет или опишите, что входит":"Paketni tanlang yoki nimalar kirishini tavsiflang",
+  "свой пакет":"oʻz paketi","число заданий не ограничено":"topshiriqlar soni cheklanmagan","Похоже, это вне пакета":"Bu paketdan tashqari boʻlishi mumkin","Всё равно создать":"Baribir yaratish",
+  "Продление договора":"Shartnomani uzaytirish","Договор до":"Shartnoma muddati","Предложить продление":"Uzaytirishni taklif qilish","Продлить на, месяцев":"Necha oyga uzaytirish","Новая абонплата в месяц (если меняется), сум":"Yangi oylik abonent toʻlovi (oʻzgarsa), soʻm",
+  "Комментарий для УП":"BA uchun izoh","На согласовании у УП":"BA kelishuvida","Согласовано УП — прикрепите подписанное доп. соглашение":"BA kelishdi — imzolangan qoʻshimcha kelishuvni biriktiring","Замечание УП":"BA izohi",
+  "Согласовать":"Kelishish","Замечание":"Izoh","Замечание ведущему":"Masʼul advokatga izoh","Прикрепить доп. соглашение":"Qoʻshimcha kelishuvni biriktirish","Отменить продление":"Uzaytirishni bekor qilish","Отменить продление?":"Uzaytirish bekor qilinsinmi?",
+  "Новый срок":"Yangi muddat","новая абонплата":"yangi abonent toʻlovi","абонплата прежняя":"abonent toʻlovi oʻzgarmaydi","Доп. соглашения":"Qoʻshimcha kelishuvlar","Договор продлён":"Shartnoma uzaytirildi",
+  "Отправлено на согласование УП":"BA kelishuviga yuborildi","Срок продления — от 1 до 60 месяцев":"Uzaytirish muddati — 1 dan 60 oygacha","Отчёты клиенту":"Mijozga hisobotlar","черновик — проверьте и отправьте":"qoralama — tekshiring va yuboring",
+  "Проверить и отправить":"Tekshirish va yuborish","Отправить клиенту":"Mijozga yuborish","Сопроводительный текст клиенту":"Mijozga ilova matni","Текст по-китайски":"Xitoycha matn","заданий":"topshiriq",
+  "Отчётов пока нет — первый соберётся 1-го числа следующего месяца":"Hozircha hisobotlar yoʻq — birinchisi keyingi oyning 1-sanasida tuziladi","Отчёт отправлен клиенту":"Hisobot mijozga yuborildi",
+  "Мои обращения":"Mening murojaatlarim","Ответ":"Javob","Работа по договору":"Shartnoma boʻyicha ish","в работе":"ishda","выполнено":"bajarildi","Оплата по месяцам":"Oylar boʻyicha toʻlov","Отчёты о работе":"Ish hisobotlari",
+  "Срок":"Muddat","Заданий пока нет":"Hozircha topshiriqlar yoʻq","Комментарий":"Izoh"});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{
+  s6renew:"{no}: {text} — согласуйте продление||{no}：续约待批准",s6renewMp:"{no}: {text}||{no}：续约审批结果",s6renewed:"{no}: {text}||{no}：合同已续约",
+  s6repReady:"Отчёт клиенту за {M} собран ({n} заданий) — проверьте и отправьте · договор {no}||{M} 的客户报告已生成——请检查并发送 · 合同 {no}",
+  s6report:"Отчёт о работе за {M} · договор {no}||{M} 工作报告 · 合同 {no}"});
+Object.assign(ICO25,{box:"M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8"});
+const SP6={
+  mp(){return isFounder()||hasF("managing");},
+  mem(m){return this.mp()||(!!m&&Pipe.can(m));},
+  local(){return !StSrv23.on()||Sp0.st===false;},
+  packs(all){const r=((S.settings||{}).supportPacks||{}).rows||[];return all?r:r.filter(p=>!p.archived);},
+  pack(id){return id?this.packs(true).find(p=>p.id===id)||null:null;},
+  /* Сп-53: абонплата месяца — как zc.support_cost: по истории абонплаты (costHist24), иначе текущая */
+  cost(m,M){const h=(m.costHist24||[]).slice().sort((a,b)=>String(a.from).localeCompare(String(b.from)));if(!h.length)return +m.cost||0;
+    const x=h.filter(e=>e.from<=M).pop();return x?+x.cost||0:+h[0].prev||+m.cost||0;},
+  sum(m,M){return r2(this.cost(m,M)*monthShare(m,M));},
+  /* действие: сервер (support_act) или — без миграции и в демо — то же в портале */
+  async act(m,act,args,okText){if(await Sp0.ready()){let r;try{r={d:await SB19.T.rpc("support_act",{mid:m.id,act,args:args||{}})};}catch(e){if(!StSrv23.noFn(e)){toast(Sp0.msg(e));return false;}Sp0.st=false;}
+      if(r){StSrv23.apply(m,r.d);if(okText)toast(okText);Router.render();return true;}}
+    const e=this.loc(m,act,args||{});if(e){toast(e);return false;}try{await saveDoc("matters",m);}catch(x){toast(String(x&&x.message||x));return false;}
+    if(okText)toast(okText);Router.render();return true;},
+  /* без сервера — те же правила, что в public.support_act */
+  loc(m,act,a){const me=(U()||{}).emp,at=nowS(),td=todayS();const hist=w=>{m.history=m.history||[];m.history.push({at,by:me,what:w});};const rn=m.renew24||{};
+    if(act==="report_send"){if(!this.mem(m))return T1("Отчёт отправляет ведущий, исполнитель дела или УП||报告由负责律师、执行律师或管理合伙人发送");const M=a.month;m.reports24=m.reports24||{};
+      const r=m.reports24[M]||this.build(m,M);if(!r)return T1("Отчёта за этот месяц нет||本月没有报告");if(r.st==="sent")return T1("Отчёт уже отправлен||报告已发送");
+      m.reports24[M]=Object.assign({},r,{st:"sent",sentAt:at,sentBy:me},a.note?{note:String(a.note).trim()}:{},a.noteZh?{noteZh:String(a.noteZh).trim()}:{});hist("Отчёт клиенту за "+fmtM(M)+" отправлен");return "";}
+    if(!this.mem(m))return T1("Продление предлагает ведущий, исполнитель дела или УП||续约由负责律师、执行律师或管理合伙人提出");
+    if(act==="renew_propose"){if(m.pipeline!=="contract"||m.status==="closed")return T1("Продлить можно только действующий договор||仅可续约有效合同");if(!/^\d{4}-\d{2}-\d{2}/.test(m.deadline||""))return T1("У договора нет даты окончания||合同没有到期日");
+      if(["mp","sign"].includes(rn.st))return T1("Продление уже на согласовании||续约已在审批中");const n=+a.months;if(!(n>=1&&n<=60&&Math.round(n)===n))return T1(UI.s6MonthsErr);
+      let c=a.cost===""||a.cost==null?null:+a.cost;if(c!=null&&!(c>0))return T1("Абонплата должна быть больше нуля||顾问费必须大于零");if(c===(+m.cost||0))c=null;const from=addDays(m.deadline.slice(0,10),1);
+      m.renew24=Object.assign({st:"mp",months:n,from,to:SP2.end(from,n),oldCost:m.cost,by:me,at},c!=null?{cost:c}:{},String(a.text||"").trim()?{text:String(a.text).trim()}:{});hist("Продление предложено: "+n+" мес., до "+fmtD(m.renew24.to));return "";}
+    if(act==="renew_mp"){if(!this.mp())return T1("Продление согласует УП||续约由管理合伙人批准");if(rn.st!=="mp")return T1("Нет продления на согласовании||没有待批准的续约");
+      if(a.ok){m.renew24=Object.assign({},rn,{st:"sign",mp:{by:me,at,ok:true}});hist("Продление согласовано УП");return "";}
+      if(!String(a.text||"").trim())return T1("Напишите замечание ведущему||请写给负责律师的意见");m.renew24=Object.assign({},rn,{st:"back",mp:{by:me,at,ok:false,text:String(a.text).trim()}});hist("Продление: замечание УП");return "";}
+    if(act==="renew_sign"){if(rn.st!=="sign")return T1("Сначала продление согласует УП||请先由管理合伙人批准续约");const f=a.file||{};if(!f.id||!f.name)return T1("Прикрепите подписанное доп. соглашение||请上传已签署的补充协议");
+      m.files=m.files||[];if(m.files.some(x=>x.id===f.id))return T1("Файл уже прикреплён||文件已附加");
+      if(rn.cost!=null){m.costHist24=(m.costHist24||[]).concat([{from:rn.from.slice(0,7),cost:rn.cost,prev:m.cost}]);m.cost=rn.cost;m.fee=rn.cost;}
+      m.deadline=rn.to;m.supMonths24=(+m.supMonths24||0)+rn.months;m.files.push({id:f.id,name:f.name,type:f.type,size:f.size,folder:"Договор и доп. соглашения",clientVisible:false,by:me,at});
+      const k=m.contract=m.contract||{};k.addenda=(k.addenda||[]).concat([Object.assign({n:(k.addenda||[]).length+1,date:td,file:f.id,months:rn.months,from:rn.from,to:rn.to},rn.cost!=null?{cost:rn.cost}:{})]);
+      m.renew24=Object.assign({},rn,{st:"done",signed:{by:me,at,file:f.id}});hist("Договор продлён до "+fmtD(rn.to)+" — доп. соглашение № "+k.addenda.length);return "";}
+    if(act==="renew_cancel"){if(!["mp","back","sign"].includes(rn.st))return T1("Нет продления, которое можно отменить||没有可取消的续约");delete m.renew24;hist("Продление отменено");return "";}
+    return T1("Неизвестное действие||未知操作");},
+  /* Сп-55: отчёт за месяц — как public.support_report_run (в демо — для показа, сохраняется при отправке) */
+  build(m,M){const vis=new Set((m.files||[]).filter(f=>f.clientVisible).map(f=>f.id));
+    const tk=(m.assignments||[]).filter(a=>a.vis&&a.status==="done"&&(a.doneMonth||String(a.doneAt||"").slice(0,7))===M).sort((a,b)=>String(a.doneAt).localeCompare(String(b.doneAt)))
+      .map(a=>Object.assign({id:a.id,title:a.title,doneAt:a.doneAt},a.result?{result:a.result}:{},a.resultZh?{resultZh:a.resultZh}:{},(a.files||[]).some(f=>vis.has(f))?{files:(a.files||[]).filter(f=>vis.has(f))}:{}));
+    return tk.length?{month:M,st:"draft",at:nowS(),tasks:tk}:null;},
+  reports(m){const R=Object.assign({},m.reports24||{});if(this.local()&&m.pipeline==="contract"){const pm=prevMonth11(monthOf11(todayS()));if(!R[pm]&&supportMonths(m).includes(pm)){const b=this.build(m,pm);if(b)R[pm]=b;}}
+    return Object.keys(R).sort().reverse().map(k=>Object.assign({month:k},R[k]));},
+  /* подсказка «вне пакета» (только подсказка) */
+  outWord(m,title){const t=String(title||"").toLowerCase();if(!t)return "";const p=this.pack(m.packId);
+    const words=["суд","иск","регистрац","лиценз"].concat(String(p&&p.exc||"").toLowerCase().split(/[,;.\n]+/).map(s=>s.trim()).filter(s=>s.length>=4).map(s=>s.slice(0,Math.max(4,s.length-2))));
+    return words.find(w=>t.includes(w))||"";},
+  _hint:null,
+  async hinted(m,fn){this._hint=m;try{return await fn();}finally{this._hint=null;}},
+  hook(){if(this._hooked)return;this._hooked=true;
+    const _ask=Dlg.ask.bind(Dlg);Dlg.ask=async function(o){const m=SP6._hint;const v=await _ask(o);if(!m||!v||!("title" in v))return v;SP6._hint=null;const w=SP6.outWord(m,v.title);if(!w)return v;
+      const p=SP6.pack(m.packId);const go=await _ask({title:T1(UI.s6Out),text:T1(UI.s6OutText).replace("{p}",p?p.name:T1(UI.s6PackOwn)).replace("{w}",w),okText:UI.s6OutOk});return go!==null?v:null;};
+    const _add=Asg11.add.bind(Asg11);Asg11.add=function(id,aid){const m=matter(id);return m&&sp2(m)&&!aid?SP6.hinted(m,()=>_add(id,aid)):_add(id,aid);};
+    if(typeof ST3!=="undefined"){const _rq=ST3.req.bind(ST3);ST3.req=function(id,rid){const m=matter(id);return m&&sp2(m)?SP6.hinted(m,()=>_rq(id,rid)):_rq(id,rid);};}},
+  /* справочник пакетов (УП) */
+  page(){const MP=this.mp();const L=this.packs(true);const used=id=>MM().filter(m=>m.svc==="support"&&m.packId===id&&m.status!=="closed").length;
+    const rows=L.map(p=>`<tr${p.archived?' class="arch6"':""}><td><b>${esc(p.name)}</b>${p.archived?`<small>${T1(UI.s6ArchY)}</small>`:""}</td><td>${esc(p.inc||"")}</td><td>${esc(p.exc||"")}</td>
+      <td class="num">${p.min||p.max?esc([p.min?fmtN(p.min):"",p.max?fmtN(p.max):""].filter(Boolean).join(" — ")):"—"}</td><td class="num">${used(p.id)}</td><td>${MP?`<button type="button" class="btn sm ghost" data-s6pk="${esc(p.id)}">${T1(UI.s6Edit)}</button>`:""}</td></tr>`).join("");
+    return `<div class="l25 s6p"><div class="ph hd25"><div class="t25"><h2>${T1(UI.s6Packs)}</h2><span class="n25">${L.filter(p=>!p.archived).length} · ${T1(UI.s6PacksSub)}</span></div><div class="acts">${MP?`<button type="button" class="btn pri" data-s6pk="">+ ${T1(UI.s6PackAdd)}</button>`:""}</div></div>
+      <div class="card">${L.length?`<div class="tw4"><table class="tb4"><thead><tr><th>${T1(UI.s6Pack)}</th><th>${T1(UI.s6Inc)}</th><th>${T1(UI.s6Exc).replace(/ \(.*\)$/,"")}</th><th class="num">${T1(UI.s2Fee)}, ${T1(UI.sum)}</th><th class="num">${T1(UI.s6Used)}</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="empty2">${T1(UI.s6PacksNone)}</div>`}
+      <div class="h4t">${T1(UI.s6PacksHint)}${MP?"":" "+T1(UI.s6OnlyMp)+"."}</div></div></div>`;},
+  async editPack(id){if(!this.mp()){toast(T1(UI.s6OnlyMp));return;}const rows=this.packs(true).map(p=>Object.assign({},p));const x=rows.find(p=>p.id===id)||{};
+    const v=await Dlg.ask({title:id?x.name:T1(UI.s6PackAdd),fields:[{k:"name",label:T1(UI.s6PackName),value:x.name||"",required:true,span:true},{k:"inc",label:T1(UI.s6Inc),type:"textarea",value:x.inc||"",required:true,span:true},
+      {k:"exc",label:T1(UI.s6Exc),type:"textarea",value:x.exc||"",span:true},{k:"min",label:T1(UI.s6Min),type:"number",value:x.min||""},{k:"max",label:T1(UI.s6Max),type:"number",value:x.max||"",check:v=>+v.min>0&&+v.max>0&&+v.min>+v.max?T1("«От» больше «до»||“起”大于“至”"):""},
+      {k:"arch",label:T1(UI.s6Arch),type:"select",value:x.archived?"1":"0",options:[["0",T1(UI.s6ArchN)],["1",T1(UI.s6ArchY)]]}]});if(!v)return;
+    const rec=Object.assign(x,{id:x.id||uid("pk"),name:String(v.name).trim(),inc:String(v.inc).trim(),exc:String(v.exc||"").trim(),min:+v.min||0,max:+v.max||0,archived:v.arch==="1"});if(!id)rows.push(rec);
+    const next={id:"supportPacks",rows,updatedAt:nowS(),updatedBy:(U()||{}).login};try{await saveDoc("settings",next);}catch(e){toast(String(e&&e.message||e));return;}S.settings.supportPacks=next;audit(`Пакеты сопровождения: ${rec.name}`);toast(T1(UI.s6Saved));Router.render();},
+  /* «Договор и пакет»: пакет и продление */
+  packCard(m){const p=this.pack(m.packId);const name=m.packName||(p&&p.name)||"";
+    return `<div class="card s6pk"><h4>${L25.ico("box")} ${T1(UI.s6PackCard)}: ${esc(name||T1(UI.s6PackOwn))}</h4><dl class="kv6"><dt>${T1(UI.s6Inc)}</dt><dd>${esc(m.package||"—")}</dd>${p&&p.exc?`<dt>${T1(UI.s6Exc).replace(/ \(.*\)$/,"")}</dt><dd>${esc(p.exc)}</dd>`:""}</dl><div class="h4t">${T1(UI.s6NoLimit)}</div></div>`;},
+  renewCard(m){const rn=m.renew24||{};const MP=this.mp(),mem=this.mem(m);const ad=(m.contract||{}).addenda||[];const vis=costVisible(m);
+    const per=r=>`<dl class="kv6"><dt>${T1(UI.s6Period)}</dt><dd>${esc(r.months+" "+T1("мес.||个月")+" · "+fmtD(r.from)+" — "+fmtD(r.to))}</dd>${vis?`<dt>${T1(UI.s2Fee)}</dt><dd>${r.cost!=null?esc(T1(UI.s6NewCost)+": "+fmtN(r.cost)+" "+T1(UI.sum)):T1(UI.s6Same)}</dd>`:""}${r.text?`<dt>${T1(UI.s6RnText).replace(/ для УП$/,"")}</dt><dd>${esc(r.text)}</dd>`:""}</dl>`;
+    let body="";
+    if(rn.st==="mp")body=`<div class="st6 w">${T1(UI.s6StMp)}</div>${per(rn)}<div class="ac6">${MP?`<button type="button" class="btn sm pri" data-s6rn="ok">${T1(UI.s6Ok)}</button><button type="button" class="btn sm" data-s6rn="back">${T1(UI.s6Back)}</button>`:""}${mem?`<button type="button" class="btn sm ghost" data-s6rn="cancel">${T1(UI.s6Cancel)}</button>`:""}</div>`;
+    else if(rn.st==="sign")body=`<div class="st6 ok">${T1(UI.s6StSign)}</div>${per(rn)}<div class="ac6">${mem?`<button type="button" class="btn sm pri" data-s6rn="sign">${L25.ico("clip")} ${T1(UI.s6Sign)}</button><button type="button" class="btn sm ghost" data-s6rn="cancel">${T1(UI.s6Cancel)}</button>`:""}</div>`;
+    else body=`${rn.st==="back"?`<div class="st6 r">${T1(UI.s6StBack)}: «${esc((rn.mp||{}).text||"")}»</div>`:""}<div class="ac6">${mem?`<button type="button" class="btn sm${rn.st==="back"||SL1.endSoon(m)?" pri":""}" data-s6rn="propose">${T1(UI.s6Prop)}</button>`:""}${rn.st==="back"&&mem?`<button type="button" class="btn sm ghost" data-s6rn="cancel">${T1(UI.s6Cancel)}</button>`:""}</div>`;
+    const adh=ad.length?`<div class="lb6">${T1(UI.s6Addenda)}</div>${ad.map(a=>{const f=(m.files||[]).find(x=>x.id===a.file);return `<div class="ad6">${esc(T1(UI.s6AdN).replace("{n}",a.n).replace("{d}",fmtD(a.date)).replace("{t}",fmtD(a.to)))}${a.cost!=null&&vis?` · ${esc(fmtN(a.cost))} ${T1(UI.sum)}`:""}${f?` · <span class="chipf" data-s6f="${esc(f.id)}">${esc(f.name)}</span>`:""}</div>`;}).join("")}`:"";
+    return `<div class="card s6rn"><h4>${L25.ico("calendar")} ${T1(UI.s6Renew)}</h4><div class="tl6">${T1(UI.s6Till)} <b>${esc(fmtD(m.deadline))}</b>${(m.contract||{}).no?` · ${esc(m.contract.no)}`:""}</div>${body}${adh}</div>`;},
+  async renew(m,k){const id=m.id;
+    if(k==="propose"){const from=addDays(String(m.deadline).slice(0,10),1);const vis=costVisible(m);
+      const v=await Dlg.ask({title:T1(UI.s6Renew)+" · "+m.no,text:T1(UI.s6RnHint).replace("{f}",fmtD(from)),fields:[{k:"months",label:T1(UI.s6RnMonths),type:"number",value:12,required:true},
+        vis?{k:"cost",label:T1(UI.s6RnCost),type:"number",value:""}:null,{k:"text",label:T1(UI.s6RnText),type:"textarea",value:"",span:true,check:x=>{const n=+x.months;return n>=1&&n<=60&&Math.round(n)===n?"":T1(UI.s6MonthsErr);}}].filter(Boolean)});if(!v)return;
+      await this.act(matter(id),"renew_propose",{months:+v.months,cost:v.cost?+v.cost:null,text:v.text||""},T1(UI.s6Sent));return;}
+    if(k==="ok"){await this.act(m,"renew_mp",{ok:true},T1(UI.s6Saved));return;}
+    if(k==="back"){const v=await Dlg.ask({title:T1(UI.s6BackT),fields:[{k:"text",label:T1(UI.s6Back),type:"textarea",required:true,span:true}]});if(!v)return;await this.act(matter(id),"renew_mp",{ok:false,text:v.text},T1(UI.s6Saved));return;}
+    if(k==="cancel"){if(!await Dlg.confirm(T1(UI.s6CancelQ),""))return;await this.act(matter(id),"renew_cancel",{},T1(UI.s6Saved));return;}
+    if(k==="sign")Files.upload(async f=>{if(!f)return;await SP6.act(matter(id),"renew_sign",{file:{id:f.id,name:f.name,type:f.type,size:f.size}},T1(UI.s6Renewed));});},
+  /* «Месяцы и оплата»: отчёты клиенту */
+  repCard(m){const L=this.reports(m);const mem=this.mem(m);
+    return `<div class="card s6rp"><h4>${L25.ico("list")} ${T1(UI.s6Reps)}</h4>${L.length?L.map(r=>`<div class="rp6"><b>${esc(fmtM(r.month))}</b><span>${(r.tasks||[]).length} ${T1(UI.s6Tasks)}</span>
+      ${r.st==="sent"?`<span class="r4 ok">${esc(T1(UI.s6SentAt).replace("{d}",fmtD(String(r.sentAt).slice(0,10))))}</span>`:`<span class="r4 w">${T1(UI.s6Draft)}</span>${mem?`<button type="button" class="btn sm pri" data-s6rp="${esc(r.month)}">${T1(UI.s6Check)}</button>`:""}`}</div>`).join(""):`<div class="empty2">${T1(UI.s6RepNone)}</div>`}
+      <div class="h4t">${T1(UI.s6RepHint)}</div></div>`;},
+  async sendRep(m,M){const r=this.reports(m).find(x=>x.month===M);if(!r)return;const fn=id=>((m.files||[]).find(f=>f.id===id)||{}).name||"";
+    const list=`<div class="rpl6">${(r.tasks||[]).map(t=>`<div><b>${esc(t.title)}</b> <small>${esc(fmtD(t.doneAt))}</small>${t.result?`<br>${esc(t.result)}`:""}${(t.files||[]).length?`<br><small>${(t.files||[]).map(f=>esc(fn(f))).join(", ")}</small>`:""}</div>`).join("")}</div>`;
+    const v=await Dlg.ask({title:T1(UI.s6RepT).replace("{m}",fmtM(M))+" · "+m.no,okText:UI.s6Send,fields:[{k:"l",type:"html",span:true,html:list},{k:"note",label:T1(UI.s6Note),type:"textarea",value:"",span:true},{k:"noteZh",label:T1(UI.s6NoteZh),type:"textarea",value:"",span:true}]});if(!v)return;
+    await this.act(m,"report_send",{month:M,note:v.note||"",noteZh:v.noteZh||""},T1(UI.s6RepSent));},
+  bindCard(vp,m){vp.querySelectorAll("[data-s6rn]").forEach(b=>b.onclick=e=>{e.stopPropagation();SP6.renew(matter(m.id),b.dataset.s6rn);});
+    vp.querySelectorAll("[data-s6f]").forEach(b=>b.onclick=e=>{e.stopPropagation();const f=(matter(m.id).files||[]).find(x=>x.id===b.dataset.s6f);if(f)Files.open(f);});
+    vp.querySelectorAll("[data-s6rp]").forEach(b=>b.onclick=e=>{e.stopPropagation();SP6.sendRep(matter(m.id),b.dataset.s6rp);});},
+  /* Сп-56: кабинет клиента — сопровождение */
+  cab(){const c=myClient();if(!c)return "";migrateClient9c(c);const subs=CP.active().filter(m=>m.svc==="support"&&m.pipeline==="contract");if(!subs.length)return null;
+    const reqs=(c.requests||[]).filter(r=>!r.by||r.by==="client").slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));const cur=monthOf11(todayS());
+    const box=(t,ic,h)=>`<div class="card cp6"><h4>${L25.ico(ic)} ${esc(T1(t))}</h4>${h}</div>`;
+    const one=m=>{const p=this.pack(m.packId);const name=m.packName||(p&&p.name)||"";const ms=supportMonths(m),i=ms.indexOf(cur);const vis=f=>(m.files||[]).find(x=>x.id===f&&x.clientVisible);
+      const tk=(m.assignments||[]).filter(a=>a.vis!==false&&(a.vis||a.src==="req"));const open=tk.filter(a=>a.status!=="done"),done=tk.filter(a=>a.status==="done").sort((a,b)=>String(b.doneAt).localeCompare(String(a.doneAt)));
+      const row=a=>`<div class="tk6"><span class="r4 ${a.status==="done"?"ok":"n"}">${T1(a.status==="done"?UI.cpDone6:UI.cpOpen6)}</span><div><b>${esc(a.title)}</b>${a.status==="done"&&a.doneAt?` <small>${esc(fmtD(a.doneAt))}</small>`:""}
+        ${a.result?`<div class="rs6">${esc(lang==="zh"&&a.resultZh?a.resultZh:a.result)}</div>`:""}${(a.comments||[]).filter(x=>x.to==="client").map(x=>`<div class="cm6"><small>${esc(fmtDT(x.at))}</small> ${esc(lang==="zh"&&x.textZh?x.textZh:x.text)}</div>`).join("")}
+        ${(a.files||[]).map(vis).filter(Boolean).map(f=>`<span class="chipf" data-cfile="${m.id}" data-fname="${esc(f.name)}">${esc(f.name)}</span>`).join(" ")}</div></div>`;
+      const reps=Object.entries(m.reports24||{}).filter(([k,r])=>!r.st||r.st==="sent").sort((a,b)=>b[0].localeCompare(a[0]));
+      const pays=ms.filter(M=>M<=cur).reverse().map(M=>{const pd=(m.monthsPaid||{})[M]==="paid";return `<div class="py6${!pd&&M<cur?" miss":""}"><b>${esc(fmtM(M))}</b><span>${esc(fmtN(this.sum(m,M)))} ${T1(UI.sum)}</span><span class="r4 ${pd?"ok":M<cur?"r":"n"}">${T1(pd?UI.s4PaidSt:M<cur?UI.s4Unpaid:UI.s4Cur)}</span></div>`;}).join("");
+      return `<div class="cols"><div style="display:grid;gap:14px">
+        ${box(T1(UI.cpContract)+" · "+((m.contract||{}).no||m.no),"box",`<dl class="kvl"><dt>${T1(UI.s4Contract)}</dt><dd>${esc((m.contract||{}).no||m.no)}</dd><dt>${T1(UI.cpTerm6)}</dt><dd>${esc(fmtD(m.opened))}${m.deadline?" — "+esc(fmtD(m.deadline)):""}${i>=0?` · ${esc(T1(UI.cpMonthN).replace("{i}",i+1).replace("{n}",ms.length))}`:""}</dd>
+          <dt>${T1(UI.s6Pack)}</dt><dd>${esc(name||T1(UI.s6PackOwn))}</dd><dt>${T1(UI.s6Inc)}</dt><dd>${esc(m.package||T1("по договору||按合同约定"))}</dd></dl>`)}
+        ${box(UI.cpMyReq,"msg",`<div class="actions" style="justify-content:flex-start;margin:0 0 10px"><button class="btn pri sm" data-act="creq">${T1(UI.cpReqNew)}</button></div>${reqs.length?reqs.map(r=>`<div class="rq6"><small>${esc(fmtDT(r.at))}</small><div>${esc(T1(r.text||""))}</div>${r.answer?`<div class="an6"><b>${T1(UI.cpAns)}:</b> ${esc(lang==="zh"&&r.answerZh?r.answerZh:T1(r.answer))}</div>`:`<span class="r4 n">${T1(UI.cpReqOpen)}</span>`}</div>`).join(""):`<div class="empty2">${T1(UI.noData)}</div>`}`)}
+        ${box(UI.cpTasks6,"check",tk.length?open.concat(done).map(row).join(""):`<div class="empty2">${T1(UI.cpNoTasks)}</div>`)}
+      </div><div style="display:grid;gap:14px">
+        ${box(UI.cpReps6,"list",reps.length?reps.map(([k,r])=>`<div class="rp6c"><b>${esc(T1(UI.s6RepT).replace("{m}",fmtM(k)))}</b>${r.sentAt?` <small>${esc(fmtD(String(r.sentAt).slice(0,10)))}</small>`:""}${r.note?`<div class="rs6">${esc(lang==="zh"&&r.noteZh?r.noteZh:r.note)}</div>`:""}
+          <ul>${(r.tasks||[]).map(t=>`<li><b>${esc(t.title)}</b>${t.result?` — ${esc(lang==="zh"&&t.resultZh?t.resultZh:t.result)}`:""}${(t.files||[]).map(vis).filter(Boolean).map(f=>` <span class="chipf" data-cfile="${m.id}" data-fname="${esc(f.name)}">${esc(f.name)}</span>`).join("")}</li>`).join("")}</ul></div>`).join(""):`<div class="empty2">${T1(UI.noData)}</div>`)}
+        ${box(UI.cpPay6,"wallet",pays||`<div class="empty2">${T1(UI.noData)}</div>`)}
+      </div></div>`;};
+    return `<div class="cp">${F.hdr(T1(UI.nSupport),T1(UI.cSub))}${subs.map(one).join("")}</div>`;}
+};
+/* суммы месяцев «Месяцы и оплата» и «Закрытие месяца» — с историей абонплаты (Сп-53) */
+if(typeof SP4!=="undefined")SP4.sum=(m,M)=>SP6.sum(m,M);
+/* условия: пакет из справочника (Сп-52) */
+{const _tfS6=Pre24.termFields.bind(Pre24);Pre24.termFields=function(m,t,needWhy){const f=_tfS6(m,t,needWhy);if(!sp2(m))return f;t=t||{};const L=SP6.packs();if(!L.length)return f;
+  const i=f.findIndex(x=>x&&x.k==="scope");if(i<0)return f;const cur=t.packId||m.packId||"";
+  f.splice(i,0,{k:"spPack",label:T1(UI.s6Pack),type:"select",value:L.some(p=>p.id===cur)?cur:"",options:[["",T1(UI.s6Own)]].concat(L.map(p=>[p.id,p.name+(p.min||p.max?` · ${[p.min?fmtN(p.min):"",p.max?fmtN(p.max):""].filter(Boolean).join("—")}`:"")]))});
+  f[i+1]=Object.assign({},f[i+1],{required:false});const last=f[f.length-1];const ch=last.check;last.check=v=>{if(!v.spPack&&!String(v.scope||"").trim())return T1(UI.s6ScopeNeed);return ch?ch(v):"";};return f;};
+ const _tFS6=Pre24.tFrom.bind(Pre24);Pre24.tFrom=function(v){const t=_tFS6(v);if(!("spMonths" in v))return t;const p=SP6.pack(v.spPack);if(!p)return t;
+   return Object.assign(t,{packId:p.id,packName:p.name,scope:t.scope||p.inc||""});};
+ const _fS6=SP2.fields.bind(SP2);SP2.fields=function(m,t,dates){_fS6(m,t,dates);m.packId=t.packId||"";m.packName=t.packName||"";};}
+/* срок действующего договора — только продлением (Сп-54); без сервера — то же в портале */
+if(typeof Matter!=="undefined"&&Matter.edit){const _edS6=Matter.edit.bind(Matter);Matter.edit=async function(id){const m=matter(id);if(!m||!sp2(m)||m.pipeline!=="contract"||SP6.mp())return _edS6(id);
+  const dl=m.deadline,op=m.opened;const r=await _edS6(id);const n=matter(id);if(n&&(n.deadline!==dl||n.opened!==op)){n.deadline=dl;n.opened=op;toast(T1(UI.s6LockDl));try{await saveDoc("matters",n);}catch(e){}Router.render();}return r;};}
+/* карточка: «Договор и пакет» — пакет и продление; «Месяцы и оплата» — отчёты клиенту */
+if(typeof Card22!=="undefined"){
+  const _bS6=Card22.build.bind(Card22);Card22.build=function(id,html,m){const out=_bS6(id,html,m);if(!sp2(m)||m.pipeline!=="contract")return out;try{
+    const tpl=document.createElement("template");tpl.innerHTML=out;const w=tpl.content;const p3=w.querySelector('[data-c22pane="3"]'),p4=w.querySelector('[data-c22pane="4"]');
+    if(p3){const b=document.createElement("div");b.innerHTML=SP6.packCard(m)+(m.status!=="closed"||(m.contract||{}).addenda?SP6.renewCard(m):"");[...b.children].reverse().forEach(c=>p3.insertBefore(c,p3.firstChild));}
+    if(p4){const b=document.createElement("div");b.innerHTML=SP6.repCard(m);const s4=p4.querySelector(":scope>.s4");p4.insertBefore(b.firstElementChild,s4?s4.nextSibling:p4.firstChild);}
+    const d=document.createElement("div");d.appendChild(w.cloneNode(true));return d.innerHTML;}catch(e){console.warn("support stage6",e);return out;}};
+  const _bdS6=Card22.bind.bind(Card22);Card22.bind=function(vp,m){_bdS6(vp,m);if(sp2(m))SP6.bindCard(vp,m);};}
+/* справочник пакетов — из меню ⋯ списка сопровождения */
+Router.extra.sppacks=()=>SP6.page();
+if(typeof SL1!=="undefined"){const _mS6=SL1.menu.bind(SL1);SL1.menu=function(f){const h=_mS6(f);return h.replace('<span class="mn25p" id="l25menu">',`<span class="mn25p" id="l25menu"><button type="button" data-s6open="1">${L25.ico("box")} ${T1(UI.s6Packs)}</button>`);};}
+{const _pbS6=Pages.bind;Pages.bind=function(vp){SP6.hook();_pbS6.apply(this,arguments);if(!vp||isClient())return;
+  if(Router.cur==="support"){const b=vp.querySelector("[data-s6open]");if(b)b.onclick=e=>{e.stopPropagation();Router.go("sppacks");};}
+  if(Router.cur==="sppacks")vp.querySelectorAll("[data-s6pk]").forEach(b=>b.onclick=()=>SP6.editPack(b.dataset.s6pk));};}
+{const _sdS6=renderSide;renderSide=function(){_sdS6();if(Router.cur!=="sppacks"||isClient())return;const side=document.getElementById("side");if(side)side.querySelectorAll(".sn").forEach(b=>b.classList.toggle("on",b.dataset.r==="support"));};}
+/* кабинет клиента: сопровождение (Сп-56) */
+if(typeof CP!=="undefined"){const _cpsS6=CP.support;CP.support=function(){const h=SP6.cab();return h===null?_cpsS6.apply(this,arguments):h;};}
+/* стили раздела (этап 6) */
+{const st=document.createElement("style");st.id="s6css";st.textContent=`
+.s6pk h4 svg,.s6rn h4 svg,.s6rp h4 svg,.cp6 h4 svg,.mn25p [data-s6open] svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+.kv6{display:grid;grid-template-columns:minmax(120px,max-content) 1fr;gap:6px 14px;margin:4px 0 0;font-size:13px}.kv6 dt{color:var(--ink-3)}.kv6 dd{margin:0}@media(max-width:600px){.kv6{grid-template-columns:1fr}.kv6 dd{margin-bottom:6px}}
+.tl6{font-size:13px;margin-bottom:8px}.st6{border-radius:8px;padding:8px 10px;font-size:13px;font-weight:600;margin:6px 0}.st6.w{background:var(--warn-soft);color:var(--warn-d)}.st6.ok{background:var(--ok-soft);color:var(--ok-d)}.st6.r{background:var(--red-soft);color:var(--red-d)}
+.ac6{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.ac6 svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;vertical-align:-2px}.lb6{font:600 10.5px var(--font-h);letter-spacing:.5px;text-transform:uppercase;color:var(--ink-3);margin:14px 0 6px}
+.ad6{font-size:13px;padding:6px 0;border-top:1px solid var(--line)}
+.rp6{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.rp6 b{min-width:110px}.rp6 span:not(.r4){color:var(--ink-3)}.rp6 .btn{margin-left:auto}
+.rpl6{display:grid;gap:8px;max-height:280px;overflow:auto;font-size:13px}.rpl6>div{background:var(--surface2);border-radius:8px;padding:8px 10px}.rpl6 small{color:var(--ink-3)}
+.tb4 tr.arch6 td{opacity:.6}
+.tk6{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.tk6:last-child{border-bottom:0}.tk6>div{flex:1;min-width:0}.tk6 small{color:var(--ink-3)}
+.rs6{color:var(--ink-2);margin-top:3px;line-height:1.45}.cm6{font-size:12.5px;background:var(--surface2);border-radius:8px;padding:6px 8px;margin-top:5px}.cm6 small{color:var(--ink-3)}
+.rq6{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.rq6:last-child{border-bottom:0}.rq6 small{color:var(--ink-3)}.an6{margin-top:5px;background:var(--ok-soft);border-radius:8px;padding:6px 8px}.rq6 .r4{margin-top:5px}
+.py6{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}.py6 b{min-width:110px}.py6 span:not(.r4){flex:1;text-align:right;white-space:nowrap}.py6.miss{color:var(--red-d)}
+.rp6c{padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.rp6c:last-child{border-bottom:0}.rp6c small{color:var(--ink-3)}.rp6c ul{margin:6px 0 0;padding-left:18px;display:grid;gap:4px}`;
   (document.head||document.documentElement).appendChild(st);}
 
 /* ══ Раздел «Юридическое сопровождение» · этап 3 — задания и обращения по месяцам (макет design-support.html, решение владельца 19.10.2026) ══
