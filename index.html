@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="0aa691c19aae";
+const ZC_BUILD="9f38bb846887";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10370,7 +10370,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="1.3";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="1.4";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -15981,6 +15981,48 @@ if(typeof Pre24!=="undefined"&&Pre24.kpBuild){const _kpImg27=Pre24.kpBuild.bind(
     if(!pdf)return _kpImg27(m);
     let s="";for(let k=0;k<pdf.length;k+=0x8000)s+=String.fromCharCode.apply(null,pdf.subarray(k,k+0x8000));const url="data:application/pdf;base64,"+btoa(s);
     const vno=((m.offer||{}).vers23||[]).length+1;return this.kpStore(m,`КП ${m.no} v${vno}.pdf`,url,pdf.length);};}
+
+/* ═══════════════════════════ РАЗДЕЛ «ЮРИДИЧЕСКОЕ СОПРОВОЖДЕНИЕ» · ЭТАП 0 — ЗАЩИТА ДАННЫХ ═══════════════════════════
+   Решение владельца 19.10.2026 (правила Сп-2, Сп-7, Сп-9 … Сп-12 — sections/support/ПРАВИЛА.md; миграция 20261019004000_support_stage0).
+   Логика — на сервере (public.support_act): оплата месяца (УП), закрытие и проверка месяца (УП), задания (ведущий, исполнитель, УП).
+   ЭСФ за прошлый месяц ставит сервер (public.support_esf_run, 08:00) — портал свою задачу больше не ставит.
+   Портал оставляет себе окна; пока миграция не выполнена в Supabase (функции нет — PGRST202) или в демо-режиме — прежний путь портала. */
+const Sp0={
+  st:null,   /* есть ли функции сопровождения на сервере: null — ещё не проверяли */
+  msg(e){return StSrv23.msg(e);},
+  async ready(){if(!StSrv23.on())return false;if(this.st!==null)return this.st;
+    try{await SB19.T.rpc("support_act",{mid:"",act:"ping",args:{}});this.st=true;}catch(e){this.st=!StSrv23.noFn(e);}return this.st;},
+  /* true — сделано на сервере (или сервер отказал — причина показана); false — функции нет, прежний путь */
+  async act(m,act,args,okText){let r;try{r={d:await SB19.T.rpc("support_act",{mid:m.id,act,args:args||{}})};}catch(e){if(StSrv23.noFn(e)){this.st=false;return false;}r={err:this.msg(e)};}
+    if(r.err){toast(r.err);Router.render();return true;}StSrv23.apply(m,r.d);if(okText)toast(okText);Pay.cache={};Router.render();return true;}
+};
+
+/* ── Сп-7: оплата месяца — УП, сервер пересчитывает статус оплаты дела ── */
+const _payMonthSp0=Pay11.month.bind(Pay11);
+Pay11.month=async function(id,M){if(!await Sp0.ready())return _payMonthSp0(id,M);const m=matter(id);if(!m)return;
+  if(!(isFounder()||hasF("managing"))){toast(T1(UI.payOnlyMp));return;}migrateMatter11(m);const cur=(m.monthsPaid||{})[M]||"unpaid";
+  const v=await Dlg.ask({title:`${T1(UI.payMonths)} · ${fmtM(M)}`,fields:[{k:"st",label:T1(UI.payStatus),type:"select",value:cur,options:[["unpaid",T1(UI.payUnpaid)],["paid",T1(UI.payFull)]]}]});if(!v)return;
+  if(!await Sp0.act(m,"month_paid",{month:M,st:v.st}))return _payMonthSp0(id,M);};
+
+/* ── Сп-9: закрытие и проверка месяца — УП ── */
+const _mcCloseSp0=MonthClose13.close.bind(MonthClose13),_mcCheckSp0=MonthClose13.check.bind(MonthClose13);
+MonthClose13.close=async function(id,M){if(!await Sp0.ready())return _mcCloseSp0(id,M);const m=matter(id);if(!m)return;
+  if(!(isFounder()||hasF("managing"))){toast(T1(UI.payOnlyMp));return;}if(!await Sp0.act(m,"month_close",{month:M}))return _mcCloseSp0(id,M);};
+MonthClose13.check=async function(id,M){if(!await Sp0.ready())return _mcCheckSp0(id,M);const m=matter(id);if(!m)return;
+  if(!(isFounder()||hasF("managing"))){toast(T1(UI.payOnlyMp));return;}if(!await Sp0.act(m,"month_check",{month:M}))return _mcCheckSp0(id,M);};
+
+/* ── Сп-11, Сп-12: задания — сервер (права, без цены, дата выполнения, уведомление исполнителю) ── */
+const _asgAddSp0=Asg11.add.bind(Asg11);
+Asg11.add=async function(id,aid){if(!await Sp0.ready())return _asgAddSp0(id,aid);const m=matter(id);if(!m||!Pipe.can(m))return;
+  const x=aid?(m.assignments||[]).find(a=>a.id===aid):{};if(aid&&!x)return;
+  const v=await Dlg.ask({title:T1(UI.asTitle),text:T1(UI.asNoCost17),fields:[{k:"title",label:T1(UI.kTitle),value:x.title||"",required:true},{k:"emp",label:T1(UI.asEmp),type:"select",value:x.emp||m.lead,options:empSel()},{k:"deadline",label:T1(UI.asDue),type:"date",value:x.deadline||addDays(todayS(),7)},{k:"status",label:T1(UI.mStatus),type:"select",value:x.status||"open",options:[["open",T1(UI.asOpen)],["done",T1(UI.asDone)]]}]});if(!v)return;
+  if(!await Sp0.act(m,"task_save",{id:aid||"",title:v.title,emp:v.emp,deadline:v.deadline,status:v.status}))return _asgAddSp0(id,aid);};
+
+/* ── Сп-10: ЭСФ за прошлый месяц ставит сервер — у сопровождения портал задачу не ставит ── */
+const _tickSp0=Close12.tick.bind(Close12);
+Close12.tick=async function(){if(!await Sp0.ready())return _tickSp0();const pm=prevMonth11(monthOf11(todayS()));const held=[];
+  MMall().forEach(m=>{if(m&&m.svc==="support"&&m.status!=="closed"){m.esfMonths=m.esfMonths||{};if(!m.esfMonths[pm]){m.esfMonths[pm]={_sp0:1};held.push(m);}}});
+  try{return await _tickSp0();}finally{held.forEach(m=>{if(m.esfMonths&&m.esfMonths[pm]&&m.esfMonths[pm]._sp0)delete m.esfMonths[pm];});}};
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
