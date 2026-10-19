@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="df79e2ff8efd";
+const ZC_BUILD="95c71f91be77";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -16113,6 +16113,155 @@ Object.assign(ICO25,{list:"M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-
   .tr25.s1{grid-template-columns:minmax(0,1fr) auto}.tr25.s1>.c-no{grid-column:1/-1}.tr25.s1>.c-tt{grid-column:1}.tr25.s1>.c-ta{display:block;grid-column:2;grid-row:2}
   .tr25.s1>.c-pr{grid-column:1/-1}.tr25.s1>.c-sg{grid-column:1/-1}}`;
   (document.head||document.documentElement).appendChild(st);}
+
+/* ══ Раздел «Юридическое сопровождение» · этап 2 — карточка договора и 5 этапов до договора (макет design-support.html, решение владельца 19.10.2026) ══
+   Карточка (Card22, v22_card.js) и этапы до договора (Pre24, v24_pre*.js) — те же, что у разовой услуги и суда. Своё у сопровождения:
+   • вкладки (Сп-22): «Задания и обращения» · «Месяцы и оплата» · «Переписка» · «Документы» · «Договор и пакет» · «Клиент и команда» · «История» — без «Обзора»;
+   • приём заявки (Сп-32): без услуги из каталога; подразделение — только ООО (Сп-2);
+   • условия, КП и договор (Сп-33): абонплата в месяц, срок договора в месяцах, начало, пакет — что входит; оплата — только «ежемесячно»;
+     конец договора и подпись срока считает сервер; при согласовании договора начало и конец становятся датами дела (от них считаются месяцы);
+   • номер договора — на «Подписании» (Сп-34), номер дела — 1, 2, 3 …; новое дело — «+ Создать заявку» и «Регистрация договора» (Сп-35).
+   Сервер — миграция 20261019005000_support_pre24 (те же действия этапов, что у разовых, с правками для сопровождения). Правила — sections/support/ПРАВИЛА.md. */
+const sp2=m=>!!m&&m.svc==="support";
+Object.assign(UI,{
+  s2TabTasks:"Задания и обращения||任务与咨询",s2TabMonths:"Месяцы и оплата||月份与付款",s2TabContract:"Договор и пакет||合同与套餐",
+  s2Fee:"Абонплата в месяц||每月顾问费",s2Months:"Срок договора, месяцев||合同期限（月）",s2Start:"Начало договора||合同开始日期",s2Pack:"Пакет — что входит||套餐——包含内容",
+  s2Term:"Срок договора||合同期限",s2PayM:"ежемесячно||按月",s2Hint:"Абонплата — за календарный месяц; первый и последний месяцы считаются по дням. Работа сверх пакета — отдельной разовой услугой со скидкой абонента.||顾问费按自然月计算；首末月按天数计算。超出套餐的工作作为单独的单项服务办理，享受顾问客户折扣。",
+  s2Tasks:"Задания по сопровождению||法律顾问任务",s2MonthsCard:"Месяцы договора||合同月份",s2NewReq:"Создать заявку||创建申请",s2NewReg:"Регистрация договора||登记合同",
+  s2Llc:"Сопровождение — только ООО ZHONG CHENG LAW FIRM||法律顾问服务仅由有限公司承接",s2MonthsErr:"Срок договора — от 1 до 60 месяцев||合同期限为1至60个月"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Задания и обращения":"Topshiriqlar va murojaatlar","Месяцы и оплата":"Oylar va toʻlov","Договор и пакет":"Shartnoma va paket","Абонплата в месяц":"Oylik abonent toʻlovi",
+  "Срок договора, месяцев":"Shartnoma muddati, oy","Начало договора":"Shartnoma boshlanishi","Пакет — что входит":"Paket — nimalar kiradi","Срок договора":"Shartnoma muddati","ежемесячно":"har oy",
+  "Задания по сопровождению":"Kuzatuv topshiriqlari","Месяцы договора":"Shartnoma oylari","Создать заявку":"Ariza yaratish","Регистрация договора":"Shartnomani roʻyxatga olish",
+  "Сопровождение — только ООО ZHONG CHENG LAW FIRM":"Kuzatuv — faqat ZHONG CHENG LAW FIRM MChJ","Срок договора — от 1 до 60 месяцев":"Shartnoma muddati — 1 dan 60 oygacha",
+  "Абонплата — за календарный месяц; первый и последний месяцы считаются по дням. Работа сверх пакета — отдельной разовой услугой со скидкой абонента.":"Abonent toʻlovi — kalendar oyi uchun; birinchi va oxirgi oylar kunlar boʻyicha hisoblanadi. Paketdan tashqari ish — abonent chegirmasi bilan alohida bir martalik xizmat."});
+const SP2={
+  /* конец договора и подпись срока — как на сервере (zc.sp24_norm) */
+  end(start,n){const d=new Date(start+"T00:00:00");if(isNaN(d))return "";const e=new Date(d.getFullYear(),d.getMonth()+(+n||0),d.getDate());e.setDate(e.getDate()-1);
+    return `${e.getFullYear()}-${String(e.getMonth()+1).padStart(2,"0")}-${String(e.getDate()).padStart(2,"0")}`;},
+  term(start,n){const e=this.end(start,n);const f=s=>s?s.split("-").reverse().join("."):"";return `${n} мес. · ${f(start)} — ${f(e)}`;},
+  isT(t){return !!t&&(t.sp24||t.months!=null);},
+  /* поля дела из условий (без сервера — то же, что zc.sp24_fields) */
+  fields(m,t,dates){m.package=t.scope||"";m.supMonths24=+t.months||0;m.supStart24=t.start||"";m.billing="subscription";m.payOrder="monthly";
+    if(dates&&t.start){m.opened=t.start;m.deadline=t.end||this.end(t.start,t.months);}},
+  units(){return typeof Price!=="undefined"&&Price.units?Price.units("support"):unitsAll().filter(u=>u.entity==="llc"&&(u.kind==="practice"||u.kind==="department")&&!u.umbrella);}
+};
+
+/* ── включаем карточку и этапы до договора для сопровождения ── */
+if(typeof Card22!=="undefined"){const _onS2=Card22.on.bind(Card22);Card22.on=function(m){return _onS2(m)||(sp2(m)&&!isClient()&&typeof matterView==="function"&&matterView(m)==="full");};}
+if(typeof Pre24!=="undefined"){const _poS2=Pre24.on.bind(Pre24);Pre24.on=function(m){return _poS2(m)||(sp2(m)&&!isClient());};}
+if(typeof Pipe!=="undefined"){const _pnS2=Pipe.next.bind(Pipe);Pipe.next=function(m){const out=_pnS2(m);if(!sp2(m)||isClient()||["contract","lost"].includes(m.pipeline))return out;
+  return out.filter(a=>a.danger||a.to==="lostconfirm"||a.to==="lostreturn"||(m.pipeline==="team_draft"&&a.to==="contract"));};
+  const _psS2=Pipe.set.bind(Pipe);Pipe.set=async function(id,step){const m=matter(id);if(sp2(m)&&step==="contract"&&m.pipeline!=="contract"&&typeof Sign22!=="undefined"){if(!await Sign22.run(id))return;}return _psS2(id,step);};}
+if(typeof Price24!=="undefined"){const _p24S2=Price24.on.bind(Price24);Price24.on=function(m){return _p24S2(m)||(sp2(m)&&m.pipeline==="team_draft"&&m.status!=="closed"&&!!this.terms(m));};}
+
+/* ── новое дело: «Создать заявку» / «Регистрация договора»; подразделение — только ООО ── */
+{const REQS2=["title","clientId","practice","lead","notes","files","p24who","p24phone","p24msg"];
+  const _mfS2=Matter.fields;Matter.fields=function(m){const pre=Matter._svc;const f=_mfS2.apply(this,arguments);const sv=f.find(x=>x&&x.k==="svc");
+    const sup=m&&m.id?sp2(m):(pre==="support"||(!pre&&sv&&sv.value==="support"));if(!sup)return f;const md=Matter._mode24;
+    const us=SP2.units();const out=f.map(x=>{if(!x)return x;if(x.k==="practice"&&us.length){const y=Object.assign({},x,{options:us.map(u=>[u.id,unitName(u.id)]),hint:T1(UI.s2Llc)});
+        if(!us.some(u=>u.id===y.value))y.value=us[0].id;return y;}
+      if(x.k==="catalog"||x.k==="catalogOther")return Object.assign({},x,{_hide24:true,required:false,check:undefined});return x;});
+    if(!(m&&m.id)&&md==="req")return out.map(x=>{if(!x||x.type==="section")return x;const y=Object.assign({},x);y._hide24=!REQS2.includes(y.k);if(y._hide24){delete y.required;delete y.check;}return y;});
+    if(!(m&&m.id))return out.filter(x=>!(x&&x.k==="pipeline"));return out;};}
+{const _maS2=Matter.apply;Matter.apply=function(m,v){const isNew=!m.no&&!(S.matters||{})[m.id];const r=_maS2.apply(this,arguments);if(!sp2(m))return r;
+  m.billing="subscription";if(m.type!=="consulting")m.type="consulting";
+  if(!isNew||m.intake23||isClient())return r;const me=Pre24.me(),at=nowS();
+  m.intake23={src:Pre24.mp()?"mp":"adv",by:me,at,text:String(v.notes||m.notes||""),files:(Array.isArray(v.files)?v.files:[]).map(x=>Object.assign({},x))};
+  if(Matter._mode24==="reg"){m.intake23.src="reg";if(!(m.counterparties||[]).length)delete m.conflict;m.intake23.accepted={by:me,at};v.pipeline=m.contractSigned?"contract":"team_draft";m.pipeline=v.pipeline;return r;}
+  const ct={who:String(v.p24who||"").trim(),phone:String(v.p24phone||"").trim(),msg:String(v.p24msg||"").trim()};if(ct.who||ct.phone||ct.msg)m.intake23.contact=ct;
+  if(m.lead===me){m.intake23.accepted={by:me,at};v.pipeline="negotiation";const fn=withLang18("ru",()=>T1(UI.p24DocsFolder));if(m.intake23.files.length){m.folders22=[fn];m.intake23.folder=fn;(v.files||[]).forEach(x=>{x.folder=fn;});}}
+  else{m.intake23.assign={to:m.lead,by:me,at,due:typeof addWD==="function"?addWD(todayS(),1):todayS(),note:""};v.pipeline="lead";}
+  m.pipeline=v.pipeline;return r;};}
+Pre24.newSupport=async function(mode){Matter._mode24=mode;Matter._svc="support";try{return await Matter.create();}finally{Matter._mode24=null;}};
+{const _sS2=section11;section11=function(sec){let h=_sS2.apply(this,arguments);if(sec!=="support"||isClient())return h;
+  return h.replace(/<button class="btn pri" data-act="newMatter11" data-svc="support">[^<]*<\/button>/,()=>`<span class="nw24"><button class="btn" data-s2new="reg">${T1(UI.s2NewReg)}</button><button class="btn pri" data-s2new="req">+ ${T1(UI.s2NewReq)}</button></span>`);};
+  const _pbS2=Pages.bind;Pages.bind=function(vp){_pbS2.apply(this,arguments);if(!vp)return;vp.querySelectorAll("[data-s2new]").forEach(b=>b.onclick=e=>{e.stopPropagation();Pre24.newSupport(b.dataset.s2new);});};}
+
+/* ── этап 1 «Приём заявки»: без услуги из каталога (Сп-32) ── */
+{const _ckS2=Pre24.checks.bind(Pre24);Pre24.checks=function(m){const l=_ckS2(m);if(!sp2(m))return l;return l.filter(x=>x[0]!==UI.p24NeedSvc).concat([[UI.s2Llc,m.entity==="llc"]]);};
+ const _sbS2=Pre24.simBox.bind(Pre24);Pre24.simBox=function(m){return sp2(m)?"":_sbS2(m);};}
+
+/* ── условия сопровождения: окно, показ, КП (Сп-33) ── */
+{const _tfS2=Pre24.termFields.bind(Pre24);Pre24.termFields=function(m,t,needWhy){const f=_tfS2(m,t,needWhy);if(!sp2(m))return f;t=t||{};
+  /* по умолчанию — 1-е число следующего месяца */
+  const st=t.start||m.supStart24||(()=>{const d=new Date();const n=new Date(d.getFullYear(),d.getMonth()+1,1);return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-01`;})();
+  const out=[];f.forEach(x=>{if(!x)return;
+    if(x.k==="cost")out.push(Object.assign({},x,{label:T1(UI.s2Fee)}));
+    else if(x.k==="payOrder")out.push(Object.assign({},x,{value:"monthly",options:[["monthly",T1(UI.s2PayM)]],_hide24:true,required:false}));
+    else if(x.k==="payPct21"||x.k==="payFirst21")return;
+    else if(x.k==="term"){out.push({k:"spMonths",label:T1(UI.s2Months),type:"number",value:t.months??m.supMonths24??12,required:true},{k:"spStart",label:T1(UI.s2Start),type:"date",value:st,required:true});}
+    else if(x.k==="scope")out.push(Object.assign({},x,{label:T1(UI.s2Pack),value:t.scope||m.package||""}));
+    else out.push(x);});
+  out.unshift({k:"s2h",type:"html",span:true,html:`<div class="s2hint">${esc(T1(UI.s2Hint))}</div>`});
+  const last=out[out.length-1];const ch=last.check;last.check=v=>{const n=+v.spMonths;if(!(n>=1&&n<=60&&Math.round(n)===n))return T1(UI.s2MonthsErr);return ch?ch(v):"";};
+  return out;};
+ const _tFS2=Pre24.tFrom.bind(Pre24);Pre24.tFrom=function(v){const t=_tFS2(v);if(!("spMonths" in v))return t;const n=+v.spMonths||0,s=String(v.spStart||"");
+   return {sp24:true,cost:+v.cost||0,currency:"UZS",payOrder:"monthly",months:n,start:s,end:SP2.end(s,n),term:SP2.term(s,n),scope:String(v.scope||"").trim()};};
+ const _trS2=Pre24.terms.bind(Pre24);Pre24.terms=function(t,base){let h=_trS2(t,base);if(!SP2.isT(t))return h;
+   return h.replace(T1(UI.p24Cost),T1(UI.s2Fee)).replace(T1(UI.p24Term),T1(UI.s2Term)).replace(T1(UI.p24Scope),T1(UI.s2Pack));};
+ /* КП (PDF): срок договора — в начале «Объёма работ»; «Стоимость» — абонплата в месяц */
+ const _kbS2=Pre24.kpBuild.bind(Pre24);Pre24.kpBuild=async function(m){const a=sp2(m)&&(this.approved(m,"neg")||{}).terms;if(!a||!SP2.isT(a))return _kbS2(m);
+   const sc=a.scope;a.scope=`${withLang18("ru",()=>T1(UI.s2Fee))}: ${fmtN(+a.cost||0)} ${withLang18("ru",()=>T1(UI.sum))}. ${withLang18("ru",()=>T1(UI.s2Term))}: ${a.term||""}. ${sc||""}`;try{return await _kbS2(m);}finally{a.scope=sc;}};}
+/* без сервера — то же, что сервер (pre24_apply / pre24_prefill) */
+{const _atS2=Pre24.applyTerms.bind(Pre24);Pre24.applyTerms=function(m,t,ph,a){const r=_atS2(m,t,ph,a);if(sp2(m)&&SP2.isT(t))SP2.fields(m,t,ph==="contract");return r;};}
+
+/* ── номер дела и договора: номер дела 1, 2, 3 …; номер договора — на «Подписании» (Сп-34) ── */
+if(typeof Reg21!=="undefined"&&Reg21.number){const _numS2=Reg21.number.bind(Reg21);Reg21.number=async function(m){const fw=(m.contract||{}).mode==="framework";const cn=m._cn21||"new";
+  if(sp2(m)&&!fw&&cn==="new"&&Matter._mode24!=="reg"){delete m._cn21;m.no=await Pre24.reserveNo();m.contract=Object.assign({},m.contract||{},{mode:"new",no:"",party:m.entity||"llc"});return null;}
+  const r=await _numS2(m);if(sp2(m)&&!fw)m.no=await Pre24.reserveNo();return r;};}
+{const _ctS2=Pre24.ctNo.bind(Pre24);Pre24.ctNo=async function(m){if(!sp2(m))return _ctS2(m);const k=m.contract||{};if(m.pipeline!=="team_draft"||k.no||k.mode==="framework"||typeof Reg21==="undefined")return;
+  const no=await Reg21.reserve(m.entity||"llc");const rec={id:uid("ct"),no,reg21:true,party:m.entity||"llc",svc:"support",subject:k.subject||m.title||"",date:"",status:"active",matterIds:[m.id],createdAt:nowS(),createdBy:this.me()};
+  m.contract=Object.assign({},k,{mode:"existing",existingId:rec.id,no,party:rec.party});const c=client(m.clientId);if(c){migrateClient11(c);c.contracts=c.contracts||[];c.contracts.push(rec);try{await saveDoc("clients",c);}catch(e){}}};}
+
+/* ── вкладки карточки (Сп-22): задания и месяцы сопровождения — на свои вкладки ── */
+const SP2T={order:[0,4,1,2,3,5,6],
+  /* блок прежней страницы: заголовок .lbl9 и всё до следующего .lbl9 */
+  take(box,text){const h=[...box.querySelectorAll(".lbl9")].find(x=>x.textContent.trim().startsWith(text));if(!h)return null;const out=[h];let n=h.nextElementSibling;
+    while(n&&!n.classList.contains("lbl9")){out.push(n);n=n.nextElementSibling;}return out;},
+  card(title,nodes,cls){const c=document.createElement("div");c.className="card "+(cls||"");const h=document.createElement("h4");h.textContent=title;c.appendChild(h);
+    nodes.forEach((x,i)=>{if(i===0&&x.classList.contains("lbl9")){const b=x.querySelector("button");if(b){b.className="more";h.appendChild(b);}x.remove();return;}c.appendChild(x);});return c;}};
+if(typeof Card22!=="undefined"){
+  const _bS2=Card22.build.bind(Card22);Card22.build=function(id,html,m){const out=_bS2(id,html,m);if(!sp2(m))return out;try{
+    const tpl=document.createElement("template");tpl.innerHTML=out;const w=tpl.content;const P=i=>w.querySelector(`[data-c22pane="${i}"]`);
+    const tabs=w.querySelector(".c22tabs");const L={0:UI.s2TabTasks,4:UI.s2TabMonths,3:UI.s2TabContract};
+    if(tabs){Object.entries(L).forEach(([i,l])=>{const b=tabs.querySelector(`[data-c22tab="${i}"]`);if(b){const nb=b.querySelector(".nb");b.textContent=T1(l);if(nb)b.appendChild(nb);}});
+      SP2T.order.forEach(i=>{const b=tabs.querySelector(`[data-c22tab="${i}"]`);if(b)tabs.appendChild(b);});}
+    const p0=P(0),p3=P(3),p4=P(4);
+    if(p0&&p3&&p4){
+      /* «Этапы» работы — у сопровождения не главное: на вкладку «Договор и пакет», в конец */
+      const stg=p0.querySelector(":scope>.c22stg");if(stg&&m.pipeline==="contract")p3.appendChild(stg);
+      const wp=p0.querySelector(":scope>.c22wp");if(wp)wp.remove();
+      /* задания — на «Задания и обращения», после «что мешает» */
+      const asg=SP2T.take(p3,T1(UI.asTitle));if(asg){const c=SP2T.card(T1(UI.s2Tasks),asg,"s2asg");const todo=p0.querySelector(":scope>.c22todo");p0.insertBefore(c,todo?todo.nextSibling:p0.firstChild);}
+      /* месяцы, счёт-фактура, закрытие месяцев — на «Месяцы и оплата», первыми */
+      const blocks=[[UI.payMonths,UI.s2MonthsCard],[UI.esfTitle,UI.esfTitle],[UI.mcTitle,UI.mcTitle]].map(([k,t])=>{const n=SP2T.take(p3,T1(k));return n?SP2T.card(T1(t),n,"s2mo"):null;}).filter(Boolean);
+      blocks.reverse().forEach(c=>p4.insertBefore(c,p4.firstChild));}
+    /* шапка действующего договора (макет): «Договор действует · месяц N из M», главная кнопка — «+ Задание»; рабочие этапы — на «Договор и пакет» */
+    if(m.pipeline==="contract"&&m.status!=="closed"&&typeof SL1!=="undefined"){
+      const ch=w.querySelector(".c22chips");const ms=SL1.months(m),i=ms.indexOf(SL1.cur());const l=m.paused?T1(UI.s1gPaused):SL1.endSoon(m)?T1(UI.s1EndShort):T1(UI.s1gWork);
+      if(ch&&ch.firstElementChild)ch.firstElementChild.textContent=l+(i>=0?" · "+T1(UI.s1MonthOf).replace("{i}",i+1).replace("{n}",ms.length):"");
+      if(Pipe.can(m)){const set=b=>{b.textContent=T1(UI.asAdd);delete b.dataset.c22target;b.dataset.act="asgAdd";b.title="";};const pb=[...w.querySelectorAll(".c22acts .btn.pri,.c22bar .btn.pri")];
+        if(pb.length)pb.forEach(set);else{const acts=w.querySelector(".c22acts");if(acts){const b=document.createElement("button");b.type="button";b.className="btn pri";set(b);acts.insertBefore(b,acts.firstChild);}}}}
+    const d=document.createElement("div");d.appendChild(w.cloneNode(true));return d.innerHTML;}catch(e){console.warn("support card",e);return out;}};
+  const _dtS2=Card22.defaultTab.bind(Card22);Card22.defaultTab=function(m){return sp2(m)?(m.pipeline!=="contract"&&m.status!=="closed"?3:0):_dtS2(m);};}
+
+/* ── кабинет клиента: КП сопровождения — принять, задать вопрос, отказаться ── */
+if(typeof CP!=="undefined"&&typeof Pre24C!=="undefined"){
+  const _cpmS2=CP.matter.bind(CP);CP.matter=function(id){let h=_cpmS2(id);const m=matter(id);if(!sp2(m)||!m.offer||!m.offer.sentAt||!clientCan(m)||h.includes('data-p24cp="'))return h;
+    const o=m.offer,cl=o.client23||{},open=!cl.decision&&m.pipeline==="offer";const exp=o.validUntil&&o.validUntil<todayS();const t=(Pre24.approved(m,"neg")||{}).terms;
+    const st=cl.decision==="accept"?`<span class="tg24 ok">${T1("Вы приняли предложение||您已接受报价")} ${esc(fmtD(String(cl.at).slice(0,10)))}</span>`:cl.decision==="refuse"?`<span class="tg24 red">${T1("Вы отказались от предложения||您已拒绝报价")}</span>`:"";
+    const tt=t&&SP2.isT(t)?`<dl class="kv24"><dt>${T1(UI.s2Fee)}</dt><dd>${esc(fmtN(+t.cost||0)+" "+T1(UI.sum))}</dd><dt>${T1(UI.s2Term)}</dt><dd>${esc(t.term||"")}</dd><dt>${T1(UI.s2Pack)}</dt><dd>${esc(t.scope||"")}</dd></dl>`:"";
+    const box=`<div class="card cp24 p24" data-p24cp="${esc(m.id)}"><h4>${T1(UI.kpTitle)}</h4><div style="font-size:13px">${o.validUntil?esc(T1(UI.kpValid17)+" "+fmtD(o.validUntil)):""} ${st}</div>${tt}
+      ${(o.qs23||[]).filter(q=>q.by===(U()||{}).login).map(q=>`<div class="q24">«${esc(q.text)}»${q.answer?`<br><b>${esc(q.answer)}</b>`:""}</div>`).join("")}
+      ${open&&!exp?`<div class="ac24"><button type="button" class="btn sm pri" data-p24c="accept">${T1("Принять предложение||接受报价")}</button><button type="button" class="btn sm" data-p24c="question">${T1("Задать вопрос||提问")}</button><button type="button" class="btn sm" data-p24c="refuse" style="color:var(--red)">${T1("Отказаться||拒绝")}</button></div>`:""}</div>`;
+    const i=h.indexOf('<div class="cols">');return i>0?h.slice(0,i)+box+h.slice(i):h+box;};
+  const _cpbS2=CP.bind.bind(CP);CP.bind=function(vp){_cpbS2(vp);vp.querySelectorAll("[data-kpfile]").forEach(el=>el.addEventListener("click",()=>{const m=matter(el.dataset.kpfile);if(sp2(m))Pre24C.call(m,"dl");}));};}
+
+/* стили раздела (этап 2) */
+{const st=document.createElement("style");st.id="s2css";st.textContent=`
+.s2hint{font-size:12px;color:var(--ink-3);line-height:1.45;background:var(--surface2);border-radius:8px;padding:8px 10px}
+.card.s2asg .lbl9,.card.s2mo .lbl9{display:none}`;(document.head||document.documentElement).appendChild(st);}
 
 /* ═══════════════════════════ РАЗДЕЛ «ЮРИДИЧЕСКОЕ СОПРОВОЖДЕНИЕ» · ЭТАП 0 — ЗАЩИТА ДАННЫХ ═══════════════════════════
    Решение владельца 19.10.2026 (правила Сп-2, Сп-7, Сп-9 … Сп-12 — sections/support/ПРАВИЛА.md; миграция 20261019004000_support_stage0).
