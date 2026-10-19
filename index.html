@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="37eeafe67c13";
+const ZC_BUILD="7485dc7eef7c";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11276,6 +11276,37 @@ const _pbindReg21=Pages.bind;Pages.bind=function(vp){_pbindReg21.call(this,vp);
 .rg21st{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;background:rgba(124,137,160,.15);color:var(--ink-2)}
 .rg21st.signed{background:rgba(63,135,104,.14);color:#2f6f53}.rg21st.done{background:rgba(58,90,140,.14);color:#2f4a74}.rg21st.lost{background:rgba(185,87,75,.14);color:#9a4237}
 table.reg21 td{vertical-align:top}table.reg21 td:first-child b,table.reg21 .lnk17,table.reg21 .pay11,table.reg21 .rg21st{white-space:nowrap}`;document.head.appendChild(st);})();
+/* ══ 20.10.2026 · свой номер договора при «Регистрации договора» (решение владельца) ══
+   Договор уже подписан на бумаге под своим номером — его можно указать вместо номера системы (разовые услуги, суд, сопровождение).
+   Номер должен быть свободен: проверяет сервер (contract_no_check и защита matters_zcontract_own, миграция 20261020000200_contract_own_no);
+   системная нумерация занятые своими номерами пропускает. Без сервера (демо) — проверка по видимым договорам. */
+Object.assign(UI,{rg21Own:"Свой номер — договор уже подписан||自定义编号——合同已签署",rg21OwnNo:"Номер подписанного договора||已签署合同编号",
+  rg21OwnH:"Как в подписанном договоре, например 15/2026||与已签署合同一致，例如 15/2026",rg21OwnNeed:"Укажите номер подписанного договора||请填写已签署合同编号",
+  rg21OwnTaken:"Договор с номером «{no}» уже есть||编号为“{no}”的合同已存在"});
+window.UZ21=Object.assign(window.UZ21||{},{"Свой номер — договор уже подписан":"Oʻz raqami — shartnoma allaqachon imzolangan","Номер подписанного договора":"Imzolangan shartnoma raqami",
+  "Как в подписанном договоре, например 15/2026":"Imzolangan shartnomadagidek, masalan 15/2026","Укажите номер подписанного договора":"Imzolangan shartnoma raqamini kiriting"});
+const Own21={
+  norm(no){return String(no||"").trim().replace(/\s+/g," ").toUpperCase();},
+  /* занят ли номер среди видимых договоров (в демо и для подсказки в окне; окончательно решает сервер) */
+  taken(no){const n=this.norm(no);if(!n)return false;let hit=false;Object.values(S.clients||{}).forEach(c=>(c.contracts||[]).forEach(k=>{if(k&&this.norm(k.no)===n)hit=true;}));
+    Object.values(S.matters||{}).forEach(m=>{if(m&&m.contract&&this.norm(m.contract.no)===n)hit=true;});return hit;},
+  async check(no){const t=String(no||"").trim();if(!t)return T1(UI.rg21OwnNeed);
+    if(Reg21.srv()){try{return String(await SB19.T.rpc("contract_no_check",{no:t})||"");}catch(e){if(!/PGRST202|Could not find the function|contract_no_check/i.test(String((e&&(e.message||e.code))||e)))throw e;}}
+    return this.taken(t)?T1(UI.rg21OwnTaken).replace("{no}",t):"";}
+};
+{const _f=Matter.fields;Matter.fields=function(m){const f=_f.apply(this,arguments);if((m&&m.id)||Matter._mode24!=="reg")return f;const i=f.findIndex(x=>x&&x.k==="cn21");if(i<0)return f;
+  const cn=Object.assign({},f[i]);cn.options=[cn.options[0],["own",T1(UI.rg21Own)],...cn.options.slice(1)];const ch=cn.check;
+  cn.check=v=>{if(v.cn21==="own"){const t=String(v.ownNo21||"").trim();if(!t)return T1(UI.rg21OwnNeed);if(t.length>40)return T1("Номер договора — не длиннее 40 символов||合同编号不超过40个字符");if(Own21.taken(t))return T1(UI.rg21OwnTaken).replace("{no}",t);return "";}return ch?ch(v):"";};
+  f[i]=cn;f.splice(i+1,0,{k:"ownNo21",label:T1(UI.rg21OwnNo),value:"",placeholder:"15/2026",hint:T1(UI.rg21OwnH)});return f;};
+ const _a=Matter.apply.bind(Matter);Matter.apply=function(m,v){const isNew=!m.no&&!S.matters[m.id];const r=_a(m,v);if(isNew&&v.cn21==="own")m._own21=String(v.ownNo21||"").trim();return r;};
+ /* поле номера — только когда выбран «Свой номер» */
+ const _ask=Dlg.ask.bind(Dlg);Dlg.ask=function(o){const p=_ask(o);const sel=document.getElementById("dlg_cn21"),inp=document.getElementById("dlg_ownNo21");
+   if(sel&&inp){const w=inp.closest(".form>*")||inp.parentElement;const sync=()=>{w.hidden=sel.value!=="own";if(sel.value==="own")inp.focus();};sel.addEventListener("change",sync);w.hidden=sel.value!=="own";}
+   return p;};
+ const _num=Reg21.number.bind(Reg21);Reg21.number=async function(m){if((m._cn21||"new")!=="own")return _num(m);const no=String(m._own21||"").trim();delete m._cn21;delete m._own21;
+   const err=await Own21.check(no);if(err)throw new Error(err);const k0=m.contract||{};
+   const rec={id:uid("ct"),no,reg21:true,ownNo:true,party:m.entity||"legal",svc:m.svc||"",subject:m.title||"",date:"",status:"active",matterIds:[],createdAt:nowS(),createdBy:(U()||{}).emp};
+   m.no=no+"/1";m.contract=Object.assign({},k0,{mode:"existing",existingId:rec.id,no,party:rec.party,ownNo:true});return {rec,isNew:true};};}
 
 
 /* ═══════════════════════════ v21 · ЭТАП 4: АДВОКАТ ВЕДЁТ РАЗОВУЮ УСЛУГУ САМ (версия 1.0) ═══════════════════════════
