@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="95c71f91be77";
+const ZC_BUILD="efbb39c640bf";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -16304,6 +16304,197 @@ const _tickSp0=Close12.tick.bind(Close12);
 Close12.tick=async function(){if(!await Sp0.ready())return _tickSp0();const pm=prevMonth11(monthOf11(todayS()));const held=[];
   MMall().forEach(m=>{if(m&&m.svc==="support"&&m.status!=="closed"){m.esfMonths=m.esfMonths||{};if(!m.esfMonths[pm]){m.esfMonths[pm]={_sp0:1};held.push(m);}}});
   try{return await _tickSp0();}finally{held.forEach(m=>{if(m.esfMonths&&m.esfMonths[pm]&&m.esfMonths[pm]._sp0)delete m.esfMonths[pm];});}};
+
+/* ══ Раздел «Юридическое сопровождение» · этап 3 — задания и обращения по месяцам (макет design-support.html, решение владельца 19.10.2026) ══
+   Вкладка «Задания и обращения» карточки договора:
+   • выбор месяца (Сп-37): задание — в месяце, когда его выполнили; открытые — всегда в текущем месяце; обращения клиента — по месяцу обращения;
+   • окно задания (Сп-38, Сп-39): что сделать, файлы задания (папка «По заданиям» в документах дела), комментарии команде или клиенту,
+     «Выполнено…» с итогом для клиента, «Вернуть в работу», «Изменить», «Сверх пакета → разовая услуга»;
+   • обращение клиента → задание одним окном (Сп-40): ответ клиенту, исполнитель, срок.
+   Логика — на сервере (public.support_act, миграция 20261019006000_support_tasks): права, месяц выполнения, уведомления, что видит клиент.
+   Без миграции и в демо — то же самое в портале (прежний путь). Правила — sections/support/ПРАВИЛА.md. */
+Object.assign(UI,{
+  s3Title:"Задания по месяцам||按月任务",s3Earlier:"… ранее||… 更早",s3Done:"выполнено||已完成",s3OpenN:"открыто||未完成",s3Cur:"идёт||进行中",
+  s3DoneIn:"Выполнено в {m}||{m}已完成",s3OpenH:"Открытые||未完成",s3OpenHint:"незавершённые задания всегда видны в текущем месяце, пока их не выполнят||未完成的任务在完成前始终显示在本月",
+  s3Sum:"выполнено заданий||已完成任务",s3SumOpen:"открыто||未完成",s3SumReq:"обращений||咨询",s3Passed:"месяц прошёл||本月已过",s3Going:"месяц идёт||本月进行中",
+  s3NoDone:"в этом месяце заданий не выполняли||本月没有已完成的任务",s3NoOpen:"открытых заданий нет||没有未完成的任务",s3Hint:"Задание попадает в тот месяц, в котором его выполнили. Нажмите на задание — откроются комментарии, файлы и история.||任务归入完成的月份。点击任务可查看评论、文件和历史。",
+  s3Task:"Задание||任务",s3From:"Откуда||来源",s3Emp:"Исполнитель||执行人",s3Due:"Срок||期限",s3St:"Состояние||状态",s3Vis:"Видно клиенту||客户可见",
+  s3FromReq:"обращение клиента||客户咨询",s3FromLead:"по инициативе ведущего||负责人发起",s3Work:"в работе||进行中",s3Late:"просрочено||逾期",s3DoneAt:"выполнено {d}||{d}完成",
+  s3Reqs:"Обращения клиента||客户咨询",s3NoReq:"обращений не было||没有咨询",s3Answered:"отвечено||已回复",s3Waits:"ждёт ответа||待回复",s3ToTask:"Сделать заданием||转为任务",s3FromCab:"из кабинета||来自客户端",
+  s3TaskOf:"задание сопровождения||法律顾问任务",s3What:"Что сделать||工作内容",s3Files:"Файлы задания||任务文件",s3NoFiles:"файлов нет||无文件",s3Attach:"Прикрепить файл||附加文件",
+  s3FileCl:"Открыть файл клиенту||向客户开放文件",s3Comments:"Комментарии||评论",s3ToTeam:"Только команде||仅团队",s3ToClient:"Клиенту (в кабинет)||给客户（客户端）",s3Send:"Отправить||发送",
+  s3SeesCl:"видит клиент||客户可见",s3TeamOnly:"только команда||仅团队",s3Zh:"Перевод на китайский (для клиента)||中文翻译（给客户）",s3CmPh:"Комментарий…||评论…",
+  s3Acts:"Действия||操作",s3MarkDone:"Отметить выполненным…||标记为已完成…",s3Reopen:"Вернуть в работу||退回进行中",s3Edit:"Изменить||修改",s3Beyond:"Это сверх пакета → разовая услуга||超出套餐 → 单项服务",
+  s3Hist:"История||历史",s3Created:"задание создано||任务已创建",s3Close:"Закрыть||关闭",s3Month:"Месяц||月份",s3InCur:"открыто — в текущем месяце||未完成——在本月",s3InMonth:"выполнено в месяце «{m}»||在“{m}”完成",
+  s3DoneT:"Задание выполнено||任务已完成",s3Result:"Итог для клиента||给客户的结果",s3ResultZh:"Итог на китайском (необязательно)||中文结果（可选）",s3ResultNeed:"Задание видно клиенту — напишите итог||任务对客户可见——请填写结果",
+  s3ResultHint:"Итог сразу увидит клиент в кабинете; задание перейдёт в месяц выполнения.||客户将立即在客户端看到结果；任务将归入完成月份。",
+  s3ReqT:"Обращение → задание||咨询 → 任务",s3Answer:"Ответ клиенту||给客户的回复",s3AnswerZh:"Ответ на китайском (необязательно)||中文回复（可选）",s3AnswerDef:"Получили, начинаем работу.||已收到，开始处理。",
+  s3VisY:"Да — в кабинете клиента||是——在客户端",s3VisN:"Нет — только команда||否——仅团队",s3ReqDone:"Задание создано, клиенту отправлен ответ||任务已创建，已回复客户",s3Saved:"Сохранено||已保存"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Задания по месяцам":"Oylar boʻyicha topshiriqlar","… ранее":"… avvalroq","выполнено":"bajarildi","открыто":"ochiq","идёт":"davom etmoqda",
+  "Выполнено в {m}":"{m} oyida bajarildi","Открытые":"Ochiqlar","незавершённые задания всегда видны в текущем месяце, пока их не выполнят":"bajarilmagan topshiriqlar bajarilgunga qadar joriy oyda koʻrinadi",
+  "выполнено заданий":"bajarilgan topshiriqlar","обращений":"murojaatlar","месяц прошёл":"oy oʻtdi","месяц идёт":"oy davom etmoqda","в этом месяце заданий не выполняли":"bu oyda topshiriq bajarilmagan","открытых заданий нет":"ochiq topshiriqlar yoʻq",
+  "Задание попадает в тот месяц, в котором его выполнили. Нажмите на задание — откроются комментарии, файлы и история.":"Topshiriq bajarilgan oyiga tushadi. Topshiriqni bosing — izohlar, fayllar va tarix ochiladi.",
+  "Задание":"Topshiriq","Откуда":"Qayerdan","Исполнитель":"Ijrochi","Срок":"Muddat","Состояние":"Holat","Видно клиенту":"Mijozga koʻrinadi","обращение клиента":"mijoz murojaati","по инициативе ведущего":"yetakchi tashabbusi bilan",
+  "в работе":"ishda","просрочено":"muddati oʻtgan","выполнено {d}":"{d} bajarildi","Обращения клиента":"Mijoz murojaatlari","обращений не было":"murojaatlar boʻlmagan","отвечено":"javob berildi","ждёт ответа":"javob kutmoqda",
+  "Сделать заданием":"Topshiriqqa aylantirish","из кабинета":"kabinetdan","задание сопровождения":"kuzatuv topshirigʻi","Что сделать":"Nima qilish kerak","Файлы задания":"Topshiriq fayllari","файлов нет":"fayllar yoʻq",
+  "Прикрепить файл":"Fayl biriktirish","Открыть файл клиенту":"Faylni mijozga ochish","Комментарии":"Izohlar","Только команде":"Faqat jamoaga","Клиенту (в кабинет)":"Mijozga (kabinetga)","Отправить":"Yuborish",
+  "видит клиент":"mijoz koʻradi","только команда":"faqat jamoa","Перевод на китайский (для клиента)":"Xitoy tiliga tarjima (mijoz uchun)","Комментарий…":"Izoh…","Действия":"Amallar","Отметить выполненным…":"Bajarildi deb belgilash…",
+  "Вернуть в работу":"Ishga qaytarish","Изменить":"Oʻzgartirish","Это сверх пакета → разовая услуга":"Bu paketdan tashqari → bir martalik xizmat","История":"Tarix","задание создано":"topshiriq yaratildi","Закрыть":"Yopish","Месяц":"Oy",
+  "открыто — в текущем месяце":"ochiq — joriy oyda","выполнено в месяце «{m}»":"«{m}» oyida bajarildi","Задание выполнено":"Topshiriq bajarildi","Итог для клиента":"Mijoz uchun natija","Итог на китайском (необязательно)":"Xitoy tilida natija (ixtiyoriy)",
+  "Задание видно клиенту — напишите итог":"Topshiriq mijozga koʻrinadi — natijani yozing","Итог сразу увидит клиент в кабинете; задание перейдёт в месяц выполнения.":"Natijani mijoz darhol kabinetda koʻradi; topshiriq bajarilgan oyga oʻtadi.",
+  "Обращение → задание":"Murojaat → topshiriq","Ответ клиенту":"Mijozga javob","Ответ на китайском (необязательно)":"Xitoy tilida javob (ixtiyoriy)","Получили, начинаем работу.":"Qabul qildik, ishni boshlaymiz.",
+  "Да — в кабинете клиента":"Ha — mijoz kabinetida","Нет — только команда":"Yoʻq — faqat jamoa","Задание создано, клиенту отправлен ответ":"Topshiriq yaratildi, mijozga javob yuborildi","Сохранено":"Saqlandi"});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{s3done:"Задание выполнено: {text}||任务已完成：{text}",s3answer:"Ответ на обращение: {text}||咨询回复：{text}",s3comment:"Комментарий по заданию: {text}||任务评论：{text}"});
+Object.assign(ICO25,{msg:"M20 14a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z",clip:"M20.5 11.5l-8.2 8.2a5.3 5.3 0 0 1-7.5-7.5l8.2-8.2a3.5 3.5 0 0 1 5 5l-8.2 8.2a1.8 1.8 0 0 1-2.5-2.5l7.5-7.5",file:"M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5"});
+const MON_P3=["январе","феврале","марте","апреле","мае","июне","июле","августе","сентябре","октябре","ноябре","декабре"];
+const ST3={
+  mo:{},all:{},
+  on(m){return sp2(m)&&m.pipeline==="contract";},
+  cur(){return monthOf11(todayS());},
+  asg(m){return (m.assignments||[]).filter(Boolean);},
+  month(a){return a.status==="done"?(a.doneMonth||String(a.doneAt||"").slice(0,7)||null):null;},
+  months(m){const c=this.cur();return supportMonths(m).filter(M=>M<=c);},
+  sel(m){const ms=this.months(m);const c=this.cur();const v=this.mo[m.id];return ms.includes(v)?v:ms.includes(c)?c:ms[ms.length-1]||c;},
+  mName(M){const [y,mo]=M.split("-");return lang==="zh"?`${+mo}月`:lang==="uz"?MONTHS_UZ_FULL[+mo-1]:MON_P3[+mo-1];},
+  reqs(m){const c=client(m.clientId);if(!c)return [];return (c.requests||[]).filter(r=>r&&r.by==="client"&&(r.matterId===m.id||!r.matterId));},
+  mp(){return isFounder()||hasF("managing");},
+  canEdit(m){return Pipe.can(m);},
+  canNote(m,a){const me=(U()||{}).emp;return this.canEdit(m)||(!!a&&a.emp===me&&m.status!=="closed");},
+  ico(n){return `<i class="ic3">${L25.ico(n)}</i>`;},
+  state(a){const t=todayS();if(a.status==="done")return `<span class="res3 ok">${esc(T1(UI.s3DoneAt).replace("{d}",fmtD(a.doneAt||"").slice(0,5)))}</span>`;
+    if(a.deadline&&a.deadline<t)return `<span class="res3 r">${T1(UI.s3Late)} ${-daysTo(a.deadline)}</span>`;return `<span class="res3 w">${T1(UI.s3Work)}</span>`;},
+  from(a){return a.src==="req"?T1(UI.s3FromReq)+(a.reqAt?" "+fmtD(String(a.reqAt).slice(0,10)).slice(0,5):""):T1(UI.s3FromLead);},
+  table(m,L,empty){return `<div class="tw3s"><table class="tb3s"><thead><tr><th>${T1(UI.s3Task)}</th><th>${T1(UI.s3From)}</th><th>${T1(UI.s3Emp)}</th><th>${T1(UI.s3Due)}</th><th>${T1(UI.s3St)}</th><th>${this.ico("msg")} · ${this.ico("clip")}</th><th>${T1(UI.s3Vis)}</th></tr></thead><tbody>
+    ${L.map(a=>`<tr data-st3t="${esc(a.id)}"><td><b>${esc(a.title)}</b>${a.desc?`<small>${esc(String(a.desc).slice(0,80))}</small>`:""}</td><td>${esc(this.from(a))}</td><td>${esc(dispName(a.emp)||"—")}</td><td class="nw3">${a.deadline?esc(fmtD(a.deadline).slice(0,5)):"—"}</td><td>${this.state(a)}</td><td class="cf3">${(a.comments||[]).length} · ${(a.files||[]).length}</td><td>${a.vis?"✓":"—"}</td></tr>`).join("")||`<tr><td colspan="7" class="em3">${T1(empty)}</td></tr>`}</tbody></table></div>`;},
+  /* вкладка «Задания и обращения» */
+  html(m){const ms=this.months(m),c=this.cur(),sel=this.sel(m),isCur=sel===c,A=this.asg(m),R=this.reqs(m);
+    const show=this.all[m.id]?ms:ms.slice(-3);const more=ms.length>show.length;
+    const pick=`<div class="ms3">${more?`<button type="button" class="all" data-st3all="1">${T1(UI.s3Earlier)}</button>`:""}${show.map(M=>{const n=A.filter(a=>this.month(a)===M).length,o=M===c?A.filter(a=>a.status!=="done").length:0;
+      return `<button type="button" class="${M===sel?"on":""}${M===c?" cur":""}" data-st3mo="${M}"><b>${esc(fmtM(M))}${M===c?` <em>· ${T1(UI.s3Cur)}</em>`:""}</b><span>✓ ${n} ${T1(UI.s3Done)}${o?` · ${o} ${T1(UI.s3OpenN)}`:""}</span></button>`;}).join("")}</div>`;
+    const done=A.filter(a=>this.month(a)===sel),open=isCur?A.filter(a=>a.status!=="done"):[],req=R.filter(r=>String(r.at||"").slice(0,7)===sel);
+    const ed=this.canEdit(m)&&m.status!=="closed";
+    return `<div class="card st3"><h4>${T1(UI.s3Title)}${ed?`<button class="more" type="button" data-act="asgAdd">${T1(UI.asAdd)}</button>`:""}</h4>${pick}
+      <div class="sum3"><b>${esc(fmtM(sel))}</b><span>${T1(UI.s3Sum)}: <b>${done.length}</b></span>${isCur?`<span>${T1(UI.s3SumOpen)}: <b>${open.length}</b></span>`:""}<span>${T1(UI.s3SumReq)}: <b>${req.length}</b></span><em>${T1(isCur?UI.s3Going:UI.s3Passed)}</em></div>
+      ${isCur?`<div class="sec3">${T1(UI.s3OpenH)} · ${open.length}<small>${T1(UI.s3OpenHint)}</small></div>${this.table(m,open,UI.s3NoOpen)}`:""}
+      <div class="sec3">${esc(T1(UI.s3DoneIn).replace("{m}",this.mName(sel)))} · ${done.length}</div>${this.table(m,done,UI.s3NoDone)}
+      <div class="hint3">${T1(UI.s3Hint)}</div></div>
+      <div class="card st3r"><h4>${T1(UI.s3Reqs)} · ${esc(fmtM(sel))} · ${req.length}</h4><div class="rl3">${req.map(r=>{const t=r.taskId&&A.find(a=>a.id===r.taskId);const ans=!!r.respondedAt;
+        return `<div class="rw3"><span class="res3 ${ans?"ok":"r"}">${T1(ans?UI.s3Answered:UI.s3Waits)}</span><div class="t">${esc(r.text||"")}<small>${esc(fmtDT(r.at))} · ${T1(UI.s3FromCab)}${ans&&r.respondedAt?` · ${esc(fmtDT(r.respondedAt))}`:""}${t?` · → ${esc(t.title)}`:""}${r.answer?` · «${esc(String(r.answer).slice(0,60))}»`:""}</small></div>${!r.taskId&&ed?`<button type="button" class="btn sm${ans?"":" pri"}" data-st3req="${esc(r.id)}">${T1(UI.s3ToTask)}</button>`:""}</div>`;}).join("")||`<div class="em3">${T1(UI.s3NoReq)}</div>`}</div></div>`;},
+  /* действие: сервер (support_act) или — без миграции и в демо — то же в портале */
+  async act(m,act,args,okText){if(await Sp0.ready()){let r;try{r={d:await SB19.T.rpc("support_act",{mid:m.id,act,args:args||{}})};}catch(e){if(!StSrv23.noFn(e)){toast(Sp0.msg(e));return false;}Sp0.st=false;}
+      if(r){StSrv23.apply(m,r.d);if(okText)toast(okText);if(act==="req_to_task")await StSrv23.reload("clients");Router.render();return true;}}
+    const e=this.local(m,act,args||{});if(e){toast(e);return false;}try{await saveDoc("matters",m);if(act==="req_to_task"){const c=client(m.clientId);if(c)await saveDoc("clients",c);}}catch(x){toast(String(x&&x.message||x));return false;}
+    if(okText)toast(okText);Router.render();return true;},
+  /* без сервера — те же правила, что в public.support_act */
+  local(m,act,a){const me=(U()||{}).emp,at=nowS(),td=todayS();m.assignments=m.assignments||[];const t=m.assignments.find(x=>x.id===a.id);
+    const hist=w=>{m.history=m.history||[];m.history.push({at,by:me,what:w});};
+    if(act!=="req_to_task"&&!t)return T1("Задание не найдено||未找到任务");
+    if(act==="task_done"){if(t.status==="done")return T1("Задание уже выполнено||任务已完成");if(t.vis&&!String(a.result||"").trim())return T1(UI.s3ResultNeed);
+      Object.assign(t,{status:"done",doneAt:td,doneMonth:td.slice(0,7),doneBy:me,result:String(a.result||"").trim(),resultZh:String(a.resultZh||"").trim()});hist("Задание выполнено: "+t.title);return "";}
+    if(act==="task_reopen"){t.status="open";delete t.doneAt;delete t.doneMonth;delete t.doneBy;t.reopened=(t.reopened||[]).concat([{by:me,at}]);hist("Задание возвращено в работу: "+t.title);return "";}
+    if(act==="task_comment"){const tx=String(a.text||"").trim();if(!tx)return T1("Напишите комментарий||请写评论");const to=a.to==="client"?"client":"team";if(to==="client"&&!t.vis)return T1("Задание не видно клиенту — комментарий только команде||任务对客户不可见——仅限团队评论");
+      t.comments=(t.comments||[]).concat([{id:uid("cm"),by:me,byName:dispName(me),at,to,text:tx,textZh:String(a.textZh||"").trim()}]);hist("Комментарий к заданию «"+t.title.slice(0,60)+"»");return "";}
+    if(act==="task_file"){const f=a.file||{};if(!f.id)return T1("Нет файла||无文件");m.files=m.files||[];if(m.files.some(x=>x.id===f.id))return T1("Файл уже прикреплён||文件已附加");
+      m.files.push({id:f.id,name:f.name,type:f.type,size:f.size,folder:"По заданиям",task:t.id,clientVisible:!!(t.vis&&a.client),by:me,at});t.files=(t.files||[]).concat([f.id]);hist("Файл к заданию «"+t.title.slice(0,60)+"»: "+f.name);return "";}
+    if(act==="req_to_task"){const c=client(m.clientId);const r=c&&(c.requests||[]).find(x=>x.id===a.reqId);if(!r||r.by!=="client")return T1("Обращение не найдено||未找到咨询");if(r.taskId)return T1("Обращение уже стало заданием||咨询已转为任务");
+      if(!String(a.answer||"").trim())return T1("Напишите ответ клиенту||请写给客户的回复");if(!String(a.title||"").trim())return T1("Напишите, что нужно сделать||请写工作内容");
+      const rec={id:uid("as"),title:String(a.title).trim(),emp:a.emp||m.lead,deadline:a.deadline||"",status:"open",vis:a.vis!==false,src:"req",reqId:r.id,reqAt:r.at,at,by:me,beyond:false,cost:0,comments:[],files:[]};
+      m.assignments.push(rec);Object.assign(r,{respondedAt:at,respondedBy:me,answer:String(a.answer).trim(),answerZh:String(a.answerZh||"").trim(),taskId:rec.id,matterId:m.id});hist("Обращение клиента → задание: "+rec.title);
+      const acc=accByEmp(rec.emp);if(acc&&acc.login!==(U()||{}).login)notify(acc.login,"task",nt18("noText",{no:m.no,text:rec.title}),m.id);return "";}
+    return T1("Неизвестное действие||未知操作");},
+  /* окно задания */
+  open(id,aid){const m=matter(id);if(!m)return;const a=this.asg(m).find(x=>x.id===aid);if(!a)return;const ov=document.getElementById("ovD"),md=document.getElementById("mdD");
+    const files=(a.files||[]).map(fid=>(m.files||[]).find(f=>f.id===fid)).filter(Boolean);const ed=this.canEdit(m)&&m.status!=="closed",note=this.canNote(m,a);
+    const hist=[[String(a.at||"").slice(0,10),dispName(a.by)||"",T1(UI.s3Created)],...(a.reopened||[]).map(x=>[String(x.at).slice(0,10),dispName(x.by),T1(UI.s3Reopen)]),...(a.doneAt?[[a.doneAt,dispName(a.doneBy)||"",T1(UI.s3Done)]]:[])].sort((x,y)=>String(x[0]).localeCompare(String(y[0])));
+    md.classList.add("wide");md.style.width="min(920px,100%)";
+    md.innerHTML=`<div class="mh" style="padding:20px 24px 0"><div style="min-width:0"><div class="mr2">${esc(m.no)} · ${T1(UI.s3TaskOf)}</div><h2 style="font-size:17px">${esc(a.title)}</h2>
+      <div class="ch3">${this.state(a)}<span>${T1(UI.s3Due)} ${a.deadline?esc(fmtD(a.deadline)):"—"}</span><span>${esc(dispName(a.emp)||"—")}</span><span>${T1(a.vis?UI.s3SeesCl:UI.s3TeamOnly)}</span></div></div></div>
+      <div class="mb2" style="background:var(--surface)"><div class="td3"><div>
+        <div class="sec3" style="margin-top:0">${T1(UI.s3What)}</div><div class="tx3">${esc(a.desc||(a.src==="req"?T1(UI.s3FromReq):"—"))}</div>
+        ${a.result?`<div class="sec3">${T1(UI.s3Result)}</div><div class="tx3">${esc(a.result)}${a.resultZh?`<small>${esc(a.resultZh)}</small>`:""}</div>`:""}
+        <div class="sec3">${T1(UI.s3Files)} · ${files.length}</div><div class="rl3">${files.map(f=>`<div class="rw3">${this.ico("file")}<div class="t">${esc(f.name)}<small>${esc(dispName(f.by)||"")}${f.at?" · "+esc(fmtDT(f.at)):""}${f.clientVisible?" · "+T1(UI.s3SeesCl):""}</small></div><button type="button" class="btn sm ghost" data-st3f="${esc(f.id)}">${T1(UI.cpDownload||"Скачать||下载")}</button></div>`).join("")||`<div class="em3">${T1(UI.s3NoFiles)}</div>`}</div>
+        ${note?`<div class="fa3"><button type="button" class="btn sm" data-st3up="1">${this.ico("clip")} ${T1(UI.s3Attach)}</button>${a.vis?`<label><input type="checkbox" id="st3fcl"> ${T1(UI.s3FileCl)}</label>`:""}</div>`:""}
+        <div class="sec3">${T1(UI.s3Comments)} · ${(a.comments||[]).length}</div><div class="cm3">${(a.comments||[]).map(c=>`<div class="c ${c.to==="client"?"kc":""}"><div class="h"><b>${esc(c.byName||dispName(c.by)||"")}</b><span>${esc(fmtDT(c.at))}</span><i>${T1(c.to==="client"?UI.s3SeesCl:UI.s3TeamOnly)}</i></div><div class="x">${esc(c.text)}</div>${c.textZh?`<small>${esc(c.textZh)}</small>`:""}</div>`).join("")}</div>
+        ${note?`<div class="cp3"><textarea id="st3ct" placeholder="${esc(T1(UI.s3CmPh))}"></textarea>${a.vis?`<textarea id="st3cz" placeholder="${esc(T1(UI.s3Zh))}" style="min-height:34px"></textarea>`:""}<div class="r"><select id="st3to"><option value="team">${T1(UI.s3ToTeam)}</option>${a.vis?`<option value="client">${T1(UI.s3ToClient)}</option>`:""}</select><span class="sp"></span><button type="button" class="btn sm pri" data-st3send="1">${T1(UI.s3Send)}</button></div></div>`:""}
+      </div><div>
+        <dl class="kv3"><dt>${T1(UI.s3Emp)}</dt><dd>${esc(dispName(a.emp)||"—")}</dd><dt>${T1(UI.s3Due)}</dt><dd>${a.deadline?esc(fmtD(a.deadline)):"—"}</dd><dt>${T1(UI.s3From)}</dt><dd>${esc(this.from(a))}</dd>
+          <dt>${T1(UI.s3Month)}</dt><dd>${this.month(a)?esc(T1(UI.s3InMonth).replace("{m}",fmtM(this.month(a)))):T1(UI.s3InCur)}</dd><dt>${T1(UI.s3Vis)}</dt><dd>${a.vis?"✓":"—"}</dd></dl>
+        ${ed?`<div class="sec3">${T1(UI.s3Acts)}</div><div class="ac3">${a.status==="done"?`<button type="button" class="btn sm" data-st3a="reopen">${T1(UI.s3Reopen)}</button>`:`<button type="button" class="btn sm pri" data-st3a="done">${T1(UI.s3MarkDone)}</button>`}<button type="button" class="btn sm" data-st3a="edit">${T1(UI.s3Edit)}</button>${can("mattersCreate")?`<button type="button" class="btn sm ghost" data-st3a="oneoff">${T1(UI.s3Beyond)}</button>`:""}</div>`:""}
+        <div class="sec3">${T1(UI.s3Hist)}</div><ul class="hi3">${hist.map(([d,w,x])=>`<li><span>${esc(fmtD(d).slice(0,5))}</span><b>${esc(w)}</b> · ${esc(x)}</li>`).join("")}</ul>
+      </div></div><div class="actions"><button class="btn" type="button" data-st3x="1">${T1(UI.s3Close)}</button></div></div>`;
+    ov.classList.add("open");const self=this;const close=()=>{ov.classList.remove("open");md.innerHTML="";md.style.width="";md.classList.remove("wide");document.removeEventListener("keydown",kd);};
+    const kd=e=>{if(e.key==="Escape"){e.stopImmediatePropagation();close();}};document.addEventListener("keydown",kd);
+    ov.onclick=e=>{if(e.target===ov)close();};
+    const re=()=>{const mm=matter(id);if(mm&&self.asg(mm).some(x=>x.id===aid))self.open(id,aid);else close();};
+    md.querySelector("[data-st3x]").onclick=close;
+    md.querySelectorAll("[data-st3f]").forEach(b=>b.onclick=()=>{const f=(m.files||[]).find(x=>x.id===b.dataset.st3f);if(f)Files.open(f);});
+    const up=md.querySelector("[data-st3up]");if(up)up.onclick=()=>{const cl=!!(md.querySelector("#st3fcl")||{}).checked;Files.upload(async f=>{if(!f)return;if(await self.act(matter(id),"task_file",{id:aid,file:{id:f.id,name:f.name,type:f.type,size:f.size},client:cl},T1(UI.s3Saved)))re();});};
+    const sd=md.querySelector("[data-st3send]");if(sd)sd.onclick=async()=>{const tx=md.querySelector("#st3ct").value.trim();if(!tx){toast(T1("Напишите комментарий||请写评论"));return;}
+      const zh=(md.querySelector("#st3cz")||{}).value||"";if(await self.act(matter(id),"task_comment",{id:aid,text:tx,textZh:zh.trim(),to:md.querySelector("#st3to").value},T1(UI.s3Saved)))re();};
+    md.querySelectorAll("[data-st3a]").forEach(b=>b.onclick=async()=>{const k=b.dataset.st3a;
+      if(k==="done"){close();await self.done(id,aid);return;}
+      if(k==="reopen"){if(await self.act(matter(id),"task_reopen",{id:aid},T1(UI.s3Saved)))re();return;}
+      if(k==="edit"){close();await Asg11.add(id,aid);return;}
+      if(k==="oneoff"){close();const x=document.querySelector('#viewPage [data-act="asgOneoff17"]');if(x)x.click();return;}});},
+  /* «Выполнено…» — итог для клиента */
+  async done(id,aid){const m=matter(id);const a=m&&this.asg(m).find(x=>x.id===aid);if(!a)return;
+    const v=await Dlg.ask({title:T1(UI.s3DoneT)+" · "+a.title,text:T1(UI.s3ResultHint),okText:UI.s3Done,fields:[{k:"result",label:T1(UI.s3Result)+(a.vis?" *":""),type:"textarea",value:a.result||"",span:true},
+      {k:"resultZh",label:T1(UI.s3ResultZh),type:"textarea",value:a.resultZh||"",span:true,check:x=>a.vis&&!String(x.result||"").trim()?T1(UI.s3ResultNeed):""}]});if(!v)return;
+    await this.act(m,"task_done",{id:aid,result:v.result,resultZh:v.resultZh},T1(UI.s3Saved));},
+  /* обращение клиента → задание */
+  async req(id,rid){const m=matter(id);const c=m&&client(m.clientId);const r=c&&(c.requests||[]).find(x=>x.id===rid);if(!r)return;
+    const v=await Dlg.ask({title:T1(UI.s3ReqT),text:`${fmtDT(r.at)} · «${String(r.text||"").slice(0,200)}»`,okText:UI.s3ToTask,fields:[{k:"title",label:T1(UI.s3Task),value:String(r.text||"").slice(0,90),required:true,span:true},
+      {k:"emp",label:T1(UI.s3Emp),type:"select",value:m.lead,options:empSel()},{k:"deadline",label:T1(UI.s3Due),type:"date",value:typeof addWD==="function"?addWD(todayS(),2):addDays(todayS(),2)},
+      {k:"answer",label:T1(UI.s3Answer),type:"textarea",value:T1(UI.s3AnswerDef),required:true,span:true},{k:"answerZh",label:T1(UI.s3AnswerZh),type:"textarea",value:"",span:true},
+      {k:"vis",label:T1(UI.s3Vis),type:"select",value:"1",options:[["1",T1(UI.s3VisY)],["0",T1(UI.s3VisN)]]}]});if(!v)return;
+    await this.act(m,"req_to_task",{reqId:rid,title:v.title,emp:v.emp,deadline:v.deadline,answer:v.answer,answerZh:v.answerZh,vis:v.vis==="1"},T1(UI.s3ReqDone));}
+};
+/* ── в карточку: вместо прежнего списка заданий — задания по месяцам и обращения ── */
+if(typeof Card22!=="undefined"){
+  const _bS3=Card22.build.bind(Card22);Card22.build=function(id,html,m){const out=_bS3(id,html,m);if(!ST3.on(m))return out;try{
+    const tpl=document.createElement("template");tpl.innerHTML=out;const w=tpl.content;const p0=w.querySelector('[data-c22pane="0"]');if(!p0)return out;
+    const old=p0.querySelector(":scope>.s2asg");const box=document.createElement("div");box.innerHTML=ST3.html(m);
+    const beyond=old&&old.querySelector(".reqonly");if(beyond)box.firstElementChild.appendChild(beyond);
+    const nodes=[...box.children];if(old){nodes.forEach(n=>p0.insertBefore(n,old));old.remove();}else{const todo=p0.querySelector(":scope>.c22todo");nodes.reverse().forEach(n=>p0.insertBefore(n,todo?todo.nextSibling:p0.firstChild));}
+    const d=document.createElement("div");d.appendChild(w.cloneNode(true));return d.innerHTML;}catch(e){console.warn("support tasks",e);return out;}};
+  const _bdS3=Card22.bind.bind(Card22);Card22.bind=function(vp,m){_bdS3(vp,m);if(!ST3.on(m))return;
+    vp.querySelectorAll("[data-st3mo]").forEach(b=>b.onclick=()=>{ST3.mo[m.id]=b.dataset.st3mo;Router.render();});
+    vp.querySelectorAll("[data-st3all]").forEach(b=>b.onclick=()=>{ST3.all[m.id]=true;Router.render();});
+    vp.querySelectorAll("[data-st3t]").forEach(r=>r.onclick=()=>ST3.open(m.id,r.dataset.st3t));
+    vp.querySelectorAll("[data-st3req]").forEach(b=>b.onclick=e=>{e.stopPropagation();ST3.req(m.id,b.dataset.st3req);});};}
+/* стили раздела (этап 3) */
+{const st=document.createElement("style");st.id="s3css";st.textContent=`
+.ic3{display:inline-block;width:14px;height:14px;vertical-align:-2px;font-style:normal}.ic3 svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ms3{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+.ms3 button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 14px;cursor:pointer;font:inherit;color:var(--ink-2);min-width:150px;text-align:left}
+.ms3 button b{font:600 13px var(--font-h);color:var(--ink)}.ms3 button b em{font:500 11px var(--font);font-style:normal;color:var(--pri)}.ms3 button span{font-size:11.5px;color:var(--ink-3)}
+.ms3 button.on{border-color:var(--pri);background:var(--pri-soft);box-shadow:0 0 0 3px var(--pri-ring)}.ms3 button.all{min-width:0;justify-content:center;color:var(--ink-3)}
+.sum3{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;padding:10px 12px;border-radius:10px;background:var(--surface2);font-size:13px;color:var(--ink-2)}
+.sum3>b{font:700 14px var(--font-h);color:var(--ink)}.sum3 em{font-style:normal;margin-left:auto;font-size:12px;color:var(--ink-3)}
+.sec3{font:700 12.5px var(--font-h);color:var(--ink);margin:16px 0 8px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.sec3 small{font:400 11.5px var(--font);color:var(--ink-3)}
+.tw3s{overflow-x:auto}.tb3s{width:100%;border-collapse:collapse;font-size:13px}
+.tb3s th{text-align:left;font:600 10.5px var(--font-h);letter-spacing:.5px;text-transform:uppercase;color:var(--ink-3);padding:8px 10px;border-bottom:1px solid var(--line);background:var(--surface2);white-space:nowrap}
+.tb3s td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}.tb3s td small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:2px}
+.tb3s tbody tr[data-st3t]{cursor:pointer}.tb3s tbody tr[data-st3t]:hover td{background:var(--surface2)}.tb3s tr:last-child td{border-bottom:0}
+.nw3,.cf3{white-space:nowrap}.cf3{color:var(--ink-3);font-size:12px}.em3{color:var(--ink-3);font-size:12.5px;padding:8px 0}
+.res3{display:inline-flex;align-items:center;border-radius:999px;padding:3px 9px;font:600 11.5px var(--font);white-space:nowrap}
+.res3.ok{background:var(--ok-soft);color:var(--ok-d)}.res3.w{background:var(--warn-soft);color:var(--warn-d)}.res3.r{background:var(--red-soft);color:var(--red-d)}
+.hint3{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.45}
+.rl3 .rw3{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}.rl3 .rw3:last-child{border-bottom:0}
+.rl3 .rw3 .t{flex:1;min-width:0}.rl3 .rw3 .t small{display:block;color:var(--ink-3);font-size:11.5px}
+.ch3{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.ch3 span:not(.res3){font-size:12px;border-radius:999px;padding:3px 9px;background:var(--surface2);color:var(--ink-2)}
+.td3{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px}@media(max-width:800px){.td3{grid-template-columns:1fr}}
+.tx3{font-size:13px;line-height:1.5;white-space:pre-wrap}.tx3 small{display:block;color:var(--ink-3);margin-top:4px}
+.fa3{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:12.5px;color:var(--ink-2)}.fa3 label{display:flex;gap:6px;align-items:center}
+.cm3{display:grid;gap:8px}.cm3 .c{border-radius:10px;padding:8px 11px;font-size:13px;line-height:1.45;background:var(--surface2)}.cm3 .c.kc{background:var(--pri-soft)}
+.cm3 .c .h{display:flex;gap:8px;align-items:baseline;font-size:12px;margin-bottom:2px}.cm3 .c .h span{color:var(--ink-3)}.cm3 .c .h i{font-style:normal;margin-left:auto;font-size:11px;color:var(--ink-3)}
+.cm3 .c .x{white-space:pre-wrap}.cm3 .c small{display:block;color:var(--ink-3);font-size:12px}
+.cp3{margin-top:10px;border:1px solid var(--line);border-radius:10px;padding:8px;display:grid;gap:6px}.cp3 textarea{width:100%;min-height:56px;border:0;resize:vertical;background:transparent;font:inherit;color:var(--ink);outline:0}
+.cp3 .r{display:flex;gap:6px;align-items:center}.cp3 .sp{flex:1}.cp3 select{font:inherit;font-size:12.5px;border:1px solid var(--line);border-radius:8px;padding:5px 8px;background:var(--surface);color:var(--ink)}
+.kv3{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px;margin:0}.kv3 dt{color:var(--ink-3)}.kv3 dd{margin:0}
+.ac3{display:grid;gap:6px}.hi3{list-style:none;margin:0;padding:0;font-size:12px}.hi3 li{padding:4px 0;border-bottom:1px dashed var(--line)}.hi3 li span{color:var(--ink-3);margin-right:6px}`;
+  (document.head||document.documentElement).appendChild(st);}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
