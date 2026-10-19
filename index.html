@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="efbb39c640bf";
+const ZC_BUILD="23fa8d7f2791";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -16304,6 +16304,102 @@ const _tickSp0=Close12.tick.bind(Close12);
 Close12.tick=async function(){if(!await Sp0.ready())return _tickSp0();const pm=prevMonth11(monthOf11(todayS()));const held=[];
   MMall().forEach(m=>{if(m&&m.svc==="support"&&m.status!=="closed"){m.esfMonths=m.esfMonths||{};if(!m.esfMonths[pm]){m.esfMonths[pm]={_sp0:1};held.push(m);}}});
   try{return await _tickSp0();}finally{held.forEach(m=>{if(m.esfMonths&&m.esfMonths[pm]&&m.esfMonths[pm]._sp0)delete m.esfMonths[pm];});}};
+
+/* ══ Раздел «Юридическое сопровождение» · этап 4 — месяцы и оплата, закрытие месяца (макет design-support.html, решения владельца 19.10.2026) ══
+   • вкладка «Месяцы и оплата»: лента месяцев договора и таблица — дней по договору, начислено (по дням для первого и последнего), оплачено,
+     отметка «оплачен» (ставит сервер по поступлениям, Сп-43; УП может поправить), закрытие месяца — два шага, оба у УП (Сп-9);
+   • экран «Закрытие месяца» (только УП): все договоры за месяц — начислено, оплачено, ЭСФ, закрыть / проверено;
+   • поступление за закрытый месяц меняет только УП (Сп-44); не оплачен прошлый месяц — новые задания стоп (Сп-45) — проверяет сервер.
+   Логика — на сервере (миграция 20261019007000_support_months); портал только показывает и вызывает прежние кнопки.
+   Суммы портал показывает той же формулой, что сервер (monthlySum). Правила — sections/support/ПРАВИЛА.md. */
+Object.assign(UI,{
+  mcClose:"Закрыть месяц||关闭月份",mcCheck:"Проверено||已核对",
+  s4Title:"Месяцы договора||合同月份",s4Month:"Месяц||月份",s4Days:"Дней по договору||合同天数",s4Acc:"Начислено||应收",s4Paid:"Оплачено||已付",s4Mark:"Оплата||付款",s4Close:"Месяц закрыт||月份关闭",
+  s4Auto:"по поступлениям||按收款",s4Hand:"отметил УП||管理合伙人标记",s4PaidSt:"оплачен||已付款",s4Unpaid:"не оплачен||未付款",s4Cur:"идёт||进行中",s4Future:"впереди||未到",
+  s4Closed:"закрыт||已关闭",s4Checked:"проверен||已核对",s4Open:"открыт||未关闭",s4Of:"из||/",s4From:"с||自",
+  s4Hint:"Расчётный период — календарный месяц; первый и последний месяцы — по дням. «Оплачен» сервер ставит сам, когда подтверждённые поступления за месяц покрывают его сумму; УП может поправить вручную. Месяц закрывает и проверяет УП. Поступление за закрытый месяц меняет только УП. Не оплачен прошлый месяц — новые задания приостановлены.||结算周期为自然月；首末月按天数计算。当月已确认收款覆盖金额时，系统自动标记“已付款”；管理合伙人可手动更正。月份由管理合伙人关闭和核对。已关闭月份的收款仅管理合伙人可修改。上月未付款——新任务暂停。",
+  s4Page:"Закрытие месяца||月份结算",s4PageSub:"сопровождение||法律顾问",s4Prev:"← пред. месяц||← 上月",s4Next:"след. месяц →||下月 →",s4Contracts:"Договоров за месяц||本月合同",
+  s4NotPaid:"Не оплачено||未付",s4NoEsf:"ЭСФ не выставлена||电子发票未开具",s4ClosedN:"Закрыто месяцев||已关闭月份",s4Contract:"Договор||合同",s4Client:"Клиент||客户",s4Esf:"ЭСФ||电子发票",
+  s4EsfOk:"выставлена||已开具",s4EsfTask:"задача УП||管理合伙人任务",s4EsfNo:"нет||无",s4None:"За этот месяц договоров сопровождения нет||本月没有法律顾问合同",s4OnlyMp:"Экран — только для УП||此页面仅限管理合伙人",
+  s4PageHint:"Все договоры сопровождения за месяц на одной странице. Закрыть можно прошедший оплаченный месяц без отменённой ЭСФ (проверяет сервер).||本月所有法律顾问合同集中在一页。可关闭已过去、已付款且电子发票未取消的月份（由服务器检查）。"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Закрыть месяц":"Oyni yopish","Проверено":"Tekshirildi","Месяцы договора":"Shartnoma oylari","Месяц":"Oy","Дней по договору":"Shartnoma boʻyicha kunlar",
+  "Начислено":"Hisoblangan","Оплачено":"Toʻlangan","Оплата":"Toʻlov","Месяц закрыт":"Oy yopilgan","по поступлениям":"tushumlar boʻyicha","отметил УП":"BA belgiladi","оплачен":"toʻlangan","не оплачен":"toʻlanmagan",
+  "идёт":"davom etmoqda","впереди":"oldinda","закрыт":"yopilgan","проверен":"tekshirilgan","открыт":"ochiq","из":"/","с":"dan","Закрытие месяца":"Oyni yopish","сопровождение":"kuzatuv",
+  "← пред. месяц":"← oldingi oy","след. месяц →":"keyingi oy →","Договоров за месяц":"Oy boʻyicha shartnomalar","Не оплачено":"Toʻlanmagan","ЭСФ не выставлена":"ESF chiqarilmagan","Закрыто месяцев":"Yopilgan oylar",
+  "Договор":"Shartnoma","Клиент":"Mijoz","ЭСФ":"ESF","выставлена":"chiqarilgan","задача УП":"BA topshirigʻi","нет":"yoʻq","За этот месяц договоров сопровождения нет":"Bu oyda kuzatuv shartnomalari yoʻq","Экран — только для УП":"Ekran — faqat BA uchun"});
+const SP4={
+  mp(){return isFounder()||hasF("managing");},
+  cur(){return monthOf11(todayS());},
+  days(m,M){const [y,mo]=M.split("-").map(Number);const dim=new Date(y,mo,0).getDate();const f=`${M}-01`,l=`${M}-${String(dim).padStart(2,"0")}`;const a=(m.opened||f)>f?m.opened:f;const b=m.deadline&&m.deadline<l?m.deadline:l;return [Math.max(0,daysTo(b)-daysTo(a)+1),dim];},
+  /* оплачено за месяц — подтверждённые поступления (как zc.support_month_paid) */
+  paid(m,M){return r2(Object.values(S.payments||{}).filter(p=>p&&p.matterId===m.id&&!p.pending&&(p.forMonth||String(p.date||"").slice(0,7))===M).reduce((s,p)=>s+r2((+p.amount||0)*(+p.rate||1)),0));},
+  st(m,M){const c=this.cur();return (m.monthsPaid||{})[M]==="paid"?"p":M<c?"u":M===c?"c":"f";},
+  esf(m,M){const e=(m.esfMonths||{})[M];return !e?"no":e.cancelledAt?"cancel":(e.issuedAt||e.acceptedAt)?"ok":"task";},
+  closeCell(m,M,MP){const c=(m.monthsClosed||{})[M]||{};const can=typeof MonthClose13!=="undefined"&&MonthClose13.can(M,m);
+    if(c.checkedAt)return `<span class="r4 ok">${T1(UI.s4Checked)} ${esc(fmtD(c.checkedAt.slice(0,10)).slice(0,5))}</span>`;
+    if(c.closedAt)return `<span class="r4 w">${T1(UI.s4Closed)} ${esc(fmtD(c.closedAt.slice(0,10)).slice(0,5))}</span>${MP?` <button type="button" class="btn sm" data-mcheck="${M}" data-mid="${m.id}">${T1(UI.mcCheck)}</button>`:""}`;
+    return MP&&can?`<button type="button" class="btn sm pri" data-mclose="${M}" data-mid="${m.id}">${T1(UI.mcClose)}</button>`:`<span class="r4 n">${T1(UI.s4Open)}</span>`;},
+  /* вкладка «Месяцы и оплата» */
+  card(m){const ms=supportMonths(m);if(!ms.length)return "";const c=this.cur(),vis=costVisible(m),MP=this.mp(),cur=T1(UI.sum);
+    const strip=`<div class="mst4">${ms.map(M=>{const s=this.st(m,M);const [d,dim]=this.days(m,M);return `<div class="m ${s}${d<dim?" pr":""}"${MP?` data-paymonth="${M}"`:""} title="${esc(fmtM(M))}"><b>${esc(fmtM(M))}</b>${vis?`<span>${esc(fmtN(monthlySum(m,M)))}</span>`:""}<em>${T1(s==="p"?UI.s4PaidSt:s==="u"?UI.s4Unpaid:s==="c"?UI.s4Cur:UI.s4Future)}</em></div>`;}).join("")}</div>`;
+    const rows=ms.filter(M=>M<=c).reverse().map(M=>{const s=this.st(m,M);const [d,dim]=this.days(m,M);const src=(m.monthsPaidSrc||{})[M];
+      return `<tr class="${s==="u"?"miss":""}"><td><b>${esc(fmtM(M))}</b></td><td>${d} ${T1(UI.s4Of)} ${dim}${d<dim&&m.opened&&m.opened.slice(0,7)===M?` · ${T1(UI.s4From)} ${esc(fmtD(m.opened).slice(0,5))}`:""}</td>
+        ${vis?`<td class="num">${esc(fmtN(monthlySum(m,M)))}</td><td class="num">${esc(fmtN(this.paid(m,M)))}</td>`:""}
+        <td><span class="r4 ${s==="p"?"ok":s==="u"?"r":"n"}">${T1(s==="p"?UI.s4PaidSt:s==="u"?UI.s4Unpaid:UI.s4Cur)}</span>${s==="p"&&src?`<small>${T1(src==="mp"?UI.s4Hand:UI.s4Auto)}</small>`:""}${MP&&M<=c?` <button type="button" class="btn sm ghost" data-paymonth="${M}">${T1(UI.s3Edit)}</button>`:""}</td>
+        <td>${M<c?this.closeCell(m,M,MP):`<span class="r4 n">${T1(UI.s4Cur)}</span>`}</td></tr>`;}).join("");
+    return `<div class="card s4"><h4>${T1(UI.s4Title)}</h4>${strip}<div class="tw4"><table class="tb4"><thead><tr><th>${T1(UI.s4Month)}</th><th>${T1(UI.s4Days)}</th>${vis?`<th class="num">${T1(UI.s4Acc)}, ${cur}</th><th class="num">${T1(UI.s4Paid)}, ${cur}</th>`:""}<th>${T1(UI.s4Mark)}</th><th>${T1(UI.s4Close)}</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="h4t">${T1(UI.s4Hint)}</div></div>`;},
+  /* экран «Закрытие месяца» (УП) */
+  M:null,
+  page(){if(!this.mp())return `<div class="card"><div class="empty2" style="padding:24px">${T1(UI.s4OnlyMp)}</div></div>`;
+    const M=this.M||prevMonth11(this.cur());const L=MM().filter(m=>m.svc==="support"&&m.pipeline==="contract"&&supportMonths(m).includes(M));const cur=T1(UI.sum);
+    const acc=r2(L.reduce((s,m)=>s+monthlySum(m,M),0)),pd=r2(L.reduce((s,m)=>s+this.paid(m,M),0));const notPaid=L.filter(m=>this.st(m,M)!=="p"&&M<this.cur()),noEsf=L.filter(m=>this.esf(m,M)!=="ok"&&M<this.cur()),cl=L.filter(m=>((m.monthsClosed||{})[M]||{}).closedAt);
+    const t=(cls,ic,l,v,em)=>`<div class="k25 ${cls}${v==="0"||v===0?" zero":""}"><span class="ic">${L25.ico(ic)}</span><span class="tx"><small>${T1(l)}</small><b>${v}</b>${em?`<em>${em}</em>`:""}</span></div>`;
+    const rows=L.map(m=>{const c=client(m.clientId);const s=this.st(m,M),e=this.esf(m,M);
+      return `<tr class="${s==="u"?"miss":""}" data-s4m="${m.id}"><td><b>${esc(L25.nm(m))}</b><small>${esc(L25.ct(m).replace(/ · $/,""))}</small></td><td>${c?esc(clientName(c)):"—"}</td><td class="num">${esc(fmtN(monthlySum(m,M)))}</td><td class="num">${esc(fmtN(this.paid(m,M)))}</td>
+        <td><span class="r4 ${s==="p"?"ok":s==="u"?"r":"n"}">${T1(s==="p"?UI.s4PaidSt:s==="u"?UI.s4Unpaid:UI.s4Cur)}</span></td><td><span class="r4 ${e==="ok"?"ok":e==="task"?"w":e==="cancel"?"r":"n"}">${T1(e==="ok"?UI.s4EsfOk:e==="task"?UI.s4EsfTask:e==="cancel"?UI.esfCancel:UI.s4EsfNo)}</span></td>
+        <td>${M<this.cur()?this.closeCell(m,M,true):`<span class="r4 n">${T1(UI.s4Cur)}</span>`}</td></tr>`;}).join("");
+    return `<div class="l25 s4p"><div class="ph hd25"><div class="t25"><h2>${T1(UI.s4Page)}</h2><span class="n25">${esc(fmtM(M))} · ${T1(UI.s4PageSub)}</span></div><div class="acts"><button type="button" class="btn" data-s4go="-1">${T1(UI.s4Prev)}</button><button type="button" class="btn" data-s4go="1">${T1(UI.s4Next)}</button></div></div>
+      <div class="ks25 s4k">${t("blue","folder",UI.s4Contracts,L.length)}${t("ok","wallet",UI.s4Acc,esc(fmtN(acc)),cur)}${t("red","alert",UI.s4NotPaid,notPaid.length,notPaid.length?esc(fmtN(r2(Math.max(0,acc-pd))))+" "+cur:"")}${t("warn","inbox",UI.s4NoEsf,noEsf.length)}${t("grey","check",UI.s4ClosedN,`${cl.length} ${T1(UI.s4Of)} ${L.length}`)}</div>
+      <div class="card"><h4>${esc(fmtM(M))}</h4>${L.length?`<div class="tw4"><table class="tb4"><thead><tr><th>${T1(UI.s4Contract)}</th><th>${T1(UI.s4Client)}</th><th class="num">${T1(UI.s4Acc)}, ${cur}</th><th class="num">${T1(UI.s4Paid)}, ${cur}</th><th>${T1(UI.s4Mark)}</th><th>${T1(UI.s4Esf)}</th><th>${T1(UI.s4Close)}</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="empty2">${T1(UI.s4None)}</div>`}
+      <div class="h4t">${T1(UI.s4PageHint)}</div></div></div>`;},
+  bindClose(vp){vp.querySelectorAll("[data-mclose][data-mid]").forEach(b=>b.onclick=e=>{e.stopPropagation();MonthClose13.close(b.dataset.mid,b.dataset.mclose);});
+    vp.querySelectorAll("[data-mcheck][data-mid]").forEach(b=>b.onclick=e=>{e.stopPropagation();MonthClose13.check(b.dataset.mid,b.dataset.mcheck);});}
+};
+/* вкладка «Месяцы и оплата»: вместо прежних «Месяцы договора» и «Закрытие месяцев» — одна карточка; ЭСФ — как была */
+if(typeof Card22!=="undefined"){
+  const _bS4=Card22.build.bind(Card22);Card22.build=function(id,html,m){const out=_bS4(id,html,m);if(!sp2(m)||m.pipeline!=="contract")return out;try{
+    const tpl=document.createElement("template");tpl.innerHTML=out;const w=tpl.content;const p4=w.querySelector('[data-c22pane="4"]');if(!p4)return out;
+    const olds=[...p4.querySelectorAll(":scope>.s2mo")].filter(c=>{const h=(c.querySelector(":scope>h4")||{}).textContent||"";return h.startsWith(T1(UI.s2MonthsCard))||h.startsWith(T1(UI.mcTitle));});
+    const box=document.createElement("div");box.innerHTML=SP4.card(m);const nc=box.firstElementChild;
+    if(nc){if(olds[0])p4.insertBefore(nc,olds[0]);else p4.insertBefore(nc,p4.firstChild);}olds.forEach(x=>x.remove());
+    const d=document.createElement("div");d.appendChild(w.cloneNode(true));return d.innerHTML;}catch(e){console.warn("support months",e);return out;}};
+  const _bdS4=Card22.bind.bind(Card22);Card22.bind=function(vp,m){_bdS4(vp,m);if(sp2(m))SP4.bindClose(vp);};}
+/* экран «Закрытие месяца» — из меню ⋯ списка сопровождения */
+Router.extra.spmonth=()=>SP4.page();
+if(typeof SL1!=="undefined"){const _mS4=SL1.menu.bind(SL1);SL1.menu=function(f){const h=_mS4(f);if(!SP4.mp())return h;return h.replace('<span class="mn25p" id="l25menu">',`<span class="mn25p" id="l25menu"><button type="button" data-s4open="1">${L25.ico("calendar")} ${T1(UI.s4Page)}</button>`);};}
+{const _pbS4=Pages.bind;Pages.bind=function(vp){_pbS4.apply(this,arguments);if(!vp||isClient())return;
+  if(Router.cur==="support"){const b=vp.querySelector("[data-s4open]");if(b)b.onclick=e=>{e.stopPropagation();SP4.M=null;Router.go("spmonth");};}
+  if(Router.cur==="spmonth"){vp.querySelectorAll("[data-s4go]").forEach(b=>b.onclick=()=>{SP4.M=addMonth(SP4.M||prevMonth11(SP4.cur()),+b.dataset.s4go);Router.render();});
+    vp.querySelectorAll("[data-s4m]").forEach(r=>r.onclick=()=>Router.go("matter",r.dataset.s4m));SP4.bindClose(vp);}};}
+{const _sdS4=renderSide;renderSide=function(){_sdS4();if(Router.cur!=="spmonth"||isClient())return;const side=document.getElementById("side");if(side)side.querySelectorAll(".sn").forEach(b=>b.classList.toggle("on",b.dataset.r==="support"));};}
+/* стили раздела (этап 4) */
+{const st=document.createElement("style");st.id="s4css";st.textContent=`
+.mst4{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px;margin:4px 0 12px}
+.mst4 .m{border-radius:10px;padding:8px 6px;text-align:center;background:var(--surface2);border:1px solid var(--line);font-size:11.5px;color:var(--ink-3);line-height:1.3}
+.mst4 .m[data-paymonth]{cursor:pointer}.mst4 .m b{display:block;font:700 12.5px var(--font-h);color:var(--ink)}.mst4 .m span{display:block}.mst4 .m em{display:block;font-style:normal;font-weight:600;margin-top:3px}
+.mst4 .m.p{background:var(--ok-soft);border-color:transparent;color:var(--ok-d)}.mst4 .m.u{background:var(--red-soft);border-color:var(--red-line);color:var(--red-d)}
+.mst4 .m.c{background:var(--pri-soft);border-color:var(--pri);color:var(--pri)}.mst4 .m.f{opacity:.75}.mst4 .m.pr b::after{content:" ½";font-weight:600;color:var(--ink-3)}
+.tw4{overflow-x:auto}.tb4{width:100%;border-collapse:collapse;font-size:13px}
+.tb4 th{text-align:left;font:600 10.5px var(--font-h);letter-spacing:.5px;text-transform:uppercase;color:var(--ink-3);padding:8px 10px;border-bottom:1px solid var(--line);background:var(--surface2);white-space:nowrap}
+.tb4 td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}.tb4 td small{display:block;color:var(--ink-3);font-size:11.5px;margin-top:2px}.tb4 .num{text-align:right;white-space:nowrap}
+.tb4 tr.miss td{background:var(--red-soft)}.tb4 tr:last-child td{border-bottom:0}.tb4 tr[data-s4m]{cursor:pointer}
+.r4{display:inline-flex;border-radius:999px;padding:3px 9px;font:600 11.5px var(--font);white-space:nowrap}.r4.ok{background:var(--ok-soft);color:var(--ok-d)}.r4.w{background:var(--warn-soft);color:var(--warn-d)}
+.r4.r{background:var(--red-soft);color:var(--red-d)}.r4.n{background:var(--surface2);color:var(--ink-2)}
+.h4t{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.45}
+.ks25.s4k{grid-template-columns:repeat(5,minmax(0,1fr))}@media(max-width:1100px){.ks25.s4k{grid-template-columns:repeat(2,minmax(0,1fr))}}`;
+  (document.head||document.documentElement).appendChild(st);}
 
 /* ══ Раздел «Юридическое сопровождение» · этап 3 — задания и обращения по месяцам (макет design-support.html, решение владельца 19.10.2026) ══
    Вкладка «Задания и обращения» карточки договора:
