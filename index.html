@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="9f38bb846887";
+const ZC_BUILD="df79e2ff8efd";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -15981,6 +15981,138 @@ if(typeof Pre24!=="undefined"&&Pre24.kpBuild){const _kpImg27=Pre24.kpBuild.bind(
     if(!pdf)return _kpImg27(m);
     let s="";for(let k=0;k<pdf.length;k+=0x8000)s+=String.fromCharCode.apply(null,pdf.subarray(k,k+0x8000));const url="data:application/pdf;base64,"+btoa(s);
     const vno=((m.offer||{}).vers23||[]).length+1;return this.kpStore(m,`КП ${m.no} v${vno}.pdf`,url,pdf.length);};}
+
+/* ══ Раздел «Юридическое сопровождение» · этап 1 — главный экран списка (макет design-support.html, решение владельца 19.10.2026) ══
+   Как списки разовых услуг и судов (L25, v25_list.js): шапка с ⋯, плитки-фильтры, одна строка управления, таблица или карточки.
+   Своё у сопровождения: колонки «Срок договора» (период и полоска месяцев), «Задания» (открыто / всего, просрочено),
+   «Оплата по месяцам» (последние месяцы); плитки «Задание просрочено», «Обращение без ответа», «Не оплачен прошлый месяц»,
+   «Договор заканчивается»; виды «Мои клиенты», «По сотрудникам», «По состоянию», «Списком».
+   Сумм на экране нет ни у кого (Сп-21). Значки — значки системы (Сп-25).
+   Только вид: данные, права и фильтры «⚙ Фильтры» — прежние (Flt11, section17List, KB11); считать ничего не нужно серверу —
+   всё берётся из дела (месяцы, задания, обращения клиента). Правила — sections/support/ПРАВИЛА.md (Сп-27 … Сп-31). */
+Object.assign(UI,{
+  s1Active:"Действующих договоров||有效合同",s1Pre:"до договора||签约前",s1Open:"Открытых заданий||未完成任务",s1Late:"Задание просрочено||任务逾期",
+  s1Req:"Обращение без ответа||未回复咨询",s1ReqSub:"дольше 1 р.д.||超过1个工作日",s1Pay:"Не оплачен прошлый месяц||上月未付款",s1End:"Договор заканчивается||合同即将到期",s1EndSub:"в ближайшие 30 дней||30天内",
+  s1Client:"Клиент и пакет||客户与套餐",s1Period:"Срок договора||合同期限",s1Tasks:"Задания||任务",s1Months:"Оплата по месяцам||按月付款",s1State:"Состояние||状态",
+  s1MonthOf:"месяц {i} из {n}||第 {i}/{n} 个月",s1NotSigned:"договор ещё не подписан||合同尚未签署",s1OpenAll:"открыто / всего||未完成 / 全部",s1LateN:"просрочено||逾期",
+  s1ReqW:"обращение ждёт||咨询待回复",s1After:"после договора||签约后",s1Paid:"оплачен||已付款",s1Unpaid:"не оплачен||未付款",s1Cur:"текущий||本月",
+  s1Mine:"Мои клиенты||我的客户",s1ByState:"По состоянию||按状态",s1Q:"Поиск: клиент, номер, пакет, задание||搜索：客户、编号、套餐、任务",
+  s1SortAtt:"сначала требующие внимания||需关注的优先",s1SortEnd:"по окончанию договора||按合同到期",
+  s1gAtt:"Требует внимания||需关注",s1gEnd:"Срок договора заканчивается||合同即将到期",s1gWork:"Договор действует||合同有效",s1gPre:"До договора||签约前",
+  s1gPaused:"Приостановлено||已暂停",s1gClosed:"Закрыто||已结束",s1Support:"Сопровождение||法律顾问",s1Ends:"до {d} · {n} дн.||至 {d} · 剩{n}天",s1EndShort:"Срок заканчивается||即将到期"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Действующих договоров":"Amaldagi shartnomalar","до договора":"shartnomagacha","Открытых заданий":"Ochiq topshiriqlar","Задание просрочено":"Topshiriq muddati oʻtgan",
+  "Обращение без ответа":"Javobsiz murojaat","дольше 1 р.д.":"1 ish kunidan koʻp","Не оплачен прошлый месяц":"Oʻtgan oy toʻlanmagan","Договор заканчивается":"Shartnoma tugayapti","в ближайшие 30 дней":"yaqin 30 kunda",
+  "Клиент и пакет":"Mijoz va paket","Срок договора":"Shartnoma muddati","Задания":"Topshiriqlar","Оплата по месяцам":"Oylar boʻyicha toʻlov","Состояние":"Holat",
+  "месяц {i} из {n}":"{n} oydan {i}-oy","договор ещё не подписан":"shartnoma hali imzolanmagan","открыто / всего":"ochiq / jami","просрочено":"muddati oʻtgan","обращение ждёт":"murojaat kutmoqda",
+  "после договора":"shartnomadan keyin","оплачен":"toʻlangan","не оплачен":"toʻlanmagan","текущий":"joriy","Мои клиенты":"Mening mijozlarim","По состоянию":"Holat boʻyicha",
+  "Поиск: клиент, номер, пакет, задание":"Qidiruv: mijoz, raqam, paket, topshiriq","сначала требующие внимания":"avval eʼtibor talab qiladiganlar","по окончанию договора":"shartnoma tugashi boʻyicha",
+  "Требует внимания":"Eʼtibor talab qiladi","Срок договора заканчивается":"Shartnoma muddati tugayapti","Договор действует":"Shartnoma amalda","До договора":"Shartnomagacha","Приостановлено":"Toʻxtatilgan","Закрыто":"Yopilgan","Сопровождение":"Kuzatuv","до {d} · {n} дн.":"{d} gacha · {n} kun","Срок заканчивается":"Muddat tugayapti"});
+const SL1={
+  Q:["qSpOpen","qSpLate","qSpReq","qSpPay","qSpEnd"],
+  cur(){return monthOf11(todayS());},
+  act(m){return m.status!=="closed"&&m.pipeline==="contract";},
+  pre(m){return m.status!=="closed"&&m.pipeline!=="contract"&&m.pipeline!=="lost";},
+  months(m){return this.act(m)||m.status==="closed"?supportMonths(m):[];},
+  /* состояние месяца: p — оплачен, u — прошёл и не оплачен, c — текущий, f — впереди */
+  mst(m,M){const c=this.cur();return (m.monthsPaid||{})[M]==="paid"?"p":M<c?"u":M===c?"c":"f";},
+  mshort(M){const [y,mo]=M.split("-");return lang==="zh"?`${+mo}月`:(lang==="uz"?MONTHS_UZ:MONTHS_RU)[+mo-1];},
+  asg(m){return (m.assignments||[]).filter(Boolean);},
+  open(m){return this.asg(m).filter(a=>a.status!=="done");},
+  late(m){const t=todayS();return this.open(m).filter(a=>a.deadline&&a.deadline<t);},
+  /* обращения клиента без ответа дольше 1 р.д.: по этому делу или общие (без дела) — у клиента с действующим сопровождением */
+  req(m){const c=client(m.clientId);if(!c||m.status==="closed")return [];return (c.requests||[]).filter(r=>r&&r.by==="client"&&!r.respondedAt&&(r.matterId===m.id||(!r.matterId&&this.act(m)))&&WD(r.at,nowS())>1);},
+  pay(m){return this.act(m)&&payBlock11(m)==="month";},
+  endSoon(m){return this.act(m)&&!m.paused&&!!m.deadline&&daysTo(m.deadline)>=0&&daysTo(m.deadline)<=30;},
+  att(m){return this.act(m)&&(this.late(m).length>0||this.req(m).length>0||this.pay(m));},
+  F:{qSpOpen:m=>SL1.open(m).length>0,qSpLate:m=>SL1.late(m).length>0,qSpReq:m=>SL1.req(m).length>0,qSpPay:m=>SL1.pay(m),qSpEnd:m=>SL1.endSoon(m)},
+  /* группы «По состоянию» и «Мои клиенты» */
+  G:[["s1gAtt","var(--red)"],["s1gEnd","var(--warn)"],["s1gWork","var(--ok)"],["s1gPre","var(--line-3)"],["s1gPaused","var(--warn)"],["s1gClosed","var(--ink-3)"]],
+  grp(m){if(m.status==="closed"||m.pipeline==="lost")return 5;if(m.paused)return 4;if(!this.act(m))return 3;if(this.att(m))return 0;if(this.endSoon(m))return 1;return 2;},
+  /* ячейки */
+  ttl(m){const c=client(m.clientId);const pk=String(m.package||"").split(/\r?\n/)[0].trim();
+    return `<div class="tt25${m.paused?" paused11":""}">${c?esc(clientName(c)):esc(mT18(m))}</div><div class="cl25">${pk?`<span class="pk1" title="${esc(m.package)}">${esc(pk.length>40?pk.slice(0,40)+"…":pk)}</span>`:esc(c?mT18(m):"")}</div>`;},
+  per(m){if(!this.act(m)&&m.status!=="closed")return `<div class="pr1"><b>${m.opened?esc(fmtD(m.opened)):"—"}</b><small>${T1(UI.s1NotSigned)}</small></div>`;
+    const ms=this.months(m);const c=this.cur();const i=ms.indexOf(c);const shown=ms.slice(Math.max(0,ms.length-24));
+    return `<div class="pr1"><b>${esc(fmtD(m.opened||""))}${m.deadline?" — "+esc(fmtD(m.deadline)):""}</b><div class="mb1">${shown.map(M=>`<i class="${this.mst(m,M)}" title="${esc(fmtM(M))}"></i>`).join("")}</div>`
+      +`<small>${i>=0?T1(UI.s1MonthOf).replace("{i}",i+1).replace("{n}",ms.length):ms.length?esc(fmtM(ms[ms.length-1])):""}</small></div>`;},
+  tasks(m){if(!this.act(m)&&m.status!=="closed")return `<div class="ta1"><small>${T1(UI.s1After)}</small></div>`;const o=this.open(m).length,a=this.asg(m).length,l=this.late(m).length,r=this.req(m).length;
+    return `<div class="ta1"><b>${o}</b> / ${a}<small>${l?`<span class="lt">${l} ${T1(UI.s1LateN)}</span>`:T1(UI.s1OpenAll)}${r?` · <span class="lt">${T1(UI.s1ReqW)}</span>`:""}</small></div>`;},
+  mon(m){const c=this.cur();const ms=this.months(m).filter(M=>M<=c).slice(-3);if(!ms.length)return `<small class="na1">—</small>`;
+    return `<div class="mo1">${ms.map(M=>{const s=this.mst(m,M);return `<span class="${s}" title="${esc(fmtM(M))} · ${T1(s==="p"?UI.s1Paid:s==="u"?UI.s1Unpaid:UI.s1Cur)}">${esc(this.mshort(M))}${s==="p"?" ✓":s==="u"?" !":""}</span>`;}).join("")}</div>`;},
+  /* «Состояние»: у действующего договора этапов работы нет — договор действует / срок заканчивается / приостановлено; до договора и закрытые — как в разовых */
+  stage(m){if(!this.act(m))return L25.stage(m);const h=L25.stage(m);const k=h.indexOf('<div class="bd25">');const bd=k<0?"":h.slice(k,h.length-"</div>".length);
+    const ms=this.months(m),i=ms.indexOf(this.cur());const end=this.endSoon(m);
+    const l=m.paused?T1(UI.s1gPaused):end?T1(UI.s1EndShort):T1(UI.s1gWork);const cls=m.paused?"s-paused":"s-stage";
+    const sub=end?T1(UI.s1Ends).replace("{d}",esc(fmtD(m.deadline).slice(0,5))).replace("{n}",daysTo(m.deadline)):i>=0?T1(UI.s1MonthOf).replace("{i}",i+1).replace("{n}",ms.length):"";
+    return `<div class="sg25"><b class="${cls}">${l}</b>${sub?`<small>${sub}</small>`:""}${bd}</div>`;},
+  no(m){return `<div class="no25"><span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity]||"")}</span>${esc(L25.nm(m))}</div><div class="ty25">${L25.ct(m)}${T1(UI.s1Support)}</div>`;},
+  row(m){return `<div class="tr25 s1${this.att(m)?" late":""}" data-matter="${m.id}"><div class="c-no">${this.no(m)}</div><div class="c-tt">${this.ttl(m)}</div><div class="c-pr">${this.per(m)}</div><div class="c-ta">${this.tasks(m)}</div><div class="c-mo">${this.mon(m)}</div><div class="c-tm">${L25.who(m)}</div><div class="c-sg">${this.stage(m)}</div></div>`;},
+  head(){return `<div class="tr25 s1 h"><div>${T1(UI.l25No)}</div><div>${T1(UI.s1Client)}</div><div class="c-pr">${T1(UI.s1Period)}</div><div class="c-ta">${T1(UI.s1Tasks)}</div><div class="c-mo">${T1(UI.s1Months)}</div><div class="c-tm">${T1(UI.l25Team)}</div><div class="c-sg">${T1(UI.s1State)}</div></div>`;},
+  table(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const [l,more]=L25.lim(list);return `<div class="tb25">${this.head()}${l.map(m=>this.row(m)).join("")}</div>${more}`;},
+  cards(list){if(!list.length)return `<div class="empty2">${T1(UI.l25Empty)}</div>`;const [l,more]=L25.lim(list);
+    return this.G.map(([k,c],i)=>{const x=l.filter(m=>this.grp(m)===i);if(!x.length)return "";
+      return `<div class="gr25"><div class="gh25"><span style="background:${c}"></span>${T1(UI[k])}<em>${x.length}</em></div><div class="cs25">${x.map(m=>`<div class="cd25${this.att(m)?" late":""}" data-matter="${m.id}">
+        <div class="r25"><span class="entbadge ${m.entity}">${T1(ENTITY_S[m.entity]||"")}</span><b class="no25">${esc(L25.nm(m))}</b><span class="ty25">· ${L25.ct(m)}${T1(UI.s1Support)}</span></div>
+        <div>${this.ttl(m)}</div>${this.per(m)}<div class="r25">${this.tasks(m)}<span class="sp25"></span>${this.mon(m)}<span class="sp25"></span>${L25.who(m)}</div><div class="ft25">${this.stage(m)}</div></div>`).join("")}</div></div>`;}).join("")+more;},
+  /* плитки: «Действующих договоров» снимает быстрые фильтры; остальные — фильтры раздела */
+  tiles(base,f){const on=this.Q.find(k=>f[k]);const act=base.filter(m=>this.act(m)).length,pre=base.filter(m=>this.pre(m)).length;
+    const sum=fn=>base.reduce((s,m)=>s+fn(m),0);
+    const t=(q,cls,ic,l,v,sub)=>`<button type="button" class="k25 ${cls}${(q==="all"&&!on)||(q!=="all"&&f[q])?" on":""}${v===0?" zero":""}" ${q==="all"?'data-s1all="1"':`data-s1q="${q}"`} aria-pressed="${q==="all"?!on:!!f[q]}"><span class="ic">${L25.ico(ic)}</span><span class="tx"><small>${T1(l)}</small><b>${v}</b>${sub?`<em>${sub}</em>`:""}</span></button>`;
+    const np=base.filter(m=>this.pay(m)).length,ne=base.filter(m=>this.endSoon(m)).length;
+    return `<div class="ks25 s1">${t("all","blue","folder",UI.s1Active,act,pre?`+${pre} ${T1(UI.s1Pre)}`:"")}${t("qSpOpen","cal","list",UI.s1Open,sum(m=>this.act(m)?this.open(m).length:0))}`
+      +`${t("qSpLate","red","clock",UI.s1Late,sum(m=>this.act(m)?this.late(m).length:0))}${t("qSpReq","red","mail",UI.s1Req,sum(m=>this.req(m).length),T1(UI.s1ReqSub))}`
+      +`${t("qSpPay","warn","wallet",UI.s1Pay,np,np?esc(fmtM(prevMonth11(this.cur()))):"")}${t("qSpEnd","warn","hour",UI.s1End,ne,ne?T1(UI.s1EndSub):"")}</div>`;},
+  tools(sec,f){let h=L25.tools(sec,f).split(T1(UI.q17)).join(T1(UI.s1Q));
+    h=h.replace(/<button type="button" class="(on)?" data-view11="mine">[^<]*<\/button>/,`<button type="button" class="${f.view==="mine"?"on":""}" data-view11="mine">${T1(UI.s1Mine)}</button>`);
+    h=h.replace(/<button type="button" class="(on)?" data-view11="status">[^<]*<\/button>/,`<button type="button" class="${f.view==="state"?"on":""}" data-view11="state">${T1(UI.s1ByState)}</button>`);
+    h=h.replace('<select class="fb25 f11" data-f11="sort" aria-label="'+T1(UI.sort17)+'">',m=>m+`<option value="att"${f.sort==="att"?" selected":""}>${T1(UI.s1SortAtt)}</option><option value="end"${f.sort==="end"?" selected":""}>${T1(UI.s1SortEnd)}</option>`);
+    const lab={qSpOpen:UI.s1Open,qSpLate:UI.s1Late,qSpReq:UI.s1Req,qSpPay:UI.s1Pay,qSpEnd:UI.s1End};
+    const chips=this.Q.filter(k=>f[k]).map(k=>`<button type="button" data-s1q="${k}" title="${T1(UI.l25Clear)}">${T1(lab[k])} <b>×</b></button>`).join("");
+    if(chips)h=h.includes('<div class="ch25">')?h.replace('<div class="ch25">','<div class="ch25">'+chips):h+`<div class="ch25">${chips}</div>`;
+    return h;},
+  menu(f){return `<span class="mo25"><button type="button" class="btn ib25" data-l25menu="1" title="${T1(UI.l25More)}" aria-haspopup="true">⋯</button><span class="mn25p" id="l25menu">
+    <button type="button" class="${f.analytics?"on":""}" data-an17="1">${L25.ico("chart")} ${T1(UI.an17)}</button><button type="button" data-csv17="1" title="${T1(UI.csvT17)}">${L25.ico("down")} CSV</button></span></span>`;},
+  sortKey:{att:m=>[SL1.att(m)?0:1,SL1.grp(m),m.deadline||"9"].join("|"),end:m=>[SL1.act(m)?0:1,m.deadline||"9"].join("|")},
+  page(sec,title,base,prev){const f=Flt11.st(sec);if(!f._s1){f._s1=1;if(!f.sort||f.sort==="deadline")f.sort="att";if(!["mine","emp","state","list"].includes(f.view))f.view="list";}
+    if(!["mine","emp","state","list"].includes(f.view))f.view="list";
+    const all=section17List(sec);let list=all;this.Q.forEach(k=>{if(f[k])list=list.filter(this.F[k]);});
+    if(this.sortKey[f.sort])list=list.slice().sort((a,b)=>this.sortKey[f.sort](a).localeCompare(this.sortKey[f.sort](b)));
+    const i=prev.indexOf('<div class="acts">');const j=i<0?-1:prev.indexOf("</div>",i);const acts=i<0||j<0?"":prev.slice(i+18,j);
+    const adv=f.adv?(()=>{const h=Flt11.html(sec,f,base);const k=h.indexOf('<div class="flt11">');return k<0?"":`<div class="ad25"><div class="ch25 q"><button type="button" class="${f.qMine?"on":""}" data-q17="qMine">${T1(UI.qMine17)}</button></div>`+h.slice(k)+"</div>";})():"";
+    const body=f.view==="emp"?KB11.byEmp(list):f.view==="state"||f.view==="mine"?this.cards(list):this.table(list);
+    return `<div class="l25 s1p"><div class="ph hd25"><div class="t25"><h2>${T1(title)}</h2><span class="n25">${list.length}</span></div><div class="acts">${this.menu(f)}${acts}</div></div>`
+      +this.tiles(all,f)+this.tools(sec,f)+adv+(f.analytics?Funnel17.html(base,f):"")+`<div class="bd25w v-${f.view}">${body}</div></div>`;}
+};
+Object.assign(ICO25,{list:"M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2M9 5v2h6V5M9 13h6M9 17h4",
+  mail:"M4 6h16v12H4zM4 7l8 6 8-6",hour:"M7 3h10M7 21h10M8 3v4a4 4 0 0 0 8 0V3M8 21v-4a4 4 0 0 1 8 0v4",chart:"M4 4v16h16M8 15l3.5-3.5 3 3L19 9",down:"M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"});
+{const _secS1=section11;section11=function(sec,title,base){const h=_secS1.apply(this,arguments);if(sec!=="support"||isClient())return h;
+  try{return SL1.page(sec,title,base||sec17Base(sec),h);}catch(e){console.error(e);return h;}};}
+{const _pbS1=Pages.bind;Pages.bind=function(vp){_pbS1.apply(this,arguments);if(!vp||Router.cur!=="support"||isClient())return;const f=Flt11.st("support");
+  const mb=vp.querySelector("[data-l25menu]");if(mb)mb.onclick=e=>{e.stopPropagation();const p=document.getElementById("l25menu");if(p)p.classList.toggle("on");};
+  const a=vp.querySelector("[data-s1all]");if(a)a.onclick=()=>{SL1.Q.forEach(k=>f[k]=false);L25.Q.forEach(k=>f[k]=false);Router.render();};
+  vp.querySelectorAll("[data-s1q]").forEach(el=>el.onclick=()=>{const k=el.dataset.s1q;const v=!f[k];SL1.Q.forEach(x=>f[x]=false);f[k]=v;Router.render();});};}
+/* стили раздела — здесь же, рядом с кодом (сборка подключает только *.js из папки раздела) */
+{const st=document.createElement("style");st.id="s1css";st.textContent=`
+.ks25.s1{grid-template-columns:repeat(6,minmax(0,1fr))}
+.k25.cal .ic{background:var(--info-soft);color:var(--info-d)}
+.tr25.s1{grid-template-columns:minmax(120px,145px) minmax(170px,1.2fr) minmax(160px,1fr) 96px 140px 64px minmax(170px,1.1fr)}
+.pk1{display:inline-block;font:600 10.5px var(--font);border-radius:4px;padding:1px 6px;background:var(--ok-soft);color:var(--ok-d);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:1px}
+.pr1{font-size:12.5px;line-height:1.35;min-width:0}.pr1 b{display:block;font-weight:600;white-space:nowrap}.pr1 small{display:block;color:var(--ink-3);font-size:11.5px}
+.mb1{display:flex;gap:2px;margin:5px 0 3px;max-width:220px}.mb1 i{flex:1;height:6px;border-radius:2px;background:var(--line-2)}
+.mb1 i.p{background:var(--ok)}.mb1 i.u{background:var(--red)}.mb1 i.c{background:var(--pri)}
+.ta1{font-size:12.5px;line-height:1.35}.ta1 b{font:700 15px var(--font-h)}.ta1 small{display:block;color:var(--ink-3);font-size:11.5px}.ta1 .lt{color:var(--red-d);font-weight:600}
+.mo1{display:flex;gap:4px;flex-wrap:wrap}.mo1 span{font:600 11px var(--font);border-radius:5px;padding:3px 6px;background:var(--surface2);color:var(--ink-3);border:1px solid var(--line);white-space:nowrap}
+.mo1 span.p{background:var(--ok-soft);color:var(--ok-d);border-color:transparent}.mo1 span.u{background:var(--red-soft);color:var(--red-d);border-color:transparent}.mo1 span.c{background:var(--pri-soft);color:var(--pri);border-color:transparent}
+.na1{color:var(--ink-3)}
+.tr25.s1 .bd25 span{white-space:normal}
+.mn25p svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+@media (max-width:1350px){.ks25.s1{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1100px){.tr25.s1{grid-template-columns:140px minmax(0,1fr) 150px minmax(150px,.8fr)}.tr25.s1>.c-tm,.tr25.s1>.c-mo,.tr25.s1>.c-ta{display:none}}
+@media (max-width:700px){.ks25.s1{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tr25.s1{grid-template-columns:minmax(0,1fr) auto}.tr25.s1>.c-no{grid-column:1/-1}.tr25.s1>.c-tt{grid-column:1}.tr25.s1>.c-ta{display:block;grid-column:2;grid-row:2}
+  .tr25.s1>.c-pr{grid-column:1/-1}.tr25.s1>.c-sg{grid-column:1/-1}}`;
+  (document.head||document.documentElement).appendChild(st);}
 
 /* ═══════════════════════════ РАЗДЕЛ «ЮРИДИЧЕСКОЕ СОПРОВОЖДЕНИЕ» · ЭТАП 0 — ЗАЩИТА ДАННЫХ ═══════════════════════════
    Решение владельца 19.10.2026 (правила Сп-2, Сп-7, Сп-9 … Сп-12 — sections/support/ПРАВИЛА.md; миграция 20261019004000_support_stage0).
