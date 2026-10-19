@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="23fa8d7f2791";
+const ZC_BUILD="21d11e24fd09";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -16112,6 +16112,97 @@ Object.assign(ICO25,{list:"M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-
 @media (max-width:700px){.ks25.s1{grid-template-columns:repeat(2,minmax(0,1fr))}
   .tr25.s1{grid-template-columns:minmax(0,1fr) auto}.tr25.s1>.c-no{grid-column:1/-1}.tr25.s1>.c-tt{grid-column:1}.tr25.s1>.c-ta{display:block;grid-column:2;grid-row:2}
   .tr25.s1>.c-pr{grid-column:1/-1}.tr25.s1>.c-sg{grid-column:1/-1}}`;
+  (document.head||document.documentElement).appendChild(st);}
+
+/* ══ Раздел «Юридическое сопровождение» · этап 5 — «Мои задания» и напоминания (макет design-support.html, решения владельца 19.10.2026) ══
+   • экран «Мои задания» (Сп-51): адвокат — задания, где он исполнитель, и обращения клиентов по договорам, которые он ведёт; УП — все, с выбором адвоката;
+     группы «Просрочено», «Сегодня», «Эта неделя», «Позже», «Без срока»; «Ответить» и «Выполнено…» — прямо в строке, клик — окно задания;
+     у УП — время ответа на обращения за месяц по адвокатам;
+   • напоминания (Сп-47 … Сп-50) рассылает сервер (public.support_remind_run, каждый час 08:00–18:00) — здесь только подписи уведомлений и описание.
+   Права и данные — прежние (дела, которые видит пользователь). Правила — sections/support/ПРАВИЛА.md. */
+Object.assign(UI,{
+  s5My:"Мои задания||我的任务",s5All:"Все задания сопровождения||全部法律顾问任务",s5MySub:"мои клиенты||我的客户",s5AllSub:"все клиенты||全部客户",s5AllAdv:"Все адвокаты||全部律师",
+  s5Late:"Просрочено||逾期",s5Today:"Сегодня||今天",s5Week:"Эта неделя||本周",s5Later:"Позже||稍后",s5NoDue:"Без срока||无期限",s5Req:"Обращения ждут ответа||待回复咨询",s5ReqSub:"срок ответа — 1 р.д.||回复期限——1个工作日",
+  s5WeekT:"На этой неделе||本周",s5Avg:"Среднее время ответа||平均回复时间",s5AvgSub:"{m} · все адвокаты||{m} · 全部律师",s5Wd:"р.д.||个工作日",s5Open:"открыто||未完成",
+  s5Task:"Задание · клиент||任务 · 客户",s5Emp:"Исполнитель||执行人",s5Due:"Срок||期限",s5St:"Состояние||状态",s5Answer:"Ответить||回复",s5Done:"Выполнено…||已完成…",
+  s5ReqRow:"Обращение клиента||客户咨询",s5Waits:"ждёт {n} р.д.||等待 {n} 个工作日",s5WaitsH:"ждёт меньше дня||等待不足一天",s5None:"Открытых заданий и обращений нет||没有未完成的任务和咨询",
+  s5RespT:"Время ответа на обращения · {m}||咨询回复时间 · {m}",s5Adv:"Адвокат||律师",s5ReqN:"Обращений||咨询",s5AvgN:"В среднем||平均",s5Over:"Дольше 1 р.д.||超过1个工作日",
+  s5RespH:"Считается по рабочим дням: от обращения клиента до ответа.||按工作日计算：从客户咨询到回复。",
+  s5RemT:"Напоминания · Telegram и push||提醒 · Telegram 和推送",s5RemH:"Все напоминания отправляет сервер, каждый час с 08:00 до 18:00 по Ташкенту; по одному поводу — одно напоминание.||所有提醒由服务器在塔什干时间08:00–18:00每小时发送；同一事由只提醒一次。",
+  s5Rem1:"Обращение клиента||客户咨询",s5Rem1t:"без ответа 4 часа — ведущему; 1 рабочий день — УП||4小时未回复——提醒负责人；1个工作日——提醒管理合伙人",
+  s5Rem2:"Срок задания||任务期限",s5Rem2t:"накануне и в день срока — исполнителю; срок прошёл — исполнителю, ведущему и УП||前一天和当天——提醒执行人；逾期——提醒执行人、负责人和管理合伙人",
+  s5Rem3:"Оплата месяца||月份付款",s5Rem3t:"не оплачен прошлый месяц (с 1-го числа) — УП и ведущему||上月未付款（从1日起）——提醒管理合伙人和负责人",
+  s5Rem4:"Конец договора||合同到期",s5Rem4t:"за 30 и за 10 дней — ведущему и УП||提前30天和10天——提醒负责人和管理合伙人"
+});
+window.UZ21=Object.assign(window.UZ21||{},{"Мои задания":"Mening topshiriqlarim","Все задания сопровождения":"Barcha kuzatuv topshiriqlari","мои клиенты":"mening mijozlarim","все клиенты":"barcha mijozlar","Все адвокаты":"Barcha advokatlar",
+  "Просрочено":"Muddati oʻtgan","Сегодня":"Bugun","Эта неделя":"Shu hafta","Позже":"Keyinroq","Без срока":"Muddatsiz","Обращения ждут ответа":"Murojaatlar javob kutmoqda","срок ответа — 1 р.д.":"javob muddati — 1 ish kuni",
+  "На этой неделе":"Shu haftada","Среднее время ответа":"Oʻrtacha javob vaqti","р.д.":"ish k.","Задание · клиент":"Topshiriq · mijoz","Ответить":"Javob berish","Выполнено…":"Bajarildi…","Обращение клиента":"Mijoz murojaati",
+  "ждёт меньше дня":"bir kundan kam kutmoqda","Открытых заданий и обращений нет":"Ochiq topshiriqlar va murojaatlar yoʻq","Адвокат":"Advokat","Обращений":"Murojaatlar","В среднем":"Oʻrtacha","Дольше 1 р.д.":"1 ish kunidan koʻp",
+  "Считается по рабочим дням: от обращения клиента до ответа.":"Ish kunlari boʻyicha: mijoz murojaatidan javobgacha.","Напоминания · Telegram и push":"Eslatmalar · Telegram va push","Срок задания":"Topshiriq muddati","Оплата месяца":"Oy toʻlovi","Конец договора":"Shartnoma tugashi"});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{
+  s5req4:"Обращение клиента {cli} ждёт ответа больше 4 часов · договор {no}||客户 {cli} 的咨询已超过4小时未回复 · 合同 {no}",
+  s5reqMp:"Обращение клиента {cli} без ответа больше 1 рабочего дня · договор {no} · ведущий {who}||客户 {cli} 的咨询超过1个工作日未回复 · 合同 {no}",
+  s5due:"Срок задания {when}: {text} · договор {no}||任务期限{when}：{text} · 合同 {no}",
+  s5late:"Срок задания прошёл ({d}): {text} · договор {no} · исполнитель {who}||任务已逾期（{d}）：{text} · 合同 {no}",
+  s5pay:"Не оплачен {M} · {cli} · договор {no} — новые задания приостановлены||{cli} · 合同 {no}：{M} 未付款",
+  s5end:"Договор сопровождения {cli} ({no}) заканчивается {d} — через {n} дн.||{cli} 的法律顾问合同（{no}）将于 {d} 到期——还有 {n} 天"});
+const SP5={
+  emp:"",
+  mp(){return isFounder()||hasF("managing");},
+  me(){return (U()||{}).emp||"";},
+  ms(){return MM().filter(m=>m.svc==="support"&&m.pipeline==="contract"&&m.status!=="closed");},
+  /* строки: задания и обращения без ответа */
+  rows(){const mp=this.mp(),me=this.me(),f=this.emp,out=[];
+    this.ms().forEach(m=>{const c=client(m.clientId);
+      (m.assignments||[]).filter(a=>a&&a.status!=="done").forEach(a=>{const who=a.emp||m.lead;if(mp?(f&&who!==f):who!==me)return;out.push({k:"t",m,a,who,c,due:a.deadline||""});});
+      if(c)(c.requests||[]).filter(r=>r&&r.by==="client"&&!r.respondedAt&&!r.taskId&&(r.matterId===m.id||!r.matterId)).forEach(r=>{const who=m.lead;if(mp?(f&&who!==f):who!==me)return;
+        if(out.some(x=>x.k==="r"&&x.r.id===r.id))return;out.push({k:"r",m,r,who,c,due:String(r.at||"").slice(0,10)});});});
+    return out;},
+  grp(x){if(x.k==="r"){const w=WD(x.r.at,nowS());return w>1?0:1;}if(!x.due)return 4;const d=daysTo(x.due);return d<0?0:d===0?1:d<=7?2:3;},
+  /* время ответа за месяц (обращения с ответом, по ведущему договора) */
+  resp(M){const by={};this.ms().concat(MM().filter(m=>m.svc==="support"&&m.status==="closed")).forEach(m=>{const c=client(m.clientId);if(!c)return;
+      (c.requests||[]).filter(r=>r&&r.by==="client"&&r.respondedAt&&String(r.respondedAt).slice(0,7)===M&&(r.matterId===m.id||!r.matterId)).forEach(r=>{const k=m.lead;by[k]=by[k]||{n:0,s:0,o:0,ids:new Set()};if(by[k].ids.has(r.id))return;by[k].ids.add(r.id);
+        const w=Math.max(0,WD(r.at,r.respondedAt));by[k].n++;by[k].s+=w;if(w>1)by[k].o++;});});
+    return Object.entries(by).map(([e,v])=>({e,n:v.n,avg:v.n?Math.round(v.s/v.n*10)/10:0,o:v.o})).sort((a,b)=>b.n-a.n);},
+  row(x,mp){const st=x.k==="r"?(()=>{const w=WD(x.r.at,nowS());return `<span class="res3 ${w>1?"r":"w"}">${w>=1?esc(T1(UI.s5Waits).replace("{n}",Math.floor(w))):T1(UI.s5WaitsH)}</span>`;})():ST3.state(x.a);
+    const ttl=x.k==="r"?`${T1(UI.s5ReqRow)}: ${esc(String(x.r.text||"").slice(0,80))}`:esc(x.a.title);const ed=Pipe.can(x.m);
+    const btn=x.k==="r"?(ed?`<button type="button" class="btn sm pri" data-s5req="${esc(x.m.id)}|${esc(x.r.id)}">${T1(UI.s5Answer)}</button>`:""):(ed?`<button type="button" class="btn sm" data-s5done="${esc(x.m.id)}|${esc(x.a.id)}">${T1(UI.s5Done)}</button>`:"");
+    return `<tr class="${this.grp(x)===0?"miss":x.k==="r"?"next":""}"${x.k==="t"?` data-s5t="${esc(x.m.id)}|${esc(x.a.id)}"`:""}><td><b>${ttl}</b><small>${esc(L25.nm(x.m))} · ${x.c?esc(clientName(x.c)):"—"}</small></td>${mp?`<td>${esc(dispName(x.who)||"—")}</td>`:""}
+      <td class="nw3">${x.k==="r"?esc(fmtDT(x.r.at)):x.due?esc(fmtD(x.due).slice(0,5)):"—"}</td><td>${st}</td><td class="cf3">${x.k==="t"?`${(x.a.comments||[]).length} · ${(x.a.files||[]).length}`:""}</td><td>${btn}</td></tr>`;},
+  page(){const mp=this.mp();const L=this.rows();const G=[[UI.s5Late,"var(--red)"],[UI.s5Today,"var(--warn)"],[UI.s5Week,"var(--pri)"],[UI.s5Later,"var(--ink-3)"],[UI.s5NoDue,"var(--ink-3)"]];
+    const n=g=>L.filter(x=>this.grp(x)===g).length,req=L.filter(x=>x.k==="r").length,M=monthOf11(todayS());const rs=mp?this.resp(M):[];const tot=rs.reduce((s,x)=>s+x.n,0);
+    const avg=tot?Math.round(rs.reduce((s,x)=>s+x.avg*x.n,0)/tot*10)/10:0;
+    const t=(cls,ic,l,v,em)=>`<div class="k25 ${cls}${v===0?" zero":""}"><span class="ic">${L25.ico(ic)}</span><span class="tx"><small>${T1(l)}</small><b>${v}</b>${em?`<em>${em}</em>`:""}</span></div>`;
+    const advs=mp?[...new Set(this.ms().flatMap(m=>[m.lead,...(m.assignments||[]).map(a=>a&&a.emp)]).filter(Boolean))]:[];
+    const body=G.map(([l,c],i)=>{const x=L.filter(y=>this.grp(y)===i).sort((a,b)=>String(a.due).localeCompare(String(b.due)));if(!x.length)return "";
+      return `<div class="gr25"><div class="gh25"><span style="background:${c}"></span>${T1(l)}<em>${x.length}</em></div><div class="card" style="padding:0;overflow:hidden"><div class="tw3s"><table class="tb3s s5t"><thead><tr><th>${T1(UI.s5Task)}</th>${mp?`<th>${T1(UI.s5Emp)}</th>`:""}<th>${T1(UI.s5Due)}</th><th>${T1(UI.s5St)}</th><th>${ST3.ico("msg")} · ${ST3.ico("clip")}</th><th></th></tr></thead><tbody>${x.map(y=>this.row(y,mp)).join("")}</tbody></table></div></div></div>`;}).join("");
+    const rem=[[UI.s5Rem1,UI.s5Rem1t],[UI.s5Rem2,UI.s5Rem2t],[UI.s5Rem3,UI.s5Rem3t],[UI.s5Rem4,UI.s5Rem4t]];
+    return `<div class="l25 s5p"><div class="ph hd25"><div class="t25"><h2>${T1(mp?UI.s5All:UI.s5My)}</h2><span class="n25">${L.length} ${T1(UI.s5Open)} · ${T1(mp?UI.s5AllSub:UI.s5MySub)}</span></div><div class="acts">${mp?`<select class="fb25" data-s5emp="1" aria-label="${T1(UI.s5Emp)}"><option value="">${T1(UI.s5AllAdv)}</option>${advs.map(e=>`<option value="${esc(e)}"${this.emp===e?" selected":""}>${esc(dispName(e))}</option>`).join("")}</select>`:""}</div></div>
+      <div class="ks25 s5k">${t("red","clock",UI.s5Late,n(0))}${t("warn","calendar",UI.s5Today,n(1))}${t("red","mail",UI.s5Req,req,T1(UI.s5ReqSub))}${t("cal","list",UI.s5WeekT,n(2))}${mp?t("ok","clock",UI.s5Avg,tot?`${String(avg).replace(".",",")} ${T1(UI.s5Wd)}`:"—",esc(T1(UI.s5AvgSub).replace("{m}",fmtM(M)))):""}</div>
+      ${body||`<div class="card"><div class="empty2" style="padding:24px">${T1(UI.s5None)}</div></div>`}
+      <div class="s5g">${mp?`<div class="card"><h4>${esc(T1(UI.s5RespT).replace("{m}",fmtM(M)))}</h4><div class="tw3s"><table class="tb3s"><thead><tr><th>${T1(UI.s5Adv)}</th><th class="num">${T1(UI.s5ReqN)}</th><th class="num">${T1(UI.s5AvgN)}</th><th class="num">${T1(UI.s5Over)}</th></tr></thead><tbody>
+        ${rs.map(x=>`<tr><td><b>${esc(dispName(x.e)||x.e)}</b></td><td class="num">${x.n}</td><td class="num">${String(x.avg).replace(".",",")} ${T1(UI.s5Wd)}</td><td class="num">${x.o?`<span class="res3 r">${x.o}</span>`:"0"}</td></tr>`).join("")||`<tr><td colspan="4" class="em3">—</td></tr>`}</tbody></table></div><div class="hint3">${T1(UI.s5RespH)}</div></div>`:""}
+      <div class="card"${mp?"":' style="grid-column:1/-1"'}><h4>${T1(UI.s5RemT)}</h4><table class="rm5">${rem.map(([a,b])=>`<tr><td>${T1(a)}</td><td>${T1(b)}</td></tr>`).join("")}</table><div class="hint3">${T1(UI.s5RemH)}</div></div></div></div>`;},
+  bind(vp){const sel=vp.querySelector("[data-s5emp]");if(sel)sel.onchange=()=>{this.emp=sel.value;Router.render();};
+    vp.querySelectorAll("[data-s5t]").forEach(r=>r.onclick=e=>{if(e.target.closest("button"))return;const [m,a]=r.dataset.s5t.split("|");ST3.open(m,a);});
+    vp.querySelectorAll("[data-s5done]").forEach(b=>b.onclick=e=>{e.stopPropagation();const [m,a]=b.dataset.s5done.split("|");ST3.done(m,a);});
+    vp.querySelectorAll("[data-s5req]").forEach(b=>b.onclick=e=>{e.stopPropagation();const [m,r]=b.dataset.s5req.split("|");ST3.req(m,r);});}
+};
+Router.extra.spmy=()=>SP5.page();
+/* кнопка в шапке списка «Юридическое сопровождение» */
+if(typeof SL1!=="undefined"){const _pgS5=SL1.page.bind(SL1);SL1.page=function(sec,title,base,prev){const h=_pgS5(sec,title,base,prev);
+  return h.replace('<div class="acts">',`<div class="acts"><button type="button" class="btn" data-s5open="1">${L25.ico("list")} ${T1(SP5.mp()?UI.s5All:UI.s5My)}</button>`);};}
+{const _pbS5=Pages.bind;Pages.bind=function(vp){_pbS5.apply(this,arguments);if(!vp||isClient())return;
+  if(Router.cur==="support"){const b=vp.querySelector("[data-s5open]");if(b)b.onclick=e=>{e.stopPropagation();Router.go("spmy");};}
+  if(Router.cur==="spmy")SP5.bind(vp);};}
+{const _sdS5=renderSide;renderSide=function(){_sdS5();if(Router.cur!=="spmy"||isClient())return;const side=document.getElementById("side");if(side)side.querySelectorAll(".sn").forEach(b=>b.classList.toggle("on",b.dataset.r==="support"));};}
+/* стили раздела (этап 5) */
+{const st=document.createElement("style");st.id="s5css";st.textContent=`
+.ks25.s5k{grid-template-columns:repeat(5,minmax(0,1fr))}@media(max-width:1100px){.ks25.s5k{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hd25 .btn svg,.acts .btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+.s5t{table-layout:fixed}.s5t th:first-child{width:40%}.s5t th:last-child{width:130px}.s5t tr.miss td{background:var(--red-soft)}.s5t tr.next td{background:var(--warn-soft)}.s5t tr[data-s5t]{cursor:pointer}
+.s5g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:6px}@media(max-width:900px){.s5g{grid-template-columns:1fr}.s5t{table-layout:auto}}
+.tb3s .num{text-align:right;white-space:nowrap}.rm5{font-size:12.5px;border-collapse:collapse;width:100%}.rm5 td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}.rm5 td:first-child{white-space:nowrap;font-weight:600}`;
   (document.head||document.documentElement).appendChild(st);}
 
 /* ══ Раздел «Юридическое сопровождение» · этап 2 — карточка договора и 5 этапов до договора (макет design-support.html, решение владельца 19.10.2026) ══
