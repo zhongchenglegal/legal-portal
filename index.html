@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="89da3ac81f56";
+const ZC_BUILD="f392eb0e4e8d";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11851,7 +11851,7 @@ const _pbindCli21=Pages.bind;Pages.bind=function(vp){_pbindCli21.call(this,vp);
    Только данные: руководство по ролям и «Что нового» (строки «русский||中文»). Отсюда же собирается текст для ИИ-ассистента
    (backend/supabase/functions/assistant/index.ts — скрипт backend/tools/build-assistant.mjs). После правки текста — пересобрать функцию. */
 const HELP21={
- ver:"1.4.1",
+ ver:"1.4.2",
  roles:{
   advocate:[
    {id:"login",t:"Вход и работа с окнами||登录与窗口操作",b:[
@@ -11949,6 +11949,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v14osh",d:"2026-10-20",t:"Версия 1.4: исправления по сообщениям об ошибках||1.4版：根据错误报告的修复",b:["«Другая сторона»: каждая сторона — отдельной строкой с ИНН и ролью, «+ ещё сторона» — для нескольких ответчиков; перенос строки в названии больше не делит сторону надвое. Старые дела исправлены, конфликт интересов в них проверяется заново.||“对方当事人”：每一方单独一行，含税号和角色；“+ 再加一方”可添加多个被告；名称中的换行不再把一方拆成两方。旧案件已修正，并重新检查利益冲突。","Уведомления: «Проверить» сначала показывает уведомление прямо на этом устройстве, затем сообщает, что стало с проверкой на сервере — доставлена, в очереди или ошибка с её текстом.||通知：“测试”先在本设备上直接显示通知，然后告知服务器上的测试结果——已送达、排队中或错误及其内容。"]},
 {id:"v14law",d:"2026-10-20",t:"Версия 1.4: роль «Юрист»||1.4版：“法务”角色",b:["Новая роль «Юрист»: как адвокат, без судебных дел, работает в ООО. В деле, переведённом в суд, — пометка с номером судебного дела.||新增“法务”角色：与律师相同，不处理诉讼案件，属于有限公司。已移交法院的案件中显示诉讼案件编号。"]},
   {id:"v11s2",d:"2026-10-14",t:"Версия 1.1: узбекский интерфейс||1.1版：乌兹别克语界面",b:["Третья кнопка языка «Oʻz»: портал на узбекском (латиница). Язык сохраняется в учётке — уведомления приходят на нём, в том числе в Telegram; ИИ-ассистент и ИИ-переводчик учитывают узбекский. Имена сотрудников — латиницей.||新增第三个语言按钮“Oʻz”：门户支持乌兹别克语（拉丁字母）。语言保存在账号中——通知（包括Telegram）以该语言发送；AI助手和AI翻译支持乌兹别克语。员工姓名以拉丁字母显示。"]},
   {id:"v11s1",d:"2026-10-13",t:"Версия 1.1: ИИ-переводчик||1.1版：AI翻译",b:["Кнопка переводчика в правом нижнем углу: русский и узбекский ↔ китайский, вставили — перевелось, режимы «Авто», «Быстрый», «Точный».||右下角翻译按钮：俄语、乌兹别克语↔中文，粘贴即译，提供“自动”“快速”“精确”模式。"]},
@@ -17015,6 +17016,88 @@ if(typeof SB19!=="undefined"){
 }
 /* «Помощь»: узбекские переводы строк о роли «Юрист» */
 window.UZ21=Object.assign(window.UZ21||{},{"роль доступа: «Управляющий адвокат», «Адвокат» или «Юрист».":"kirish roli: «Boshqaruvchi advokat», «Advokat» yoki «Yurist».","«Юрист» — всё как у адвоката, но без судебных дел: раздела «Судебные дела» у него нет, в судебное дело его не поставить. Юрист работает в ООО: в дела адвокатской фирмы его не добавить. Ставка — как у адвоката. Если его дело перевели в суд, в деле видна пометка «Дело переведено в суд» с номером судебного дела.":"«Yurist» — hammasi advokatdagidek, lekin sud ishlarisiz: unda «Sud ishlari» boʻlimi yoʻq, uni sud ishiga qoʻshib boʻlmaydi. Yurist MChJda ishlaydi: advokatlik firmasi ishlariga uni qoʻshib boʻlmaydi. Stavka — advokatdagidek. Agar uning ishi sudga oʻtkazilgan boʻlsa, ishda sud ishi raqami bilan «Ish sudga oʻtkazildi» belgisi koʻrinadi.","Версия 1.4: роль «Юрист»":"1.4-versiya: «Yurist» roli","Новая роль «Юрист»: как адвокат, без судебных дел, работает в ООО. В деле, переведённом в суд, — пометка с номером судебного дела.":"Yangi «Yurist» roli: advokat kabi, sud ishlarisiz, MChJda ishlaydi. Sudga oʻtkazilgan ishda — sud ishi raqami bilan belgi.","«Управление» → «Доступы и журнал» → вкладка «Доступы» → «+ Создать аккаунт»: логин, ФИО, должность, подразделение и роль доступа: «Управляющий адвокат», «Адвокат» или «Юрист». Пароль — без символов l, I, O, 0, 1.":"«Boshqaruv» → «Ruxsatlar va jurnal» → «Ruxsatlar» varagʻi → «+ Hisob yaratish»: login, F.I.Sh., lavozim, boʻlim va ruxsat roli: «Boshqaruvchi advokat», «Advokat» yoki «Yurist». Parol — l, I, O, 0, 1 belgilarisiz."});
+
+/* ═══════════════════════════ версия 1.4 · ОШИБКИ ИЗ «СООБЩИТЬ ОБ ОШИБКЕ» (20.10.2026, «исправь все») ═══════════════════════════
+   • ОШ-0002 «несколько ответчиков»: поле «Другая сторона» (разовые услуги, суд, заявка) — не одно текстовое поле с форматом
+     «название | по-китайски | ИНН | роль», а строки: название · ИНН · роль · по-китайски, «+ ещё сторона», ✕. Перенос строки
+     или «|» внутри названия больше ничего не режет. Старый текст (вставленный из документа) разбирается с учётом названий,
+     разорванных переносом строки (кавычки «…» не закрыты — строка продолжается на следующей).
+     Дела, где стороны уже были разрезаны, сервер склеил (миграция 20261020000400) и пометил conflict.recheck — проверка
+     конфликта интересов повторяется при открытии дела ведущим или УП.
+   • ОШ-0001 «push не появился»: «Проверить» сначала показывает уведомление прямо на этом устройстве (видно, пускают ли
+     Windows/телефон уведомления браузера), затем отправляет проверку через сервер и через полминуты сообщает, что с ней
+     стало (public.push_status): отправлено / ошибка и её текст / ещё в очереди.
+   • Журнал сбоев: служебная проверка «Сопровождения» теперь получает от сервера «ok» (миграция 20261020000400). */
+Object.assign(UI,{cp28Name:"Название (ООО «…», ФИО)||名称（公司或姓名）",cp28Inn:"ИНН||税号",cp28Role:"Роль||角色",cp28Zh:"По-китайски||中文名称",
+  cp28Add:"+ ещё сторона||+ 再加一方",cp28Del:"Убрать||删除",cp28Hint:"Каждая сторона — своей строкой; ответчиков можно добавить сколько нужно. Нужна для проверки конфликта интересов||每方单独一行；被告可添加多个。用于利益冲突检查",
+  ps28Local:"Сейчас на этом устройстве должно появиться проверочное уведомление. Если его нет — уведомления браузера выключены в Windows (Параметры → Система → Уведомления → Chrome) или включён режим «Не беспокоить»||本设备应立即显示测试通知。如未显示——请在 Windows 中开启浏览器通知（设置 → 系统 → 通知 → Chrome）或关闭“勿扰”",
+  ps28Blocked:"Браузер не разрешает уведомления для портала: значок замка слева от адреса → «Уведомления» → «Разрешить»||浏览器未允许本门户的通知：点击地址栏左侧锁形图标 → “通知” → “允许”",
+  ps28Wait:"Проверка через сервер отправлена — жду ответ…||已通过服务器发送测试——等待结果…",ps28Sent:"Сервер доставил проверку на устройства ({n}) в {t}. Если уведомление не появилось — его не показывает Windows/телефон (см. выше)||服务器已于 {t} 将测试送达设备（{n}）。如未看到通知——是 Windows/手机未显示（见上）",
+  ps28Fail:"Сервер не смог доставить: {e}. Отключите и снова включите уведомления на этом устройстве; если не поможет — «Сообщить об ошибке»||服务器发送失败：{e}。请在本设备关闭后重新开启通知；仍不行请“报告错误”",
+  ps28Queue:"Проверка ещё в очереди сервера. Обычно уходит за минуту — если нет, сообщите управляющему адвокату (рассылка не запущена)||测试仍在服务器队列中。通常一分钟内发出——否则请告知管理律师（发送服务未运行）",
+  ps28NoDev:"На сервере нет ни одного вашего устройства — нажмите «Включить на этом устройстве»||服务器上没有您的设备——请点击“在本设备开启”",ps28Title:"Проверка уведомлений||通知测试"});
+window.UZ21=Object.assign(window.UZ21||{},{"Название (ООО «…», ФИО)":"Nomi (MChJ «…», F.I.Sh.)","ИНН":"STIR","Роль":"Rol","По-китайски":"Xitoycha","+ ещё сторона":"+ yana tomon","Убрать":"Olib tashlash",
+  "Каждая сторона — своей строкой; ответчиков можно добавить сколько нужно. Нужна для проверки конфликта интересов":"Har bir tomon — alohida qatorda; javobgarlarni kerakicha qoʻshish mumkin. Manfaatlar toʻqnashuvini tekshirish uchun kerak",
+  "Проверка уведомлений":"Bildirishnomalarni tekshirish",
+  "Версия 1.4: исправления по сообщениям об ошибках":"1.4-versiya: xato haqidagi xabarlar boʻyicha tuzatishlar",
+  "«Другая сторона»: каждая сторона — отдельной строкой с ИНН и ролью, «+ ещё сторона» — для нескольких ответчиков; перенос строки в названии больше не делит сторону надвое. Старые дела исправлены, конфликт интересов в них проверяется заново.":"«Boshqa tomon»: har bir tomon — STIR va roli bilan alohida qatorda, bir nechta javobgar uchun — «+ yana tomon»; nomdagi qator koʻchishi endi tomonni ikkiga boʻlmaydi. Eski ishlar tuzatildi, ularda manfaatlar toʻqnashuvi qayta tekshiriladi.",
+  "Уведомления: «Проверить» сначала показывает уведомление прямо на этом устройстве, затем сообщает, что стало с проверкой на сервере — доставлена, в очереди или ошибка с её текстом.":"Bildirishnomalar: «Tekshirish» avval shu qurilmaning oʻzida bildirishnoma koʻrsatadi, soʻng serverdagi tekshiruv natijasini aytadi — yetkazildi, navbatda yoki xato va uning matni."});
+const CP28_ROLES=["ответчик","истец","третье лицо","соответчик","продавец","покупатель","арендодатель","арендатор","контрагент"];
+const CP28={
+  clean(s){return String(s||"").replace(/[\r\n|]+/g," ").replace(/\s{2,}/g," ").trim();},
+  /* старый текст: строка без «|» с незакрытыми «…» продолжается на следующей (название, разорванное переносом) */
+  parse(txt){const lines=String(txt||"").split("\n").map(l=>l.trim()).filter(Boolean);const out=[];let acc="";
+    const open=s=>(s.split("«").length-1)>(s.split("»").length-1);
+    lines.forEach(l=>{const cur=acc?acc+" "+l:l;if(!cur.includes("|")&&open(cur)){acc=cur;return;}acc="";out.push(cur);});if(acc)out.push(acc);
+    return out.map(l=>{const [name,nameZh,inn,role]=l.split("|").map(x=>(x||"").trim());return {name,nameZh:nameZh||"",inn:inn||"",role:role||""};}).filter(x=>x.name||x.inn);},
+  text(rows){return rows.map(r=>[this.clean(r.name),this.clean(r.nameZh),this.clean(r.inn),this.clean(r.role)]).filter(r=>r[0]||r[2]).map(r=>r.join(" | ").replace(/( \| )+$/,"")).join("\n");},
+  enhance(){const ta=document.querySelector("#mdD textarea#dlg_counterparties");if(!ta||ta.dataset.cp28)return;ta.dataset.cp28="1";ta.style.display="none";
+    const box=document.createElement("div");box.className="cp28";ta.after(box);
+    const hint=ta.parentNode&&ta.parentNode.querySelector(".fhint");if(hint)hint.textContent=T1(UI.cp28Hint);
+    let rows=this.parse(ta.value);if(!rows.length)rows=[{name:"",nameZh:"",inn:"",role:""}];
+    const sync=()=>{ta.value=this.text(rows);ta.dispatchEvent(new Event("input",{bubbles:true}));};
+    const dl=`<datalist id="cp28roles">${CP28_ROLES.map(r=>`<option value="${esc(r)}">`).join("")}</datalist>`;
+    const paint=()=>{box.innerHTML=dl+rows.map((r,i)=>`<div class="cp28r" data-i="${i}"><input data-f="name" placeholder="${esc(T1(UI.cp28Name))}" value="${esc(r.name)}" autocomplete="off"><input data-f="inn" placeholder="${esc(T1(UI.cp28Inn))}" value="${esc(r.inn)}" inputmode="numeric" autocomplete="off"><input data-f="role" list="cp28roles" placeholder="${esc(T1(UI.cp28Role))}" value="${esc(r.role)}" autocomplete="off"><input data-f="nameZh" placeholder="${esc(T1(UI.cp28Zh))}" value="${esc(r.nameZh)}" autocomplete="off"><button type="button" class="cp28x" data-del="${i}" title="${esc(T1(UI.cp28Del))}" aria-label="${esc(T1(UI.cp28Del))}">✕</button></div>`).join("")+`<button type="button" class="btn sm" data-cp28add="1">${T1(UI.cp28Add)}</button>`;
+      box.querySelectorAll(".cp28r input").forEach(inp=>{inp.oninput=()=>{const i=+inp.closest(".cp28r").dataset.i;rows[i][inp.dataset.f]=inp.value;sync();};
+        inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();e.stopPropagation();}};});
+      box.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{rows.splice(+b.dataset.del,1);if(!rows.length)rows.push({name:"",nameZh:"",inn:"",role:""});sync();paint();});
+      box.querySelector("[data-cp28add]").onclick=()=>{rows.push({name:"",nameZh:"",inn:"",role:CP28_ROLES[0]});sync();paint();const last=box.querySelectorAll('.cp28r input[data-f="name"]');if(last.length)last[last.length-1].focus();};};
+    paint();sync();}
+};
+/* окна портала: поле «Другая сторона» — строками */
+{const _askCp28=Dlg.ask.bind(Dlg);Dlg.ask=function(o){const p=_askCp28.apply(this,arguments);try{if((o&&o.fields||[]).some(x=>x&&x.k==="counterparties"))setTimeout(()=>CP28.enhance(),0);}catch(e){}return p;};}
+/* разбор сторон — с учётом названий, разорванных переносом строки */
+if(typeof Conflict17!=="undefined"){Conflict17.parse=function(txt){return CP28.parse(txt);};}
+/* дело, где сервер склеил стороны: проверка конфликта ещё раз — при открытии ведущим или УП */
+const _pmCp28=Pages.matter;Pages.matter=function(id){const h=_pmCp28.apply(this,arguments);const m=S.matters[id];
+  try{if(m&&m.conflict&&m.conflict.recheck&&typeof Conflict17!=="undefined"&&!CP28._busy){const me=(U()||{}).emp;const can=isFounder()||hasF("managing")||(m.lead&&m.lead===me);
+    if(can){CP28._busy=true;setTimeout(async()=>{try{const c=Object.assign({},m.conflict);delete m.conflict.recheck;await Conflict17.run(m);if(m.conflict)delete m.conflict.recheck;await saveDoc("matters",m);if(Router.cur==="matter"&&Router.arg===id)Router.render();}catch(e){}finally{CP28._busy=false;}},0);}}}catch(e){}
+  return h;};
+/* ── ОШ-0001: «Проверить» уведомления ── */
+const Push28={
+  async local(){try{if(!("Notification" in window))return "none";if(Notification.permission==="denied")return "denied";if(Notification.permission!=="granted")return "default";
+      const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();const title="ZHONG CHENG · 众诚";const opt={body:T1(UI.ps28Title),tag:"zc-local-test",icon:"icons/icon-192.png?v=2"};
+      if(reg&&reg.showNotification)await reg.showNotification(title,opt);else new Notification(title,opt);return "shown";}catch(e){return "error";}},
+  async status(){try{const r=await SB19.T.rpc("push_status");return Array.isArray(r)?r[0]:r;}catch(e){return null;}},
+  async test(){const loc=await this.local();const lines=[];
+    lines.push(loc==="denied"?T1(UI.ps28Blocked):T1(UI.ps28Local));
+    let n=0;try{n=+(await SB19.T.rpc("push_test"))||0;}catch(e){toast(Acc20.msg(e));return;}
+    const st0=await this.status();if(st0&&!st0.devices){Dlg.ask({title:T1(UI.ps28Title),text:lines.concat([T1(UI.ps28NoDev)]).join("\n\n"),fields:[],okText:"ОК||确定"});return;}
+    toast(T1(UI.ps28Wait));let last=null;
+    for(let i=0;i<12;i++){await new Promise(r=>setTimeout(r,5000));const st=await this.status();last=st&&(st.last||[]).find(x=>x.test);if(last&&last.status!=="pending"&&last.status!=="sending")break;}
+    if(!last||last.status==="pending"||last.status==="sending")lines.push(T1(UI.ps28Queue));
+    else if(last.status==="sent")lines.push(T1(UI.ps28Sent).replace("{n}",String((await this.status()||{}).devices||1)).replace("{t}",String(last.sentAt||"").slice(11,16)));
+    else lines.push(T1(UI.ps28Fail).replace("{e}",String(last.error||"—").slice(0,160)));
+    Dlg.ask({title:T1(UI.ps28Title),text:lines.join("\n\n"),fields:[],okText:"ОК||确定"});}
+};
+if(typeof Push21!=="undefined"&&typeof Push21.bind==="function"){const _pbCp28=Push21.bind.bind(Push21);Push21.bind=function(){const r=_pbCp28.apply(this,arguments);const b=document.getElementById("pw21Test");if(b)b.onclick=()=>Push28.test();return r;};}
+(function(){const st=document.createElement("style");st.textContent=`
+.cp28{display:grid;gap:8px}.cp28r{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:6px;align-items:center;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.cp28r input{min-width:0;width:100%;box-sizing:border-box}.cp28r input[data-f="name"]{grid-column:1/4;grid-row:1}.cp28r .cp28x{grid-column:4;grid-row:1}
+.cp28r input[data-f="inn"]{grid-column:1;grid-row:2}.cp28r input[data-f="role"]{grid-column:2;grid-row:2}.cp28r input[data-f="nameZh"]{grid-column:3;grid-row:2}
+.cp28x{border:0;background:transparent;color:var(--ink-3);cursor:pointer;font-size:14px;padding:4px 6px}
+.cp28 [data-cp28add]{justify-self:start}
+@media (max-width:560px){.cp28r input[data-f="inn"]{grid-column:1/2}.cp28r input[data-f="role"]{grid-column:2/4}.cp28r input[data-f="nameZh"]{grid-column:1/4;grid-row:3}}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
