@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="f392eb0e4e8d";
+const ZC_BUILD="58407890fce9";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10370,7 +10370,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="1.4";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="1.5";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -11851,7 +11851,7 @@ const _pbindCli21=Pages.bind;Pages.bind=function(vp){_pbindCli21.call(this,vp);
    Только данные: руководство по ролям и «Что нового» (строки «русский||中文»). Отсюда же собирается текст для ИИ-ассистента
    (backend/supabase/functions/assistant/index.ts — скрипт backend/tools/build-assistant.mjs). После правки текста — пересобрать функцию. */
 const HELP21={
- ver:"1.4.2",
+ ver:"1.5",
  roles:{
   advocate:[
    {id:"login",t:"Вход и работа с окнами||登录与窗口操作",b:[
@@ -11949,6 +11949,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v15back",d:"2026-10-21",t:"Версия 1.5: кнопка «Назад»||1.5版：“返回”按钮",b:["Стрелка «←» рядом со значком меню возвращает на одну страницу назад — туда, откуда вы пришли (главная → раздел → дело и обратно). На первой странице после входа она серая. Вкладки карточки дела шагами не считаются: дело открывается на той же вкладке.||菜单图标旁的“←”箭头可返回上一页——即您来时的页面（首页 → 栏目 → 案件，反之亦然）。登录后的第一页上该按钮为灰色。案件卡片的标签页不算作步骤：案件会在原标签页打开。"]},
 {id:"v14osh",d:"2026-10-20",t:"Версия 1.4: исправления по сообщениям об ошибках||1.4版：根据错误报告的修复",b:["«Другая сторона»: каждая сторона — отдельной строкой с ИНН и ролью, «+ ещё сторона» — для нескольких ответчиков; перенос строки в названии больше не делит сторону надвое. Старые дела исправлены, конфликт интересов в них проверяется заново.||“对方当事人”：每一方单独一行，含税号和角色；“+ 再加一方”可添加多个被告；名称中的换行不再把一方拆成两方。旧案件已修正，并重新检查利益冲突。","Уведомления: «Проверить» сначала показывает уведомление прямо на этом устройстве, затем сообщает, что стало с проверкой на сервере — доставлена, в очереди или ошибка с её текстом.||通知：“测试”先在本设备上直接显示通知，然后告知服务器上的测试结果——已送达、排队中或错误及其内容。"]},
 {id:"v14law",d:"2026-10-20",t:"Версия 1.4: роль «Юрист»||1.4版：“法务”角色",b:["Новая роль «Юрист»: как адвокат, без судебных дел, работает в ООО. В деле, переведённом в суд, — пометка с номером судебного дела.||新增“法务”角色：与律师相同，不处理诉讼案件，属于有限公司。已移交法院的案件中显示诉讼案件编号。"]},
   {id:"v11s2",d:"2026-10-14",t:"Версия 1.1: узбекский интерфейс||1.1版：乌兹别克语界面",b:["Третья кнопка языка «Oʻz»: портал на узбекском (латиница). Язык сохраняется в учётке — уведомления приходят на нём, в том числе в Telegram; ИИ-ассистент и ИИ-переводчик учитывают узбекский. Имена сотрудников — латиницей.||新增第三个语言按钮“Oʻz”：门户支持乌兹别克语（拉丁字母）。语言保存在账号中——通知（包括Telegram）以该语言发送；AI助手和AI翻译支持乌兹别克语。员工姓名以拉丁字母显示。"]},
@@ -17098,6 +17099,55 @@ if(typeof Push21!=="undefined"&&typeof Push21.bind==="function"){const _pbCp28=P
 .cp28x{border:0;background:transparent;color:var(--ink-3);cursor:pointer;font-size:14px;padding:4px 6px}
 .cp28 [data-cp28add]{justify-self:start}
 @media (max-width:560px){.cp28r input[data-f="inn"]{grid-column:1/2}.cp28r input[data-f="role"]{grid-column:2/4}.cp28r input[data-f="nameZh"]{grid-column:1/4;grid-row:3}}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.5 · КНОПКА «НАЗАД» В ШАПКЕ (решение владельца 21.10.2026) ═══════════════════════════
+   Стрелка «←» сразу справа от значка меню: одно нажатие — одна страница назад (главная → блок → раздел → дело и обратно).
+   Шаги — это переходы между страницами, которые портал и так пишет в историю браузера (Route17.write, версия 17):
+   кнопка делает то же, что «Назад» браузера, Alt+← или боковая кнопка мыши, — нужна прежде всего в установленном
+   приложении (PWA), где у окна нет кнопок браузера. Вкладки карточки дела, фильтры и окна шагами не считаются
+   (карточка и так помнит открытую вкладку — Card22.tab).
+   На первой странице после входа кнопка видна, но серая: из портала (на страницу входа, на чужой сайт или к прошлому
+   пользователю этого браузера) она не выводит. Номер шага хранится в history.state.zc29, первая страница входа —
+   в sessionStorage (чтобы после обновления страницы кнопка помнила, откуда начался вход).
+   Только интерфейс: сервер, права и переходы не меняются — открывается лишь то, что Route17.check и так разрешает. */
+Object.assign(UI,{bk29:"Назад||返回"});
+window.UZ21=Object.assign(window.UZ21||{},{"Назад":"Orqaga","Версия 1.5: кнопка «Назад»":"1.5-versiya: «Orqaga» tugmasi",
+  "Стрелка «←» рядом со значком меню возвращает на одну страницу назад — туда, откуда вы пришли (главная → раздел → дело и обратно). На первой странице после входа она серая. Вкладки карточки дела шагами не считаются: дело открывается на той же вкладке.":"Menyu belgisi yonidagi «←» strelkasi bir sahifa orqaga — siz kelgan joyga qaytaradi (bosh sahifa → boʻlim → ish va aksincha). Kirishdan keyingi birinchi sahifada u kulrang. Ish kartochkasidagi yorliqlar qadam hisoblanmaydi: ish oʻsha yorliqda ochiladi."});
+const Back29={
+  key:"zc_back29",user:null,base:0,swap:false,
+  idx(){const s=history.state;return s&&typeof s.zc29==="number"?s.zc29:0;},
+  who(){try{const u=U();return u?(u.login||u.id||"?"):null;}catch(e){return null;}},
+  /* сменился пользователь (вход) — текущая страница становится первой; после F5 — берётся из sessionStorage */
+  sync(){const w=this.who();if(!w){this.user=null;return;}
+    if(w!==this.user){this.user=w;let b=null;try{const s=JSON.parse(sessionStorage.getItem(this.key)||"null");if(s&&s.u===w&&typeof s.b==="number"&&s.b<=this.idx())b=s.b;}catch(e){}
+      this.base=b!=null?b:this.idx();try{sessionStorage.setItem(this.key,JSON.stringify({u:w,b:this.base}));}catch(e){}}},
+  can(){return !!this.who()&&this.idx()>this.base;},
+  paint(){this.sync();const b=document.getElementById("bk29");if(!b)return;const on=this.can();b.disabled=!on;b.setAttribute("aria-disabled",String(!on));},
+  ensure(){const top=document.querySelector(".app>.top");if(!top)return;top.classList.add("bk29top");let b=document.getElementById("bk29");
+    if(!b){b=document.createElement("button");b.type="button";b.className="ib hb21 bk29";b.id="bk29";
+      b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+      b.onclick=e=>{e.stopPropagation();if(Back29.can())history.back();};}
+    const t=T1(UI.bk29);b.title=t;b.setAttribute("aria-label",t);
+    const tg=document.getElementById("sideTg21");if(tg&&tg.parentNode===top){if(tg.nextSibling!==b)tg.after(b);}else if(top.firstChild!==b)top.prepend(b);
+    this.paint();},
+  clear(){this.user=null;this.base=0;try{sessionStorage.removeItem(this.key);}catch(e){}}
+};
+/* номер шага в истории: новая страница = предыдущий + 1; замена страницы номер сохраняет; выход (null) — как есть */
+{const _push29=history.pushState.bind(history),_repl29=history.replaceState.bind(history);
+  history.pushState=function(s,t,u){if(Back29.swap){Back29.swap=false;return history.replaceState(s,t,u);}const n=Back29.idx()+1;const st=(s&&typeof s==="object")?Object.assign({},s,{zc29:n}):{zc29:n};const r=_push29(st,t,u);try{Back29.paint();}catch(e){}return r;};
+  history.replaceState=function(s,t,u){const st=(s&&typeof s==="object"&&typeof s.zc29!=="number")?Object.assign({},s,{zc29:Back29.idx()}):s;const r=_repl29(st,t,u);try{Back29.paint();}catch(e){}return r;};}
+window.addEventListener("popstate",()=>{try{Back29.paint();}catch(e){}});
+const _side29=renderSide;renderSide=function(){const r=_side29.apply(this,arguments);try{Back29.ensure();}catch(e){}return r;};
+const _go29=Router.go.bind(Router);Router.go=function(){const r=_go29.apply(this,arguments);try{Back29.ensure();}catch(e){}return r;};
+/* обновление страницы (F5) тем же входом: портал сначала ставит главную на место текущей страницы, затем снова открывает
+   страницу из адреса — она заменяет запись, а не добавляет шаг (иначе «Назад» вёл бы на главную дважды) */
+const _hide29=hideLogin;hideLogin=function(){let same=false;try{const s=JSON.parse(sessionStorage.getItem(Back29.key)||"null");same=!!(s&&s.u===Back29.who());}catch(e){}
+  Back29.swap=same;try{return _hide29.apply(this,arguments);}finally{Back29.swap=false;}};
+const _login29=showLogin;showLogin=function(){Back29.clear();return _login29.apply(this,arguments);};
+(function(){const st=document.createElement("style");st.textContent=`
+.ib.hb21.bk29{margin-left:0}
+.ib.hb21.bk29:disabled{opacity:.35;cursor:default;background:transparent;color:var(--ink-2)}
+@media (max-width:700px){.app>.top.bk29top{gap:3px}.ib.hb21.bk29{display:inline-flex;align-items:center;justify-content:center;width:28px;margin-left:-8px}}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
