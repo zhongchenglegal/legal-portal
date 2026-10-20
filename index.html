@@ -6625,7 +6625,7 @@ const chartMembers9=u=>mode==="now"?u.members.filter(m=>!m.vac&&!isDemoM(m)):u.m
 const unplacedNow9=key=>{if(mode!=="now"||(key!=="legal"&&key!=="llc")||typeof Staff21==="undefined")return [];
   return [...new Set(Staff21.added||[])].map(id=>ALL[id]).filter(m=>m&&!m.vac&&!m.members&&!isDemoM(m)&&!UNITS.some(u=>u.members.includes(m))&&(key==="llc"?m.ent==="ooo":m.ent!=="ooo"));};
 const roleNow9=m=>{if(mode!=="now")return m.role;const a=typeof accByEmp==="function"?accByEmp(m.id):null;if(!a)return m.role;
-  return typeof Adv21!=="undefined"&&Adv21.kind(a)==="mp"?"Управляющий адвокат||管理律师":"Адвокат||律师";};
+  return typeof Adv21!=="undefined"&&Adv21.kind(a)==="mp"?"Управляющий адвокат||管理律师":typeof Adv21!=="undefined"&&Adv21.kind(a)==="lawyer"?"Юрист||法务":"Адвокат||律师";};
 const isAs9=m=>m.type==="jur"&&/помощник|assistant|助理/i.test(T1(m.name)+" "+T1(m.role));
 const plRu=(n,f)=>{const a=Math.abs(n)%100,b=a%10;return f[a>10&&a<20?2:b===1?0:b>1&&b<5?1:2];};
 const cntLbl=(n,kind)=>lang==="zh"?(kind==="pos"?`${n} 个岗位`:`${n} 人`):lang==="uz"?`${n} ${kind==="pos"?"lavozim":"kishi"}`:`${n} ${kind==="pos"?plRu(n,["позиция","позиции","позиций"]):"чел."}`;
@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="7485dc7eef7c";
+const ZC_BUILD="89da3ac81f56";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10519,7 +10519,7 @@ if(typeof Acc20!=="undefined"){const _newStaff21=Acc20.newStaff.bind(Acc20);Acc2
     {k:"name",label:T1(UI.nsName21),required:true},{k:"nameZh",label:T1(UI.nsNameZh21)},
     {k:"slot",label:T1("Позиция в «Структуре» (кому подчиняется)||架构职位（上级）"),type:"select",value:"",options:[["",T1("— без позиции —||— 无职位 —")],...(typeof Slot21!=="undefined"?Slot21.free():[])]},
     {k:"unit",label:T1(UI.nsUnit21),type:"select",value:"",options:[["","—"],...units.map(u=>[u.id,T1((u.nameRu||u.id)+"||"+(u.nameZh||u.nameRu||u.id))])]},
-    {k:"access",label:T1(UI.nsAccess21),type:"select",value:"advocate",options:[["advocate",T1("Адвокат||律师")],["mp",T1("Управляющий адвокат||管理律师")]]},
+    {k:"access",label:T1(UI.nsAccess21),type:"select",value:"advocate",options:[["advocate",T1("Адвокат||律师")],["lawyer",T1("Юрист||法务")],["mp",T1("Управляющий адвокат||管理律师")]],hint:T1("Юрист — как адвокат, без судебных дел; работает в ООО||法务——与律师相同，但不处理诉讼案件；属于有限公司")},
     {k:"login",label:T1(UI.aLogin),required:true,hint:T1("латиница, цифры, точка||拉丁字母、数字、点")},
     {k:"pw",label:T1(UI.lgP),value:genPw(),required:true,check:x=>Acc20.pwCheck(x.pw,x.login)}]});
   if(!v)return;const login=String(v.login).trim().toLowerCase();
@@ -11851,7 +11851,7 @@ const _pbindCli21=Pages.bind;Pages.bind=function(vp){_pbindCli21.call(this,vp);
    Только данные: руководство по ролям и «Что нового» (строки «русский||中文»). Отсюда же собирается текст для ИИ-ассистента
    (backend/supabase/functions/assistant/index.ts — скрипт backend/tools/build-assistant.mjs). После правки текста — пересобрать функцию. */
 const HELP21={
- ver:"1.1.2",
+ ver:"1.4.1",
  roles:{
   advocate:[
    {id:"login",t:"Вход и работа с окнами||登录与窗口操作",b:[
@@ -11920,7 +11920,8 @@ const HELP21={
   ],
   mp:[
    {id:"acc",t:"Учётки и доступы||账号与权限",b:[
-    "«Управление» → «Доступы и журнал» → вкладка «Доступы» → «+ Создать аккаунт»: логин, ФИО, должность, подразделение и роль доступа: «Управляющий адвокат» или «Адвокат». Пароль — без символов l, I, O, 0, 1.||“管理”→“权限与日志”→“账号权限”标签→“+ 创建账号”：登录名、姓名、职位、部门及权限角色：“管理合伙人”或“律师”。密码中不要使用l、I、O、0、1。",
+    "«Управление» → «Доступы и журнал» → вкладка «Доступы» → «+ Создать аккаунт»: логин, ФИО, должность, подразделение и роль доступа: «Управляющий адвокат», «Адвокат» или «Юрист». Пароль — без символов l, I, O, 0, 1.||“管理”→“权限与日志”→“账号权限”标签→“+ 创建账号”：登录名、姓名、职位、部门及权限角色：“管理合伙人”或“律师”。密码中不要使用l、I、O、0、1。",
+    "«Юрист» — всё как у адвоката, но без судебных дел: раздела «Судебные дела» у него нет, в судебное дело его не поставить. Юрист работает в ООО: в дела адвокатской фирмы его не добавить. Ставка — как у адвоката. Если его дело перевели в суд, в деле видна пометка «Дело переведено в суд» с номером судебного дела.||“法务”——与律师相同，但不处理诉讼案件：没有“诉讼案件”栏目，不能被加入诉讼案件。法务属于有限公司：不能被加入律师事务所的案件。费率与律师相同。如其案件已移交法院，案件中会显示“案件已移交法院”及诉讼案件编号。",
     "«Изменить доступ» меняет роль. Матрица прав показывает, какие разделы видит каждая роль.||“修改权限”可更改角色。权限矩阵显示各角色可见的栏目。",
     "Адвокат видит только свои дела (где он участник), их клиентов, корреспонденцию и свои финансы.||律师只能看到自己参与的案件、其客户、函件及本人财务。"]},
    {id:"cal",t:"Календарь||日历",b:[
@@ -11948,6 +11949,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v14law",d:"2026-10-20",t:"Версия 1.4: роль «Юрист»||1.4版：“法务”角色",b:["Новая роль «Юрист»: как адвокат, без судебных дел, работает в ООО. В деле, переведённом в суд, — пометка с номером судебного дела.||新增“法务”角色：与律师相同，不处理诉讼案件，属于有限公司。已移交法院的案件中显示诉讼案件编号。"]},
   {id:"v11s2",d:"2026-10-14",t:"Версия 1.1: узбекский интерфейс||1.1版：乌兹别克语界面",b:["Третья кнопка языка «Oʻz»: портал на узбекском (латиница). Язык сохраняется в учётке — уведомления приходят на нём, в том числе в Telegram; ИИ-ассистент и ИИ-переводчик учитывают узбекский. Имена сотрудников — латиницей.||新增第三个语言按钮“Oʻz”：门户支持乌兹别克语（拉丁字母）。语言保存在账号中——通知（包括Telegram）以该语言发送；AI助手和AI翻译支持乌兹别克语。员工姓名以拉丁字母显示。"]},
   {id:"v11s1",d:"2026-10-13",t:"Версия 1.1: ИИ-переводчик||1.1版：AI翻译",b:["Кнопка переводчика в правом нижнем углу: русский и узбекский ↔ китайский, вставили — перевелось, режимы «Авто», «Быстрый», «Точный».||右下角翻译按钮：俄语、乌兹别克语↔中文，粘贴即译，提供“自动”“快速”“精确”模式。"]},
   {id:"s7",d:"2026-10-12",t:"Раздел «Помощь» и ИИ-ассистент||“帮助”栏目与AI助手",b:["Руководство по ролям на русском и китайском, «Что нового», ИИ-ассистент (до 30 вопросов в день), журнал вопросов для управляющего адвоката.||按角色的中俄文使用指南、“更新内容”、AI助手（每天最多30个问题）、管理合伙人可查看提问记录。"]},
@@ -16933,6 +16935,86 @@ if(typeof Card22!=="undefined"){
 .kv3{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px;margin:0}.kv3 dt{color:var(--ink-3)}.kv3 dd{margin:0}
 .ac3{display:grid;gap:6px}.hi3{list-style:none;margin:0;padding:0;font-size:12px}.hi3 li{padding:4px 0;border-bottom:1px dashed var(--line)}.hi3 li span{color:var(--ink-3);margin-right:6px}`;
   (document.head||document.documentElement).appendChild(st);}
+
+/* ═══════════════════════════ версия 1.4 · РОЛЬ «ЮРИСТ» (решение владельца 20.10.2026) ═══════════════════════════
+   Всё как у адвоката (те же правила «только своё», оплата — как у адвоката, 35 %), кроме судебных дел:
+   • нет пунктов «Судебные дела», «Судебный контроль», отчётов суда; прямой переход туда — на главную;
+   • в архиве нет вкладки «Судебные», при создании дела нельзя выбрать вид «Судебное дело», нет кнопки «Передать в суд»;
+   • лицензии адвоката нет (licensedOf) — в выборе ведущего судебного дела юриста нет;
+   • юрист работает в ООО (сервер ставит организацию учётки — ООО и не пускает его в дела адвокатской фирмы).
+   Главное правило — на сервере (миграция 20261020000300_lawyer_role.sql): судебные дела юристу не отдаются вовсе,
+   в судебное дело и в дело адвокатской фирмы его не поставить.
+   Перевод дела в суд: в исходном деле — пометка «Дело переведено в суд: <номер> от <даты>» (data.courtTransfer — ставит сервер);
+   юрист видит номер, но не само судебное дело; остальным номер открывает судебное дело.
+   Роль хранится в учётке: data.access = "lawyer" (создание учётки и «Изменить доступ»). */
+Object.assign(UI,{acc21Law:"Юрист||法务",law27Court:"Дело переведено в суд||案件已移交法院",law27CourtNo:"Судебное дело {no} от {d}||诉讼案件 {no}（{d}）",
+  law27NoCourt:"Юрист не участвует в судебных делах — это делает управляющий адвокат или адвокат||法务不参与诉讼案件——由管理律师或律师处理",
+  law27Hidden:"Судебное дело ведёт адвокат — юристу оно не доступно||诉讼案件由律师处理——法务无权查看",law27Open:"Открыть судебное дело||打开诉讼案件"});
+window.UZ21=Object.assign(window.UZ21||{},{"Юрист":"Yurist","Дело переведено в суд":"Ish sudga oʻtkazildi","Судебное дело {no} от {d}":"Sud ishi {no}, {d}",
+  "Юрист не участвует в судебных делах — это делает управляющий адвокат или адвокат":"Yurist sud ishlarida ishtirok etmaydi — buni boshqaruvchi advokat yoki advokat bajaradi",
+  "Судебное дело ведёт адвокат — юристу оно не доступно":"Sud ishini advokat olib boradi — yurist uchun u ochiq emas","Открыть судебное дело":"Sud ishini ochish","Юрист — как адвокат, без судебных дел; работает в ООО":"Yurist — advokat kabi, sud ishlarisiz; MChJda ishlaydi"});
+const LAW27_COURT=["court","courtctl","courtrep"];
+/* роль учётки: УП (функции) → юрист (data.access) → адвокат */
+Adv21.kind=function(a){a=a||{};if((a.funcs||[]).some(f=>f==="founder"||f==="managing"))return "mp";return a.access==="lawyer"?"lawyer":"advocate";};
+Adv21.label=function(k){return T1(k==="mp"?UI.acc21Mp:k==="lawyer"?UI.acc21Law:UI.acc21Adv);};
+Adv21.on=function(){const u=U();if(!u||isClient())return false;const k=this.kind(S.accounts[u.login]||u);return k==="advocate"||k==="lawyer";};
+Adv21.isAdvEmp=function(e){const a=accByEmp(e);if(!a)return false;const k=this.kind(a);return k==="advocate"||k==="lawyer";};
+const Law27={
+  on(){const u=U();return !!u&&!isClient()&&Adv21.kind(S.accounts[u.login]||u)==="lawyer";},
+  isLawEmp(e){const a=typeof accByEmp==="function"?accByEmp(e):null;return !!a&&Adv21.kind(a)==="lawyer";}
+};
+/* лицензии адвоката у юриста нет (как zc.licensed_of): ведущим судебного дела его не выбрать */
+const _licLaw27=licensedOf;licensedOf=function(e){if(Law27.isLawEmp(e))return false;return _licLaw27.apply(this,arguments);};
+/* меню и переходы */
+const _navLaw27=navFor;navFor=function(){const g=_navLaw27.apply(this,arguments);if(!Law27.on())return g;
+  return g.map(([t,items])=>[t,(items||[]).filter(it=>!LAW27_COURT.includes(it&&it[0]))]);};
+if(typeof Route17!=="undefined"){const _nkLaw27=Route17.navKeys.bind(Route17);Route17.navKeys=function(){const s=_nkLaw27();if(Law27.on())LAW27_COURT.forEach(k=>s.delete(k));return s;};}
+const _goLaw27=Router.go.bind(Router);Router.go=function(r,arg){if(Law27.on()&&LAW27_COURT.includes(r)){r="home";arg=null;}
+  if(Law27.on()&&r==="matter"&&arg&&S.matters[arg]&&S.matters[arg].svc==="court"){toast(T1(UI.law27Hidden));r="home";arg=null;}return _goLaw27(r,arg);};
+/* архив: без вкладки «Судебные» */
+const _arLaw27=Pages.archive;Pages.archive=function(){if(Law27.on()&&this._ar&&this._ar.tab==="court")this._ar.tab="oneoff";const h=_arLaw27.apply(this,arguments);
+  return Law27.on()?h.replace(/<button class="[^"]*" data-artab="court">[\s\S]*?<\/button>/,""):h;};
+/* новое дело: вида «Судебное дело» нет */
+const _mfLaw27=Matter.fields;Matter.fields=function(){const f=_mfLaw27.apply(this,arguments);if(!Law27.on())return f;
+  (f||[]).forEach(x=>{if(x&&x.k==="svc"&&Array.isArray(x.options))x.options=x.options.filter(o=>o[0]!=="court");});return f;};
+/* «Передать в суд» — не для юриста */
+if(typeof toCourt11==="function"){const _tcLaw27=toCourt11;toCourt11=async function(){if(Law27.on()){toast(T1(UI.law27NoCourt));return;}return _tcLaw27.apply(this,arguments);};}
+/* карточка дела: пометка о переводе в суд; у юриста нет кнопки «Передать в суд» */
+const _pmLaw27=Pages.matter;Pages.matter=function(id){let h=_pmLaw27.apply(this,arguments);const m=S.matters[id];if(!m)return h;
+  if(Law27.on())h=h.replace(/<button class="btn sm" data-act="toCourt">[\s\S]*?<\/button>/,"");
+  const t=m.courtTransfer;if(!t||!t.no)return h;const law=Law27.on(),can=!law&&t.id&&S.matters[t.id];
+  const bar=`<div class="law27bar" role="status"><b>⚖ ${T1(UI.law27Court)}</b><span>${esc(T1(UI.law27CourtNo).replace("{no}",t.no).replace("{d}",t.at?fmtD(t.at):"—"))}</span>${can?`<button class="btn sm" data-matter="${esc(t.id)}">${T1(UI.law27Open)}</button>`:law?`<small>${T1(UI.law27Hidden)}</small>`:""}</div>`;
+  let i=h.indexOf('<div class="c22tw">');if(i<0)i=h.indexOf('<div class="card');return i>=0?h.slice(0,i)+bar+h.slice(i):bar+h;};
+/* «Изменить доступ»: Адвокат / Юрист / Управляющий адвокат */
+if(typeof Acc20!=="undefined"){
+  Acc20.setAccess=async function(login){const a=S.accounts[login];if(!a)return;const cur=Adv21.kind(a),self=login===U().login&&cur==="mp";
+    const v=await Dlg.ask({title:T1(UI.acc21Change)+" · "+login,text:esc(a.name||"")+(self?" · "+T1(UI.acc21Self):""),fields:[
+      ...(self?[]:[{k:"access",label:T1(UI.acc21Access),type:"select",value:cur,options:[["advocate",T1(UI.acc21Adv)],["lawyer",T1(UI.acc21Law)],["mp",T1(UI.acc21Mp)]]}])]});if(!v)return;
+    const acc=self?cur:v.access;if(acc===cur)return;
+    const patch={data:{access:acc==="mp"?"advocate":acc}};
+    patch.funcs=acc==="mp"?[...new Set([...(a.funcs||[]).filter(f=>f!=="founder"),"managing"])]:(a.funcs||[]).filter(f=>f!=="managing"&&f!=="founder");
+    try{await this.rpc("admin_update_account",{target:login,patch});}catch(e){toast(this.msg(e));return;}
+    audit(`Доступ ${login}: ${Adv21.label(acc)}`);await this.reload();toast(T1(UI.saved));Cabinet.render&&Cabinet.render();};
+}
+/* «Матрица прав»: строка «Юрист» — как адвокат, без «Судебных дел» */
+const _rightsLaw27=Cabinet.rights.bind(Cabinet);Cabinet.rights=function(){const h=_rightsLaw27.apply(this,arguments);if(typeof MX21_COLS==="undefined")return h;
+  const f=k=>k==="court"?0:(MX21_ADV[k]||0);
+  const row=`<tr><td><b>${T1(UI.acc21Law)}</b></td>${MX21_COLS.map(([k])=>{const x=f(k);return `<td class="${x===1?"y":x===2||x===3?"p":"n"}">${x===1?"✓":x===2?"◐":x===3?"👁":"—"}</td>`;}).join("")}</tr>`;
+  const i=h.lastIndexOf("</tbody>");return i>=0?h.slice(0,i)+row+h.slice(i):h;};
+(function(){const st=document.createElement("style");st.textContent=`
+.law27bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 14px;margin:0 0 14px;border-radius:10px;background:var(--warn-soft,var(--line-2));color:var(--ink)}
+.law27bar small{color:var(--ink-3)}.law27bar .btn{margin-left:auto}`;document.head.appendChild(st);})();
+/* роль приходит с сервера после входа (список учёток загружается позже первой отрисовки):
+   как только стало известно, что вошёл юрист (или роль сменилась), меню, шапка и страница перерисовываются */
+Law27._st=null;Law27.sync=function(){const now=this.on();if(now===this._st)return;this._st=now;try{renderSide();Router.render();}catch(e){}};
+if(typeof SB19!=="undefined"){
+  const _stLaw27=SB19.start.bind(SB19);SB19.start=async function(){const r=await _stLaw27.apply(this,arguments);Law27._st=null;setTimeout(()=>Law27.sync(),0);return r;};
+  if(typeof SB19.colSub==="function"){const _csLaw27=SB19.colSub.bind(SB19);SB19.colSub=function(n,cb,err){if(n!=="accounts")return _csLaw27(n,cb,err);
+    return _csLaw27(n,function(){const r=cb.apply(this,arguments);setTimeout(()=>Law27.sync(),0);return r;},err);};}
+  const _rsLaw27=renderSide;renderSide=function(){Law27._st=Law27.on();return _rsLaw27.apply(this,arguments);};
+}
+/* «Помощь»: узбекские переводы строк о роли «Юрист» */
+window.UZ21=Object.assign(window.UZ21||{},{"роль доступа: «Управляющий адвокат», «Адвокат» или «Юрист».":"kirish roli: «Boshqaruvchi advokat», «Advokat» yoki «Yurist».","«Юрист» — всё как у адвоката, но без судебных дел: раздела «Судебные дела» у него нет, в судебное дело его не поставить. Юрист работает в ООО: в дела адвокатской фирмы его не добавить. Ставка — как у адвоката. Если его дело перевели в суд, в деле видна пометка «Дело переведено в суд» с номером судебного дела.":"«Yurist» — hammasi advokatdagidek, lekin sud ishlarisiz: unda «Sud ishlari» boʻlimi yoʻq, uni sud ishiga qoʻshib boʻlmaydi. Yurist MChJda ishlaydi: advokatlik firmasi ishlariga uni qoʻshib boʻlmaydi. Stavka — advokatdagidek. Agar uning ishi sudga oʻtkazilgan boʻlsa, ishda sud ishi raqami bilan «Ish sudga oʻtkazildi» belgisi koʻrinadi.","Версия 1.4: роль «Юрист»":"1.4-versiya: «Yurist» roli","Новая роль «Юрист»: как адвокат, без судебных дел, работает в ООО. В деле, переведённом в суд, — пометка с номером судебного дела.":"Yangi «Yurist» roli: advokat kabi, sud ishlarisiz, MChJda ishlaydi. Sudga oʻtkazilgan ishda — sud ishi raqami bilan belgi.","«Управление» → «Доступы и журнал» → вкладка «Доступы» → «+ Создать аккаунт»: логин, ФИО, должность, подразделение и роль доступа: «Управляющий адвокат», «Адвокат» или «Юрист». Пароль — без символов l, I, O, 0, 1.":"«Boshqaruv» → «Ruxsatlar va jurnal» → «Ruxsatlar» varagʻi → «+ Hisob yaratish»: login, F.I.Sh., lavozim, boʻlim va ruxsat roli: «Boshqaruvchi advokat», «Advokat» yoki «Yurist». Parol — l, I, O, 0, 1 belgilarisiz."});
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
