@@ -10287,7 +10287,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="58407890fce9";
+const ZC_BUILD="55e551dbd21d";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11851,7 +11851,7 @@ const _pbindCli21=Pages.bind;Pages.bind=function(vp){_pbindCli21.call(this,vp);
    Только данные: руководство по ролям и «Что нового» (строки «русский||中文»). Отсюда же собирается текст для ИИ-ассистента
    (backend/supabase/functions/assistant/index.ts — скрипт backend/tools/build-assistant.mjs). После правки текста — пересобрать функцию. */
 const HELP21={
- ver:"1.5",
+ ver:"1.5.1",
  roles:{
   advocate:[
    {id:"login",t:"Вход и работа с окнами||登录与窗口操作",b:[
@@ -11863,6 +11863,8 @@ const HELP21={
    {id:"home",t:"Главная и «План на день»||首页与“今日计划”",b:[
     "На главной — «План на день»: ваши события, дедлайны дел, задания сопровождения, задачи и поручения на выбранный день.||首页显示“今日计划”：所选日期的事件、案件截止日、顾问任务、任务与指派事项。",
     "«+ Событие» добавляет встречу, заседание или звонок в ваш план. Дедлайны дел попадают в план сами.||“+ 事件”可将会议、庭审或电话加入计划。案件截止日自动显示。",
+    "Заметки — под календарём «Плана на день»: напишите текст и нажмите Enter (начните со времени — «15:00 позвонить в банк» — время подставится само). Скрепка прикрепляет файл, микрофон записывает голосовое. Квадратик — «сделано». Невыполненное за прошлые дни само переходит на сегодня с красной пометкой «с 17.10».||备忘位于“今日计划”日历下方：输入内容后按回车（以时间开头——“15:00 给银行打电话”——会自动填入时间）。回形针附加文件，麦克风录制语音。方框表示“已完成”。过去未完成的备忘会自动移到今天，并带红色标记“自 17.10”。",
+    "Нажмите на заметку — откроется окно: день, время, «Напомнить» (если указано время: в указанное время, за 15 минут, за час, за день — push и Telegram), «Кому» (поставить коллеге — ему придёт уведомление), дело, файлы и голосовые, комментарии. Заметку видите только вы; если поставили коллеге — вы и он. Менять и удалять её может только автор; коллега отмечает «сделано», прикрепляет файлы и пишет комментарии.||点击备忘打开窗口：日期、时间、“提醒”（填写时间后：到点、提前15分钟、1小时、1天——推送和Telegram）、“给谁”（给同事——对方会收到通知）、案件、文件和语音、评论。备忘仅您可见；给了同事则您和对方可见。只有作者可修改和删除；同事可标记完成、附加文件和评论。",
     "Вверху справа три кнопки: «Поручения», «Сообщения», «События» (уведомления). Число на кнопке — непрочитанное.||右上角有三个按钮：“指派”“消息”“事件”（通知）。按钮上的数字为未读数量。"]},
    {id:"newmatter",t:"Новое дело и клиент||新建案件与客户",b:[
     "«+ Дело» в разделе услуги. Клиент: «свой» (из ваших дел), «найти» (по точному названию или ИНН среди клиентов фирмы) или «новый».||在服务栏目点击“+ 案件”。客户可选“我的客户”“查找”（按准确名称或税号在全所客户中查找）或“新客户”。",
@@ -11925,7 +11927,8 @@ const HELP21={
     "«Изменить доступ» меняет роль. Матрица прав показывает, какие разделы видит каждая роль.||“修改权限”可更改角色。权限矩阵显示各角色可见的栏目。",
     "Адвокат видит только свои дела (где он участник), их клиентов, корреспонденцию и свои финансы.||律师只能看到自己参与的案件、其客户、函件及本人财务。"]},
    {id:"cal",t:"Календарь||日历",b:[
-    "Пункт меню «Календарь» — только у управляющего адвоката: планы всех сотрудников, дедлайны дел, задания, поручения. У вас на главной — свой «План на день».||“日历”菜单仅管理合伙人可见：全体员工计划、案件截止日、任务、指派。首页显示您自己的“今日计划”。"]},
+    "Пункт меню «Календарь» — только у управляющего адвоката: планы всех сотрудников, дедлайны дел, задания, поручения. У вас на главной — свой «План на день».||“日历”菜单仅管理合伙人可见：全体员工计划、案件截止日、任务、指派。首页显示您自己的“今日计划”。",
+    "В «Календаре» — только события, заметок сотрудников там нет: заметки личные и видны только автору (и коллеге, которому заметка поставлена). Свои заметки — на главной под «Планом на день».||“日历”中只有事件，没有员工备忘：备忘是个人的，仅作者（及被指派的同事）可见。您自己的备忘在首页“今日计划”下方。"]},
    {id:"reg",t:"Реестр договоров||合同登记簿",b:[
     "«Реестр договоров» в «Администрировании»: номер, дата, клиент, организация, вид услуги, ведущий, стоимость, порядок и статус оплаты, файл. Фильтры по году, организации и статусу, выгрузка в Excel.||“管理”中的“合同登记簿”：编号、日期、客户、主体、服务类型、主办律师、费用、付款方式与状态、文件。可按年份、主体、状态筛选并导出Excel。",
     "Номера: ZCL-26-101 (адвокатская фирма) и ZCLF-26-101 (ООО), отдельный счёт для каждой, с нового года снова со 101. Сорвавшаяся сделка остаётся в реестре с пометкой «не заключён».||编号：ZCL-26-101（律师事务所）与ZCLF-26-101（有限公司），分别计数，每年从101重新开始。未成交的仍保留在登记簿并标记“未签订”。"]},
@@ -11949,6 +11952,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v15notes",d:"2026-10-21",t:"Версия 1.5: заметки в «Плане на день»||1.5版：“今日计划”中的备忘",b:["Под календарём «Плана на день» — заметки и задачи с квадратиком «сделано»: быстро написать и нажать Enter, прикрепить файл или записать голосовое, напомнить, поставить коллеге, обсудить в комментариях. Невыполненное само переходит на сегодня.||“今日计划”日历下方新增带“已完成”方框的备忘和任务：快速输入并回车，可附加文件或录制语音、设置提醒、交给同事、在评论中讨论。未完成的会自动移到今天。"]},
 {id:"v15back",d:"2026-10-21",t:"Версия 1.5: кнопка «Назад»||1.5版：“返回”按钮",b:["Стрелка «←» рядом со значком меню возвращает на одну страницу назад — туда, откуда вы пришли (главная → раздел → дело и обратно). На первой странице после входа она серая. Вкладки карточки дела шагами не считаются: дело открывается на той же вкладке.||菜单图标旁的“←”箭头可返回上一页——即您来时的页面（首页 → 栏目 → 案件，反之亦然）。登录后的第一页上该按钮为灰色。案件卡片的标签页不算作步骤：案件会在原标签页打开。"]},
 {id:"v14osh",d:"2026-10-20",t:"Версия 1.4: исправления по сообщениям об ошибках||1.4版：根据错误报告的修复",b:["«Другая сторона»: каждая сторона — отдельной строкой с ИНН и ролью, «+ ещё сторона» — для нескольких ответчиков; перенос строки в названии больше не делит сторону надвое. Старые дела исправлены, конфликт интересов в них проверяется заново.||“对方当事人”：每一方单独一行，含税号和角色；“+ 再加一方”可添加多个被告；名称中的换行不再把一方拆成两方。旧案件已修正，并重新检查利益冲突。","Уведомления: «Проверить» сначала показывает уведомление прямо на этом устройстве, затем сообщает, что стало с проверкой на сервере — доставлена, в очереди или ошибка с её текстом.||通知：“测试”先在本设备上直接显示通知，然后告知服务器上的测试结果——已送达、排队中或错误及其内容。"]},
 {id:"v14law",d:"2026-10-20",t:"Версия 1.4: роль «Юрист»||1.4版：“法务”角色",b:["Новая роль «Юрист»: как адвокат, без судебных дел, работает в ООО. В деле, переведённом в суд, — пометка с номером судебного дела.||新增“法务”角色：与律师相同，不处理诉讼案件，属于有限公司。已移交法院的案件中显示诉讼案件编号。"]},
@@ -15942,6 +15946,307 @@ if(typeof CL1!=="undefined"){const _pgC5c=CL1.page.bind(CL1);CL1.page=function(s
 .ks25.r5k{grid-template-columns:repeat(6,minmax(0,1fr))}.r5p0 .k25{cursor:default}
 @media (max-width:1350px){.ks25.r5k{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (max-width:700px){.ks25.r5k{grid-template-columns:repeat(2,minmax(0,1fr))}.r5t .r5p{width:100%}}`;
   (document.head||document.documentElement).appendChild(st);}
+
+/* ═══════════════════════════ версия 1.5 · ЗАМЕТКИ В «ПЛАНЕ НА ДЕНЬ» (решения владельца 21.10.2026) ═══════════════════════════
+   Макет — design-calnotes.html (версия 5). Правила — sections/notes/ПРАВИЛА.md (Зм-1 …), сервер — миграция 20261021000100_day_notes.sql.
+   • Заметки только на главной: в «Плане на день» под календарём месяца — заметки выбранного дня; в разделе «Календарь» их нет.
+   • Быстрая строка: текст + Enter (начать со времени — «15:00 позвонить» — время подставится); скрепка — файл, микрофон — голосовое.
+   • Квадратик — «сделано»; невыполненное само переходит на сегодня с пометкой «с 17.10» (сервер, ночью; при входе — для своих).
+   • Окно заметки: текст, день, время, «Напомнить», «Кому», дело, файлы и голосовые, комментарии.
+   • Видят только автор и коллега, которому поставлена. Правка, перенос и удаление — автор; «сделано», файлы, комментарии — оба.
+   Всё меняется только через public.note_act на сервере; портал показывает и вызывает. Таблица — day_notes (S.dayNotes). */
+Object.assign(UI,{
+  nt30Title:"Заметки||备忘",nt30Add:"Заметка или задача… Enter||备忘或任务… 回车",nt30AddDay:"Заметка на этот день… Enter||当天备忘… 回车",
+  nt30Hide:"скрыть выполненные||隐藏已完成",nt30Done:"Сделано {k} из {n}||已完成 {k}/{n}",nt30None:"Заметок нет||暂无备忘",
+  nt30Past:"На прошедший день заметку не поставить — невыполненное само переходит на сегодня||过去的日期不能添加备忘——未完成的会自动移到今天",
+  nt30From:"с {d}||自 {d}",nt30Tomorrow:"на завтра||移到明天",nt30Clip:"Прикрепить файл||附加文件",nt30Mic:"Записать голосовое||录制语音",
+  nt30Win:"Заметка||备忘",nt30Text:"Текст||内容",nt30Day:"День||日期",nt30Tm:"Время (по желанию)||时间（可选）",nt30Rem:"Напомнить||提醒",
+  nt30RemNo:"не напоминать||不提醒",nt30Rem0:"в указанное время||到点提醒",nt30Rem15:"за 15 минут||提前15分钟",nt30Rem60:"за 1 час||提前1小时",nt30Rem1440:"за день||提前1天",
+  nt30RemHint:"Напоминание придёт push-уведомлением и в Telegram — как настроено у {w}.||提醒将通过推送和Telegram发送——按{w}的设置。",
+  nt30RemWho0:"вас||您",nt30RemWho1:"получателя||接收人",nt30RemNeed:"Напомнить можно, если указано время.||填写时间后才能设置提醒。",
+  nt30To:"Кому||给谁",nt30Self:"себе||自己",nt30Matter:"Дело (по желанию)||案件（可选）",nt30NoMatter:"— без дела —||— 无案件 —",
+  nt30Att:"Файлы и голосовые||文件和语音",nt30AttNone:"Пока ничего не прикреплено||尚未附加",nt30Cm:"Комментарии||评论",
+  nt30CmNone:"Пока нет комментариев||暂无评论",nt30CmPh:"Написать комментарий… Enter||写评论… 回车",nt30Send:"Отправить||发送",
+  nt30Del:"Удалить||删除",nt30Save:"Сохранить||保存",nt30Close:"Закрыть||关闭",nt30Cancel:"Отмена||取消",nt30DelQ:"Удалить заметку?||删除此备忘？",
+  nt30By:"Создал(а): {a}, {t}||创建：{a}，{t}",nt30For:"для: {a} — видите вы и он(а)||给：{a}——仅您和对方可见",nt30FromA:"Поставил(а) вам: {a} — вы отмечаете «сделано», прикрепляете файлы и пишете комментарии||{a} 给您的——您可标记完成、附加文件和评论",
+  nt30Moved:"перенесено с {d}||自 {d} 移来",nt30DoneAt:"сделано {t}||完成于 {t}",nt30DoneBy:"сделано: {a}, {t}||完成：{a}，{t}",nt30You:"Вы||您",
+  nt30Rec:"Идёт запись||正在录音",nt30RecOk:"Готово||完成",nt30Voice:"Голосовая заметка||语音备忘",nt30Short:"Слишком короткая запись||录音太短",
+  nt30NoMic:"Нет доступа к микрофону — разрешите его в браузере||无法使用麦克风——请在浏览器中允许",nt30Need:"Заметки заработают после обновления сервера (миграция 20261021000100)||服务器更新后备忘功能可用（迁移 20261021000100）",
+  nt30Busy:"Загружаю…||上传中…",nt30Remove:"Убрать||移除",nt30Open:"Открыть||打开"});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{dn30To:"{a} поставил(а) вам заметку: {t}||{a} 给您留了备忘：{t}",
+  dn30Cm:"{a} — комментарий к заметке «{t}»: {c}||{a} — 备忘「{t}」的评论：{c}",dn30Rem:"Напоминание: {t} — {tm}||提醒：{t} — {tm}"});
+window.UZ21=Object.assign(window.UZ21||{},{"Заметки":"Eslatmalar","Заметка или задача… Enter":"Eslatma yoki vazifa… Enter","Заметка на этот день… Enter":"Shu kunga eslatma… Enter",
+  "скрыть выполненные":"bajarilganlarni yashirish","Сделано {k} из {n}":"{n} tadan {k} tasi bajarildi","Заметок нет":"Eslatmalar yoʻq",
+  "На прошедший день заметку не поставить — невыполненное само переходит на сегодня":"Oʻtgan kunga eslatma qoʻyib boʻlmaydi — bajarilmaganlar oʻzi bugunga oʻtadi",
+  "с {d}":"{d} dan","на завтра":"ertaga","Прикрепить файл":"Fayl biriktirish","Записать голосовое":"Ovozli yozish","Заметка":"Eslatma","Текст":"Matn","День":"Kun",
+  "Время (по желанию)":"Vaqt (ixtiyoriy)","Напомнить":"Eslatish","не напоминать":"eslatmaslik","в указанное время":"belgilangan vaqtda","за 15 минут":"15 daqiqa oldin",
+  "за 1 час":"1 soat oldin","за день":"bir kun oldin","Напоминание придёт push-уведомлением и в Telegram — как настроено у {w}.":"Eslatma push-bildirishnoma va Telegram orqali keladi — {w} sozlamasiga koʻra.",
+  "вас":"sizning","получателя":"qabul qiluvchining","Напомнить можно, если указано время.":"Vaqt koʻrsatilsa, eslatish mumkin.","Кому":"Kimga","себе":"oʻzimga",
+  "Дело (по желанию)":"Ish (ixtiyoriy)","— без дела —":"— ishsiz —","Файлы и голосовые":"Fayllar va ovozlilar","Пока ничего не прикреплено":"Hozircha hech narsa biriktirilmagan",
+  "Комментарии":"Izohlar","Пока нет комментариев":"Hozircha izohlar yoʻq","Написать комментарий… Enter":"Izoh yozish… Enter","Отправить":"Yuborish","Удалить":"Oʻchirish",
+  "Сохранить":"Saqlash","Закрыть":"Yopish","Отмена":"Bekor qilish","Удалить заметку?":"Eslatma oʻchirilsinmi?","Создал(а): {a}, {t}":"Yaratdi: {a}, {t}",
+  "для: {a} — видите вы и он(а)":"{a} uchun — faqat siz va u koʻradi","Поставил(а) вам: {a} — вы отмечаете «сделано», прикрепляете файлы и пишете комментарии":"{a} sizga qoʻydi — «bajarildi» deb belgilaysiz, fayl biriktirasiz va izoh yozasiz",
+  "перенесено с {d}":"{d} dan oʻtkazildi","сделано {t}":"bajarildi {t}","сделано: {a}, {t}":"bajardi: {a}, {t}","Вы":"Siz","Идёт запись":"Yozilmoqda","Готово":"Tayyor",
+  "Голосовая заметка":"Ovozli eslatma","Слишком короткая запись":"Yozuv juda qisqa","Нет доступа к микрофону — разрешите его в браузере":"Mikrofonga ruxsat yoʻq — brauzerda ruxsat bering",
+  "Заметки заработают после обновления сервера (миграция 20261021000100)":"Eslatmalar server yangilangach ishlaydi (migratsiya 20261021000100)","Загружаю…":"Yuklanmoqda…","Убрать":"Olib tashlash","Открыть":"Ochish",
+  "{a} поставил(а) вам заметку: {t}":"{a} sizga eslatma qoʻydi: {t}","{a} — комментарий к заметке «{t}»: {c}":"{a} — «{t}» eslatmasiga izoh: {c}","Напоминание: {t} — {tm}":"Eslatma: {t} — {tm}",
+  "Заметки — под календарём «Плана на день»: напишите текст и нажмите Enter (начните со времени — «15:00 позвонить в банк» — время подставится само). Скрепка прикрепляет файл, микрофон записывает голосовое. Квадратик — «сделано». Невыполненное за прошлые дни само переходит на сегодня с красной пометкой «с 17.10».":"Eslatmalar — «Kun rejasi» taqvimi ostida: matnni yozing va Enter bosing (vaqtdan boshlasangiz — «15:00 bankka qoʻngʻiroq» — vaqt oʻzi qoʻyiladi). Qisqich fayl biriktiradi, mikrofon ovozli yozadi. Katakcha — «bajarildi». Oʻtgan kunlarning bajarilmaganlari qizil «17.10 dan» belgisi bilan oʻzi bugunga oʻtadi.",
+  "Нажмите на заметку — откроется окно: день, время, «Напомнить» (если указано время: в указанное время, за 15 минут, за час, за день — push и Telegram), «Кому» (поставить коллеге — ему придёт уведомление), дело, файлы и голосовые, комментарии. Заметку видите только вы; если поставили коллеге — вы и он. Менять и удалять её может только автор; коллега отмечает «сделано», прикрепляет файлы и пишет комментарии.":"Eslatmani bossangiz, oyna ochiladi: kun, vaqt, «Eslatish» (vaqt koʻrsatilsa: belgilangan vaqtda, 15 daqiqa, 1 soat, 1 kun oldin — push va Telegram), «Kimga» (hamkasbga qoʻyish — unga bildirishnoma keladi), ish, fayllar va ovozlilar, izohlar. Eslatmani faqat siz koʻrasiz; hamkasbga qoʻysangiz — siz va u. Oʻzgartirish va oʻchirish — faqat muallif; hamkasb «bajarildi» deb belgilaydi, fayl biriktiradi va izoh yozadi.",
+  "В «Календаре» — только события, заметок сотрудников там нет: заметки личные и видны только автору (и коллеге, которому заметка поставлена). Свои заметки — на главной под «Планом на день».":"«Taqvim»da faqat tadbirlar, xodimlarning eslatmalari yoʻq: eslatmalar shaxsiy va faqat muallifga (va qoʻyilgan hamkasbga) koʻrinadi. Oʻz eslatmalaringiz — bosh sahifada «Kun rejasi» ostida.",
+  "Версия 1.5: заметки в «Плане на день»":"1.5-versiya: «Kun rejasi»da eslatmalar",
+  "Под календарём «Плана на день» — заметки и задачи с квадратиком «сделано»: быстро написать и нажать Enter, прикрепить файл или записать голосовое, напомнить, поставить коллеге, обсудить в комментариях. Невыполненное само переходит на сегодня.":"«Kun rejasi» taqvimi ostida — «bajarildi» katakchali eslatma va vazifalar: tez yozib Enter bosish, fayl biriktirish yoki ovozli yozish, eslatish, hamkasbga qoʻyish, izohlarda muhokama qilish. Bajarilmaganlar oʻzi bugunga oʻtadi."});
+S.dayNotes=S.dayNotes||{};
+const NT30_ICO={clip:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.5l-8.4 8.4a5 5 0 0 1-7.1-7.1L14 5.3a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-2.8-2.8L15.4 8.3"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  doc:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>',
+  play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',pause:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg>',x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'};
+const NT30={
+  hideKey:"zc_nt30hide",ok:null,
+  on(){return typeof SB19!=="undefined"&&!!S.db&&!!SB19.T&&!!U()&&!isClient()&&(typeof Staff21==="undefined"||Staff21.on());},
+  me(){return (U()||{}).login||"";},
+  hide(){try{return localStorage.getItem(this.hideKey+"_"+this.me())==="1";}catch(e){return false;}},
+  setHide(v){try{localStorage.setItem(this.hideKey+"_"+this.me(),v?"1":"0");}catch(e){}},
+  of(d){return Object.values(S.dayNotes).filter(n=>n&&n.day===d).sort((a,b)=>((a.done?1:0)-(b.done?1:0))||((a.from?0:1)-(b.from?0:1))||String(a.from||"").localeCompare(String(b.from||""))||String(a.tm||"99").localeCompare(String(b.tm||"99"))||String(a.createdAt||"").localeCompare(String(b.createdAt||"")));},
+  name(l){if(!l)return "";const a=S.accounts&&S.accounts[l];return (a&&(a.name||(a.emp&&typeof dispName==="function"?dispName(a.emp):"")))||l;},
+  short(l){const p=this.name(l).split(/\s+/);return p.length>1?p[0]+" "+p[1].charAt(0)+".":p[0];},
+  dm(d){return d?d.slice(8,10)+"."+d.slice(5,7):"";},
+  at(t){return t?String(t).slice(8,10)+"."+String(t).slice(5,7)+" "+String(t).slice(11,16):"";},
+  mmss(s){s=Math.max(0,Math.round(+s||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");},
+  kb(n){n=+n||0;return n>1048576?(n/1048576).toFixed(1).replace(".",",")+" МБ":Math.max(1,Math.round(n/1024))+" КБ";},
+  fill(s,p){return String(s).replace(/\{(\w+)\}/g,(m,k)=>p[k]!=null?p[k]:m);},
+  msg(e){const s=(e&&(e.message||e.msg))||String(e||"");return typeof StSrv23!=="undefined"&&StSrv23.msg?StSrv23.msg(e):s.replace(/^.*ERROR:\s*/,"");},
+  noFn(e){return typeof StSrv23!=="undefined"&&StSrv23.noFn?StSrv23.noFn(e):/PGRST202|Could not find the function|does not exist/.test(String(e&&e.message||e));},
+  /* единственный путь изменения — сервер */
+  async act(nid,act,args){try{const d=await SB19.T.rpc("note_act",{nid:nid||"",act,args:args||{}});this.ok=true;return d;}
+    catch(e){if(this.noFn(e)){this.ok=false;toast(T1(UI.nt30Need));return null;}toast(this.msg(e));return null;}},
+  put(d){if(d&&d.id){S.dayNotes[d.id]=d;}},
+  /* ── «План на день»: блок заметок под календарём ── */
+  block(d){const td=todayS(),me=this.me(),hide=this.hide();const a=this.of(d);const k=a.filter(n=>n.done).length;
+    const list=a.filter(n=>!(hide&&n.done)).map(n=>this.item(n,me,td)).join("");
+    const x=new Date(d+"T12:00");const nm=x.toLocaleDateString(lang==="zh"?"zh-CN":"ru-RU",{day:"numeric",month:"long"});
+    return `<div class="nt30" data-nt30day="${esc(d)}"><div class="nt30h"><b>${T1(UI.nt30Title)}</b><span>· ${esc(nm)}</span><span class="sp"></span><label class="nt30sw"><input type="checkbox" data-nt30hide${hide?" checked":""}><i></i>${T1(UI.nt30Hide)}</label></div>
+      ${d>=td?`<div class="nt30qa"><b>+</b><input data-nt30add="${esc(d)}" maxlength="2000" autocomplete="off" placeholder="${esc(T1(d===td?UI.nt30Add:UI.nt30AddDay))}"><button type="button" class="nt30qb" data-nt30clip="${esc(d)}" title="${esc(T1(UI.nt30Clip))}">${NT30_ICO.clip}</button><button type="button" class="nt30qb" data-nt30mic="${esc(d)}" title="${esc(T1(UI.nt30Mic))}">${NT30_ICO.mic}</button></div>`:`<div class="nt30past">${T1(UI.nt30Past)}</div>`}
+      ${a.length?`<div class="nt30pg"><span>${this.fill(T1(UI.nt30Done),{k,n:a.length})}</span><span>${Math.round(k/a.length*100)}%</span></div><div class="nt30bar"><i style="width:${k/a.length*100}%"></i></div>`:""}
+      <div class="nt30ls">${list||`<div class="nt30none">${T1(UI.nt30None)}</div>`}</div></div>`;},
+  item(n,me,td){const author=n.by===me;const meta=[];
+    if(n.from)meta.push(`<span class="fr">${this.fill(T1(UI.nt30From),{d:this.dm(n.from)})}</span>`);
+    if(n.to&&author)meta.push(`<span class="to">→ ${esc(this.short(n.to))}</span>`);
+    if(!author)meta.push(`<span class="by">${T1("от||来自")} ${esc(this.short(n.by))}</span>`);
+    if(n.matterId){const m=S.matters&&S.matters[n.matterId];meta.push(`<a href="#" data-matter="${esc(n.matterId)}">${esc((m&&m.no)||T1("дело||案件"))}</a>`);}
+    if(n.remind!=null&&n.tm&&!n.done)meta.push(`<span class="bl">${NT30_ICO.bell}${esc(n.remind===0?n.tm:T1(UI["nt30Rem"+n.remind]||""))}</span>`);
+    if((n.comments||[]).length)meta.push(`<span class="cc">${NT30_ICO.chat}${n.comments.length}</span>`);
+    if(n.done&&n.doneAt)meta.push(esc(n.doneBy&&n.doneBy!==me?this.fill(T1(UI.nt30DoneBy),{a:this.short(n.doneBy),t:this.at(n.doneAt)}):this.fill(T1(UI.nt30DoneAt),{t:this.at(n.doneAt)})));
+    return `<div class="nt30it${n.done?" done":""}" data-nt30id="${esc(n.id)}"><button type="button" class="nt30ck" role="checkbox" aria-checked="${n.done?"true":"false"}" data-nt30ck="${esc(n.id)}" title="${esc(T1("Сделано||完成"))}"></button>
+      <div class="nt30tx" data-nt30open="${esc(n.id)}"><span class="nt30tt">${n.tm?`<span class="tm">${esc(n.tm)}</span>`:""}${esc(n.text||"")}</span>${meta.length?`<span class="nt30mt">${meta.join(" · ")}</span>`:""}${this.att(n,false)}</div>
+      ${author&&!n.done&&n.day>=td?`<button type="button" class="nt30mv" data-nt30mv="${esc(n.id)}">${T1(UI.nt30Tomorrow)}</button>`:""}</div>`;},
+  att(n,edit){const me=this.me(),author=n.by===me;const fl=n.files||[],vo=n.voices||[];if(!fl.length&&!vo.length)return edit?`<span class="nt30none">${T1(UI.nt30AttNone)}</span>`:"";
+    const rm=f=>edit&&(author||f.by===me)?`<button type="button" class="nt30rm" data-nt30rm="${esc(n.id)}:${esc(f.id)}" title="${esc(T1(UI.nt30Remove))}">${NT30_ICO.x}</button>`:"";
+    const bars=w=>(w&&w.length?w:[5,9,6,12,8,13,7,10,5,11,8,6,12,7,9,5]).filter((v,i,a)=>a.length<=24||i%Math.ceil(a.length/24)===0).map(h=>`<i style="height:${Math.max(3,Math.min(14,Math.round(h/2)))}px"></i>`).join("");
+    return `<div class="nt30at">${vo.map(v=>`<span class="nt30ai"><button type="button" class="nt30vc${Play30.cur&&Play30.cur.id===v.id?" play":""}" data-nt30vo="${esc(v.id)}" data-dur="${esc(v.dur)}"><span class="pl">${Play30.cur&&Play30.cur.id===v.id?NT30_ICO.pause:NT30_ICO.play}</span><span class="wv">${bars(v.wave)}</span>${this.mmss(v.dur)}</button>${rm(v)}</span>`).join("")}${fl.map(f=>`<span class="nt30ai"><button type="button" class="nt30fc" data-nt30fo="${esc(n.id)}:${esc(f.id)}" title="${esc(f.name)}">${NT30_ICO.doc}<b>${esc(f.name)}</b>${this.kb(f.size)}</button>${rm(f)}</span>`).join("")}</div>`;},
+  /* перерисовать главную, не теряя набранный текст */
+  rerender(){if(Router.cur!=="home")return;const a=document.activeElement;const k=a&&a.dataset&&a.dataset.nt30add;const v=k?a.value:null;const s=k?a.selectionStart:0;
+    Router.render();if(k){const i=document.querySelector(`[data-nt30add="${CSS.escape(k)}"]`);if(i){i.value=v;i.focus();try{i.setSelectionRange(s,s);}catch(e){}}}
+    if(Pop30.id)Pop30.paint();},
+  soon(){clearTimeout(this._t);this._t=setTimeout(()=>{const a=document.activeElement;if(a&&a.dataset&&a.dataset.nt30add&&a.value){this.soon();return;}this.rerender();},150);},
+  async create(day,args,inp){const d=await this.act("","create",Object.assign({day},args));if(!d)return false;this.put(d);if(inp)inp.value="";this.rerender();
+    const i=document.querySelector(`[data-nt30add="${CSS.escape(day)}"]`);if(i&&inp)i.focus();return true;},
+  quick(inp){let v=inp.value.trim();if(!v)return;let tm=null;const m=v.match(/^(\d{1,2})[:.](\d{2})\s+(.+)$/);if(m&&+m[1]<24&&+m[2]<60){tm=String(m[1]).padStart(2,"0")+":"+m[2];v=m[3];}
+    const args={text:v};if(tm)args.tm=tm;this.create(inp.dataset.nt30add,args,inp);},
+  async done(id){const n=S.dayNotes[id];if(!n)return;const d=await this.act(id,"done",{done:!n.done});if(d){this.put(d);this.rerender();}},
+  async move(id){const n=S.dayNotes[id];if(!n)return;const x=new Date((n.day>todayS()?n.day:todayS())+"T12:00");x.setDate(x.getDate()+1);
+    const d=await this.act(id,"move",{day:x.toISOString().slice(0,10)});if(d){this.put(d);this.rerender();}},
+  /* файл: из скрепки строки — новая заметка (текст из строки или имя файла), из окна — к заметке */
+  pick(target){Files.upload(async f=>{if(!f||!f.id)return;if(target.note){const d=await this.act(target.note,"attach",{files:[{id:f.id}]});if(d){this.put(d);this.rerender();}}
+    else{const inp=document.querySelector(`[data-nt30add="${CSS.escape(target.day)}"]`);const t=(inp&&inp.value.trim())||f.name;this.create(target.day,{text:t,files:[{id:f.id}]},inp);}});},
+  async voiceDone(target,file,dur,wave){const meta=await Rec30.upload(file);if(!meta)return;const v={id:meta.id,dur:Math.round(dur*10)/10,wave};
+    if(target.note){const d=await this.act(target.note,"attach",{voices:[v]});if(d){this.put(d);this.rerender();}}
+    else{const inp=document.querySelector(`[data-nt30add="${CSS.escape(target.day)}"]`);const t=(inp&&inp.value.trim())||T1(UI.nt30Voice);this.create(target.day,{text:t,voices:[v]},inp);}},
+  async detach(nid,fid){const n=S.dayNotes[nid];if(!n)return;const f=[...(n.files||[]),...(n.voices||[])].find(x=>x.id===fid);
+    const d=await this.act(nid,"detach",{id:fid});if(!d)return;this.put(d);if(f&&f.by===this.me())this.dropFile(fid);this.rerender();},
+  dropFile(fid){try{S.db.doc("files/"+fid).delete().catch(()=>{});}catch(e){}},
+  openFile(nid,fid){const n=S.dayNotes[nid];const f=n&&(n.files||[]).find(x=>x.id===fid);if(f&&typeof Files!=="undefined"&&Files.open)Files.open({id:f.id,name:f.name,type:f.type,size:f.size});},
+  /* при входе: своё невыполненное за прошлые дни — на сегодня (ночью то же делает сервер для всех) */
+  async carry(){if(this._carried===this.me()+todayS())return;
+    if(!Object.values(S.dayNotes).some(n=>n&&!n.done&&n.day<todayS()))return;this._carried=this.me()+todayS();
+    const r=await this.act("","carry");if(r&&r.moved){try{(await SB19.rows("dayNotes")).forEach(x=>{if(x&&x.id&&x.data)S.dayNotes[x.id]=x.data;});}catch(e){}this.soon();}}
+};
+/* ── окно заметки ── */
+const Pop30={id:null,
+  el(){let p=document.getElementById("nt30pop");if(!p){p=document.createElement("div");p.id="nt30pop";p.className="nt30pop";p.innerHTML='<div class="nt30pb" role="dialog" aria-modal="true"></div>';document.body.appendChild(p);
+      p.addEventListener("mousedown",e=>{if(e.target===p)this.close();});}return p;},
+  open(id){if(!S.dayNotes[id])return;this.id=id;this.el().classList.add("on");this.paint(true);},
+  close(){this.id=null;const p=document.getElementById("nt30pop");if(p)p.classList.remove("on");},
+  paint(first){const n=S.dayNotes[this.id];if(!n){this.close();return;}const p=this.el(),b=p.querySelector(".nt30pb");const me=NT30.me(),author=n.by===me;
+    const keep=first?null:this.read();const ci=b.querySelector("#nt30ci");const cv=ci?ci.value:"";
+    const opt=(v,t,sel)=>`<option value="${esc(v)}"${String(sel)===String(v)?" selected":""}>${esc(t)}</option>`;
+    const staff=Object.values(S.accounts||{}).filter(a=>a&&a.login&&a.login!==me&&a.active!==false&&a.kind!=="client").sort((x,y)=>NT30.name(x.login).localeCompare(NT30.name(y.login),"ru"));
+    const mts=Object.values(S.matters||{}).filter(m=>m&&m.id&&!m._fact20&&(m.status!=="closed"||m.id===n.matterId)).sort((x,y)=>String(x.no||"").localeCompare(String(y.no||"")));
+    const v=keep||{text:n.text||"",day:n.day,tm:n.tm||"",remind:n.remind==null?"":String(n.remind),to:n.to||"",matterId:n.matterId||""};
+    const who=author?NT30.fill(T1(UI.nt30By),{a:NT30.name(n.by),t:NT30.at(n.createdAt)})+(n.to?" · "+NT30.fill(T1(UI.nt30For),{a:NT30.name(n.to)}):""):NT30.fill(T1(UI.nt30FromA),{a:NT30.name(n.by)});
+    const extra=[n.from?NT30.fill(T1(UI.nt30Moved),{d:NT30.dm(n.from)}):"",n.done&&n.doneAt?NT30.fill(T1(UI.nt30DoneBy),{a:NT30.name(n.doneBy||n.by),t:NT30.at(n.doneAt)}):""].filter(Boolean).join(" · ");
+    const cms=(n.comments||[]).map(c=>`<div class="nt30cm${c.by===me?" me":""}"><span class="av">${esc(NT30.name(c.by).split(/\s+/).map(x=>x.charAt(0)).join("").slice(0,2).toUpperCase())}</span><div class="bd"><small><b>${esc(c.by===me?T1(UI.nt30You):NT30.name(c.by))}</b> · ${esc(NT30.at(c.at))}</small>${esc(c.text)}</div></div>`).join("");
+    b.innerHTML=`<div class="nt30ph"><h3>${T1(UI.nt30Win)}</h3><button type="button" class="nt30x" data-nt30x title="${esc(T1(UI.nt30Close))}">${NT30_ICO.x}</button></div>
+      <label>${T1(UI.nt30Text)}${author?`<textarea id="nt30t" rows="2" maxlength="2000">${esc(v.text)}</textarea>`:`<div class="nt30ro">${esc(n.text||"")}</div>`}</label>
+      ${author?`<div class="two"><label>${T1(UI.nt30Day)}<input type="date" id="nt30d" min="${esc(todayS()<n.day?todayS():n.day)}" value="${esc(v.day)}"></label><label>${T1(UI.nt30Tm)}<input type="time" id="nt30tm" value="${esc(v.tm)}"></label></div>
+      <div class="two"><label>${T1(UI.nt30Rem)}<select id="nt30r"${v.tm?"":" disabled"}>${opt("",T1(UI.nt30RemNo),v.remind)}${["0","15","60","1440"].map(k=>opt(k,T1(UI["nt30Rem"+k]),v.remind)).join("")}</select></label>
+        <label>${T1(UI.nt30To)}<select id="nt30to">${opt("",T1(UI.nt30Self),v.to)}${staff.map(a=>opt(a.login,NT30.name(a.login),v.to)).join("")}</select></label></div>
+      <div class="nt30hint" id="nt30rh">${v.tm?NT30.fill(T1(UI.nt30RemHint),{w:T1(v.to?UI.nt30RemWho1:UI.nt30RemWho0)}):T1(UI.nt30RemNeed)}</div>
+      <label>${T1(UI.nt30Matter)}<select id="nt30m">${opt("",T1(UI.nt30NoMatter),v.matterId)}${mts.map(m=>opt(m.id,(m.no||"")+" · "+(m.title||""),v.matterId)).join("")}</select></label>`
+      :`<div class="nt30ro sm">${esc(NT30.dm(n.day))}${n.tm?" · "+esc(n.tm):""}${n.matterId&&S.matters&&S.matters[n.matterId]?" · "+esc(S.matters[n.matterId].no||""):""}</div>`}
+      <div class="nt30sec"><span class="lbl">${T1(UI.nt30Att)}</span>${NT30.att(n,true)}<div class="nt30btns"><button type="button" class="btn ghost sm" data-nt30pclip>${NT30_ICO.clip} ${T1(UI.nt30Clip)}</button><button type="button" class="btn ghost sm" data-nt30pmic>${NT30_ICO.mic} ${T1(UI.nt30Mic)}</button></div></div>
+      <div class="nt30sec"><span class="lbl">${T1(UI.nt30Cm)}</span><div class="nt30cl" id="nt30cl">${cms||`<span class="nt30none">${T1(UI.nt30CmNone)}</span>`}</div>
+        <div class="nt30cin"><input id="nt30ci" maxlength="1000" autocomplete="off" placeholder="${esc(T1(UI.nt30CmPh))}"><button type="button" class="btn sm" data-nt30send>${T1(UI.nt30Send)}</button></div></div>
+      <div class="nt30who">${esc(who)}${extra?" · "+esc(extra):""}</div>
+      <div class="nt30ft">${author?`<button type="button" class="nt30del" data-nt30del>${T1(UI.nt30Del)}</button>`:""}<span class="sp"></span>${author?`<button type="button" class="btn ghost" data-nt30x>${T1(UI.nt30Cancel)}</button><button type="button" class="btn pri" data-nt30save>${T1(UI.nt30Save)}</button>`:`<button type="button" class="btn pri" data-nt30x>${T1(UI.nt30Close)}</button>`}</div>`;
+    const nci=b.querySelector("#nt30ci");if(nci&&cv)nci.value=cv;const cl=b.querySelector("#nt30cl");if(cl)cl.scrollTop=cl.scrollHeight;
+    const tmI=b.querySelector("#nt30tm"),rS=b.querySelector("#nt30r"),toS=b.querySelector("#nt30to");
+    const hint=()=>{if(!tmI)return;rS.disabled=!tmI.value;if(!tmI.value)rS.value="";b.querySelector("#nt30rh").textContent=tmI.value?NT30.fill(T1(UI.nt30RemHint),{w:T1(toS.value?UI.nt30RemWho1:UI.nt30RemWho0)}):T1(UI.nt30RemNeed);};
+    if(tmI){tmI.addEventListener("input",hint);toS.addEventListener("change",hint);}
+    if(first){const t=b.querySelector("#nt30t");if(t)t.focus();else if(nci)nci.focus();}},
+  read(){const b=document.querySelector("#nt30pop .nt30pb");const g=id=>{const x=b&&b.querySelector("#"+id);return x?x.value:null;};if(!b||g("nt30t")===null)return null;
+    return {text:g("nt30t"),day:g("nt30d"),tm:g("nt30tm"),remind:g("nt30r"),to:g("nt30to"),matterId:g("nt30m")};},
+  async save(){const n=S.dayNotes[this.id];const v=this.read();if(!n||!v){this.close();return;}const args={};
+    if(v.text.trim()!==(n.text||""))args.text=v.text;if(v.day&&v.day!==n.day)args.day=v.day;if((v.tm||"")!==(n.tm||""))args.tm=v.tm||null;
+    if((v.remind||"")!==(n.remind==null?"":String(n.remind)))args.remind=v.remind===""?null:+v.remind;if((v.to||"")!==(n.to||""))args.to=v.to||null;
+    if((v.matterId||"")!==(n.matterId||""))args.matterId=v.matterId||null;
+    if(!Object.keys(args).length){this.close();return;}const d=await NT30.act(n.id,"edit",args);if(!d)return;NT30.put(d);this.close();NT30.rerender();},
+  async comment(){const i=document.getElementById("nt30ci");const t=i&&i.value.trim();if(!t||!this.id)return;const d=await NT30.act(this.id,"comment",{text:t});if(!d)return;
+    NT30.put(d);i.value="";this.paint();const j=document.getElementById("nt30ci");if(j)j.focus();NT30.soon();},
+  async del(){const n=S.dayNotes[this.id];if(!n)return;const p=this.el();p.style.visibility="hidden";let ok=true;try{ok=typeof Dlg!=="undefined"&&Dlg.confirm?await Dlg.confirm(T1(UI.nt30DelQ),n.text||"",true):true;}finally{p.style.visibility="";}if(!ok)return;
+    const r=await NT30.act(n.id,"delete");if(!r)return;delete S.dayNotes[n.id];(r.files||[]).forEach(f=>NT30.dropFile(f));this.close();NT30.rerender();}
+};
+/* ── голосовое: запись (как в чате — до 5 минут, короче 0,7 с — не сохраняется), загрузка в хранилище ── */
+const Rec30={r:null,
+  async start(target){if(this.r)return;if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder)){toast(T1(UI.nt30NoMic));return;}
+    let st;try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){toast(T1(UI.nt30NoMic));return;}
+    const types=["audio/webm;codecs=opus","audio/mp4","audio/ogg;codecs=opus","audio/webm"];const mime=types.find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))||"";
+    const mr=new MediaRecorder(st,mime?{mimeType:mime,audioBitsPerSecond:32000}:undefined);const r=this.r={target,st,mr,chunks:[],t0:Date.now(),lv:[],mime:mr.mimeType||mime||"audio/webm"};
+    try{const ac=new (window.AudioContext||window.webkitAudioContext)();const an=ac.createAnalyser();an.fftSize=256;ac.createMediaStreamSource(st).connect(an);r.ac=ac;r.an=an;r.buf=new Uint8Array(an.frequencyBinCount);}catch(e){}
+    mr.ondataavailable=e=>{if(e.data&&e.data.size)r.chunks.push(e.data);};mr.start(250);this.bar(true);
+    r.tick=setInterval(()=>{const s=(Date.now()-r.t0)/1000;const t=document.getElementById("nt30rt");if(t)t.textContent=NT30.mmss(s);
+      if(r.an){r.an.getByteTimeDomainData(r.buf);let m=0;for(const v of r.buf)m=Math.max(m,Math.abs(v-128));r.lv.push(m);}if(s>=300)this.finish(true);},100);},
+  bar(on){let b=document.getElementById("nt30rec");if(!b){b=document.createElement("div");b.id="nt30rec";b.className="nt30rec";
+      b.innerHTML=`<span class="dot"></span><b>${T1(UI.nt30Rec)}</b><span id="nt30rt">0:00</span><span class="sp"></span><button type="button" class="btn ghost sm" data-nt30rx>${T1(UI.nt30Cancel)}</button><button type="button" class="btn pri sm" data-nt30rok>${T1(UI.nt30RecOk)}</button>`;document.body.appendChild(b);}
+    b.classList.toggle("on",on);},
+  finish(save){const r=this.r;if(!r)return;this.r=null;clearInterval(r.tick);this.bar(false);const dur=(Date.now()-r.t0)/1000;
+    const end=()=>{try{r.st.getTracks().forEach(t=>t.stop());}catch(e){}try{r.ac&&r.ac.close();}catch(e){}
+      if(!save)return;if(dur<0.7){toast(T1(UI.nt30Short));return;}
+      const n=46,lv=r.lv.length?r.lv:[8];const wave=Array.from({length:n},(_,i)=>{const a=lv.slice(Math.floor(i*lv.length/n),Math.max(Math.floor(i*lv.length/n)+1,Math.floor((i+1)*lv.length/n)));return Math.max(3,Math.min(28,Math.round(a.reduce((x,y)=>Math.max(x,y),0)/128*28*1.6)));});
+      const type=r.mime.split(";")[0]||"audio/webm";const ext=/mp4/.test(type)?"m4a":/ogg/.test(type)?"ogg":"webm";
+      const file=new File([new Blob(r.chunks,{type})],"voice-"+Date.now()+"."+ext,{type});NT30.voiceDone(r.target,file,Math.min(300,dur),wave);};
+    if(r.mr.state!=="inactive"){r.mr.onstop=end;try{r.mr.stop();}catch(e){end();}}else end();},
+  async upload(f){if(!(typeof FS20!=="undefined"&&FS20.on()&&S.db)){toast(T1(UI.nt30Need));return null;}
+    const id="f"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const meta={id,name:f.name,type:f.type||"audio/webm",size:f.size,by:NT30.me(),at:ymdhmL(new Date()),path:FS20.path(id,f.name),store:"sb"};
+    try{if(typeof SB19.T.uploadBlob==="function"){await SB19.docSet("files",id,meta);try{await SB19.T.uploadBlob(meta.path,f,meta.type);}catch(e){try{await SB19.T.del("files",{id});}catch(_){}throw e;}}
+      else{const data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f);});await SB19.docSet("files",id,Object.assign({},meta,{data}));}}
+    catch(e){toast(T1(UI.fsErr20||"Не удалось загрузить файл||文件上传失败")+(e&&e.message?": "+e.message:""));return null;}return meta;}
+};
+/* ── прослушивание: файл берётся так же, как голосовые чата (Play22.src) ── */
+const Play30={cur:null,
+  async toggle(id){const c=this.cur;if(c&&c.id===id){c.a.pause();this.cur=null;NT30.soon();return;}if(c){c.a.pause();this.cur=null;}
+    let src=null;try{src=typeof Play22!=="undefined"?await Play22.src({id}):null;}catch(e){}if(!src)return;
+    const a=new Audio(src);this.cur={id,a};a.onended=()=>{if(this.cur&&this.cur.a===a){this.cur=null;NT30.soon();}};a.play().catch(()=>{});NT30.soon();}
+};
+/* ── данные: загрузка и живые обновления таблицы day_notes ── */
+if(typeof SPEED20!=="undefined"&&Array.isArray(SPEED20.COLS)&&!SPEED20.COLS.includes("dayNotes"))SPEED20.COLS.push("dayNotes");
+/* сервер-режим грузит данные цепочкой, сохранённой в v19 до разделов, — подписка после входа (SB19.start), как в v20_calc */
+if(typeof SB19!=="undefined"&&SB19.start){const _st30=SB19.start.bind(SB19);SB19.start=async function(login){const r=await _st30.apply(this,arguments);S.dayNotes=S.dayNotes||{};
+  if(this.kind!=="client"&&S.db){try{S.unsub=S.unsub||[];S.unsub.push(S.db.collection("dayNotes").onSnapshot(s=>{s.docChanges().forEach(c=>{if(c.type==="removed")delete S.dayNotes[c.doc.id];else S.dayNotes[c.doc.id]=clone(c.doc.data());});
+      NT30.carry();if(Router.cur==="home")NT30.soon();if(Pop30.id)Pop30.paint();},()=>{}));}catch(e){}}return r;};}
+if(typeof SB19!=="undefined"&&SB19.reset){const _rs30=SB19.reset.bind(SB19);SB19.reset=function(){const r=_rs30.apply(this,arguments);S.dayNotes={};Pop30.close();return r;};}
+/* ── «План на день»: точки заметок в календаре и блок заметок под ним ── */
+if(typeof Dash!=="undefined"&&Dash.planner){const _plan30=Dash.planner.bind(Dash);Dash.planner=function(scope){const html=_plan30(scope);if(!NT30.on())return html;
+  const st=Pages._dp||{sel:todayS(),m:todayS().slice(0,7)};const box=document.createElement("div");box.innerHTML=html;
+  box.querySelectorAll("[data-dp]").forEach(b=>{const a=NT30.of(b.dataset.dp);if(a.length)b.classList.add(a.every(n=>n.done)?"nt30all":"nt30has");});
+  const dp=box.querySelector(".dayp");if(dp)dp.insertAdjacentHTML("beforeend",NT30.block(st.sel));return box.innerHTML;};}
+/* ── действия (один обработчик на документ — главная перерисовывается целиком) ── */
+document.addEventListener("click",e=>{const t=e.target;if(!t||!t.closest)return;let x;
+  if((x=t.closest("[data-nt30ck]"))){e.preventDefault();NT30.done(x.dataset.nt30ck);return;}
+  if((x=t.closest("[data-nt30mv]"))){e.preventDefault();NT30.move(x.dataset.nt30mv);return;}
+  if((x=t.closest("[data-nt30vo]"))){e.preventDefault();e.stopPropagation();Play30.toggle(x.dataset.nt30vo);return;}
+  if((x=t.closest("[data-nt30fo]"))){e.preventDefault();e.stopPropagation();const [n,f]=x.dataset.nt30fo.split(":");NT30.openFile(n,f);return;}
+  if((x=t.closest("[data-nt30rm]"))){e.preventDefault();const [n,f]=x.dataset.nt30rm.split(":");NT30.detach(n,f);return;}
+  if((x=t.closest(".nt30 [data-matter]"))){e.preventDefault();Router.go("matter",x.dataset.matter);return;}
+  if((x=t.closest("[data-nt30open]"))){Pop30.open(x.dataset.nt30open);return;}
+  if((x=t.closest("[data-nt30clip]"))){NT30.pick({day:x.dataset.nt30clip});return;}
+  if((x=t.closest("[data-nt30mic]"))){Rec30.start({day:x.dataset.nt30mic});return;}
+  if(t.closest("[data-nt30pclip]")&&Pop30.id){NT30.pick({note:Pop30.id});return;}
+  if(t.closest("[data-nt30pmic]")&&Pop30.id){Rec30.start({note:Pop30.id});return;}
+  if(t.closest("[data-nt30rok]")){Rec30.finish(true);return;}
+  if(t.closest("[data-nt30rx]")){Rec30.finish(false);return;}
+  if(t.closest("[data-nt30send]")){Pop30.comment();return;}
+  if(t.closest("[data-nt30save]")){Pop30.save();return;}
+  if(t.closest("[data-nt30del]")){Pop30.del();return;}
+  if(t.closest("[data-nt30x]")){Pop30.close();return;}});
+document.addEventListener("change",e=>{const t=e.target;if(t&&t.matches&&t.matches("[data-nt30hide]")){NT30.setHide(t.checked);NT30.rerender();}});
+document.addEventListener("keydown",e=>{const t=e.target;if(!t||!t.matches)return;
+  if(e.key==="Enter"&&t.matches("[data-nt30add]")){e.preventDefault();NT30.quick(t);return;}
+  if(e.key==="Enter"&&t.matches("#nt30ci")){e.preventDefault();Pop30.comment();return;}
+  if(e.key==="Escape"&&Rec30.r){e.preventDefault();Rec30.finish(false);return;}
+  if(e.key==="Escape"&&Pop30.id){e.preventDefault();Pop30.close();}},true);
+/* уведомление о заметке — открыть её на главной */
+document.addEventListener("click",e=>{const g=e.target&&e.target.closest&&e.target.closest("[data-go]");if(!g)return;const ref=(g.dataset.go||"").split(":")[1];
+  if(!ref||!S.dayNotes[ref])return;setTimeout(()=>{try{Notif.close();}catch(_){}const n=S.dayNotes[ref];if(!n)return;Pages._dp=Object.assign({},Pages._dp||{},{sel:n.day,m:n.day.slice(0,7)});
+    if(Router.cur!=="home")Router.go("home");else Router.render();Pop30.open(ref);},0);},true);
+(function(){const st=document.createElement("style");st.textContent=`
+.dayp .mini button.nt30has::before,.dayp .mini button.nt30all::before{content:"";position:absolute;left:calc(50% + 4px);bottom:2px;width:4px;height:4px;border-radius:999px;background:var(--ink-3)}
+.dayp .mini button.nt30all::before{background:var(--ok)}.dayp .mini button.nt30has:not(.has)::before,.dayp .mini button.nt30all:not(.has)::before{left:50%;transform:translateX(-50%)}
+.dayp .mini button.sel.nt30has::before,.dayp .mini button.sel.nt30all::before{background:var(--on-ink)}
+.nt30{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:10px;margin-top:2px}
+.nt30h{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3)}.nt30h b{font:700 11px "Manrope",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}.nt30h .sp,.nt30ft .sp,.nt30rec .sp{flex:1}
+.nt30sw{display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none;font-size:11.5px;color:var(--ink-3)}.nt30sw input{position:absolute;opacity:0;pointer-events:none}
+.nt30sw i{width:26px;height:15px;border-radius:99px;background:var(--line-2);position:relative;transition:.15s;flex:none}.nt30sw i::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;transition:.15s}
+.nt30sw input:checked+i{background:var(--pri)}.nt30sw input:checked+i::after{left:13px}.nt30sw input:focus-visible+i{box-shadow:0 0 0 2px var(--pri-ring)}
+.nt30qa{display:flex;align-items:center;gap:6px;border:1px dashed var(--line-2);border-radius:var(--r-sm);padding:4px 6px 4px 10px;color:var(--ink-3)}
+.nt30qa:focus-within{border-style:solid;border-color:var(--pri);background:var(--surface)}.nt30qa b{color:var(--pri);font-size:15px;line-height:1}
+.nt30qa input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:13px var(--font);color:var(--ink);padding:5px 0}
+.nt30qb{border:0;background:none;color:var(--ink-3);width:28px;height:28px;border-radius:7px;display:grid;place-items:center;cursor:pointer;flex:none}.nt30qb:hover{color:var(--pri);background:var(--pri-soft)}
+.nt30qb svg,.nt30btns svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nt30past{font-size:12px;color:var(--ink-3);font-style:italic}
+.nt30pg{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-2)}.nt30bar{height:4px;border-radius:99px;background:var(--surface2);overflow:hidden}.nt30bar i{display:block;height:100%;background:var(--ok);border-radius:99px}
+.nt30ls{display:grid;gap:2px}.nt30none{font-size:12.5px;color:var(--ink-3);font-style:italic}
+.nt30it{display:flex;align-items:flex-start;gap:8px;padding:5px 2px;position:relative;border-radius:var(--r-sm)}
+.nt30ck{width:18px;height:18px;flex:none;border-radius:5px;border:1.6px solid var(--line-2);background:var(--surface);cursor:pointer;margin-top:1px;display:grid;place-items:center;padding:0}
+.nt30ck:hover{border-color:var(--pri)}.nt30it.done .nt30ck{background:var(--ok);border-color:var(--ok)}
+.nt30it.done .nt30ck::after{content:"";width:8px;height:4.5px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.nt30tx{flex:1;min-width:0;font-size:13px;line-height:1.35;color:var(--ink);cursor:pointer;overflow-wrap:anywhere}.nt30tx:hover .nt30tt{color:var(--pri)}
+.nt30it.done .nt30tt{color:var(--ink-3);text-decoration:line-through}.nt30tt .tm{font-weight:700;color:var(--pri);margin-right:4px}
+.nt30mt{display:block;font-size:11.5px;color:var(--ink-3);margin-top:1px}.nt30mt a{color:var(--pri);text-decoration:none}.nt30mt .fr{color:var(--red);font-weight:700}
+.nt30mt .to{color:var(--pri);font-weight:600}.nt30mt .by{color:var(--warn-d);font-weight:600}.nt30mt .bl,.nt30mt .cc{display:inline-flex;align-items:center;gap:3px}
+.nt30mt svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nt30mv{display:none;position:absolute;right:0;top:4px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);border-radius:6px;font:600 11px var(--font);padding:3px 7px;cursor:pointer;box-shadow:var(--sh-1)}
+.nt30it:hover .nt30mv,.nt30mv:focus-visible{display:block}.nt30mv:hover{color:var(--pri);border-color:var(--pri)}
+@media (hover:none),(max-width:700px){.nt30mv{display:block;position:static;align-self:center;box-shadow:none}.nt30ck{width:21px;height:21px}}
+.nt30at{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}.nt30ai{display:inline-flex;align-items:center;gap:2px;max-width:100%}
+.nt30fc{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--surface2);border-radius:7px;padding:3px 8px;font:11.5px var(--font);color:var(--ink-3);cursor:pointer;max-width:100%;white-space:nowrap}
+.nt30fc:hover{border-color:var(--pri)}.nt30fc svg{width:14px;height:14px;flex:none;fill:none;stroke:var(--pri);stroke-width:1.8;stroke-linejoin:round}.nt30fc b{font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;max-width:170px}
+.nt30vc{display:inline-flex;align-items:center;gap:7px;border:0;background:var(--pri-soft);color:var(--pri);border-radius:99px;padding:3px 11px 3px 3px;font:600 11.5px var(--font);cursor:pointer}
+.nt30vc .pl{width:22px;height:22px;border-radius:50%;background:var(--pri);color:#fff;display:grid;place-items:center}.nt30vc .pl svg{width:11px;height:11px;fill:currentColor}
+.nt30vc .wv{display:flex;align-items:center;gap:2px;height:14px}.nt30vc .wv i{width:2px;background:currentColor;border-radius:2px;opacity:.5}
+.nt30vc.play .wv i{opacity:1;animation:nt30wv .7s ease-in-out infinite alternate}.nt30vc.play .wv i:nth-child(2n){animation-delay:.2s}.nt30vc.play .wv i:nth-child(3n){animation-delay:.35s}
+@keyframes nt30wv{from{transform:scaleY(.4)}to{transform:scaleY(1)}}
+.nt30rm{border:0;background:none;color:var(--ink-3);cursor:pointer;width:22px;height:22px;display:grid;place-items:center;border-radius:5px;padding:0}.nt30rm:hover{color:var(--red)}
+.nt30rm svg,.nt30x svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.nt30pop{position:fixed;inset:0;background:var(--ov-bg,rgba(20,24,32,.4));display:none;place-items:center;z-index:600;padding:16px}.nt30pop.on{display:grid}
+.nt30pb{width:min(460px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--surface);color:var(--ink);border-radius:var(--r-lg);box-shadow:var(--sh-3);padding:18px 20px;display:grid;gap:12px}
+.nt30ph{display:flex;align-items:center;gap:8px}.nt30ph h3{flex:1;font:600 16px var(--font-h,var(--font))}.nt30x{border:0;background:none;color:var(--ink-3);cursor:pointer;width:28px;height:28px;border-radius:7px;display:grid;place-items:center}.nt30x:hover{background:var(--surface2)}
+.nt30pb label{display:grid;gap:5px;font:700 10.5px "Manrope",sans-serif;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
+.nt30pb input,.nt30pb select,.nt30pb textarea{font:13.5px var(--font);border:1px solid var(--line-2);border-radius:9px;padding:8px 10px;background:var(--surface);color:var(--ink);text-transform:none;letter-spacing:0;min-width:0;width:100%;box-sizing:border-box}
+.nt30pb select:disabled{opacity:.5}.nt30pb .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nt30ro{font:13.5px var(--font);color:var(--ink);text-transform:none;letter-spacing:0;background:var(--surface2);border-radius:9px;padding:8px 10px}.nt30ro.sm{font-size:12.5px;color:var(--ink-2)}
+.nt30hint,.nt30who{font-size:12px;color:var(--ink-3)}.nt30sec{display:grid;gap:7px}.nt30sec .lbl{font:700 10.5px "Manrope",sans-serif;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
+.nt30sec .nt30at{margin:0}.nt30btns{display:flex;gap:8px;flex-wrap:wrap}.nt30btns .btn{display:inline-flex;align-items:center;gap:6px}
+.nt30cl{display:grid;gap:8px;max-height:200px;overflow:auto}.nt30cm{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;align-items:start}
+.nt30cm .av{width:28px;height:28px;border-radius:50%;background:var(--pri-soft);color:var(--pri);display:grid;place-items:center;font:700 10.5px "Manrope",sans-serif}.nt30cm.me .av{background:var(--pri);color:#fff}
+.nt30cm .bd{background:var(--surface2);border-radius:4px 10px 10px 10px;padding:6px 10px;font-size:13px;line-height:1.4;overflow-wrap:anywhere}.nt30cm .bd small{display:block;font-size:11px;color:var(--ink-3);margin-bottom:1px}.nt30cm .bd small b{color:var(--ink-2);font-weight:600}
+.nt30cin{display:flex;gap:6px}.nt30cin input{flex:1}
+.nt30ft{display:flex;gap:8px;align-items:center}.nt30del{border:0;background:none;color:var(--red);font:600 13px var(--font);cursor:pointer;padding:6px 0}
+.nt30rec{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:none;align-items:center;gap:10px;background:var(--surface);color:var(--ink);border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--sh-3);padding:10px 12px 10px 16px;min-width:min(330px,calc(100vw - 32px));z-index:700}
+.nt30rec.on{display:flex}.nt30rec .dot{width:10px;height:10px;border-radius:50%;background:var(--red);animation:nt30bl 1s infinite}.nt30rec #nt30rt{font:600 13px var(--font);color:var(--red);font-variant-numeric:tabular-nums}
+@keyframes nt30bl{50%{opacity:.25}}
+@media (max-width:520px){.nt30pb .two{grid-template-columns:1fr}}`;document.head.appendChild(st);})();
 
 /* ══ Раздел «Разовые услуги» · КП-PDF текстом (В4, решение владельца 18.10.2026: «вариант Б — настоящий текстовый PDF со встроенным
    свободным шрифтом») ══
