@@ -5493,7 +5493,9 @@ const saveNotes=login=>dbWrite(db=>db.doc("notes/"+login).set(S.notes[login]));
 const courtKindOf=m=>m.courtKind||(m.type==="criminal"?"criminal":m.type==="litigation"?(/кономич/i.test(m.court||"")?"economic":"civil"):null);
 /* 18.10.2026 (суд, этап 0, ошибка 4): судебное дело — по виду услуги svc; старые признаки type/status — только для дел без svc */
 const isCourt=m=>m.svc?m.svc==="court":(m.type==="litigation"||m.type==="criminal"||m.status==="court");
-const isSupport=m=>m.billing==="subscription"||m.type==="consulting";
+/* 21.10.2026 (замечание 1 владельца): сопровождение — тоже по виду услуги svc, как в разделах; раньше разовая консультация
+   (type consulting) на главной и в кабинете клиента считалась сопровождением. Старые признаки — только для дел без svc */
+const isSupport=m=>m.svc?m.svc==="support":(m.billing==="subscription"||m.type==="consulting");
 const catOf=m=>isCourt(m)?"court":isSupport(m)?"support":"oneoff";
 const closedDate=m=>m.closed||((m.history||[]).filter(h=>/закрыто/i.test(h.what)).map(h=>h.at.slice(0,10))[0])||(m.status==="closed"?m.deadline||m.opened:null);
 const isoWeekStart=s=>{const d=new Date(s+"T12:00:00");const w=(d.getDay()+6)%7;d.setDate(d.getDate()-w);return ymdL(d);};
@@ -10288,7 +10290,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="b2fedf6b41da";
+const ZC_BUILD="7e701e937517";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -17506,6 +17508,64 @@ window.addEventListener("pagehide",()=>{ChatDr30.grab();ChatDr30.save();});
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){ChatDr30.grab();ChatDr30.save();}});
 if(typeof Push21!=="undefined"&&Push21.authChanged){const _ac30=Push21.authChanged.bind(Push21);Push21.authChanged=function(){ChatDr30.grab();ChatDr30.save();return _ac30.apply(this,arguments);};}
 {const _go30=Router.go.bind(Router);Router.go=function(){if(Router.cur==="chats"){ChatDr30.grab();ChatDr30.save();}return _go30.apply(this,arguments);};}
+
+/* ══ версия 1.5 · исправления по документу владельца «Замечания 2026-10-21» (пункты 2, 4, 5; пункт 1 — в v8_app.js isSupport) ══
+   2. Подсказка «чей ход» в списке и в короткой строке карточки на этапах до договора берётся из той же логики, что подробный
+      этап (Pre24): «ждёт решения УП» / «ждёт ответа ведущего»; раньше на «Обсуждении условий» всегда было «подготовить КП».
+   4. «Дебиторка» («Финансы» → «Обзор», главная): только дела с подписанным договором, не отказ и не закрытые; остаток —
+      стоимость договора минус оплачено в валюте договора (как «Долги клиентов» у Fin21), итог — по валютам, без смешивания.
+   5. На сайте (режим сервера) нет демонстрационных подписей и блоков: «Демонстрационные данные — заполняются HR» в карточке
+      сотрудника, вкладка «Фонд оплаты труда» в кабинете (демо-данные профилей; настоящий расчёт — «Финансы» → «Зарплаты»),
+      пояснение «Демо-поступления… demo:1» в «Поступлениях» и в расчётном листке. В демо-режиме всё как было. */
+Object.assign(UI,{d31Left:"Остаток||余额",d31Cost:"Стоимость договора||合同金额",d31Paid:"Оплачено||已付",d31St:"Оплата||付款",d31None:"Долгов по подписанным договорам нет||已签合同无欠款"});
+window.UZ21=Object.assign(window.UZ21||{},{"Остаток":"Qoldiq","Стоимость договора":"Shartnoma qiymati","Оплачено":"Toʻlangan","Оплата":"Toʻlov","Долгов по подписанным договорам нет":"Imzolangan shartnomalar boʻyicha qarz yoʻq"});
+const SRV31=()=>typeof SRV21==="function"&&SRV21();
+
+/* ── 2. «чей ход» до договора ── */
+if(typeof Pre24!=="undefined"&&typeof P24_PHASE!=="undefined"){const _mv31=move17;move17=function(m){const r=_mv31(m);
+  try{if(!r||!m||m.pipeline==="contract"||m.pipeline==="lost"||m.status==="closed"||m.paused)return r;
+    /* особые сигналы (конфликт, отказ ждёт подтверждения, КП просрочено и т.п.) остаются как были */
+    if(r.l!==UI.mvKpMake17&&r.l!==UI.mvUs17)return r;
+    const ph=P24_PHASE[m.pipeline];if(!ph)return r;const st=Pre24.st(m,ph);
+    if(st==="mp")return {l:UI.p24TurnMp,c:"ctl"};if(st==="lead")return {l:UI.p24TurnLead,c:"us"};
+    return m.pipeline==="negotiation"?{l:UI.mvUs17,c:"us"}:r;}catch(e){return r;}};}
+
+/* ── 4. дебиторка по подписанным договорам ── */
+const Debt31={
+  list(){if(typeof Fin21==="undefined"||typeof Pay21==="undefined")return [];
+    return MM().filter(m=>Fin21.signed(m)&&!Fin21.lost(m)&&(+m.cost||0)>0&&m.status!=="closed"&&m.status!=="cancelled")
+      .map(m=>{const cur=Pay21.cur(m);const paid=Pay21.paidC(m);const left=Math.round(((+m.cost||0)-paid)*100)/100;return {m,cur,paid,left,usd:Fin21.toUsd(left,cur)};})
+      .filter(x=>x.left>0.5).sort((a,b)=>b.usd-a.usd);},
+  money(v,cur){return cur==="USD"?"$"+fmtN(Math.round(v)):cur==="CNY"?"¥"+fmtN(Math.round(v)):fmtN(Math.round(v))+" "+T1(UI.sum);},
+  total(L){const by={};L.forEach(x=>{by[x.cur]=(by[x.cur]||0)+x.left;});return Object.keys(by).map(c=>this.money(by[c],c)).join(" · ")||"0";},
+  table(L){if(!L.length)return `<div class="empty2">${T1(UI.d31None)}</div>`;
+    return `<table class="tbl"><thead><tr><th>${T1(UI.mNo)}</th><th>${T1(UI.mClient)}</th><th class="num">${T1(UI.d31Cost)}</th><th class="num">${T1(UI.d31Paid)}</th><th class="num">${T1(UI.d31Left)}</th><th>${T1(UI.d31St)}</th></tr></thead><tbody>${L.map(x=>{const m=x.m,c=client(m.clientId);
+      return `<tr data-matter="${m.id}" style="cursor:pointer"><td><b>${esc(m.no)}</b><br><small style="color:var(--ink-3)">${esc(mT18(m).slice(0,40))}</small></td><td>${esc(c?clientName(c):"—")}</td><td class="num">${this.money(+m.cost||0,x.cur)}</td><td class="num">${this.money(x.paid,x.cur)}</td><td class="num"><b style="color:var(--red)">${this.money(x.left,x.cur)}</b></td><td>${typeof payLabel==="function"?payLabel(m.paymentStatus||"unpaid"):""}</td></tr>`;}).join("")}</tbody></table>`;},
+  card(){const L=this.list();return `<div class="card" style="margin-top:14px"><h4>${T1(UI.hDebt)}${L.length?` · ${this.total(L)}`:""}</h4>${this.table(L)}</div>`;}
+};
+/* «Финансы» → «Обзор» у УП: прежний блок «Дебиторка» (последний на вкладке) заменяется */
+{const _fin31=Pages.fin;Pages.fin=function(){const h=_fin31.apply(this,arguments);if(this._ft!=="fin"||(typeof Adv21!=="undefined"&&Adv21.on()))return h;
+  const mk=`<div class="card" style="margin-top:14px"><h4>${T1(UI.hDebt)} · `;const i=h.lastIndexOf(mk);return i<0?h:h.slice(0,i)+Debt31.card();};}
+/* таблица дебиторки в других местах (главная бухгалтера и т.п.) — тот же расчёт */
+Pages.debtTable=function(){return Debt31.table(Debt31.list());};
+
+/* ── 5. на сайте — без демонстрационных подписей и блоков ── */
+{const DEMO=()=>`<div class="demo"><i></i>${T1(UI.onlyDemo)}</div>`;
+  ["personal","work"].forEach(k=>{const f=Profile[k];if(typeof f!=="function")return;Profile[k]=function(){const h=f.apply(this,arguments);return SRV31()&&typeof h==="string"?h.split(DEMO()).join(""):h;};});
+  const _cr31=Cabinet.render.bind(Cabinet);Cabinet.render=function(){if(SRV31()&&this.tab==="pay")this.tab="sum";_cr31();if(SRV31()){const b=document.querySelector('#mdC .tabs [data-tab="pay"]');if(b)b.remove();}};
+  const _pays31=Pages.payments;Pages.payments=function(){const h=_pays31.apply(this,arguments);return SRV31()&&typeof h==="string"?h.split(`<div class="demo"><i></i>${T1(UI.demoPay)}</div>`).join(""):h;};
+  const _pr31=Pages.payroll;Pages.payroll=function(){const h=_pr31.apply(this,arguments);return SRV31()&&typeof h==="string"?h.split(` · ${T1(UI.demoPay)}</div>`).join("</div>"):h;};}
+
+/* ── 6. Отказ до договора (владелец 21.10.2026: «не получается закрыть это дело»): вкладка «Договор» этапов до договора (v24)
+   убирала все кнопки переходов, кроме «Отказ», — вместе с ними пропадали «Подтвердить отказ» и «Вернуть в работу», и дело
+   с отказом, ждущим УП, нельзя было ни закрыть, ни вернуть (разовые и судебные). Теперь обе кнопки — у УП в блоке отказа
+   (Lost17.confirm / Lost17.ret через Pipe.set, как раньше). Плашка «Отказ — ждёт подтверждения УП» в шапке — одна, без повтора. */
+{const _pm31=Pages.matter;Pages.matter=function(id){let h=_pm31.apply(this,arguments);const m=matter(id);
+  if(!m||!m.lostPending||m.status==="closed"||isClient()||!(isFounder()||hasF("managing"))||typeof h!=="string"||h.includes('data-pipe="lostconfirm"'))return h;
+  const i=h.indexOf('<div class="card span lost17">');if(i<0)return h;const j=h.indexOf("</dl>",i);if(j<0)return h;
+  const btn=`<div class="actions" style="justify-content:flex-start;margin-top:10px"><button type="button" class="btn sm pri" data-pipe="lostconfirm">${T1(UI.lostConfirm17)}</button><button type="button" class="btn sm ghost" data-pipe="lostreturn">${T1(UI.lostReturn17)}</button></div>`;
+  return h.slice(0,j+5)+btn+h.slice(j+5);};}
+{const _mv31b=move17;move17=function(m){if(m&&m.lostPending&&m.status!=="closed")return null;return _mv31b(m);};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
