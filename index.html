@@ -2045,6 +2045,7 @@ rect.bar[fill="#1B8F6E"]{fill:var(--pri2)}
 .tk22.rd{width:19px}
 .tk22{width:16px;height:11px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .grp22.me .tk22.rd{color:#BFE1FF}
+.tx22 .r2 .tk22{flex:none}
 .q22{display:flex;flex-direction:column;align-items:flex-start;text-align:left;border:0;border-left:3px solid var(--pri);background:var(--pri-soft);border-radius:6px;padding:4px 9px;margin:1px 0 5px;font:inherit;font-size:12.5px;color:var(--ink-2);cursor:pointer;max-width:100%;width:100%}
 .q22 b{color:var(--pri);font-size:12px}.q22 span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .grp22.me .q22{border-left-color:#fff;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)}.grp22.me .q22 b{color:#fff}
@@ -10287,7 +10288,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="55e551dbd21d";
+const ZC_BUILD="b2fedf6b41da";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -11952,6 +11953,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v15chat",d:"2026-10-21",t:"Версия 1.5: в чате набранный текст не пропадает||1.5版：聊天中输入的文字不会丢失",b:["Недописанное сообщение сохраняется на этом устройстве: после обновления окна, перехода на другую страницу или закрытия приложения текст вернётся, когда откроете разговор. Уведомления больше не мешают набору.||未写完的消息保存在本设备上：刷新窗口、切换页面或关闭应用后，再打开对话时文字会恢复。通知不再干扰输入。"]},
 {id:"v15notes",d:"2026-10-21",t:"Версия 1.5: заметки в «Плане на день»||1.5版：“今日计划”中的备忘",b:["Под календарём «Плана на день» — заметки и задачи с квадратиком «сделано»: быстро написать и нажать Enter, прикрепить файл или записать голосовое, напомнить, поставить коллеге, обсудить в комментариях. Невыполненное само переходит на сегодня.||“今日计划”日历下方新增带“已完成”方框的备忘和任务：快速输入并回车，可附加文件或录制语音、设置提醒、交给同事、在评论中讨论。未完成的会自动移到今天。"]},
 {id:"v15back",d:"2026-10-21",t:"Версия 1.5: кнопка «Назад»||1.5版：“返回”按钮",b:["Стрелка «←» рядом со значком меню возвращает на одну страницу назад — туда, откуда вы пришли (главная → раздел → дело и обратно). На первой странице после входа она серая. Вкладки карточки дела шагами не считаются: дело открывается на той же вкладке.||菜单图标旁的“←”箭头可返回上一页——即您来时的页面（首页 → 栏目 → 案件，反之亦然）。登录后的第一页上该按钮为灰色。案件卡片的标签页不算作步骤：案件会在原标签页打开。"]},
 {id:"v14osh",d:"2026-10-20",t:"Версия 1.4: исправления по сообщениям об ошибках||1.4版：根据错误报告的修复",b:["«Другая сторона»: каждая сторона — отдельной строкой с ИНН и ролью, «+ ещё сторона» — для нескольких ответчиков; перенос строки в названии больше не делит сторону надвое. Старые дела исправлены, конфликт интересов в них проверяется заново.||“对方当事人”：每一方单独一行，含税号和角色；“+ 再加一方”可添加多个被告；名称中的换行不再把一方拆成两方。旧案件已修正，并重新检查利益冲突。","Уведомления: «Проверить» сначала показывает уведомление прямо на этом устройстве, затем сообщает, что стало с проверкой на сервере — доставлена, в очереди или ошибка с её текстом.||通知：“测试”先在本设备上直接显示通知，然后告知服务器上的测试结果——已送达、排队中或错误及其内容。"]},
@@ -17453,6 +17455,57 @@ const _login29=showLogin;showLogin=function(){Back29.clear();return _login29.app
 .ib.hb21.bk29{margin-left:0}
 .ib.hb21.bk29:disabled{opacity:.35;cursor:default;background:transparent;color:var(--ink-2)}
 @media (max-width:700px){.app>.top.bk29top{gap:3px}.ib.hb21.bk29{display:inline-flex;align-items:center;justify-content:center;width:28px;margin-left:-8px}}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.5 · ЧАТ: НАБРАННЫЙ ТЕКСТ НЕ ПРОПАДАЕТ (сообщение владельца 21.10.2026) ═══════════════════════════
+   Владелец печатал в «Чатах» (установленное приложение на компьютере), пришло уведомление — чат подвис, набранное исчезло.
+   • Черновик каждого разговора хранится на этом устройстве (localStorage, у каждого пользователя свой): после перезагрузки окна,
+     перехода на другую страницу или закрытия приложения текст возвращается в поле, когда разговор открывают снова; отправили — черновик удалён.
+     Хранится до 30 дней, до 60 разговоров.
+   • Уведомления (и поручения) больше не перестраивают экран чата целиком — перестройка только при новых сообщениях (подписка «chats»).
+   • Общее обновление страницы (Router.refresh — при изменениях дел, задач и т. п.), пока открыт чат, заменено обновлением чата,
+     которое сохраняет поле ввода, курсор и прокрутку (раньше терялся первый символ, набранный в этот момент).
+   • Перед автоматической перезагрузкой окна («в другом окне сменили пользователя или вышли») черновики сохраняются, а в сообщении сказано,
+     что набранный текст сохранён. Только интерфейс; сервер не меняется. */
+Object.assign(UI,{pw21Other:"В другом окне этого браузера сменили пользователя или вышли — страница обновлена; набранный в чате текст сохранён||此浏览器的另一个窗口已切换用户或退出——页面已刷新；聊天中输入的文字已保存"});
+window.UZ21=Object.assign(window.UZ21||{},{"В другом окне этого браузера сменили пользователя или вышли — страница обновлена; набранный в чате текст сохранён":"Brauzerning boshqa oynasida foydalanuvchi almashtirildi yoki chiqildi — sahifa yangilandi; chatda yozilgan matn saqlandi",
+  "Версия 1.5: в чате набранный текст не пропадает":"1.5-versiya: chatda yozilgan matn yoʻqolmaydi",
+  "Недописанное сообщение сохраняется на этом устройстве: после обновления окна, перехода на другую страницу или закрытия приложения текст вернётся, когда откроете разговор. Уведомления больше не мешают набору.":"Yozib tugatilmagan xabar shu qurilmada saqlanadi: oynani yangilagandan, boshqa sahifaga oʻtgandan yoki ilovani yopgandan keyin suhbatni ochsangiz, matn qaytadi. Bildirishnomalar endi yozishga xalaqit bermaydi."});
+const ChatDr30={
+  loaded:null,quiet:0,MAX_DAYS:30,MAX_N:60,
+  key(){return "zc_ch22dr_"+((U()||{}).login||"");},
+  read(){try{const o=JSON.parse(localStorage.getItem(this.key())||"{}");return o&&typeof o==="object"?o:{};}catch(e){return {};}},
+  /* перенести сохранённые черновики в память чата (один раз на вход; то, что уже набрано в этом окне, не трогаем) */
+  load(){const me=(U()||{}).login;if(!me||this.loaded===me||typeof Chat22==="undefined")return;this.loaded=me;const o=this.read();const lim=Date.now()-this.MAX_DAYS*864e5;
+    Object.entries(o).forEach(([peer,v])=>{if(!v||typeof v.t!=="string"||!v.t||(v.at||0)<lim)return;if(!Chat22.drafts[peer])Chat22.drafts[peer]=v.t;});},
+  save(){const me=(U()||{}).login;if(!me||this.loaded!==me||typeof Chat22==="undefined")return;const old=this.read(),now=Date.now(),out={};
+    Object.entries(Chat22.drafts||{}).forEach(([peer,t])=>{if(typeof t==="string"&&t.trim()){out[peer]={t:t.slice(0,20000),at:old[peer]&&old[peer].t===t?old[peer].at:now};}});
+    const list=Object.entries(out).sort((a,b)=>b[1].at-a[1].at).slice(0,this.MAX_N);
+    try{if(list.length)localStorage.setItem(this.key(),JSON.stringify(Object.fromEntries(list)));else localStorage.removeItem(this.key());}catch(e){}},
+  soon(){clearTimeout(this._t);this._t=setTimeout(()=>this.save(),300);},
+  /* текущее поле ввода — в память чата (на случай, если обработчик чата ещё не успел) */
+  grab(){if(typeof Chat22==="undefined")return;const ta=document.getElementById("ch22ta");if(ta&&Chat22.peer&&!(Chat22.edit&&Chat22.edit[Chat22.peer]))Chat22.drafts[Chat22.peer]=ta.value;}
+};
+if(typeof Chat22!=="undefined"){
+  /* восстановление: перед тем как чат кладёт черновик в поле */
+  const _after30=Chat22.after.bind(Chat22);Chat22.after=function(){ChatDr30.load();return _after30.apply(this,arguments);};
+  /* отправили — черновик удалён (чат сам очищает drafts[peer]) */
+  const _send30=Chat22.send.bind(Chat22);Chat22.send=async function(){try{return await _send30.apply(this,arguments);}finally{ChatDr30.save();}};
+  /* уведомления не перестраивают экран чата */
+  const _ref30=Chat22.refresh.bind(Chat22);Chat22.refresh=function(){if(ChatDr30.quiet)return;return _ref30.apply(this,arguments);};
+}
+/* подписки «notif» и «assignments» (уведомления, поручения) вызывают Notif.rerender → обновление чата — на время их обработки чат не трогаем */
+if(typeof SB19!=="undefined"&&SB19.colSub){const _cs30=SB19.colSub.bind(SB19);SB19.colSub=function(name,cb,err){
+  if(name!=="notif"&&name!=="assignments"||typeof cb!=="function")return _cs30.apply(this,arguments);
+  return _cs30.call(this,name,function(){ChatDr30.quiet++;try{return cb.apply(this,arguments);}finally{ChatDr30.quiet--;}},err);};}
+/* общее обновление страницы, пока открыт чат, — обновлением чата (поле ввода, курсор и прокрутка на месте) */
+{const _rr30=Router.refresh.bind(Router);Router.refresh=function(){if(Router.cur==="chats"&&typeof Chat22!=="undefined"&&document.getElementById("ch22")&&document.getElementById("login").style.display==="none"){
+    try{Chat22.refresh(true);renderSide();Notif.badge();return;}catch(e){}}return _rr30.apply(this,arguments);};}
+/* набор — сохраняем; уход со страницы, скрытие окна, перезагрузка — тоже */
+document.addEventListener("input",e=>{if(e.target&&e.target.id==="ch22ta"){ChatDr30.grab();ChatDr30.soon();}},true);
+window.addEventListener("pagehide",()=>{ChatDr30.grab();ChatDr30.save();});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){ChatDr30.grab();ChatDr30.save();}});
+if(typeof Push21!=="undefined"&&Push21.authChanged){const _ac30=Push21.authChanged.bind(Push21);Push21.authChanged=function(){ChatDr30.grab();ChatDr30.save();return _ac30.apply(this,arguments);};}
+{const _go30=Router.go.bind(Router);Router.go=function(){if(Router.cur==="chats"){ChatDr30.grab();ChatDr30.save();}return _go30.apply(this,arguments);};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
