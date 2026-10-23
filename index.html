@@ -10290,7 +10290,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="7e701e937517";
+const ZC_BUILD="fadb5e6f0e19";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -17566,6 +17566,37 @@ Pages.debtTable=function(){return Debt31.table(Debt31.list());};
   const btn=`<div class="actions" style="justify-content:flex-start;margin-top:10px"><button type="button" class="btn sm pri" data-pipe="lostconfirm">${T1(UI.lostConfirm17)}</button><button type="button" class="btn sm ghost" data-pipe="lostreturn">${T1(UI.lostReturn17)}</button></div>`;
   return h.slice(0,j+5)+btn+h.slice(j+5);};}
 {const _mv31b=move17;move17=function(m){if(m&&m.lostPending&&m.status!=="closed")return null;return _mv31b(m);};}
+
+/* ═══════════════════════════ версия 1.5 · ОРГАНИЗАЦИЯ ДЕЛА — ПО РОЛИ И ВИДУ ДЕЛА, БЕЗ ПОДРАЗДЕЛЕНИЙ (решение владельца 24.10.2026) ═══════════════════════════
+   Владелец: «сейчас пока у нас нет подразделений… есть адвокат и юрист. Адвокат — разовые услуги, юридическое сопровождение и судебные дела;
+   юрист не сможет судебные дела». Сообщение: у юриста «Создать заявку» и «Регистрация договора» отказывали — «Ведущий исполнитель должен быть
+   из той же организации, что и подразделение дела»: организация сотрудника считалась по подразделению (у юриста и адвокатов его нет → «адвокатская
+   фирма»), организация дела — по подразделению дела (в «Сопровождении» — ООО, в разовых — скрытое поле, Б19).
+   Теперь у нового дела:
+     • сопровождение — всегда ООО (Сп-2), ведущий — адвокат или юрист;
+     • судебное дело — адвокатская фирма, только адвокат (юристу раздел закрыт — v27_lawyer.js, сервер zc.guard_lawyer) — как было;
+     • разовая услуга — по ведущему: юрист → ООО, адвокат и УП → адвокатская фирма.
+   Подразделение дела подставляется любое подходящее (поле по-прежнему скрыто); проверка «ведущий из той же организации» больше не мешает —
+   на время сохранения дела организация ведущего берётся по этим правилам (Структура и «Кадры» не меняются). У уже заведённых дел организация
+   при правке не меняется. Сервер: сопровождение — только ООО (zc.guard_support), юрист — не в делах адвокатской фирмы (zc.guard_lawyer). */
+const Ent32={
+  /* организация сотрудника по роли: юрист — ООО; иначе — организация учётки; УП — адвокатская фирма */
+  of(e){if(!e||e==="shahzod")return "legal";const a=typeof accByEmp==="function"?accByEmp(e):null;
+    if(a&&typeof Adv21!=="undefined"&&Adv21.kind&&Adv21.kind(a)==="lawyer")return "llc";
+    if(a&&(a.entity==="llc"||a.entity==="legal"))return a.entity;return empEntity(e);},
+  target(svc,lead,m){if(m&&m.id&&S.matters[m.id]&&m.entity)return m.entity;   /* правка — организация дела не меняется */
+    if(svc==="support")return "llc";if(svc==="court")return "legal";return lead&&lead!=="shahzod"?this.of(lead):"legal";},
+  /* подразделение нужной организации: выбранное, иначе своё у ведущего, иначе первое подходящее */
+  unit(E,lead,cur){const ok=id=>id&&entityOfUnit(id)===E&&!!unit9(id);if(ok(cur))return cur;const own=lead?unitOf(lead):null;if(ok(own))return own;
+    const all=unitsAll();const pick=all.find(u=>u.entity===E&&(u.kind==="practice"||u.kind==="department")&&!u.umbrella)||all.find(u=>u.entity===E);return pick?pick.id:cur;}
+};
+{const _ap32=Matter.apply.bind(Matter);Matter.apply=function(m,v){
+  const svc=(v&&v.svc)||(m&&m.svc)||Matter._svc||"oneoff";if(!v||svc==="court")return _ap32.apply(this,arguments);
+  const lead=v.lead||m.lead||null;const E=Ent32.target(svc,lead,m);const U=Ent32.unit(E,lead,v.practice);if(U)v.practice=U;
+  /* на время сохранения: подразделение ведущего (и команды) — нужной организации, чтобы проверка v9 сверяла по правилам выше */
+  const who=new Set([v.lead,m.lead].filter(x=>x&&x!=="shahzod"));
+  const prev=unitOf;unitOf=function(e){return who.has(e)&&U?U:prev.apply(this,arguments);};
+  try{return _ap32.call(this,m,v);}finally{unitOf=prev;}};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
