@@ -8208,7 +8208,8 @@ const Adv={
 };
 /* ── основание для выплат ── */
 Object.assign(Pay.REASONS,{disputed:"pDisputed",noCn:"pNoCn",notClosed:"pNotClosed",monthOpen:"pMonthOpen",instOpen:"pInstOpen",stageOpen:"pStageOpen"});
-const closeAt13=m=>{if(m.stage!=="accepted")return null;const a=Object.values(S.clientAcceptance).filter(x=>x.matterId===m.id&&x.result==="accepted").map(x=>x.at).sort()[0];return (a||m.esf&&m.esf.acceptedAt||(m.closed?m.closed+"T23:59":null)||nowS()).slice(0,10);};
+/* 1.7 (ОШ-0020): закрытым считается и дело на этапе «Отправление в архив» — туда попадают только принятые клиентом (раньше премия писала «не закрыто» у всех закрытых разовых) */
+const closeAt13=m=>{if(m.stage!=="accepted"&&m.stage!=="archive")return null;const a=Object.values(S.clientAcceptance).filter(x=>x.matterId===m.id&&x.result==="accepted").map(x=>x.at).sort()[0];return (a||m.esf&&m.esf.acceptedAt||(m.closed?m.closed+"T23:59":null)||nowS()).slice(0,10);};
 const _elig13=Pay.eligibility.bind(Pay);
 Pay.eligibility=function(p){const w=_elig13(p);if(w||this._v13off)return w;const m=p.matterId&&S.matters[p.matterId];if(!m||p.kind==="translation")return null;migrateMatter11(m);const end=endOfM(this._calcM||monthOf(todayS()));const st=paySettings();
   if(m.invoiceDisputed)return "disputed";
@@ -10292,7 +10293,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="281e9b70aaae";
+const ZC_BUILD="9c1ad656c187";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10375,7 +10376,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="1.6";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="1.7";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -11968,6 +11969,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v17osh",d:"2026-10-24",t:"Версия 1.7: исправления по сообщениям об ошибках||1.7版：根据错误报告的修复",b:["Премия: закрытые разовые дела (этап «Отправление в архив») больше не числятся «не закрытыми».||奖金：已关闭的一次性案件（“归档”阶段）不再显示为“未关闭”。","Пока ценовая политика не утверждена, диапазон цены — только ориентир, пояснение не требуется.||价格政策批准前，价格区间仅供参考，无需说明。","В новой заявке клиента нужно выбрать — первый клиент больше не подставляется сам; кнопки шагов — «Далее», «Найти клиента», «Создать заявку».||新申请必须选择客户——不再自动选中第一个客户；步骤按钮为“下一步”“查找客户”“创建申请”。","КП без доступа клиента в кабинет — «отправка отмечена сотрудником», а не «доставлено».||客户无门户权限时，报价显示“员工已标记发送”，而非“已送达”。","Пеня, сумма иска и цена не могут быть меньше нуля; дата договора позже срока — предупреждение.||违约金、诉讼金额和价格不能小于零；合同日期晚于期限时会提示。","«Судебный контроль» открывается и после обновления страницы.||“诉讼监控”刷新页面后仍可打开。","Если сервер не принял действие этапа до договора, окно открывается снова с введённым.||若服务器未接受签约前阶段的操作，窗口会带着已输入内容重新打开。","Клиент, указанный и другой стороной этого же дела, — возможный конфликт для проверки УП.||客户同时被列为本案对方时，标记为可能的冲突，由管理合伙人审核。"]},
 {id:"v16osh",d:"2026-10-24",t:"Версия 1.6: исправления по сообщениям об ошибках||1.6版：根据错误报告的修复",b:["Сохранение дела адвокатом больше не отклоняется «Ведущего назначает управляющий адвокат»: в «Редактировать дело» ведущий показан текстом, а поля этапов берутся из базы.||律师保存案件不再被“主办律师由管理律师指定”拒绝：“编辑案件”中主办律师以文字显示，阶段字段取自数据库。","«История» дела: кто что изменил — было → стало. Данные «Приёма заявки» можно изменить до договора; свою «Новую» заявку в «Заявках» — тоже.||案件“历史”：谁改了什么——原值 → 新值。签约前可修改“受理申请”信息；“申请”中自己的“新”申请也可修改。","Задачи: исполнитель — из людей дела (себя — всегда); статус меняют автор, исполнитель, ведущий и УП.||任务：执行人从案件成员中选择（始终可选自己）；状态可由创建人、执行人、主办律师和管理律师更改。","«Сообщить об ошибке» — из любого окна: ⚠ в заголовке окна или Ctrl+Shift+E; форма справа, окно не закрывается.||“报告错误”——可在任何窗口中：窗口标题的⚠或 Ctrl+Shift+E；表单在右侧，原窗口不关闭。","Ctrl+V скриншота или файла — в окна с «Прикрепить файл», задачи, форму ошибки и «Документы» дела; файлы можно перетащить в окно.||Ctrl+V 粘贴截图或文件——到带“附加文件”的窗口、任务、错误表单和案件“文件”；文件可拖入窗口。","КП: двойное нажатие больше не создаёт дубль; «Открыть все версии» и «Сравнить две»; «Изменить» — новая версия; «Удалить» — неотправленную.||报价：双击不再生成重复；“查看全部版本”和“对比两版”；“修改”——新版本；“删除”——未发送的版本。","Условия оплаты: поля появляются по выбранной оплате. «Пакет услуг» видят адвокаты и юристы. Календарь: месяц, год и выбор даты. Несколько файлов — в папку сразу. Переводчик: значок «копировать» у перевода. При обрыве связи портал сам проверяет, выполнено ли действие.||付款条件：字段随付款方式出现。律师和法务可查看“服务套餐”。日历：年月及日期选择。可一次将多个文件移入文件夹。翻译：译文旁的复制图标。连接中断时门户会自动检查操作是否完成。","Сохранение из окна, открытого давно, больше не возвращает этап, ведущего и оплату дела, изменённые за это время; поступление пересчитывает дело на сервере и пишет строку в его историю.||打开已久的窗口保存时，不再还原期间已更改的阶段、主办律师和付款；收款由服务器重新计算案件并记入其历史。"]},
 {id:"v15chat",d:"2026-10-21",t:"Версия 1.5: в чате набранный текст не пропадает||1.5版：聊天中输入的文字不会丢失",b:["Недописанное сообщение сохраняется на этом устройстве: после обновления окна, перехода на другую страницу или закрытия приложения текст вернётся, когда откроете разговор. Уведомления больше не мешают набору.||未写完的消息保存在本设备上：刷新窗口、切换页面或关闭应用后，再打开对话时文字会恢复。通知不再干扰输入。"]},
 {id:"v15notes",d:"2026-10-21",t:"Версия 1.5: заметки в «Плане на день»||1.5版：“今日计划”中的备忘",b:["Под календарём «Плана на день» — заметки и задачи с квадратиком «сделано»: быстро написать и нажать Enter, прикрепить файл или записать голосовое, напомнить, поставить коллеге, обсудить в комментариях. Невыполненное само переходит на сегодня.||“今日计划”日历下方新增带“已完成”方框的备忘和任务：快速输入并回车，可附加文件或录制语音、设置提醒、交给同事、在评论中讨论。未完成的会自动移到今天。"]},
@@ -18116,6 +18118,129 @@ window.UZ21=Object.assign(window.UZ21||{},{
   "КП: двойное нажатие больше не создаёт дубль; «Открыть все версии» и «Сравнить две»; «Изменить» — новая версия; «Удалить» — неотправленную.":"TT: ikki marta bosish endi nusxa yaratmaydi; «Barcha versiyalarni ochish» va «Ikkitasini solishtirish»; «Oʻzgartirish» — yangi versiya; «Oʻchirish» — yuborilmaganini.",
   "Условия оплаты: поля появляются по выбранной оплате. «Пакет услуг» видят адвокаты и юристы. Календарь: месяц, год и выбор даты. Несколько файлов — в папку сразу. Переводчик: значок «копировать» у перевода. При обрыве связи портал сам проверяет, выполнено ли действие.":"Toʻlov shartlari: maydonlar tanlangan toʻlovga qarab chiqadi. «Xizmatlar paketi»ni advokatlar va yuristlar koʻradi. Kalendar: oy, yil va sanani tanlash. Bir nechta fayl — papkaga birdan. Tarjimon: tarjima yonida «nusxa olish» belgisi. Aloqa uzilsa, portal amal bajarilganini oʻzi tekshiradi.",
   "Сохранение из окна, открытого давно, больше не возвращает этап, ведущего и оплату дела, изменённые за это время; поступление пересчитывает дело на сервере и пишет строку в его историю.":"Uzoq ochiq turgan oynadan saqlash endi shu vaqt ichida oʻzgargan bosqich, masʼul va toʻlovni qaytarmaydi; tushum ishni serverda qayta hisoblaydi va tarixiga yozadi."
+});
+
+/* ═══════════════════════════ версия 1.7 · ИСПРАВЛЕНИЯ ПО «СООБЩИТЬ ОБ ОШИБКЕ» ОШ-0019…0034 (24.10.2026) ═══════════════════════════
+   Только ошибки (решение владельца: «сначала исправь только баги; где нужно моё решение — пока не трогай»).
+   Сервер — миграция backend/supabase/migrations/20261024000300_v17_oshibki.sql (пеня, сумма иска, цена в условиях).
+     • ОШ-0021: пока ценовая политика не утверждена (портал берёт демонстрационные ставки, «Версия 0»), диапазон — «ориентир», пояснение не требуется;
+     • ОШ-0026: «Судебный контроль» и «Отчёт по судебным делам» открываются по адресу (F5, закладка, «Назад») — тем, кому открыт список «Судебные дела»;
+     • ОШ-0027: в новой заявке и новом деле клиент не выбирается сам — «— выберите клиента —», поле обязательное (из карточки клиента — как было);
+     • ОШ-0028: кнопки промежуточных шагов — «Далее», «Найти клиента», «Выбрать»; последняя — «Создать заявку» / «Зарегистрировать» / «Создать»;
+     • ОШ-0029: КП без доступа клиента в кабинет — «отправка отмечена сотрудником», а не «доставлено»; без кабинета нужно указать способ передачи;
+     • ОШ-0030: «Заполнить договор» — пеня не меньше нуля; дата договора позже срока — предупреждение (второе «Сохранить» — сохранить как есть);
+     • ОШ-0031: до подписания договора в «Истории» нет служебной строки «этап: Подготовка к работе» (этапы работы ещё не начались);
+     • ОШ-0032: «Сумма иска» не меньше нуля — при создании и в «Изменить дело»;
+     • ОШ-0033: клиент дела, указанный и другой стороной этого же дела, — возможный конфликт (решает УП, как другие совпадения);
+     • ОШ-0034: условия — цена не меньше нуля, абонплата больше нуля (до отправки); если сервер не принял действие этапа до договора,
+       окно открывается снова с введённым и текстом ошибки (раньше всё введённое пропадало).
+   ОШ-0020 (премия у закрытых разовых дел) — в v13_pay.js (closeAt13). */
+Object.assign(UI,{
+  p34PrDemo:"ориентир: {a} — {b} · ценовая политика ещё не утверждена (демонстрационные ставки) — пояснение не требуется||参考：{a} — {b} · 价格政策尚未批准（演示数据）——无需说明",
+  p34PickClient:"— выберите клиента —||— 请选择客户 —",
+  p34Next:"Далее||下一步",p34FindBtn:"Найти клиента||查找客户",p34Pick:"Выбрать||选择",p34CreateReq:"Создать заявку||创建申请",p34Register:"Зарегистрировать||登记",p34Create:"Создать||创建",
+  p34Marked:"отправка отмечена сотрудником||员工已标记发送",
+  p34NoChannel:"У клиента нет доступа в кабинет — укажите, как передали КП||客户没有门户权限——请注明报价的发送方式",
+  p34Penalty:"Пеня не может быть меньше нуля||违约金不能小于零",
+  p34DateLate:"Дата договора позже срока ({d}). Если так и есть — нажмите «Сохранить» ещё раз||合同日期晚于期限（{d}）。如确实如此——请再次点击“保存”",
+  p34Claim:"Сумма иска не может быть меньше нуля||诉讼金额不能小于零",
+  p34Cost:"Сумма не может быть меньше нуля||金额不能小于零",
+  p34Fee:"Абонплата должна быть больше нуля||月费必须大于零",
+  p34SelfCp:"клиент дела указан и другой стороной в этом же деле — проверьте стороны||本案客户同时被列为本案对方——请核对当事人",
+  p34Retry:"Не сохранено: {e}. Введённое осталось — исправьте и нажмите «Сохранить»||未保存：{e}。已输入内容保留——请修改后点击“保存”"
+});
+window.UZ21=Object.assign(window.UZ21||{},{
+  "ориентир: {a} — {b} · ценовая политика ещё не утверждена (демонстрационные ставки) — пояснение не требуется":"moʻljal: {a} — {b} · narx siyosati hali tasdiqlanmagan (namunaviy stavkalar) — izoh shart emas",
+  "— выберите клиента —":"— mijozni tanlang —","Далее":"Keyingi","Найти клиента":"Mijozni topish","Выбрать":"Tanlash","Создать заявку":"Ariza yaratish","Зарегистрировать":"Roʻyxatdan oʻtkazish","Создать":"Yaratish",
+  "отправка отмечена сотрудником":"yuborilgani xodim tomonidan belgilangan",
+  "У клиента нет доступа в кабинет — укажите, как передали КП":"Mijozda kabinetga kirish yoʻq — TKni qanday topshirganingizni koʻrsating",
+  "Пеня не может быть меньше нуля":"Penya noldan kam boʻlishi mumkin emas",
+  "Дата договора позже срока ({d}). Если так и есть — нажмите «Сохранить» ещё раз":"Shartnoma sanasi muddatdan ({d}) keyin. Agar shunday boʻlsa — «Saqlash»ni yana bir marta bosing",
+  "Сумма иска не может быть меньше нуля":"Da'vo summasi noldan kam boʻlishi mumkin emas",
+  "Сумма не может быть меньше нуля":"Summa noldan kam boʻlishi mumkin emas","Абонплата должна быть больше нуля":"Abonent toʻlovi noldan katta boʻlishi kerak",
+  "клиент дела указан и другой стороной в этом же деле — проверьте стороны":"ish mijozi shu ishda qarama-qarshi tomon sifatida ham koʻrsatilgan — tomonlarni tekshiring",
+  "Не сохранено: {e}. Введённое осталось — исправьте и нажмите «Сохранить»":"Saqlanmadi: {e}. Kiritilganlar qoldi — tuzatib, «Saqlash»ni bosing"
+});
+/* число из поля формы: пробелы и запятая допускаются; пусто — null */
+const num34=v=>{const s=String(v??"").trim().replace(/\s/g,"").replace(",",".");return s===""?null:+s;};
+
+/* ── ОШ-0021: демонстрационная ценовая политика — ориентир, не правило ── */
+const Demo34={on(){try{return typeof Price!=="undefined"&&Price.current().status==="default";}catch(e){return false;}}};
+if(typeof Pre24!=="undefined"){const _out34=Pre24.outOf.bind(Pre24);Pre24.outOf=function(m,t){return Demo34.on()?false:_out34(m,t);};
+  let base34=UI.p24Range;Object.defineProperty(UI,"p24Range",{configurable:true,enumerable:true,get(){return Demo34.on()?UI.p34PrDemo:base34;},set(v){base34=v;}});}
+
+/* ── ОШ-0026: страницы раздела «Судебные дела», открываемые кнопкой, — и по адресу ── */
+{const _chk34=Route17.check.bind(Route17);Route17.check=function(r){
+  if(r&&(r.cur==="courtctl"||r.cur==="courtrep")&&U()&&!isClient()){if(this.navKeys().has("court")&&Router.extra&&Router.extra[r.cur])return true;toast(T1(UI.noAccess17));return false;}
+  return _chk34(r);};}
+
+/* ── ОШ-0027 (клиент не выбирается сам) и ОШ-0032 (сумма иска не меньше нуля) — поля дела ── */
+{const _mf34=Matter.fields;Matter.fields=function(m){const f=_mf34.apply(this,arguments);const isNew=!(m&&m.id);
+  f.forEach(x=>{if(!x)return;
+    if(isNew&&x.k==="clientId"&&x.type==="select"&&!x._hide24){const op=x.options||[];if(!op.some(o=>o[0]===""))x.options=[["",T1(UI.p34PickClient)],...op];if(!x.value||!op.some(o=>o[0]===x.value))x.value="";x.required=true;}
+    if(x.k==="claimSum24"){const c0=x.check;x.min=0;x.check=v=>{const n=num34(v.claimSum24);if(n!==null&&!(n>=0))return T1(UI.p34Claim);return c0?c0(v):"";};}});
+  return f;};}
+
+/* ── ОШ-0030: «Заполнить договор» — пеня и дата договора ── */
+if(typeof Contract11!=="undefined"){const _cf34=Contract11.fields.bind(Contract11);let warned34="";Contract11.fields=function(m){const f=_cf34(m);
+  f.forEach(x=>{if(!x)return;
+    if(x.k==="penaltyRate"){const c0=x.check;x.min=0;x.check=v=>{const n=num34(v.penaltyRate);if(n!==null&&!(n>=0))return T1(UI.p34Penalty);return c0?c0(v):"";};}
+    if(x.k==="date"){const c0=x.check;x.check=v=>{const e=c0?c0(v):"";if(e)return e;const d=String(v.date||""),t=String(v.term||"");
+      if(ISO21.test(d)&&ISO21.test(t)&&d>t){const key=d+"|"+t;if(warned34!==key){warned34=key;return T1(UI.p34DateLate).replace("{d}",fmtD(t));}}return "";};}});
+  return f;};}
+
+/* ── ОШ-0034: цена в условиях не меньше нуля, абонплата сопровождения больше нуля (сервер проверяет то же) ── */
+if(typeof Pre24!=="undefined"){const _tf34=Pre24.termFields.bind(Pre24);Pre24.termFields=function(m,t,needWhy){const f=_tf34(m,t,needWhy);const sup=typeof sp2==="function"&&sp2(m);
+  f.forEach(x=>{if(x&&x.k==="cost"){const c0=x.check;x.check=v=>{const n=num34(v.cost);if(n!==null){if(isNaN(n)||n<0)return T1(UI.p34Cost);if(sup&&n<=0)return T1(UI.p34Fee);}return c0?c0(v):"";};}});
+  return f;};}
+
+/* ── ОШ-0034: сервер не принял действие этапа до договора — окно снова, с введённым и текстом ошибки ── */
+const D34={track:false,last:null,err:null,draft:null};
+if(typeof StSrv23!=="undefined"){const _c34=StSrv23.call.bind(StSrv23);StSrv23.call=async function(fn,args){const r=await _c34(fn,args);if(D34.track&&r&&r.err&&fn==="pre24_act")D34.err=r.err;return r;};}
+if(typeof Pre24!=="undefined"){const _act34=Pre24.act.bind(Pre24);Pre24.act=async function(m,a,b){const top=!D34.track;if(top){D34.track=true;D34.last=null;D34.err=null;}let r;
+  try{r=await _act34(m,a,b);}finally{if(top)D34.track=false;}
+  if(top&&D34.err&&D34.last){D34.draft={title:D34.last.title,v:D34.last.v,err:D34.err};D34.last=null;D34.err=null;return Pre24.act(matter(m.id)||m,a,b);}
+  return r;};}
+
+/* ── Dlg.ask: подписи кнопок (ОШ-0028), способ передачи КП (ОШ-0029), повтор окна с введённым (ОШ-0034) ── */
+{const _da34=Dlg.ask.bind(Dlg);Dlg.ask=function(o){
+  if(o&&Array.isArray(o.fields)){const ks=o.fields.filter(x=>x&&x.k).map(x=>x.k);
+    if(!o.okText){
+      if(o.title===T1(UI.mNew)&&ks.length===1&&ks[0]==="mode")o=Object.assign({},o,{okText:UI.p34Next});
+      else if(o.title===T1(UI.adv21Find)&&ks.length===1&&ks[0]==="q")o=Object.assign({},o,{okText:UI.p34FindBtn});
+      else if(o.title===T1(UI.mClient)&&ks.length===1&&ks[0]==="c")o=Object.assign({},o,{okText:UI.p34Pick});
+      else if(o.title===T1(UI.mNew)&&ks.includes("clientId")&&ks.includes("title")){const md=Matter._mode24;o=Object.assign({},o,{okText:md==="reg"?UI.p34Register:md==="req"?UI.p34CreateReq:UI.p34Create});}}
+    if(typeof o.title==="string"&&o.title.startsWith(T1(UI.p24Send)+" · ")&&o.text===T1(UI.p24SendNoCab))
+      o=Object.assign({},o,{fields:o.fields.map(x=>x&&x.k==="channel"?Object.assign({},x,{check:v=>v.channel?"":T1(UI.p34NoChannel)}):x)});
+    if(D34.draft&&o.title===D34.draft.title){const dv=D34.draft.v,er=D34.draft.err;D34.draft=null;
+      o=Object.assign({},o,{text:T1(UI.p34Retry).replace("{e}",er)+(o.text?" · "+o.text:""),
+        fields:o.fields.map(x=>x&&x.k&&dv[x.k]!==undefined&&!["files","html","section"].includes(x.type)?Object.assign({},x,{value:dv[x.k]}):x)});}}
+  const p=_da34(o);if(D34.track&&o)p.then(v=>{if(v&&D34.track)D34.last={title:o.title,v};});return p;};}
+
+/* ── ОШ-0029: без кабинета — «отправка отмечена сотрудником», не «доставлено» ── */
+if(typeof Pre24!=="undefined"&&Pre24.p3){const _p334=Pre24.p3.bind(Pre24);Pre24.p3=function(m){const h=_p334(m);const o=m&&m.offer;
+  return o&&o.sentAt&&!o.cabinet?h.split(`<span class="on">${T1(UI.p24SeenDel)} `).join(`<span class="on">${T1(UI.p34Marked)} `):h;};}
+
+/* ── ОШ-0031: до договора этапов работы ещё нет — в «Истории» без строк этапов (служебная «Подготовка к работе» 09:00) ── */
+if(typeof Card22!=="undefined"&&Card22.feed){const _fd34=Card22.feed.bind(Card22);Card22.feed=function(m){
+  return m&&m.pipeline&&m.pipeline!=="contract"&&(m.stageHistory||[]).length?_fd34(Object.assign({},m,{stageHistory:[]})):_fd34(m);};}
+
+/* ── ОШ-0033: клиент дела и другая сторона этого же дела совпадают — возможный конфликт ── */
+if(typeof Conflict17!=="undefined"){const _ck34=Conflict17.check.bind(Conflict17);Conflict17.check=function(m){const h=_ck34(m);
+  try{const my=m&&m.clientId?this.clientKeys(client(m.clientId)):new Set();if(my.size)(m.counterparties||[]).forEach(x=>{const hit=this.inter(this.keysOf(x),my);if(hit)h.push({kind:"self34",cp:x.name||x.inn,by:hit.slice(0,3)});});}catch(e){}
+  return h;};
+  const _ht34=Conflict17.hitText.bind(Conflict17);Conflict17.hitText=function(h){return h&&h.kind==="self34"?`${esc(h.cp)} — ${T1(UI.p34SelfCp)}`:_ht34(h);};}
+/* «Что нового» версии 1.7 — по-узбекски */
+window.UZ21=Object.assign(window.UZ21||{},{
+  "Версия 1.7: исправления по сообщениям об ошибках":"1.7-versiya: xato xabarlari boʻyicha tuzatishlar",
+  "Премия: закрытые разовые дела (этап «Отправление в архив») больше не числятся «не закрытыми».":"Mukofot: yopilgan bir martalik ishlar («Arxivga yuborish» bosqichi) endi «yopilmagan» deb hisoblanmaydi.",
+  "Пока ценовая политика не утверждена, диапазон цены — только ориентир, пояснение не требуется.":"Narx siyosati tasdiqlanmaguncha narx oraligʻi faqat moʻljal, izoh shart emas.",
+  "В новой заявке клиента нужно выбрать — первый клиент больше не подставляется сам; кнопки шагов — «Далее», «Найти клиента», «Создать заявку».":"Yangi arizada mijozni tanlash kerak — birinchi mijoz endi oʻzi qoʻyilmaydi; qadam tugmalari — «Keyingi», «Mijozni topish», «Ariza yaratish».",
+  "КП без доступа клиента в кабинет — «отправка отмечена сотрудником», а не «доставлено».":"Mijozda kabinetga kirish boʻlmasa, TK uchun «yuborilgani xodim tomonidan belgilangan» deb yoziladi, «yetkazildi» emas.",
+  "Пеня, сумма иска и цена не могут быть меньше нуля; дата договора позже срока — предупреждение.":"Penya, daʼvo summasi va narx noldan kam boʻlishi mumkin emas; shartnoma sanasi muddatdan keyin boʻlsa — ogohlantirish.",
+  "«Судебный контроль» открывается и после обновления страницы.":"«Sud nazorati» sahifa yangilangandan keyin ham ochiladi.",
+  "Если сервер не принял действие этапа до договора, окно открывается снова с введённым.":"Agar server shartnomagacha bosqich amalini qabul qilmasa, oyna kiritilganlar bilan qayta ochiladi.",
+  "Клиент, указанный и другой стороной этого же дела, — возможный конфликт для проверки УП.":"Mijoz shu ishda qarama-qarshi tomon sifatida ham koʻrsatilgan boʻlsa — boshqaruvchi advokat tekshiradigan ehtimoliy nizo."
 });
 
 
