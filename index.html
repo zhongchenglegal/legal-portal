@@ -2488,6 +2488,8 @@ body.ch22pg #ms21Btn{color:var(--pri);border-color:var(--pri);background:var(--p
 .p24 .sim24 .sim17{background:none;border:0;padding:0;margin:0;font-size:13px}.p24 .sim24 .sim17>div{margin-bottom:4px}.p24 .sim24 .sim17l{margin:4px 0 0;padding-left:18px}
 .p24 .cf24{margin:6px 0 0;padding-left:18px;font-size:12.5px}.p24 .cf24 li{margin:2px 0}
 .nw24{display:inline-flex;gap:8px;flex-wrap:wrap}
+/* версия 1.6 · ОШ-0012: поле «Выводы ведущего» — обычные углы (раньше класс строки поиска делал его овалом и обрезал текст при растягивании) */
+.ta33{display:block;width:100%;min-height:70px;resize:vertical;border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;font:inherit;font-size:13px;line-height:1.5;background:var(--surface);color:var(--ink)}
 </style>
 <style>
 /* ═══ версия 1.3 · главный экран «Разовые услуги» (v25_list.js; макет design-oneoff-list.html) ═══ */
@@ -10290,7 +10292,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="fadb5e6f0e19";
+const ZC_BUILD="281e9b70aaae";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10373,7 +10375,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="1.5";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="1.6";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -11862,8 +11864,11 @@ const HELP21={
     "После обновления страницы (F5) система остаётся на той же странице.||刷新页面（F5）后系统停留在原页面。",
     "Окна не закрываются щелчком мимо них. Всё, что вы ввели, сохраняется как черновик: при следующем открытии окно предложит «Есть черновик — восстановить?».||点击窗口外部不会关闭窗口。已输入内容自动保存为草稿：下次打开时会提示“有草稿——是否恢复？”。",
     "Файлы прикрепляются кнопкой «Прикрепить файл», размер — до 100 МБ.||使用“附加文件”按钮上传文件，单个文件最大100 MB。",
+    "Скриншот или файл можно вставить Ctrl+V или перетащить мышью: в открытое окно с «Прикрепить файл», в окно задачи, в форму «Сообщить об ошибке»; на странице дела без открытых окон — в «Документы» дела.||截图或文件可用 Ctrl+V 粘贴或用鼠标拖入：带“附加文件”的窗口、任务窗口、“报告错误”表单；在没有打开窗口的案件页面则进入案件“文件”。",
+    "Сообщить об ошибке можно из любого открытого окна: кнопка ⚠ «Ошибка» в заголовке окна или Ctrl+Shift+E. Форма открывается справа поверх окна, окно не закрывается; Esc закрывает только форму.||可在任何打开的窗口中报告错误：窗口标题中的⚠“错误”按钮或 Ctrl+Shift+E。表单在右侧覆盖显示，原窗口不会关闭；Esc 只关闭表单。",
     "Язык — кнопки «RU · 中文 · Oʻz»: на экране входа и в «Настройках» (шестерёнка внизу слева). Выбор сохраняется в вашей учётке: уведомления, в том числе в Telegram, приходят на этом языке.||语言——“RU · 中文 · Oʻz”按钮：在登录页面和“设置”（左下角齿轮）中。所选语言保存在您的账号中：通知（包括Telegram）将以该语言发送。"]},
    {id:"home",t:"Главная и «План на день»||首页与“今日计划”",b:[
+    "В «Плане на день» под датой — месяц и год; нажмите на них, чтобы сразу выбрать нужную дату (без листания по месяцам).||“今日计划”日期下方显示年月；点击即可直接选择日期（无需逐月翻页）。",
     "На главной — «План на день»: ваши события, дедлайны дел, задания сопровождения, задачи и поручения на выбранный день.||首页显示“今日计划”：所选日期的事件、案件截止日、顾问任务、任务与指派事项。",
     "«+ Событие» добавляет встречу, заседание или звонок в ваш план. Дедлайны дел попадают в план сами.||“+ 事件”可将会议、庭审或电话加入计划。案件截止日自动显示。",
     "Заметки — под календарём «Плана на день»: напишите текст и нажмите Enter (начните со времени — «15:00 позвонить в банк» — время подставится само). Скрепка прикрепляет файл, микрофон записывает голосовое. Квадратик — «сделано». Невыполненное за прошлые дни само переходит на сегодня с красной пометкой «с 17.10».||备忘位于“今日计划”日历下方：输入内容后按回车（以时间开头——“15:00 给银行打电话”——会自动填入时间）。回形针附加文件，麦克风录制语音。方框表示“已完成”。过去未完成的备忘会自动移到今天，并带红色标记“自 17.10”。",
@@ -11876,6 +11881,8 @@ const HELP21={
     "Дедлайн разовой услуги обязателен — выбирается датой в календаре.||一次性服务必须填写截止日，在日历中选择日期。",
     "Перед работой система проверяет конфликт интересов по всей фирме; вы увидите только число совпадений.||开始工作前系统会在全所范围检查利益冲突；您只能看到匹配数量。"]},
    {id:"contract",t:"Договор, порядок оплаты и подписание||合同、付款方式与签署",b:[
+    "В «Предложить условия» и в условиях договора поля появляются по выбранной оплате: «Предоплата N %» — процент, «Поэтапно» — сумма первого этапа; при «100 % предоплате» и «Оплате после результата» лишних полей нет.||在“提出条件”和合同条件中，字段随所选付款方式出现：“预付 N%”——比例，“分阶段”——第一阶段金额；“100% 预付”和“成果后付款”无多余字段。",
+    "Версии КП: «Открыть все версии» — список слева, просмотр справа, «Сравнить две». «Изменить» собирает новую версию с исправленными текстами (цена и оплата — согласованные на этапе 2). «Удалить» — только версию, которую ещё не отправляли клиенту.||报价版本：“查看全部版本”——左侧列表、右侧预览、“对比两版”。“修改”生成文字修正后的新版本（价格和付款方式为第2阶段已商定）。“删除”——仅限尚未发送给客户的版本。",
     "«Договор и стоимость»: дата, предмет, дедлайн, ставка пени, стоимость, валюта и порядок оплаты из списка: 100 % предоплата; предоплата N % + остаток по результату; оплата после результата; поэтапно; ежемесячно (только сопровождение).||“合同与费用”：日期、事项、截止日、违约金费率、费用、币种及付款方式（列表选择）：100%预付；预付N%+结果后付余款；结果后付款；分阶段；按月（仅顾问服务）。",
     "«Договор подписан» вы ставите сами, когда заполнены реквизиты, приложен файл договора («Приложить договор») и выбран порядок оплаты. Управляющий адвокат получит уведомление и может отменить подписание.||当合同信息完整、已附合同文件（“附加合同”）并选定付款方式后，您可自行标记“合同已签署”。管理合伙人会收到通知并可撤销签署。",
     "После подписания стоимость и порядок оплаты меняет только управляющий адвокат. Если нужно изменить — «Попросить изменить стоимость» с обоснованием.||签署后费用和付款方式只能由管理合伙人修改。如需修改，请点击“申请修改费用”并说明理由。"]},
@@ -11886,12 +11893,17 @@ const HELP21={
     "При оплате после результата «Результат готов» можно поставить сразу, но без полной оплаты дело не закрыть и не отправить в архив, и оно не войдёт в расчёт зарплаты.||结果后付款时可直接标记“结果已完成”，但未全额付款的案件不能结案或归档，也不计入工资核算。",
     "Непроверенные поступления в зарплату не идут, пока управляющий адвокат их не подтвердит.||未经管理合伙人确认的收款不计入工资。"]},
    {id:"stages",t:"Стадии дела||案件阶段",b:[
+    "Кто и что изменил в деле — во вкладке «История»: поле, было → стало, автор и время (записывает сервер).||案件中谁改了什么——见“历史”标签：字段、原值 → 新值、修改人和时间（由服务器记录）。",
+    "До подписания договора ведущий (или управляющий адвокат) может изменить данные этапа «Приём заявки» — кнопка «Изменить данные заявки».||签约前，主办律师（或管理律师）可修改“受理申请”阶段的信息——“修改申请信息”按钮。",
+    "«Документы» дела: отметьте файлы галочками и выберите «Переместить в папку…» — несколько файлов сразу.||案件“文件”：勾选文件后选择“移动到文件夹…”，可一次移动多个文件。",
     "Обязательные стадии: «В работе», «На согласовании», «Результат готов», «Принят клиентом», «Архив». Остальные — команда, переводчик, китайский юрист, свои этапы — добавляете, переименовываете и удаляете сами (кнопка «Этапы»).||必经阶段：“进行中”“待确认”“结果已完成”“客户已接受”“归档”。其他阶段（团队、翻译、中国法务、自定义阶段）可通过“阶段”按钮自行添加、重命名或删除。",
     "Команда, переводчик и китайский юрист — по вашему решению; без них можно идти дальше.||团队、翻译和中国法务由您决定是否添加，不添加也可继续。",
     "«Проверка старшего адвоката» обязательна, только если над вами в «Структуре» есть другой адвокат (не управляющий).||仅当“组织架构”中您的上级是另一位律师（非管理合伙人）时，“资深律师审核”为必经阶段。",
     "«Принят клиентом» ставится с основанием и файлом: акт или скриншот переписки. Дело после этого остаётся открытым.||“客户已接受”需填写依据并附文件：验收单或聊天截图。之后案件仍保持开启。",
     "В «Архив» отправляет только управляющий адвокат после проверки договора, поступлений и приёмки.||只有管理合伙人在核对合同、收款和验收后才能将案件归档。"]},
    {id:"tasks",t:"Поручения и задачи||指派与任务",b:[
+    "Исполнитель задачи выбирается из людей дела (себя — всегда). Статус задачи меняют автор, исполнитель, ведущий дела и управляющий адвокат. На главной — задачи, где вы исполнитель.||任务执行人从案件成员中选择（始终可选自己）。任务状态可由创建人、执行人、主办律师和管理律师更改。首页显示您为执行人的任务。",
+    "Свою заявку в «Заявках» можно изменить, пока она «Новая» — нажмите на неё; изменения сохраняются в истории заявки.||“申请”中自己的申请在“新”状态时可修改——点击即可；修改记入申请历史。",
     "Поручения даёт руководитель сотруднику по «Структуре». Принять, отчитаться и закрыть поручение можно из кнопки «Поручения» вверху.||指派由上级按“组织架构”下达给员工。可通过顶部“指派”按钮接受、汇报和完成。",
     "Задачи по делу создаются внутри дела; комментарии к задаче приходят участникам в «События».||案件任务在案件内创建；任务评论会通过“事件”通知参与者。"]},
    {id:"msg",t:"Сообщения и уведомления||消息与通知",b:[
@@ -11911,6 +11923,7 @@ const HELP21={
     "В карточке клиента на «Обзоре» видны реквизиты: ИНН или ПИНФЛ, руководитель, адрес, банк, счёт, МФО, контакт, телефон.||客户资料“概览”中显示开票信息：税号或个人识别号、负责人、地址、银行、账号、MFO、联系人、电话。",
     "Вы видите клиентов своих дел и тех, кого создали сами.||您可以看到自己案件的客户以及自己创建的客户。"]},
    {id:"translate",t:"ИИ-переводчик||AI翻译",b:[
+    "Скопировать перевод — значок в правом верхнем углу перевода или кнопка «Копировать» внизу.||复制译文——译文右上角的图标或下方的“复制”按钮。",
     "Круглая кнопка с иконкой переводчика — в правом нижнем углу на любом экране, даже поверх открытого окна.||翻译按钮位于任意页面右下角，即使打开窗口时也可使用。",
     "Вставьте текст — перевод начнётся сразу. Набранный текст переводится по Enter (Shift+Enter — новая строка). «Копировать» — и вставляйте в WeChat, Telegram или письмо.||粘贴文字即自动翻译。输入的文字按Enter翻译（Shift+Enter换行）。点击“复制”后可粘贴到微信、Telegram或邮件中。",
     "Направление выбирается само: русский и узбекский — на китайский; китайский — на язык интерфейса (узбекский или русский). Чтобы перевести иначе, допишите в тексте: «на английский», «на узбекском кириллицей».||翻译方向自动判断：俄语和乌兹别克语译为中文；中文译为界面语言（乌兹别克语或俄语）。如需其他方向，可在文字中注明：“翻译成英文”等。",
@@ -11955,6 +11968,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v16osh",d:"2026-10-24",t:"Версия 1.6: исправления по сообщениям об ошибках||1.6版：根据错误报告的修复",b:["Сохранение дела адвокатом больше не отклоняется «Ведущего назначает управляющий адвокат»: в «Редактировать дело» ведущий показан текстом, а поля этапов берутся из базы.||律师保存案件不再被“主办律师由管理律师指定”拒绝：“编辑案件”中主办律师以文字显示，阶段字段取自数据库。","«История» дела: кто что изменил — было → стало. Данные «Приёма заявки» можно изменить до договора; свою «Новую» заявку в «Заявках» — тоже.||案件“历史”：谁改了什么——原值 → 新值。签约前可修改“受理申请”信息；“申请”中自己的“新”申请也可修改。","Задачи: исполнитель — из людей дела (себя — всегда); статус меняют автор, исполнитель, ведущий и УП.||任务：执行人从案件成员中选择（始终可选自己）；状态可由创建人、执行人、主办律师和管理律师更改。","«Сообщить об ошибке» — из любого окна: ⚠ в заголовке окна или Ctrl+Shift+E; форма справа, окно не закрывается.||“报告错误”——可在任何窗口中：窗口标题的⚠或 Ctrl+Shift+E；表单在右侧，原窗口不关闭。","Ctrl+V скриншота или файла — в окна с «Прикрепить файл», задачи, форму ошибки и «Документы» дела; файлы можно перетащить в окно.||Ctrl+V 粘贴截图或文件——到带“附加文件”的窗口、任务、错误表单和案件“文件”；文件可拖入窗口。","КП: двойное нажатие больше не создаёт дубль; «Открыть все версии» и «Сравнить две»; «Изменить» — новая версия; «Удалить» — неотправленную.||报价：双击不再生成重复；“查看全部版本”和“对比两版”；“修改”——新版本；“删除”——未发送的版本。","Условия оплаты: поля появляются по выбранной оплате. «Пакет услуг» видят адвокаты и юристы. Календарь: месяц, год и выбор даты. Несколько файлов — в папку сразу. Переводчик: значок «копировать» у перевода. При обрыве связи портал сам проверяет, выполнено ли действие.||付款条件：字段随付款方式出现。律师和法务可查看“服务套餐”。日历：年月及日期选择。可一次将多个文件移入文件夹。翻译：译文旁的复制图标。连接中断时门户会自动检查操作是否完成。","Сохранение из окна, открытого давно, больше не возвращает этап, ведущего и оплату дела, изменённые за это время; поступление пересчитывает дело на сервере и пишет строку в его историю.||打开已久的窗口保存时，不再还原期间已更改的阶段、主办律师和付款；收款由服务器重新计算案件并记入其历史。"]},
 {id:"v15chat",d:"2026-10-21",t:"Версия 1.5: в чате набранный текст не пропадает||1.5版：聊天中输入的文字不会丢失",b:["Недописанное сообщение сохраняется на этом устройстве: после обновления окна, перехода на другую страницу или закрытия приложения текст вернётся, когда откроете разговор. Уведомления больше не мешают набору.||未写完的消息保存在本设备上：刷新窗口、切换页面或关闭应用后，再打开对话时文字会恢复。通知不再干扰输入。"]},
 {id:"v15notes",d:"2026-10-21",t:"Версия 1.5: заметки в «Плане на день»||1.5版：“今日计划”中的备忘",b:["Под календарём «Плана на день» — заметки и задачи с квадратиком «сделано»: быстро написать и нажать Enter, прикрепить файл или записать голосовое, напомнить, поставить коллеге, обсудить в комментариях. Невыполненное само переходит на сегодня.||“今日计划”日历下方新增带“已完成”方框的备忘和任务：快速输入并回车，可附加文件或录制语音、设置提醒、交给同事、在评论中讨论。未完成的会自动移到今天。"]},
 {id:"v15back",d:"2026-10-21",t:"Версия 1.5: кнопка «Назад»||1.5版：“返回”按钮",b:["Стрелка «←» рядом со значком меню возвращает на одну страницу назад — туда, откуда вы пришли (главная → раздел → дело и обратно). На первой странице после входа она серая. Вкладки карточки дела шагами не считаются: дело открывается на той же вкладке.||菜单图标旁的“←”箭头可返回上一页——即您来时的页面（首页 → 栏目 → 案件，反之亦然）。登录后的第一页上该按钮为灰色。案件卡片的标签页不算作步骤：案件会在原标签页打开。"]},
@@ -14025,7 +14039,7 @@ Object.assign(Pre24,{
     const rows=items.map(a=>{const q=a.kind==="q";const ok=!!a.done;return `<div class="rw24"><span class="tg24 ${ok?"ok":"wait"}">${esc(T1(ok?(q?UI.p24StOkQ:UI.p24StOk):(q?UI.p24StWaitQ:UI.p24StWait)))}</span><span class="tg24">${esc(T1(q?UI.p24KQ:UI.p24KDoc))}</span><span class="t">${esc(a.text)}<br><small>${esc(fmtDT(a.at))}${a.answer?" · «"+esc(a.answer)+"»":""}${a.doneAt?" · "+esc(fmtDT(a.doneAt)):""}</small></span>${!ok&&this.can(m,"data")?`<button type="button" class="btn sm" data-p24got="${esc(a.id)}">${T1(UI.p24Got)}</button>`:""}</div>`;}).join("");
     const p1=`<div class="pt24 ${T.dataDone||!act?"ok":"on"}"><span class="n">${T.dataDone||!act?"✓":"1"}</span><h5>${T1(UI.p24Data)}</h5><span class="s">${esc(T1(UI.p24DataH))}</span></div>
       <div class="g24"><div class="bx24 span">${rows||`<div style="font-size:13px;color:var(--ink-3)">${T1(UI.p24NoData)}</div>`}${this.can(m,"data")?`<div class="ac24" style="border:0;margin-top:6px;padding-top:0">${this.btn("askdoc",UI.p24AskDoc)}${this.btn("askq",UI.p24AskQ)}</div>`:""}</div>
-      <div class="bx24 span"><h4>${T1(UI.p24Concl)}</h4>${act&&L?`<textarea class="search" data-p24notes="1" rows="3" style="width:100%;resize:vertical" placeholder="${esc(T1(UI.p24ConclH))}">${esc(m.notes23||"")}</textarea><div style="margin-top:6px">${this.btn("notes",UI.p24ConclSave)}</div>`:m.notes23?`<div class="q24">${esc(m.notes23)}</div>`:`<div style="font-size:13px;color:var(--ink-3)">—</div>`}</div></div>`;
+      <div class="bx24 span"><h4>${T1(UI.p24Concl)}</h4>${act&&L?`<textarea class="ta33" data-p24notes="1" rows="3" placeholder="${esc(T1(UI.p24ConclH))}">${esc(m.notes23||"")}</textarea><div style="margin-top:6px">${this.btn("notes",UI.p24ConclSave)}</div>`:m.notes23?`<div class="q24">${esc(m.notes23)}</div>`:`<div style="font-size:13px;color:var(--ink-3)">—</div>`}</div></div>`;
     let p2=`<div class="pt24 ${ap?"ok":T.dataDone?"on":""}"><span class="n">${ap?"✓":"2"}</span><h5>${T1(UI.p24Terms)}</h5><span class="s">${esc(ap?T1(UI.p24Agreed).replace("{d}",fmtDT(ap.at)):T.dataDone?T1(this.st(m,"neg")==="mp"?UI.p24TurnMp:this.st(m,"neg")==="lead"?UI.p24TurnLead:UI.p24TurnMine):"")}</span></div>`;
     if(!T.dataDone&&!ap)p2+=`<div class="lk24">${T1(UI.p24TermsLock)}</div>`;
     else{const t=(ap&&ap.terms)||this.lastTerms(m,"neg");const r=this.range(m);const pos=r&&t?Math.max(2,Math.min(98,20+60*((+t.cost-r.min)/Math.max(1,r.max-r.min)))):0;
@@ -17597,6 +17611,512 @@ const Ent32={
   const who=new Set([v.lead,m.lead].filter(x=>x&&x!=="shahzod"));
   const prev=unitOf;unitOf=function(e){return who.has(e)&&U?U:prev.apply(this,arguments);};
   try{return _ap32.call(this,m,v);}finally{unitOf=prev;}};}
+
+/* ═══════════════════════════ версия 1.6 · ОШ-0004 — СОХРАНЕНИЕ ДЕЛА АДВОКАТОМ НЕ ОТКЛОНЯЕТСЯ «ВЕДУЩЕГО НАЗНАЧАЕТ УП» (решение владельца 24.10.2026) ═══════════════════════════
+   Сообщение Сотрудник (21.10): «по ошибке сохранил — исправить нельзя»; в журнале — отказ сервера «Ведущего назначает управляющий адвокат».
+   Причина: портал записывает дело целиком. Если в копии адвоката поле «ведущий» (или этап, данные этапов до договора) отличается от базы —
+   устаревшая копия или форма «Редактировать дело» подставила первого человека из урезанного списка ведущих — сервер отклоняет всё сохранение.
+   Правило сервера (zc.guard_pre24: ведущего назначает только УП, этапы — только действиями этапа) не меняется. Портал:
+     • в «Редактировать дело» у адвоката и юриста ведущий показан текстом (меняет УП), значение берётся из дела;
+     • перед записью дела не-УП поля, которые меняются только действиями сервера, берутся из базы — устаревшая копия их не перезапишет;
+       после подписания договора так же — цена и порядок оплаты (их меняет только УП). */
+const Lead33={
+  KEYS:["intake23","terms23","relead23","leads23","skip23"],
+  OFFER:["client23","qs23","approvals","sum"],
+  PAY:["cost","currency","payOrder","payPct21","payFirst21","noVat"],
+  PRE:["lead","negotiation","offer","approval_terms","team_draft"],
+  staff(){return !!U()&&!(typeof isClient==="function"&&isClient())&&!(typeof Pre24!=="undefined"&&Pre24.mp());},
+  /* значения базы → в записываемый объект (и в открытую копию, чтобы экран совпадал с базой) */
+  merge(obj,srv){if(!srv)return;const pre=this.PRE.includes(srv.pipeline||"");
+    if(pre){["lead","pipeline"].forEach(k=>{if(k in srv)obj[k]=srv[k];});}
+    this.KEYS.forEach(k=>{if(srv[k]!==undefined)obj[k]=srv[k];});
+    /* после подписания договора цену и порядок оплаты меняет только УП (zc.guard_work_rules) — значения из базы */
+    if(srv.contractSigned===true||srv.contractSigned==="true")this.PAY.forEach(k=>{if(k in srv)obj[k]=srv[k];else delete obj[k];});
+    if(srv.offer&&typeof srv.offer==="object"){obj.offer=obj.offer&&typeof obj.offer==="object"?obj.offer:{};this.OFFER.forEach(k=>{if(srv.offer[k]===undefined)delete obj.offer[k];else obj.offer[k]=srv.offer[k];});}}
+};
+{const _fl33=Matter.fields.bind(Matter);Matter.fields=function(m){const fs=_fl33.apply(this,arguments);
+  if(!m||!m.id||!S.matters[m.id]||!Lead33.staff())return fs;const i=fs.findIndex(x=>x&&x.k==="lead");if(i<0)return fs;
+  fs.splice(i,1,{k:"lead33",type:"html",html:`<label>${esc(T1(UI.mLead))}</label><div class="ld33"><b>${esc(m.lead?dispName(m.lead):"—")}</b> <span>${esc(T1(UI.ld33Hint))}</span></div>`});return fs;};}
+{const _ap33=Matter.apply.bind(Matter);Matter.apply=function(m,v){
+  if(v&&m&&m.id&&S.matters[m.id]&&Lead33.staff()&&!("lead" in v))v.lead=S.matters[m.id].lead;return _ap33.apply(this,arguments);};}
+{const _ds33=SB19.docSet.bind(SB19);SB19.docSet=async function(name,id,obj){
+  if(name==="matters"&&this.on&&obj&&["oneoff","court","support"].includes(obj.svc)&&Lead33.staff()){
+    let row=null;try{row=await this.T.one("matters","id",id);}catch(e){row=null;}
+    if(row&&row.data){Lead33.merge(obj,row.data);const live=S.matters[id];if(live&&live!==obj)Lead33.merge(live,row.data);}}
+  return _ds33(name,id,obj);};}
+Object.assign(UI,{ld33Hint:"меняет управляющий адвокат||由管理律师更改"});
+(()=>{const st=document.createElement("style");st.textContent=".ld33{padding:8px 10px;border:1px dashed var(--line-2);border-radius:8px;font-size:13px}.ld33 span{color:var(--ink-3);font-size:12px;margin-left:6px}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.6 · ОШ-0008 / ОШ-0009 — ЗАДАЧИ ДЕЛА: ИСПОЛНИТЕЛЬ И СТАТУС (решение владельца 24.10.2026) ═══════════════════════════
+   Сообщения Сотрудник (21.10): «не получается выбрать исполнителя в задачах дела, не получается изменить статус»; «задачу из дела не видно на главной».
+   Причина: список «Исполнитель» строился из профилей (S.profiles), а адвокату сервер отдаёт только свой профиль (или ни одного) — список пустой,
+   задача сохранялась без исполнителя и поэтому не попадала на главную. Статус менял только исполнитель.
+   Решение владельца:
+     • исполнитель — люди этого дела: адвокат всегда может выбрать себя, а когда над делом работают несколько человек — и их; УП — любого сотрудника;
+     • статус задачи (и саму задачу) меняют автор, исполнитель, ведущий дела или УП — то же правило на сервере (миграция 20261024000100_v16_oshibki);
+     • на главной каждый видит только задачи, где он исполнитель (как было). */
+const Task33={
+  me(){return (U()||{}).emp;},
+  mp(){return typeof Pre24!=="undefined"&&Pre24.mp();},
+  matter(t){return t&&t.matterId?S.matters[t.matterId]:null;},
+  /* люди дела: ведущий, команда, исполнители, проверяющий, переводчик */
+  people(m){const s=new Set();if(!m)return [];[m.lead,m.reviewer,m.translator,...(m.team||[]),...(m.executors||[]).map(x=>x&&x.emp)].forEach(e=>{if(e&&e!=="-"&&ALL[e]&&isPerson(e))s.add(e);});return [...s];},
+  /* менять задачу (статус, срок, описание): автор, исполнитель, ведущий дела, УП */
+  may(t){const u=U();if(!u||!t)return false;if(this.mp())return true;const me=u.emp;
+    if(t.emp===me||t.createdBy===u.login||t.createdBy===me)return true;const m=this.matter(t);return !!(m&&m.lead===me);},
+  /* выбор исполнителя — при создании: кто может создать задачу (участник дела, ведущий, УП, автор личной задачи) */
+  mayAssign(t){if(this.mp())return true;const m=this.matter(t);if(!m)return true;const me=this.me();return m.lead===me||this.people(m).includes(me);},
+  options(t){const me=this.me();if(this.mp())return empSel().map(([e])=>e);const m=this.matter(t);const L=m?this.people(m):[];if(me&&!L.includes(me))L.unshift(me);return L;},
+  fixSel(t){const sel=document.querySelector("#mdT #tEmp");if(!sel||!t)return;const L=this.options(t);if(!L.length)return;
+    const cur=L.includes(t.emp)?t.emp:(L.includes(this.me())?this.me():L[0]);
+    sel.innerHTML=L.map(e=>`<option value="${esc(e)}"${e===cur?" selected":""}>${esc(dispName(e))}${e===this.me()?" · "+esc(T1(UI.tk33Me)):""}</option>`).join("");t.emp=cur;
+    sel.onchange=()=>{t.emp=sel.value;};},
+  ctx:null,drag:null
+};
+/* права задачи — по задаче, открытой в окне (или перетаскиваемой на доске), а не только по исполнителю */
+{const _can33=can;can=function(a,emp){const t=Task33.ctx;if(t&&(a==="editTask"||a==="assign"))return a==="assign"?Task33.mayAssign(t):Task33.may(t);return _can33.apply(this,arguments);};}
+{const _tr33=Task.render.bind(Task);Task.render=function(){Task33.ctx=this.draft;try{_tr33.apply(this,arguments);}finally{Task33.ctx=null;}try{Task33.fixSel(this.draft);}catch(e){console.warn("tk33:",e&&e.message);}};}
+/* доска задач дела: карточку может перетаскивать и автор, и ведущий (раньше — только исполнитель) */
+document.addEventListener("pointerdown",e=>{const c=e.target.closest&&e.target.closest(".kc[data-id]");if(!c||c.getAttribute("draggable")==="true")return;
+  const t=S.tasks[c.dataset.id];if(!t||!Task33.may(t))return;c.setAttribute("draggable","true");
+  if(!c._dg33){c._dg33=1;c.addEventListener("dragstart",()=>{Task33.drag=c.dataset.id;c.classList.add("drag");});c.addEventListener("dragend",()=>{c.classList.remove("drag");setTimeout(()=>{Task33.drag=null;},0);});}},true);
+document.addEventListener("drop",async e=>{const id=Task33.drag;if(!id)return;const col=e.target.closest&&e.target.closest(".kcol[data-col]");Task33.drag=null;if(!col)return;
+  e.preventDefault();col.classList.remove("over");const t=S.tasks[id];if(!t||t.status===col.dataset.col||!Task33.may(t))return;
+  t.status=col.dataset.col;await saveTask(t);Router.render();},true);
+document.addEventListener("dragover",e=>{if(Task33.drag&&e.target.closest&&e.target.closest(".kcol[data-col]"))e.preventDefault();},true);
+Object.assign(UI,{tk33Me:"я||我"});
+
+/* ═══════════════════════════ версия 1.6 · ОШ-0015 — ДЕЙСТВИЯ ЭТАПОВ ПРИ ОБРЫВЕ СВЯЗИ (решение владельца 24.10.2026) ═══════════════════════════
+   Сообщение УП (21.10, телефон): «Согласовать» → «pre24_act: TypeError: Load failed» дважды, хотя этап на сервере закрылся.
+   Ответ сервера не дошёл до телефона, портал показал ошибку, и было непонятно, выполнено ли действие.
+   Теперь для всех действий этапов (разовые, суд, сопровождение — всё, что идёт через StSrv23.call):
+     • пока действие выполняется, кнопки действий не нажимаются (второго нажатия не будет);
+     • если связь оборвалась — портал перечитывает дело с сервера: изменилось — «✓ Действие выполнено», дело обновлено;
+       не изменилось — «Связь прервалась — действие не выполнено. Повторите». */
+const Net33={
+  busy:0,
+  isNet(e){return /Failed to fetch|Load failed|NetworkError|network|ERR_INTERNET|ERR_NETWORK|timeout|aborted/i.test(String((e&&(e.message||e))||""));},
+  same(a,b){try{return JSON.stringify(a)===JSON.stringify(b);}catch(e){return false;}},
+  async row(mid){for(let i=0;i<3;i++){try{const r=await SB19.T.one("matters","id",mid);if(r)return r;}catch(e){}await new Promise(r=>setTimeout(r,1200*(i+1)));}return null;},
+  mark(on){this.busy=Math.max(0,this.busy+(on?1:-1));document.body.classList.toggle("srv33busy",this.busy>0);}
+};
+{const _call33=StSrv23.call.bind(StSrv23);StSrv23.call=async function(fn,args){
+  if(!this.on())return _call33(fn,args);const mid=args&&args.mid;Net33.mark(true);let r;
+  /* состояние дела на сервере до действия — чтобы после обрыва связи понять, выполнено ли оно (копия на экране может отставать) */
+  let before=null;if(mid){try{const r0=await SB19.T.one("matters","id",mid);before=r0&&r0.data;}catch(e){before=null;}if(!before&&S.matters[mid])before=clone(S.matters[mid]);}
+  try{try{r={d:await SB19.T.rpc(fn,args)};}catch(e){if(this.noFn(e)){this.missing=true;return {skip:true};}
+      if(!Net33.isNet(e)||!mid)return {err:Net33.isNet(e)?T1(UI.nt33Fail):this.msg(e)};
+      const row=await Net33.row(mid);
+      if(row&&row.data&&before&&!Net33.same(row.data,before)){setTimeout(()=>toast(T1(UI.nt33Done)),60);return {d:Object.assign({},row.data,{id:mid})};}
+      return {err:T1(row?UI.nt33Fail:UI.nt33NoNet)};}
+    return r;}
+  finally{Net33.mark(false);}};}
+Object.assign(UI,{
+  nt33Done:"✓ Связь прерывалась, но действие выполнено — дело обновлено с сервера||✓ 连接曾中断，但操作已完成——已从服务器更新",
+  nt33Fail:"Связь прервалась — действие не выполнено. Повторите||连接中断——操作未完成，请重试",
+  nt33NoNet:"Нет связи с сервером — проверьте интернет и повторите||无法连接服务器——请检查网络后重试"});
+(()=>{const st=document.createElement("style");st.textContent=".srv33busy [data-p24a],.srv33busy [data-c22target],.srv33busy [data-stage],.srv33busy [data-ct3],.srv33busy .c22hd .btn.pri{pointer-events:none;opacity:.55;cursor:progress}.srv33busy{cursor:progress}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.6 · ОШ-0016 — КП: ДВОЙНОЕ НАЖАТИЕ, ПРОСМОТР ВЕРСИЙ, ПРАВКА, УДАЛЕНИЕ (решение владельца 24.10.2026) ═══════════════════════════
+   Сообщение Сотрудник (21.10): два раза нажал «Собрать КП из условий» — в «Версиях КП» две строки «КП 13 v1.pdf»; просит удалять неудачные КП.
+   1) Сборка и загрузка КП не запускаются второй раз, пока идёт первая; номер версии — следующий после самого большого номера в деле.
+   2) Решение владельца: открыть несколько КП и посмотреть — окно со списком версий слева и просмотром справа (на компьютере — «Сравнить» две рядом);
+      справа у каждой версии — «Открыть», «Изменить», «Удалить».
+      • «Изменить» — новая версия vN+1 с исправленными текстами (описание работ, срок выполнения, примечание); цена и оплата согласованы
+        с УП на этапе 2 и здесь не меняются; согласованные условия дела тоже не меняются — только документ КП.
+      • «Удалить» — только версию, которую ещё не отправляли клиенту (решение владельца); ведущий или УП; проверяет сервер (public.v16_kp_del),
+        удаление — в «Истории» дела. */
+const Kp33={
+  lock:{},
+  no(m){let n=0;((m.offer||{}).vers23||[]).forEach(v=>{const x=/v(\d+)\.pdf$/i.exec((v.file||{}).name||"");if(x)n=Math.max(n,+x[1]);});return Math.max(n,((m.offer||{}).vers23||[]).length);}
+};
+{const _act33=Pre24.act.bind(Pre24);Pre24.act=async function(m,a,b){
+  if(!["kpbuild","kpup","kpedit33"].includes(a))return _act33.apply(this,arguments);
+  if(Kp33.lock[m.id])return;Kp33.lock[m.id]=1;if(b){b.disabled=true;b.classList.add("busy33");}
+  try{return a==="kpedit33"?await Kp33.editRun(m,b&&b.dataset.kp33e):await _act33.apply(this,arguments);}finally{delete Kp33.lock[m.id];if(b&&b.isConnected){b.disabled=false;b.classList.remove("busy33");}}};}
+{const _st33=Pre24.kpStore.bind(Pre24);Pre24.kpStore=function(m,name,dataUrl,size){
+  const mm=matter(m.id)||m;if(/ v\d+\.pdf$/i.test(name||""))name=name.replace(/ v\d+\.pdf$/i," v"+(Kp33.no(mm)+1)+".pdf");return _st33.call(this,m,name,dataUrl,size);};}
+/* ── версии КП: «Открыть», «Изменить», «Удалить» справа у каждой ── */
+Object.assign(Kp33,{
+  vers(m){return typeof Pre24.kpFiles==="function"?Pre24.kpFiles(m):(((m.offer||{}).vers23)||[]);},
+  sent(m,v){const o=m.offer||{};return !!(v.sent||(o.sentAt&&o.file&&v.file&&v.file.id===o.file.id));},
+  canDel(m,v){const u=U();return !!u&&!this.sent(m,v)&&(Pre24.mp()||m.lead===u.emp)&&m.pipeline==="offer";},
+  canEdit(m){return typeof Pre24.can==="function"&&Pre24.can(m,"kpbuild");},
+  ovr:null,
+  /* «Изменить» — новая версия с исправленными текстами; цена и оплата — согласованные */
+  async editRun(m){const ap=(Pre24.approved(m,"neg")||{}).terms;if(!ap){toast(T1(UI.kp33NoTerms));return;}
+    const v=await Dlg.ask({title:T1(UI.kp33Edit)+" · "+m.no,text:T1(UI.kp33EditT),fields:[
+      {k:"scope",label:T1(UI.p24Scope),type:"textarea",value:ap.scope||"",required:true,span:true},{k:"term",label:T1(UI.p24Term),value:ap.term||"",required:true},
+      {k:"note",label:T1(UI.kp33Note),type:"textarea",value:"",span:true}]});
+    if(!v)return;this.ovr={scope:v.scope+(String(v.note||"").trim()?"\n"+String(v.note).trim():""),term:v.term};
+    try{return await Pre24.kpBuild(matter(m.id)||m);}finally{this.ovr=null;}},
+  async del(id,fid){const m=matter(id);const v=m&&this.vers(m).find(x=>x.file&&x.file.id===fid);if(!m||!v||!this.canDel(m,v))return;
+    if(!await Dlg.confirm(T1(UI.kp33DelQ).replace("{n}",v.file.name),T1(UI.kp33DelT),true))return;
+    const r=await StSrv23.call("v16_kp_del",{mid:m.id,fid});if(StSrv23.done(r,m,T1(UI.kp33Deleted)))return;
+    const o=m.offer||{};o.vers23=(o.vers23||[]).filter(x=>!(x.file&&x.file.id===fid));m.files=(m.files||[]).filter(f=>f.id!==fid);
+    if(o.file&&o.file.id===fid){const L=o.vers23[o.vers23.length-1];if(L)o.file=L.file;else delete o.file;}
+    m.history.push({at:nowS(),by:U().emp,what:"КП удалено: "+v.file.name});await saveDoc("matters",m);toast(T1(UI.kp33Deleted));Router.render();}
+});
+/* при «Изменить» сборщики КП берут исправленные тексты */
+{const _apr33=Pre24.approved.bind(Pre24);Pre24.approved=function(m,ph){const r=_apr33.apply(this,arguments);
+  if(Kp33.ovr&&ph==="neg"&&r&&r.terms)return Object.assign({},r,{terms:Object.assign({},r.terms,Kp33.ovr)});return r;};}
+{const _p333=Pre24.p3.bind(Pre24);Pre24.p3=function(m){const h=_p333.apply(this,arguments);if(typeof h!=="string"||!/data-p24file/.test(h))return h;
+  const box=document.createElement("div");box.innerHTML=h;const hd=[...box.querySelectorAll(".bx24>h4")].find(x=>x.textContent.trim()===T1(UI.p24KpVers));if(!hd)return h;
+  const bx=hd.parentElement;const ed=Kp33.canEdit(m);
+  bx.querySelectorAll(".rw24").forEach(rw=>{const ch=rw.querySelector("[data-p24file]");if(!ch)return;const fid=ch.dataset.p24file;const v=Kp33.vers(m).find(x=>x.file&&x.file.id===fid);if(!v)return;
+    const a=document.createElement("span");a.className="kp33a";
+    a.innerHTML=`<button type="button" class="btn sm" data-kp33v="${esc(fid)}">${esc(T1(UI.kp33Open))}</button>`+
+      (ed?`<button type="button" class="btn sm" data-p24a="kpedit33" data-kp33e="${esc(fid)}">✎ ${esc(T1(UI.kp33Edit))}</button>`:"")+
+      (Kp33.canDel(m,v)?`<button type="button" class="btn sm ghost kp33d" data-kp33d="${esc(fid)}" title="${esc(T1(UI.kp33DelH))}">🗑 ${esc(T1(UI.kp33Del))}</button>`:"");
+    ch.replaceWith(a);});
+  if(Kp33.vers(m).length>1){const b=document.createElement("button");b.type="button";b.className="btn sm kp33all";b.dataset.kp33v="";b.textContent=T1(UI.kp33All);hd.appendChild(b);}
+  return box.innerHTML;};}
+/* окно просмотра версий: список слева, просмотр справа; «Сравнить» — две рядом */
+const KpView33={id:null,a:null,b:null,cmp:false,
+  async data(fid){const m=matter(this.id);const v=Kp33.vers(m).find(x=>x.file&&x.file.id===fid);const f=v&&v.file;if(!f)return null;
+    let rec=S.filesMem&&S.filesMem[f.id];if(!rec&&S.db){try{const s=await S.db.doc("files/"+f.id).get();if(s.exists)rec=s.data();}catch(e){}}return rec&&rec.data?rec:null;},
+  async open(id,fid){const m=matter(id);if(!m)return;const L=Kp33.vers(m).slice().reverse();if(!L.length)return;this.id=id;this.a=fid||L[0].file.id;this.b=(L.find(x=>x.file.id!==this.a)||L[0]).file.id;
+    let ov=document.getElementById("ovKp33");if(!ov){ov=document.createElement("div");ov.className="ov";ov.id="ovKp33";ov.style.zIndex="240";document.body.appendChild(ov);ov.addEventListener("mousedown",e=>{if(e.target===ov)this.close();});}
+    ov.classList.add("open");await this.render();},
+  close(){const ov=document.getElementById("ovKp33");if(ov){ov.classList.remove("open");ov.innerHTML="";}},
+  async pane(fid){const rec=await this.data(fid);if(!rec)return `<div class="kp33no">${esc(T1(UI.noAccess))}</div>`;return `<iframe src="${esc(rec.data)}" title="${esc(rec.name||"")}"></iframe>`;},
+  async render(){const ov=document.getElementById("ovKp33");const m=matter(this.id);if(!ov||!m)return;const L=Kp33.vers(m).slice().reverse();
+    const item=v=>`<button type="button" class="kp33i${v.file.id===this.a?" on":""}${this.cmp&&v.file.id===this.b?" on2":""}" data-kp33p="${esc(v.file.id)}"><b>${esc(v.file.name)}</b><small>${esc(fmtDT(v.at||""))}${v.by?" · "+esc(dispName(v.by)):""}</small><span class="tg24 ${Kp33.sent(m,v)?"ok":""}">${esc(T1(Kp33.sent(m,v)?UI.p24KpSent:UI.p24KpDraft))}</span></button>`;
+    const wide=innerWidth>900;
+    ov.innerHTML=`<div class="md kp33md" role="dialog" aria-modal="true"><button type="button" class="close mx" data-kp33x="1" aria-label="×"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="mh"><div><h2>${esc(T1(UI.kp33Title))} · ${esc(m.no)}</h2><div class="mr2">${esc(T1(this.cmp?UI.kp33CmpH:UI.kp33H))}</div></div>${wide&&L.length>1?`<button type="button" class="btn sm kp33cmp${this.cmp?" pri":""}" data-kp33c="1">${esc(T1(this.cmp?UI.kp33One:UI.kp33Cmp))}</button>`:""}</div>
+      <div class="kp33b"><div class="kp33l">${L.map(item).join("")}</div><div class="kp33r${this.cmp?" two":""}"><div class="kp33f">${await this.pane(this.a)}</div>${this.cmp?`<div class="kp33f">${await this.pane(this.b)}</div>`:""}</div></div></div>`;
+    ov.querySelector("[data-kp33x]").onclick=()=>this.close();
+    const c=ov.querySelector("[data-kp33c]");if(c)c.onclick=()=>{this.cmp=!this.cmp;this.render();};
+    ov.querySelectorAll("[data-kp33p]").forEach(b=>b.onclick=()=>{const id=b.dataset.kp33p;if(this.cmp){if(id!==this.a)this.b=id;}else this.a=id;this.render();});}
+};
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-kp33v],[data-kp33d]");if(!t)return;e.preventDefault();e.stopPropagation();const id=Router.arg;
+  if(t.dataset.kp33d!==undefined)Kp33.del(id,t.dataset.kp33d);else KpView33.open(id,t.dataset.kp33v||null);},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.querySelector("#ovKp33.open")&&!(typeof B26!=="undefined"&&B26.isOpen())&&!document.querySelector("#ovD.open")){e.stopImmediatePropagation();KpView33.close();}},true);
+Object.assign(UI,{
+  kp33Open:"Открыть||打开",kp33Edit:"Изменить||修改",kp33Del:"Удалить||删除",kp33DelH:"Удалить версию — её ещё не отправляли клиенту||删除此版本（尚未发送给客户）",
+  kp33DelQ:"Удалить «{n}»?||删除“{n}”？",kp33DelT:"Версия ещё не отправлялась клиенту. Удаление попадёт в «Историю» дела.||该版本尚未发送给客户。删除将记入案件“历史”。",kp33Deleted:"Версия КП удалена||商务报价版本已删除",
+  kp33EditT:"Будет собрана новая версия КП. Цена и порядок оплаты — согласованные на этапе 2, здесь не меняются; согласованные условия дела тоже не меняются.||将生成新版本报价。价格和付款方式为第2阶段已商定内容，此处不可更改；案件已商定条件亦不变。",
+  kp33Note:"Примечание в КП (необязательно)||报价备注（可选）",kp33NoTerms:"Сначала согласуйте условия на этапе 2||请先在第2阶段商定条件",
+  kp33All:"Открыть все версии||查看全部版本",kp33Title:"Версии КП||报价版本",kp33H:"Выберите версию слева — она откроется справа||在左侧选择版本，右侧显示",
+  kp33Cmp:"Сравнить две||对比两版",kp33One:"Одна версия||单版查看",kp33CmpH:"Слева в списке выделены обе: нажмите другую версию — она откроется справа||列表中两版均已标出：点击其他版本即在右侧显示"});
+(()=>{const st=document.createElement("style");st.textContent=".btn.busy33{opacity:.6;cursor:progress;pointer-events:none}"+
+  ".kp33a{display:inline-flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}.kp33d{color:var(--red)}.kp33all{margin-left:10px;vertical-align:middle}"+
+  ".kp33md{width:min(1280px,100%);height:calc(100vh - 44px)}.kp33md .mh{display:flex;align-items:flex-start;gap:12px;padding:18px 22px 12px}.kp33md .mh>div{flex:1}.kp33cmp{margin-right:44px}"+
+  ".kp33b{flex:1;display:grid;grid-template-columns:260px 1fr;min-height:0;border-top:1px solid var(--line)}.kp33l{overflow:auto;border-right:1px solid var(--line);padding:8px;display:grid;gap:6px;align-content:start}"+
+  ".kp33i{display:grid;gap:3px;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;cursor:pointer}.kp33i small{color:var(--ink-3);font-size:11.5px}.kp33i .tg24{justify-self:start}"+
+  ".kp33i.on{border-color:var(--pri,var(--red));box-shadow:inset 3px 0 0 var(--pri,var(--red))}.kp33i.on2{border-color:var(--ok);box-shadow:inset 3px 0 0 var(--ok)}"+
+  ".kp33r{display:grid;min-height:0}.kp33r.two{grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.kp33f{min-height:0;background:var(--surface-2,#f4f5f7)}.kp33f iframe{width:100%;height:100%;border:0;display:block}.kp33no{padding:30px;color:var(--ink-3)}"+
+  "@media (max-width:900px){.kp33b{grid-template-columns:1fr;grid-template-rows:auto 1fr}.kp33l{border-right:0;border-bottom:1px solid var(--line);grid-auto-flow:column;grid-auto-columns:220px;overflow-x:auto}}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.6 · ОШ-0003 / ОШ-0004 — ПРАВКА ВНЕСЁННОГО И ИСТОРИЯ «КТО ЧТО ИЗМЕНИЛ» (решение владельца 24.10.2026) ═══════════════════════════
+   Сообщения Сотрудник (21.10): «при поэтапном внесении информации оказывается нельзя отредактировать то, что уже внесено»; «нет кнопки редактирования».
+   Решение владельца: дать возможность редактировать, а в истории дела — кто что изменил (уведомлений УП о правках не нужно).
+     • История дела: каждое изменение важных полей записывает сервер (миграция 20261024000100_v16_oshibki, zc.matter_hist16) —
+       в «Истории» дела строка «Срок: 26.10 → 30.10» с автором и временем; портал показывает её как остальные записи.
+     • Этап «Приём заявки»: кнопка «Изменить данные заявки» — суть, контакт, желаемый срок, файлы; ведущий или УП, до подписания договора
+       (проверяет сервер, public.v16_intake_edit).
+     • Раздел «Заявки»: автор правит свою заявку, пока она «Новая» (сервер не даёт после); изменения — в истории заявки. */
+const Ie33={
+  pre:["lead","negotiation","offer","approval_terms","team_draft"],
+  can(m){const u=U();if(!u||!m||!["oneoff","court","support"].includes(m.svc))return false;if(!this.pre.includes(m.pipeline||"")||m.contractSigned===true)return false;
+    return (typeof Pre24!=="undefined"&&Pre24.mp())||m.lead===u.emp;},
+  btn(m){return this.can(m)?`<div class="ie33"><button type="button" class="btn sm" data-ie33="${esc(m.id)}">✎ ${esc(T1(UI.ie33Btn))}</button><span>${esc(T1(UI.ie33Hint))}</span></div>`:"";},
+  async open(id){const m=matter(id);if(!this.can(m))return;const i=m.intake23||{},c=i.contact||{},fl=i.files||[];
+    const v=await Dlg.ask({title:T1(UI.ie33Btn)+" · "+m.no,text:T1(UI.ie33Text),fields:[
+      {k:"text",label:T1(UI.p24Essence),type:"textarea",value:i.text||m.notes||"",required:true,span:true},
+      {k:"who",label:T1(UI.ie33Who),value:c.who||""},{k:"phone",label:T1(UI.ie33Phone),value:c.phone||""},
+      {k:"msg",label:T1(UI.ie33Msg),value:c.msg||""},{k:"deadline",label:T1(UI.p24Want),type:"date",value:m.deadline||""},
+      ...(fl.length?[{k:"keep",label:T1(UI.ie33Keep),type:"multi",value:fl.map(f=>f.id),options:fl.map(f=>[f.id,f.name||f.id]),span:true}]:[]),
+      {k:"add",label:T1(UI.ie33Add),type:"files",span:true}]});
+    if(!v)return;const keep=fl.filter(f=>(v.keep||[]).includes(f.id));const files=[...keep,...(v.add||[]).map(f=>({id:f.id,name:f.name,type:f.type||"",size:f.size||0}))];
+    const patch={text:v.text,contact:{who:v.who,phone:v.phone,msg:v.msg},files};if(v.deadline)patch.deadline=v.deadline;
+    const r=await StSrv23.call("v16_intake_edit",{mid:m.id,patch});
+    if(StSrv23.done(r,m,T1(UI.saved)))return;
+    /* без сервера (демо) — то же в портале */
+    const at=nowS(),me=U().emp,old={text:i.text||m.notes||"",dl:m.deadline||""};m.intake23=Object.assign({},i,{text:v.text,contact:patch.contact,files});m.notes=v.text;if(v.deadline)m.deadline=v.deadline;
+    if(old.text!==v.text)m.history.push({at,by:me,what:"Суть заявки: "+old.text.slice(0,80)+" → "+v.text.slice(0,80),edit16:true});
+    if(v.deadline&&old.dl!==v.deadline)m.history.push({at,by:me,what:"Срок: "+(old.dl||"—")+" → "+v.deadline,edit16:true});
+    await saveDoc("matters",m);toast(T1(UI.saved));Router.render();}
+};
+{const _pn33=Pre24.panel.bind(Pre24);Pre24.panel=function(m,k){const h=_pn33.apply(this,arguments);return k==="lead"&&typeof h==="string"?h+Ie33.btn(m):h;};}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-ie33]");if(!b)return;e.preventDefault();e.stopPropagation();Ie33.open(b.dataset.ie33);},true);
+
+/* ── «Заявки»: автор правит свою «Новую» заявку ── */
+const Rq33={
+  mine(r){const u=U();return !!(u&&r&&r.by===u.emp&&(r.status||"new")==="new");},
+  hist(r){const H=(r.history||[]).slice().reverse();return H.length?`<div class="rq33h"><b>${esc(T1(UI.rq33Hist))}</b>${H.map(x=>`<div><span>${esc(fmtDT(x.at||""))} · ${esc(dispName(x.by))}</span> ${esc(x.what||"")}</div>`).join("")}</div>`:"";},
+  async edit(id){const r=S.requests[id];if(!this.mine(r))return;
+    const v=await Dlg.ask({title:T1(UI.rq33Edit),text:T1(UI.rq33Text),fields:[{k:"type",label:T1(UI.rType),type:"select",value:r.type,options:[["purchase",T1(UI.rPurchase)],["repair",T1(UI.rRepair)],["booking",T1(UI.rBooking)],["other",T1(UI.rOther)]]},
+      {k:"text",label:T1(UI.rText),type:"textarea",value:r.text,required:true,span:true},...(r.history&&r.history.length?[{k:"h",type:"html",html:this.hist(r)}]:[])]});
+    if(!v||(v.type===r.type&&v.text===r.text))return;const prev={type:r.type,text:r.text};
+    if(!SB19.on){r.history=r.history||[];const at=nowS(),me=U().emp;if(prev.text!==v.text)r.history.push({at,by:me,what:"Текст: "+prev.text+" → "+v.text});if(prev.type!==v.type)r.history.push({at,by:me,what:"Вид: "+prev.type+" → "+v.type});}
+    r.type=v.type;r.text=v.text;try{await saveDoc("requests",r);toast(T1(UI.saved));}catch(e){Object.assign(r,prev);toast(String(e&&e.message||e));}Router.render();}
+};
+{const _rl33=Pages.reqList.bind(Pages);Pages.reqList=function(list){let h=_rl33.apply(this,arguments);if(can("reqManage"))return h;
+  (list||[]).forEach(r=>{if(Rq33.mine(r))h=h.replace(`data-req="${r.id}" style="cursor:default"`,`data-req="${r.id}" data-rq33="1" title="${esc(T1(UI.rq33Edit))}" style="cursor:pointer"`);});return h;};}
+document.addEventListener("click",e=>{const el=e.target.closest&&e.target.closest("[data-rq33]");if(!el||can("reqManage"))return;e.preventDefault();e.stopPropagation();Rq33.edit(el.dataset.req);},true);
+
+Object.assign(UI,{
+  ie33Btn:"Изменить данные заявки||修改申请信息",ie33Hint:"изменения попадут в «Историю» дела||修改将记入案件“历史”",
+  ie33Text:"Ведущий или управляющий адвокат, до подписания договора. Кто и что изменил — видно в «Истории» дела.||主办律师或管理律师可在签约前修改。修改记录见案件“历史”。",
+  ie33Who:"Контакт: кто||联系人",ie33Phone:"Телефон||电话",ie33Msg:"Мессенджер||即时通讯",ie33Keep:"Файлы заявки (снимите галочку, чтобы убрать)||申请文件（取消勾选即移除）",ie33Add:"Добавить файлы||添加文件",
+  rq33Edit:"Изменить заявку||修改申请",rq33Text:"Пока заявка «Новая», её можно изменить. Изменения сохраняются в истории заявки.||申请为“新”状态时可修改，修改记入申请历史。",rq33Hist:"История изменений||修改历史"});
+(()=>{const st=document.createElement("style");st.textContent=".ie33{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}.ie33 span{font-size:12px;color:var(--ink-3)}"+
+  "[data-rq33] .at::after{content:' ✎';color:var(--ink-3);font-size:12px}.rq33h{font-size:12.5px;border-top:1px solid var(--line);padding-top:8px}.rq33h div{margin-top:4px}.rq33h span{color:var(--ink-3);font-size:11.5px}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.6 · ОШ-0014 — «СООБЩИТЬ ОБ ОШИБКЕ» ИЗ ЛЮБОГО ОКНА (решение владельца 24.10.2026) ═══════════════════════════
+   Сообщение Сотрудник (21.10): «сообщить об ошибках без закрытия окон»; владелец: у адвокатов не получается сообщить из открытого окна.
+   Причина: открытое окно затемняет весь экран — «Настройки» и «Помощь» под ним не нажимаются, а форма ошибки открывалась под окном.
+   Теперь:
+     • в заголовке каждого открытого окна — кнопка ⚠ «Сообщить об ошибке» (задача, «Предложить условия», просмотр файла и др.);
+     • сочетание клавиш на компьютере: Ctrl+Shift+E (на Mac — Cmd+Shift+E);
+     • форма открывается боковой панелью поверх всего, открытое окно остаётся на месте; скриншот снимается вместе с этим окном;
+     • после отправки или «Отмена» человек возвращается в то же окно — введённое там не пропадает; Esc закрывает только форму ошибки. */
+const Bug33={
+  skip:new Set(["ovB26"]),
+  host(ov){if(ov.id==="viewer")return ov;return ov.querySelector(":scope>.md")||ov.firstElementChild;},
+  put(){if(typeof B26==="undefined"||!B26.staff())return;
+    document.querySelectorAll(".ov.open,#viewer.open").forEach(ov=>{if(this.skip.has(ov.id))return;const h=this.host(ov);if(!h||h.querySelector(":scope>.b33"))return;
+      const b=document.createElement("button");b.type="button";b.className="b33"+(h.querySelector(":scope>.close")?" cx":"")+(ov.id==="viewer"?" vw":"");
+      b.title=T1(UI.b33Tip);b.setAttribute("aria-label",T1(UI.b33Tip));b.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg><span>${esc(T1(UI.b33Short))}</span>`;
+      b.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();B26.open({from:"window:"+ov.id});});
+      b.addEventListener("mousedown",e=>e.stopPropagation());h.appendChild(b);});},
+  t:0,
+  watch(){const run=()=>{this.t=0;try{this.put();}catch(e){}};new MutationObserver(()=>{if(!this.t)this.t=requestAnimationFrame(run);}).observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["class"]});}
+};
+Bug33.watch();
+/* Ctrl+Shift+E — форма ошибки с любого экрана; Esc при открытой форме закрывает только её (окно под ней остаётся) */
+document.addEventListener("keydown",e=>{
+  if(typeof B26==="undefined")return;
+  if(B26.isOpen()&&e.key==="Escape"){e.preventDefault();e.stopImmediatePropagation();B26.close();return;}
+  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&!e.altKey&&(e.code==="KeyE"||/^[eEуУ]$/.test(e.key))&&B26.staff()&&!B26.isOpen()){e.preventDefault();e.stopImmediatePropagation();B26.open({from:"key"});}},true);
+/* пока форма ошибки открыта, Enter и клики внутри неё не доходят до окна под ней */
+document.addEventListener("keydown",e=>{if(typeof B26!=="undefined"&&B26.isOpen()&&e.key==="Enter"&&e.target.closest&&e.target.closest("#ovB26"))e.stopImmediatePropagation();},true);
+Object.assign(UI,{b33Tip:"Сообщить об ошибке (Ctrl+Shift+E)||报告错误（Ctrl+Shift+E）",b33Short:"Ошибка||错误"});
+(()=>{const st=document.createElement("style");st.textContent=
+  "#ovB26{z-index:400!important;justify-content:flex-end;align-items:stretch;padding:0;background:rgba(18,18,18,.22)}"+
+  "#ovB26 .b26md{width:min(480px,100%);height:100vh;max-height:100vh;border-radius:16px 0 0 16px;animation:b33in .18s ease-out;box-shadow:-12px 0 40px rgba(0,0,0,.22)}"+
+  "#ovB26 .b26md .mb2{overflow:auto;flex:1}#ovB26 .b26row{display:grid!important;grid-template-columns:1fr!important;gap:10px}#ovB26 .b26seg{flex-wrap:wrap;width:max-content;max-width:100%}"+
+  "@keyframes b33in{from{transform:translateX(40px);opacity:.4}to{transform:none;opacity:1}}"+
+  "@media (max-width:700px){#ovB26 .b26md{width:100%;border-radius:0}}"+
+  ".b26bar{z-index:401!important}"+
+  ".b33{position:absolute;top:12px;right:14px;z-index:5;display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-3);font:inherit;font-size:11.5px;font-weight:600;cursor:pointer;opacity:.85}"+
+  ".b33.cx{right:56px}.b33:hover{opacity:1;color:var(--warn,#b7791f);border-color:currentColor}"+
+  ".b33 svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}"+
+  ".b33.vw{position:fixed;top:14px;right:70px;background:rgba(255,255,255,.92);color:#333}"+
+  ".md:has(>.b33:not(.cx))>.mh{padding-right:110px!important}.md:has(>.b33.cx)>.mh{padding-right:150px!important}"+
+  "@media (max-width:700px){.b33 span{display:none}.b33{padding:0 8px}.md:has(>.b33:not(.cx))>.mh{padding-right:56px!important}.md:has(>.b33.cx)>.mh{padding-right:96px!important}}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.6 · УДОБСТВА ПО СООБЩЕНИЯМ ОБ ОШИБКАХ (решения владельца 24.10.2026) ═══════════════════════════
+   ОШ-0011 «Пакет услуг» — видят адвокаты и юристы (раньше — только по подразделению, а подразделений сейчас нет); сервер — zc.svc_visible.
+   ОШ-0013 «Предложить условия» и условия договора: поля появляются по выбранной оплате — «100 % предоплата» и «Оплата после результата» —
+           без лишних полей, «Предоплата N %» — только «Предоплата, %», «Поэтапно» — только «Сумма первого этапа». Сервер проверяет заполнение.
+   ОШ-0006 «План на день»: год виден всегда; нажатие на месяц открывает выбор даты (месяц, год, ввод даты).
+   ОШ-0005 «Документы» дела: галочки у файлов — «Переместить выбранные в папку…».
+   ОШ-0018 Переводчик: значок «копировать» прямо в углу перевода; если скопировать не удалось — сообщение, а не тишина. */
+
+/* ── ОШ-0011: пакеты услуг — все действующие для сотрудников ── */
+{const _cse33=Pack17.canSeeEmp.bind(Pack17);Pack17.canSeeEmp=function(svc,e){if(!svc||!e||!isPerson(e))return false;if(this.seesAll(e))return true;if(svc.archived)return false;
+  const P=posOf(e);if(P==="translator")return _cse33(svc,e);return true;};}
+
+/* ── ОШ-0013: поля условий — по выбранной оплате ── */
+const Pay33={
+  apply(md){const po=md.querySelector("#dlg_payOrder");if(!po)return;const pct=md.querySelector("#dlg_payPct21"),fst=md.querySelector("#dlg_payFirst21");
+    const wrap=el=>el&&el.closest(".form>div");const set=()=>{const v=po.value;const a=wrap(pct),b=wrap(fst);if(a)a.hidden=v!=="prepay";if(b)b.hidden=v!=="stages";};
+    if(!po.dataset.pay33){po.dataset.pay33="1";po.addEventListener("change",set);}set();},
+  /* до «Сохранить»: у видимого поля — понятная проверка (сервер проверяет то же) */
+  check(md){const po=md.querySelector("#dlg_payOrder");if(!po)return "";const v=po.value;
+    if(v==="prepay"){const x=+((md.querySelector("#dlg_payPct21")||{}).value||0);if(!(x>=1&&x<=100))return T1(UI.pay33Pct);}
+    if(v==="stages"){const x=+((md.querySelector("#dlg_payFirst21")||{}).value||0);if(!(x>0))return T1(UI.pay33First);}return "";}
+};
+{const _ask33=Dlg.ask.bind(Dlg);Dlg.ask=function(o){const p=_ask33.apply(this,arguments);
+  if((o&&o.fields||[]).some(x=>x&&x.k==="payOrder"))setTimeout(()=>{const md=document.getElementById("mdD");if(md)Pay33.apply(md);},0);return p;};}
+document.addEventListener("click",e=>{const ok=e.target.closest&&e.target.closest("#mdD #dlgOk");if(!ok)return;const md=document.getElementById("mdD");const er=Pay33.check(md);if(!er)return;
+  e.preventDefault();e.stopImmediatePropagation();let w=md.querySelector(".dlgwarn");if(!w){w=document.createElement("div");w.className="dlgwarn";w.setAttribute("role","alert");md.querySelector(".actions").before(w);}w.textContent=er;},true);
+
+/* ── ОШ-0006: «План на день» — месяц и год, выбор даты ── */
+const Dp33={
+  RU:["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
+  label(ym){const [y,m]=ym.split("-").map(Number);if(lang==="zh")return `${y}年${m}月`;if(lang==="uz"&&typeof MONTHS_UZ_FULL!=="undefined")return MONTHS_UZ_FULL[m-1]+" "+y;return this.RU[m-1]+" "+y;}
+};
+if(typeof Dash!=="undefined"&&Dash.planner){const _pl33=Dash.planner.bind(Dash);Dash.planner=function(scope){const html=_pl33.apply(this,arguments);
+  const st=Pages._dp||{sel:todayS(),m:todayS().slice(0,7)};const box=document.createElement("div");box.innerHTML=html;const sm=box.querySelector(".dnav .dt small");
+  if(sm){const wd=String(sm.textContent||"").split("·")[0].trim();sm.innerHTML=`${esc(wd)} · <label class="dp33" title="${esc(T1(UI.dp33Tip))}">${esc(Dp33.label(st.m))} ▾<input type="date" data-dp33 value="${esc(st.sel)}" aria-label="${esc(T1(UI.dp33Tip))}"></label>`;}
+  return box.innerHTML;};}
+document.addEventListener("click",e=>{const l=e.target.closest&&e.target.closest("label.dp33");if(!l)return;const i=l.querySelector("input[data-dp33]");if(i&&i.showPicker&&e.target!==i){e.preventDefault();try{i.showPicker();}catch(x){i.focus();}}},true);
+document.addEventListener("change",e=>{const i=e.target;if(!i.matches||!i.matches("input[data-dp33]")||!/^\d{4}-\d{2}-\d{2}$/.test(i.value))return;Pages._dp=Pages._dp||{};Pages._dp.sel=i.value;Pages._dp.m=i.value.slice(0,7);Router.render();});
+
+/* ── ОШ-0005: «Документы» дела — несколько файлов в папку ── */
+const Mv33={sel:{},
+  on(m){return !!m&&(m.folders22||[]).length>0&&Card22.folderEd(m);},
+  set(id){return this.sel[id]||(this.sel[id]=new Set());},
+  bar(m){const s=this.set(m.id);const n=s.size;const b=document.createElement("div");b.className="mv33"+(n?" on":"");
+    b.innerHTML=n?`<b>${esc(T1(UI.mv33N).replace("{n}",n))}</b><select data-mv33f><option value="">${esc(T1(UI.mv33To))}</option><option value="-">${esc(T1(UI.c22DocNoFolder))}</option>${(m.folders22||[]).map(f=>`<option value="${esc(f)}">📁 ${esc(f)}</option>`).join("")}</select><button type="button" class="btn sm pri" data-mv33go>${esc(T1(UI.mv33Go))}</button><button type="button" class="btn sm ghost" data-mv33x>${esc(T1(UI.mv33Clear))}</button>`
+      :`<span>${esc(T1(UI.mv33Hint))}</span>`;return b;}
+};
+{const _db33=Card22.docsBody.bind(Card22);Card22.docsBody=function(m){const w=_db33.apply(this,arguments);if(!Mv33.on(m))return w;const s=Mv33.set(m.id);
+  w.querySelectorAll(".c22fr").forEach(r=>{const a=r.querySelector('[data-act="mFile"]');if(!a)return;const i=a.dataset.i;const cb=document.createElement("input");cb.type="checkbox";cb.className="mv33c";cb.dataset.mv33=i;cb.checked=s.has(i);cb.title=T1(UI.mv33Pick);r.insertBefore(cb,r.firstChild);});
+  w.insertBefore(Mv33.bar(m),w.firstChild);return w;};}
+{const _bd33=Card22.bindDocs.bind(Card22);Card22.bindDocs=function(vp,m){_bd33.apply(this,arguments);if(!Mv33.on(matter(m.id)))return;const self=this;const s=Mv33.set(m.id);
+  vp.querySelectorAll("[data-mv33]").forEach(cb=>cb.onchange=()=>{if(cb.checked)s.add(cb.dataset.mv33);else s.delete(cb.dataset.mv33);self.docsRedraw(vp,m);});
+  const x=vp.querySelector("[data-mv33x]");if(x)x.onclick=()=>{s.clear();self.docsRedraw(vp,m);};
+  const go=vp.querySelector("[data-mv33go]");if(go)go.onclick=async()=>{const f=(vp.querySelector("[data-mv33f]")||{}).value;if(!f){toast(T1(UI.mv33To));return;}
+    const mm=matter(m.id);if(!self.folderEd(mm))return;let n=0;[...s].forEach(i=>{const fl=(mm.files||[])[+i];if(!fl)return;if(f==="-")delete fl.folder;else fl.folder=f;n++;});
+    go.disabled=true;try{await saveDoc("matters",mm);s.clear();toast(T1(UI.mv33Done).replace("{n}",n).replace("{f}",f==="-"?T1(UI.c22DocNoFolder):f));}catch(e){toast(String(e&&e.message||e));}self.docsRedraw(vp,m);};};}
+
+/* ── ОШ-0018: переводчик — «копировать» у самого перевода ── */
+if(typeof Tr21!=="undefined"){
+  Tr21.copy=async function(btn){const t=this.shown();if(!t)return;let ok=false;try{await navigator.clipboard.writeText(t);ok=true;}catch(e){}
+    if(!ok){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{ok=document.execCommand("copy");}catch(e){}ta.remove();}
+    if(!ok){toast(T1(UI.tr33Fail));return false;}
+    toast(T1(UI.tr21Copied));document.querySelectorAll("[data-tr21copy],.tr33c").forEach(b=>{b.classList.add("done33");const o=b.dataset.t33||b.innerHTML;b.dataset.t33=o;if(b.classList.contains("tr33c"))b.innerHTML="✓";else b.textContent="✓ "+T1(UI.tr21Copied);
+      setTimeout(()=>{if(b.isConnected){b.classList.remove("done33");b.innerHTML=b.dataset.t33;}},1400);});return true;};
+  const _rn33=Tr21.render.bind(Tr21);Tr21.render=function(){const r=_rn33.apply(this,arguments);try{const out=document.getElementById("tr21Out");
+    if(out&&String(out.textContent||"").trim()&&!out.querySelector(".tr33c")){const b=document.createElement("button");b.type="button";b.className="tr33c";b.title=T1(UI.tr21Copy);b.setAttribute("aria-label",T1(UI.tr21Copy));
+      b.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>`;b.onclick=e=>{e.stopPropagation();Tr21.copy(b);};out.appendChild(b);}}catch(e){}return r;};}
+
+Object.assign(UI,{
+  pay33Pct:"Предоплата — от 1 до 100 %||预付比例应为 1–100%",pay33First:"Поэтапно — укажите сумму первого этапа||分阶段付款——请填写第一阶段金额",
+  dp33Tip:"Выбрать дату||选择日期",
+  mv33Hint:"Отметьте файлы галочками, чтобы переместить несколько сразу||勾选文件即可一次移动多个",mv33N:"Выбрано: {n}||已选：{n}",mv33To:"Переместить в папку…||移动到文件夹…",mv33Go:"Переместить||移动",
+  mv33Clear:"Снять выбор||取消选择",mv33Pick:"Выбрать файл||选择文件",mv33Done:"Перемещено файлов: {n} → {f}||已移动 {n} 个文件 → {f}",
+  tr33Fail:"Не удалось скопировать — выделите текст перевода и нажмите Ctrl+C||复制失败——请选中译文后按 Ctrl+C"});
+(()=>{const st=document.createElement("style");st.textContent=
+  "label.dp33{position:relative;display:inline-flex;align-items:center;gap:3px;cursor:pointer;font-weight:700;color:var(--ink-2,var(--ink));text-transform:none}label.dp33:hover{color:var(--pri,var(--red))}"+
+  "label.dp33 input[data-dp33]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}"+
+  ".mv33{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink-3);margin:0 0 8px}.mv33.on{position:sticky;top:0;z-index:2;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;padding:8px 10px;color:var(--ink);box-shadow:var(--sh-1,0 2px 8px rgba(0,0,0,.06))}"+
+  ".mv33 select{border:1px solid var(--line-2);border-radius:6px;padding:4px 8px;font:inherit;font-size:12.5px;background:var(--surface);color:var(--ink)}.mv33c{margin-right:8px;width:16px;height:16px;flex:none;cursor:pointer}"+
+  "#tr21Out{position:relative;padding-right:40px!important}.tr33c{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:8px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-3);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-weight:800}"+
+  ".tr33c:hover{color:var(--pri,var(--red));border-color:currentColor}.tr33c svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}.tr33c.done33{color:var(--ok);border-color:var(--ok)}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.6 · ОШ-0017 — ВСТАВКА СКРИНШОТОВ И ФАЙЛОВ ИЗ БУФЕРА (решение владельца 24.10.2026) ═══════════════════════════
+   Сообщение Сотрудник (21.10): «возможность вставления скриншота из буфера обмена». Раньше Ctrl+V с картинкой работал только в чатах.
+   Решение владельца: «сделай возможным везде вставить так файлы, чтобы было удобно». Ctrl+V скриншота или файла:
+     • в открытом окне с «Прикрепить файл» (оплата, приёмка, переписка, данные заявки, этапы суда…) — файл добавляется в это окно;
+     • в окне задачи — к файлам задачи; в форме «Сообщить об ошибке» — как приложенный файл;
+     • в строке заметки «Плана на день» — новая заметка с файлом;
+     • на странице дела без открытых окон — в «Документы» дела (в открытую папку);
+     • в чатах — как и раньше (свой обработчик).
+   Файлы можно и перетащить мышью в открытое окно. Загрузка — тем же путём, что «Прикрепить файл» (сжатие, хранилище, права). */
+const Paste33={
+  name(f){return f.name&&f.name!=="image.png"&&f.name!=="image.jpg"?f:new File([f],"screenshot-"+nowS().replace(/[:T-]/g,"")+"."+((f.type||"image/png").split("/")[1]||"png").replace("jpeg","jpg"),{type:f.type||"image/png"});},
+  /* файл → в тот же путь, что «Прикрепить файл»: trigger() вызывает Files.upload, выбор файла подменяется этим файлом */
+  async inject(file,trigger){const inp=document.getElementById("fileIn");if(!inp)return false;const orig=inp.click;inp.click=()=>{};
+    try{await trigger();}finally{inp.click=orig;}if(typeof inp.onchange!=="function")return false;
+    const dt=new DataTransfer();dt.items.add(file);inp.files=dt.files;inp.onchange();await new Promise(r=>setTimeout(r,450));return true;},
+  open(id){const o=document.getElementById(id);return !!o&&o.classList.contains("open");},
+  /* куда вставлять — по открытому окну и месту на странице */
+  target(el){
+    if(typeof B26!=="undefined"&&B26.isOpen())return {k:"bug"};
+    if(this.open("ovD")){const d=document.querySelector("#mdD .dfiles [data-dfadd]");return d?{k:"btn",b:d}:{k:"none"};}
+    if(this.open("ovT")){const b=document.querySelector("#mdT #tUp");return b?{k:"btn",b}:{k:"task-new"};}
+    if(document.querySelector(".ov.open,#viewer.open"))return {k:"none"};
+    const nt=el&&el.closest&&el.closest("[data-nt30add]");if(nt&&typeof NT30!=="undefined")return {k:"note",day:nt.dataset.nt30add};
+    const cm=document.getElementById("cmAttach");if(cm&&el&&el.closest&&cm.closest("form,.card,div")&&cm.closest("form,.card,div").contains(el))return {k:"btn",b:cm};
+    if(Router.cur==="matter"&&document.querySelector('[data-act="mUp"]'))return {k:"docs"};
+    return {k:"none"};},
+  async put(files,el){files=[...files].filter(Boolean).map(f=>this.name(f));if(!files.length)return false;const t=this.target(el);
+    if(t.k==="none"){toast(T1(UI.ps33None));return false;}
+    if(t.k==="task-new"){toast(T1(UI.ps33TaskNew));return false;}
+    if(t.k==="bug"){const f=files[0];if(f.size>10*1024*1024){toast(T1(UI.b26FileBig));return false;}B26.d.file=f;B26.render();toast(T1(UI.ps33Ok).replace("{n}",f.name));return true;}
+    for(const f of files){
+      if(t.k==="btn")await this.inject(f,()=>t.b.click());
+      else if(t.k==="note")await this.inject(f,()=>NT30.pick({day:t.day}));
+      else if(t.k==="docs"){if(typeof Card22!=="undefined"&&Card22.dropFiles)await Card22.dropFiles(document,[f]);}
+      toast(T1(t.k==="docs"?UI.ps33Docs:UI.ps33Ok).replace("{n}",f.name));}
+    return true;}
+};
+/* Ctrl+V: только файлы и картинки; текст вставляется как обычно; чат обрабатывает сам */
+document.addEventListener("paste",e=>{if(e.defaultPrevented||!U()||(typeof isClient==="function"&&isClient()&&!document.getElementById("cmAttach")))return;
+  const it=[...((e.clipboardData||{}).items||[])].filter(x=>x.kind==="file");if(!it.length)return;
+  if(e.target.closest&&e.target.closest("#ch22thr,.ch22,.c22chat"))return;
+  e.preventDefault();Paste33.put(it.map(x=>x.getAsFile()),e.target);});
+/* перетаскивание файлов в открытое окно (окно, задача, форма ошибки) */
+const inOv33=el=>el&&el.closest&&el.closest("#ovD.open,#ovT.open,#ovB26.open");
+document.addEventListener("dragover",e=>{if(!inOv33(e.target)||![...((e.dataTransfer||{}).types||[])].includes("Files"))return;e.preventDefault();const md=e.target.closest(".md");if(md)md.classList.add("drop33");});
+document.addEventListener("dragleave",e=>{const md=e.target.closest&&e.target.closest(".md.drop33");if(md&&!md.contains(e.relatedTarget))md.classList.remove("drop33");});
+document.addEventListener("drop",e=>{if(!inOv33(e.target)||!((e.dataTransfer||{}).files||[]).length)return;e.preventDefault();e.stopPropagation();
+  document.querySelectorAll(".md.drop33").forEach(x=>x.classList.remove("drop33"));Paste33.put(e.dataTransfer.files,e.target);});
+Object.assign(UI,{ps33Ok:"Вставлено: {n}||已粘贴：{n}",ps33Docs:"Вставлено в «Документы» дела: {n}||已粘贴到案件“文件”：{n}",
+  ps33None:"Здесь некуда вставить файл — откройте окно с «Прикрепить файл» или страницу дела||此处无法粘贴文件——请打开带“附加文件”的窗口或案件页面",
+  ps33TaskNew:"Сначала сохраните задачу — затем вставьте файл||请先保存任务，再粘贴文件"});
+(()=>{const st=document.createElement("style");st.textContent=".md.drop33{outline:3px dashed var(--pri,var(--red));outline-offset:-6px}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 1.6 · СТАРАЯ КОПИЯ ДЕЛА НЕ ОТКАТЫВАЕТ ДЕЛО; ПОСТУПЛЕНИЕ НЕ ПИШЕТ ДЕЛО (решение владельца 24.10.2026) ═══════════════════════════
+   Шаг 2. Портал записывает дело целиком из копии на экране. Теперь вместе с делом уходит метка версии, которую видел портал
+   (data._rev33 = время последнего изменения строки). Если копия устарела, сервер (миграция 20261024000200_v16_stale, zc.guard_rev16)
+   оставляет как в базе этап, ведущего, этап до договора и его данные, оплату и закрытие дела — для всех, включая УП; история дела
+   объединяется. Ответ сервера на запись сразу обновляет копию на экране (и метку), поэтому вторая запись подряд не считается старой.
+   Шаг 1. Поступление (внести, изменить, удалить, подтвердить) дело больше не записывает: «Оплачено», статус, строку истории,
+   снятие ручного статуса и уведомление ведущему «можно начинать работу» делает сервер; портал только перечитывает дело.
+   Без сервера (демо) — как раньше. */
+const Rev33={
+  mark(row){const t=row&&row.updated_at;if(!t)return "";return t instanceof Date?t.toISOString():String(t);},
+  /* ответ сервера → в открытую копию дела (тот же объект, что на экране) */
+  apply(obj,row){if(!obj||!row||!row.data)return;Object.keys(obj).forEach(k=>{if(!(k in row.data))delete obj[k];});Object.assign(obj,row.data);obj.id=obj.id||row.id;const r=this.mark(row);if(r)obj._rev33=r;},
+  async reload(id){if(!id)return;let row=null;try{row=await SB19.T.one("matters","id",id);}catch(e){row=null;}if(!row)return;
+    const live=S.matters[id];if(live)this.apply(live,row);else{S.matters[id]=Object.assign({},row.data,{id});const r=this.mark(row);if(r)S.matters[id]._rev33=r;}}
+};
+{const _do33=SB19.docOf.bind(SB19);SB19.docOf=function(name,row){const d=_do33(name,row);if(name==="matters"&&d&&d.data&&row&&row.updated_at){const r=Rev33.mark(row);if(r)d.data._rev33=r;}return d;};}
+{const _wr33=SB19.write.bind(SB19);SB19.write=async function(t,id,vals){if(t!=="matters"||!vals||!vals.data)return _wr33.apply(this,arguments);
+  const r=await this.T.update(t,vals,{id});if(r&&r.length){Rev33.apply(vals.data,r[0]);const live=S.matters&&S.matters[id];if(live&&live!==vals.data)Rev33.apply(live,r[0]);return;}
+  return _wr33.apply(this,arguments);};}
+/* шаг 1: поступление — дело не записывается, только перечитывается */
+{const _sm33=Payment.syncMatter.bind(Payment);Payment.syncMatter=async function(p,sign){if(!SB19.on)return _sm33.apply(this,arguments);
+  if(!p||!p.matterId||p.pending)return;await new Promise(r=>setTimeout(r,150));await Rev33.reload(p.matterId);};}
+/* сравнение «до/после» при обрыве связи (v33_net) — без метки версии */
+if(typeof Net33!=="undefined"){const _same33=Net33.same.bind(Net33);Net33.same=function(a,b){const s=x=>{if(!x||typeof x!=="object")return x;const c=Object.assign({},x);delete c._rev33;return c;};return _same33(s(a),s(b));};}
+
+/* ═══════════════════════════ версия 1.6 · УЗБЕКСКИЙ ДЛЯ НОВЫХ НАДПИСЕЙ (24.10.2026) ═══════════════════════════
+   Переводы на узбекский (латиница) для модулей v33_* и новых строк «Помощи» (руководство и «Что нового» версии 1.6). */
+window.UZ21=Object.assign(window.UZ21||{},{
+  "меняет управляющий адвокат":"boshqaruvchi advokat oʻzgartiradi","я":"men",
+  "✓ Связь прерывалась, но действие выполнено — дело обновлено с сервера":"✓ Aloqa uzildi, lekin amal bajarildi — ish serverdan yangilandi",
+  "Связь прервалась — действие не выполнено. Повторите":"Aloqa uzildi — amal bajarilmadi. Qayta urinib koʻring",
+  "Нет связи с сервером — проверьте интернет и повторите":"Server bilan aloqa yoʻq — internetni tekshirib, qayta urinib koʻring",
+  "Открыть":"Ochish","Изменить":"Oʻzgartirish","Удалить":"Oʻchirish","Удалить версию — её ещё не отправляли клиенту":"Versiyani oʻchirish — u hali mijozga yuborilmagan",
+  "Удалить «{n}»?":"«{n}» oʻchirilsinmi?","Версия ещё не отправлялась клиенту. Удаление попадёт в «Историю» дела.":"Versiya hali mijozga yuborilmagan. Oʻchirish ishning «Tarix»iga yoziladi.",
+  "Версия КП удалена":"TT versiyasi oʻchirildi",
+  "Будет собрана новая версия КП. Цена и порядок оплаты — согласованные на этапе 2, здесь не меняются; согласованные условия дела тоже не меняются.":"TTning yangi versiyasi tuziladi. Narx va toʻlov tartibi 2-bosqichda kelishilgan, bu yerda oʻzgarmaydi; ishning kelishilgan shartlari ham oʻzgarmaydi.",
+  "Примечание в КП (необязательно)":"TTdagi izoh (ixtiyoriy)","Сначала согласуйте условия на этапе 2":"Avval 2-bosqichda shartlarni kelishing",
+  "Открыть все версии":"Barcha versiyalarni ochish","Версии КП":"TT versiyalari","Выберите версию слева — она откроется справа":"Chapdan versiyani tanlang — u oʻngda ochiladi",
+  "Сравнить две":"Ikkitasini solishtirish","Одна версия":"Bitta versiya","Слева в списке выделены обе: нажмите другую версию — она откроется справа":"Roʻyxatda ikkalasi belgilangan: boshqa versiyani bosing — u oʻngda ochiladi",
+  "Изменить данные заявки":"Ariza maʼlumotlarini oʻzgartirish","изменения попадут в «Историю» дела":"oʻzgarishlar ishning «Tarix»iga yoziladi",
+  "Ведущий или управляющий адвокат, до подписания договора. Кто и что изменил — видно в «Истории» дела.":"Masʼul yoki boshqaruvchi advokat, shartnoma imzolanguncha. Kim nimani oʻzgartirgani ishning «Tarix»ida koʻrinadi.",
+  "Контакт: кто":"Aloqa: kim","Телефон":"Telefon","Мессенджер":"Messenjer","Файлы заявки (снимите галочку, чтобы убрать)":"Ariza fayllari (olib tashlash uchun belgini oling)","Добавить файлы":"Fayl qoʻshish",
+  "Изменить заявку":"Arizani oʻzgartirish","Пока заявка «Новая», её можно изменить. Изменения сохраняются в истории заявки.":"Ariza «Yangi» ekan, uni oʻzgartirish mumkin. Oʻzgarishlar ariza tarixida saqlanadi.",
+  "История изменений":"Oʻzgarishlar tarixi","Сообщить об ошибке (Ctrl+Shift+E)":"Xato haqida xabar berish (Ctrl+Shift+E)","Ошибка":"Xato",
+  "Предоплата — от 1 до 100 %":"Oldindan toʻlov — 1 dan 100 % gacha","Поэтапно — укажите сумму первого этапа":"Bosqichma-bosqich — birinchi bosqich summasini kiriting",
+  "Выбрать дату":"Sanani tanlash","Отметьте файлы галочками, чтобы переместить несколько сразу":"Bir nechtasini birdan koʻchirish uchun fayllarni belgilang",
+  "Выбрано: {n}":"Tanlandi: {n}","Переместить в папку…":"Papkaga koʻchirish…","Переместить":"Koʻchirish","Снять выбор":"Tanlovni bekor qilish","Выбрать файл":"Faylni tanlash",
+  "Перемещено файлов: {n} → {f}":"Koʻchirilgan fayllar: {n} → {f}","Не удалось скопировать — выделите текст перевода и нажмите Ctrl+C":"Nusxa olinmadi — tarjima matnini belgilab, Ctrl+C bosing",
+  "Вставлено: {n}":"Qoʻyildi: {n}","Вставлено в «Документы» дела: {n}":"Ishning «Hujjatlar»iga qoʻyildi: {n}",
+  "Здесь некуда вставить файл — откройте окно с «Прикрепить файл» или страницу дела":"Bu yerga fayl qoʻyib boʻlmaydi — «Fayl biriktirish» bor oynani yoki ish sahifasini oching",
+  "Сначала сохраните задачу — затем вставьте файл":"Avval vazifani saqlang — keyin faylni qoʻying",
+  /* «Помощь»: руководство */
+  "Скриншот или файл можно вставить Ctrl+V или перетащить мышью: в открытое окно с «Прикрепить файл», в окно задачи, в форму «Сообщить об ошибке»; на странице дела без открытых окон — в «Документы» дела.":"Skrinshot yoki faylni Ctrl+V bilan qoʻyish yoki sichqoncha bilan sudrab olib kelish mumkin: «Fayl biriktirish» bor ochiq oynaga, vazifa oynasiga, «Xato haqida xabar berish» shakliga; ochiq oyna boʻlmagan ish sahifasida — ishning «Hujjatlar»iga.",
+  "Сообщить об ошибке можно из любого открытого окна: кнопка ⚠ «Ошибка» в заголовке окна или Ctrl+Shift+E. Форма открывается справа поверх окна, окно не закрывается; Esc закрывает только форму.":"Xato haqida istalgan ochiq oynadan xabar berish mumkin: oyna sarlavhasidagi ⚠ «Xato» tugmasi yoki Ctrl+Shift+E. Shakl oyna ustida oʻngda ochiladi, oyna yopilmaydi; Esc faqat shaklni yopadi.",
+  "В «Плане на день» под датой — месяц и год; нажмите на них, чтобы сразу выбрать нужную дату (без листания по месяцам).":"«Kun rejasi»da sana ostida — oy va yil; kerakli sanani darhol tanlash uchun ularni bosing (oylarni varaqlamasdan).",
+  "В «Предложить условия» и в условиях договора поля появляются по выбранной оплате: «Предоплата N %» — процент, «Поэтапно» — сумма первого этапа; при «100 % предоплате» и «Оплате после результата» лишних полей нет.":"«Shartlarni taklif qilish» va shartnoma shartlarida maydonlar tanlangan toʻlovga qarab chiqadi: «Oldindan N %» — foiz, «Bosqichma-bosqich» — birinchi bosqich summasi; «100 % oldindan» va «Natijadan keyin toʻlov»da ortiqcha maydon yoʻq.",
+  "Версии КП: «Открыть все версии» — список слева, просмотр справа, «Сравнить две». «Изменить» собирает новую версию с исправленными текстами (цена и оплата — согласованные на этапе 2). «Удалить» — только версию, которую ещё не отправляли клиенту.":"TT versiyalari: «Barcha versiyalarni ochish» — chapda roʻyxat, oʻngda koʻrish, «Ikkitasini solishtirish». «Oʻzgartirish» tuzatilgan matnlar bilan yangi versiya tuzadi (narx va toʻlov — 2-bosqichda kelishilgan). «Oʻchirish» — faqat mijozga hali yuborilmagan versiya.",
+  "Кто и что изменил в деле — во вкладке «История»: поле, было → стало, автор и время (записывает сервер).":"Ishda kim nimani oʻzgartirgani — «Tarix» yorligʻida: maydon, edi → boʻldi, muallif va vaqt (server yozadi).",
+  "До подписания договора ведущий (или управляющий адвокат) может изменить данные этапа «Приём заявки» — кнопка «Изменить данные заявки».":"Shartnoma imzolanguncha masʼul (yoki boshqaruvchi advokat) «Arizani qabul qilish» bosqichi maʼlumotlarini oʻzgartirishi mumkin — «Ariza maʼlumotlarini oʻzgartirish» tugmasi.",
+  "«Документы» дела: отметьте файлы галочками и выберите «Переместить в папку…» — несколько файлов сразу.":"Ishning «Hujjatlar»i: fayllarni belgilang va «Papkaga koʻchirish…»ni tanlang — bir nechta faylni birdan.",
+  "Исполнитель задачи выбирается из людей дела (себя — всегда). Статус задачи меняют автор, исполнитель, ведущий дела и управляющий адвокат. На главной — задачи, где вы исполнитель.":"Vazifa ijrochisi ish ishtirokchilaridan tanlanadi (oʻzingizni — doim). Vazifa holatini muallif, ijrochi, ishning masʼuli va boshqaruvchi advokat oʻzgartiradi. Bosh sahifada — siz ijrochi boʻlgan vazifalar.",
+  "Свою заявку в «Заявках» можно изменить, пока она «Новая» — нажмите на неё; изменения сохраняются в истории заявки.":"«Arizalar»dagi oʻz arizangizni u «Yangi» ekan oʻzgartirish mumkin — ustiga bosing; oʻzgarishlar ariza tarixida saqlanadi.",
+  "Скопировать перевод — значок в правом верхнем углу перевода или кнопка «Копировать» внизу.":"Tarjimadan nusxa olish — tarjimaning oʻng yuqori burchagidagi belgi yoki pastdagi «Nusxa olish» tugmasi.",
+  /* «Что нового» */
+  "Версия 1.6: исправления по сообщениям об ошибках":"1.6-versiya: xato xabarlari boʻyicha tuzatishlar",
+  "Сохранение дела адвокатом больше не отклоняется «Ведущего назначает управляющий адвокат»: в «Редактировать дело» ведущий показан текстом, а поля этапов берутся из базы.":"Advokat ishni saqlaganda endi «Masʼulni boshqaruvchi advokat tayinlaydi» rad etilmaydi: «Ishni tahrirlash»da masʼul matn bilan koʻrsatiladi, bosqich maydonlari bazadan olinadi.",
+  "«История» дела: кто что изменил — было → стало. Данные «Приёма заявки» можно изменить до договора; свою «Новую» заявку в «Заявках» — тоже.":"Ishning «Tarix»i: kim nimani oʻzgartirdi — edi → boʻldi. «Arizani qabul qilish» maʼlumotlarini shartnomagacha oʻzgartirish mumkin; «Arizalar»dagi oʻz «Yangi» arizangizni ham.",
+  "Задачи: исполнитель — из людей дела (себя — всегда); статус меняют автор, исполнитель, ведущий и УП.":"Vazifalar: ijrochi — ish ishtirokchilaridan (oʻzingiz — doim); holatni muallif, ijrochi, masʼul va BA oʻzgartiradi.",
+  "«Сообщить об ошибке» — из любого окна: ⚠ в заголовке окна или Ctrl+Shift+E; форма справа, окно не закрывается.":"«Xato haqida xabar berish» — istalgan oynadan: oyna sarlavhasida ⚠ yoki Ctrl+Shift+E; shakl oʻngda, oyna yopilmaydi.",
+  "Ctrl+V скриншота или файла — в окна с «Прикрепить файл», задачи, форму ошибки и «Документы» дела; файлы можно перетащить в окно.":"Skrinshot yoki faylni Ctrl+V — «Fayl biriktirish» bor oynalarga, vazifalarga, xato shakliga va ishning «Hujjatlar»iga; fayllarni oynaga sudrab olib kelish mumkin.",
+  "КП: двойное нажатие больше не создаёт дубль; «Открыть все версии» и «Сравнить две»; «Изменить» — новая версия; «Удалить» — неотправленную.":"TT: ikki marta bosish endi nusxa yaratmaydi; «Barcha versiyalarni ochish» va «Ikkitasini solishtirish»; «Oʻzgartirish» — yangi versiya; «Oʻchirish» — yuborilmaganini.",
+  "Условия оплаты: поля появляются по выбранной оплате. «Пакет услуг» видят адвокаты и юристы. Календарь: месяц, год и выбор даты. Несколько файлов — в папку сразу. Переводчик: значок «копировать» у перевода. При обрыве связи портал сам проверяет, выполнено ли действие.":"Toʻlov shartlari: maydonlar tanlangan toʻlovga qarab chiqadi. «Xizmatlar paketi»ni advokatlar va yuristlar koʻradi. Kalendar: oy, yil va sanani tanlash. Bir nechta fayl — papkaga birdan. Tarjimon: tarjima yonida «nusxa olish» belgisi. Aloqa uzilsa, portal amal bajarilganini oʻzi tekshiradi.",
+  "Сохранение из окна, открытого давно, больше не возвращает этап, ведущего и оплату дела, изменённые за это время; поступление пересчитывает дело на сервере и пишет строку в его историю.":"Uzoq ochiq turgan oynadan saqlash endi shu vaqt ichida oʻzgargan bosqich, masʼul va toʻlovni qaytarmaydi; tushum ishni serverda qayta hisoblaydi va tarixiga yozadi."
+});
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
