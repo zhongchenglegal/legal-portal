@@ -10443,7 +10443,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="53eb10928a90";
+const ZC_BUILD="fcc4baf6ef64";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -15635,7 +15635,7 @@ AGXW.extraRender=function(a){
  AGXW.renderChat&&AGXW.renderChat();AGXW.extraUpdate(a);};
 AGXW.extraUpdate=function(a){};
 AGXW.extraAction=function(k,a,b){
- if(k==='call'){modal('Звонок через портал',`Голосовой разговор с ${a.first} появится на следующем этапе (голосовой ИИ). Сейчас — чат: он справа, ${a.first} отвечает по данным портала.`,{confirm:'Понятно'});return true;}
+ if(k==='call'){AGXW.call?AGXW.call.start(a):toast('Звонок недоступен');return true;}
  if(k==='openchat'){API.dm.open(a.id==='dir'?'ai.dir':'ai.'+a.id);return true;}
  if(k==='chat'){$('#agChat').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>$('#agChatIn').focus(),350);return true;}
  if(k==='export'){const rows=[['Время','Сотрудник','Действие']].concat(events.filter(e=>e.id===a.id).map(e=>[e.full||e.time,a.person,e.text]));const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const u=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const l=document.createElement('a');l.href=u;l.download=`журнал-${a.first}.csv`;l.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('Журнал выгружен');return true;}
@@ -15937,6 +15937,59 @@ const Rec={r:null,
   if(r.mr.state!=='inactive'){r.mr.onstop=done;try{r.mr.stop();}catch(e){done();}}else done();}};
 ROOT.addEventListener('click',e=>{const b=e.target.closest('[data-mic]');if(b){e.preventDefault();Rec.toggle(b.dataset.mic,b);}});
 ROOT.addEventListener('keydown',e=>{if(e.key==='Escape'&&Rec.r)Rec.stop(false);});
+/* ---------- звонок через портал (решение владельца 26.10.2026, вариант B): голос — OpenAI GPT-Live по WebRTC, ответы — наш агент ----------
+   Браузер ↔ OpenAI: звук; события — канал «oai-events». Когда GPT-Live передаёт вопрос (session.delegation.created), портал отправляет
+   последние реплики в ai-director (call_turn) и возвращает ответ агента (session.commentary.append) — GPT-Live его озвучивает. */
+{const SV=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+ ROOT.insertAdjacentHTML('beforeend',`<div class="zc-call" id="zcCall" hidden><div class="zc-call-card" role="dialog" aria-label="Звонок ИИ-агенту"><div class="zc-call-top"><span class="chp pri">Звонок через портал</span><span id="zcCallTime">00:00</span></div><div class="zc-call-av"><span class="ring"></span><span class="ring r2"></span><div id="zcCallImg" class="ph"></div></div><h2 id="zcCallName"></h2><div class="zc-call-st" id="zcCallSt">Соединение…</div><div class="zc-wave" id="zcWave">${'<i></i>'.repeat(24)}</div><div class="zc-trans" id="zcTrans"></div><div class="zc-call-ctrl"><button type="button" class="cbtn on" id="zcMic">${SV('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>')}<small>Микрофон</small></button><button type="button" class="cbtn end" id="zcEnd">${SV('<path d="M3 15c5-4.5 13-4.5 18 0l-2.4 2.6-3.2-1.6v-2.5a11 11 0 0 0-6.8 0V16l-3.2 1.6z"/>')}<small>Завершить</small></button></div><div class="zc-call-note">Голос — OpenAI (GPT-Live), ответы — руководитель отдела по данным портала. Указания в разговоре становятся поручениями. Только для УП.</div></div></div>`);}
+const Call={c:null,
+ line(who,delta,newLine){const c=this.c;if(!c)return;let l=c.lines[c.lines.length-1];if(newLine||!l||l.who!==who){l={who,text:''};c.lines.push(l);}l.text+=delta;this.paint();},
+ paint(){const c=this.c,box=$('#zcTrans');if(!c||!box)return;box.innerHTML=c.lines.slice(-14).map(l=>`<div class="tl ${l.who}"><b>${l.who==='ag'?'Александр':l.who==='sys'?'✓':'Вы'}</b><span>${esc(l.text)}</span></div>`).join('');box.scrollTop=1e6;},
+ st(t){const e=$('#zcCallSt');if(e)e.textContent=t;},
+ async start(a){if(this.c)return;if(API.demo){toast('Демо-режим: звонок — только с сервером');return;}if(!D.on){toast('Руководитель отдела выключен — включите его в профиле');return;}
+  if(!window.RTCPeerConnection||!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){toast('Звонок в этом браузере недоступен — откройте портал в Chrome');return;}
+  const c=this.c={a,lines:[],orders:[],t0:0,ended:false,busy:0};
+  const ph=$('#zcCallImg');ph.style.backgroundImage='url('+ASSETS.directorPortrait+')';ph.style.backgroundSize='cover';ph.style.backgroundPosition='50% 20%';
+  $('#zcCallName').textContent=a.person;$('#zcTrans').innerHTML='';$('#zcCallTime').textContent='00:00';this.st('Соединение…');$('#zcCall').hidden=false;$('#zcCall').classList.add('ringing');$('#zcMic').classList.add('on');
+  try{c.mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){this.fail('Нет доступа к микрофону — разрешите его в браузере');return;}
+  if(this.c!==c){c.mic.getTracks().forEach(t=>t.stop());return;}
+  const pc=c.pc=new RTCPeerConnection();c.mic.getTracks().forEach(t=>pc.addTrack(t,c.mic));
+  c.audio=document.createElement('audio');c.audio.autoplay=true;pc.ontrack=e=>{c.audio.srcObject=e.streams[0];};
+  const dc=c.dc=pc.createDataChannel('oai-events');dc.onmessage=e=>{let ev;try{ev=JSON.parse(e.data);}catch(_){return;}this.on(ev);};
+  pc.onconnectionstatechange=()=>{if(['failed','disconnected'].includes(pc.connectionState)&&this.c===c&&!c.ended)this.end('Связь прервалась');};
+  try{await pc.setLocalDescription(await pc.createOffer());
+   await new Promise(r=>{if(pc.iceGatheringState==='complete')return r();const t=setTimeout(r,2500);pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);r();}});});
+   const r=await API.invoke('ai-director',{action:'call_start',sdp:pc.localDescription.sdp});if(this.c!==c)return;
+   c.id=r&&r.id;await pc.setRemoteDescription({type:'answer',sdp:r.sdp});this.st('Соединение…');}
+  catch(e){this.fail(e&&e.code==='no_openai'?'Звонок ещё не подключён: на сервере нет ключа OpenAI':errText(e));}},
+ on(ev){const c=this.c;if(!c)return;const t=ev.type||'';
+  if(t==='session.started'){$('#zcCall').classList.remove('ringing');c.t0=Date.now();this.st('Разговор идёт · говорите');
+   c.timer=setInterval(()=>{const s=Math.floor((Date.now()-c.t0)/1000);$('#zcCallTime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},500);}
+  else if(t==='session.input_transcript.delta'){this.line('me',ev.delta||'');}
+  else if(t==='session.output_transcript.delta'){this.line('ag',ev.delta||'');const w=$('#zcWave');w.classList.add('talk');clearTimeout(c.wt);c.wt=setTimeout(()=>w.classList.remove('talk'),900);}
+  else if(t==='session.delegation.created'&&ev.delegation&&ev.delegation.id)this.turn(ev.delegation.id);
+  else if(t==='session.closed'){c.closed=true;}
+  else if(t==='error'||/\.failed$/.test(t)){const m=(ev.error&&ev.error.message)||'';if(m)this.line('sys','Ошибка: '+m,true);}},
+ async turn(did){const c=this.c;if(!c)return;c.busy++;this.st('Александр смотрит данные…');
+  try{const said=c.lines.filter(l=>l.who!=='sys'&&l.text.trim()).slice(-16).map(l=>({who:l.who,text:l.text}));
+   const r=await API.invoke('ai-director',{action:'call_turn',said});if(this.c!==c)return;
+   if(r&&r.order){c.orders.push(r.order);this.line('sys',`Поручение №${r.order} принято`,true);}
+   const say=String((r&&r.say)||'Не смог проверить — повторите, пожалуйста.').slice(0,1500);
+   if(c.dc&&c.dc.readyState==='open')c.dc.send(JSON.stringify({type:'session.commentary.append',event_id:'r'+Date.now(),delegation_id:did,content:say}));}
+  catch(e){if(c.dc&&c.dc.readyState==='open')c.dc.send(JSON.stringify({type:'session.commentary.append',event_id:'r'+Date.now(),delegation_id:did,content:'Сейчас не получается проверить данные, попробуйте чуть позже.'}));}
+  finally{c.busy--;if(this.c===c&&!c.busy)this.st('Разговор идёт · говорите');}},
+ fail(t){toast(t);this.end(null,true);},
+ async end(reason,silent){const c=this.c;if(!c||c.ended)return;c.ended=true;clearInterval(c.timer);
+  try{if(c.dc&&c.dc.readyState==='open'){c.dc.send(JSON.stringify({type:'session.close'}));for(let i=0;i<20&&!c.closed;i++)await new Promise(r=>setTimeout(r,100));}}catch(e){}
+  try{c.pc&&c.pc.close();}catch(e){}try{c.mic&&c.mic.getTracks().forEach(t=>t.stop());}catch(e){}if(c.audio)c.audio.srcObject=null;
+  const sec=c.t0?Math.round((Date.now()-c.t0)/1000):0;this.c=null;$('#zcCall').hidden=true;$('#zcCall').classList.remove('ringing');
+  if(reason)toast(reason);
+  if(sec>0&&!silent){try{await API.invoke('ai-director',{action:'call_end',sec,lines:c.lines.filter(l=>l.who!=='sys').slice(-12),orders:c.orders});}catch(e){}
+   localEv.push({ts:Date.now(),text:`Звонок через портал · ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`});await load(true);}}};
+AGXW.call=Call;
+$('#zcEnd').onclick=()=>Call.end();
+$('#zcMic').onclick=()=>{const c=Call.c;if(!c||!c.mic)return;const on=!$('#zcMic').classList.contains('on');c.mic.getAudioTracks().forEach(t=>t.enabled=on);$('#zcMic').classList.toggle('on',on);Call.st(on?'Разговор идёт · говорите':'Микрофон выключен');};
+ROOT.addEventListener('keydown',e=>{if(e.key==='Escape'&&Call.c)Call.end();});
 /* ---------- собрать отчёт сейчас ---------- */
 AGXW.build=async function(kind){if(API.demo){toast('Демо-режим: отчёты собираются только на сервере');return;}if(busy)return toast('Отчёт уже собирается');if(!D.on)return toast('Руководитель отдела выключен — включите его в профиле');
  busy=true;toast(`Собираю ${KIND[kind]} отчёт — обычно до минуты`);setTimeout(()=>load(true),1500);
