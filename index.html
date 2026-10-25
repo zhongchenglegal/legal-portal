@@ -10443,7 +10443,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="fcc4baf6ef64";
+const ZC_BUILD="db68a64e6e78";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -15107,6 +15107,165 @@ const _navAgx37=navFor;navFor=function(){const g=_navAgx37.apply(this,arguments)
 const _pbindAgx37=Pages.bind;Pages.bind=function(vp){_pbindAgx37.call(this,vp);const slot=vp.querySelector("#agxSlot");if(slot&&Agx37.can())Agx37.mount(slot);};
 const _logoutAgx37=Auth.logout;Auth.logout=function(){Agx37.reset();return _logoutAgx37.apply(this,arguments);};
 
+/* ═══════════════════════════ версия 1.9 · ЗВОНОК ИИ-СОТРУДНИКУ ЧЕРЕЗ ПОРТАЛ (решения владельца 26.10.2026) ═══════════════════════════
+   • Звонят УП, адвокаты и юристы: кнопка 📞 в «Чатах» (переписка с агентом) и «Позвонить» в профиле агента (раздел «ИИ-агенты»).
+     С сотрудником агент говорит только о поручениях УП, которые его касаются (сервер: ai_call_ctx2, функция ai-director).
+   • Агент сам звонит через портал по поручению УП: у сотрудника звонит портал («Принять» / «Отклонить»); не ответил за 90 с —
+     агент пишет в чат (сервер: ai_calls, zc.ai_call_sweep).
+   • Окно звонка: текст разговора — по кнопке «Текст» (по умолчанию скрыт); «Свернуть» — звонок идёт, а порталом можно пользоваться.
+   • Запись звонка — в переписке с агентом: карточка «📞 Звонок через портал · 2:10», текст разговора разворачивается;
+     вверху переписки — «История звонков».
+   • Голос — OpenAI GPT-Live по WebRTC (браузер ↔ OpenAI); когда GPT-Live передаёт вопрос (session.delegation.created), портал
+     отправляет реплики в ai-director (call_turn) и возвращает ответ агента (session.commentary.append). */
+Object.assign(UI,{ag37Call:"Позвонить||打电话",ag37Hist:"История звонков||通话记录",ag37Text:"Текст||文字",ag37Min:"Свернуть||最小化",ag37Mic:"Микрофон||麦克风",ag37End:"Завершить||结束",
+  ag37Ring:"звонит вам через портал||正在通过门户呼叫您",ag37Acc:"Принять||接听",ag37Dec:"Отклонить||拒绝",ag37Talk:"Текст разговора||通话文字",ag37NoCalls:"Звонков пока не было||暂无通话记录"});
+const AGX37_SV=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const AGX37_IC={phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',end:'<path d="M3 15c5-4.5 13-4.5 18 0l-2.4 2.6-3.2-1.6v-2.5a11 11 0 0 0-6.8 0V16l-3.2 1.6z"/>',
+  text:'<path d="M4 6h16M4 11h16M4 16h10"/>',min:'<path d="M5 14h14M9 18l3 3 3-3"/>',max:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',hist:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'};
+const AgxCall37={c:null,ringing:null,seen:{},
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&!!U()&&!isClient();},
+  async inv(body){if(!SB19.T.invoke)throw Object.assign(new Error(T1("Функция недоступна||功能不可用")),{status:404});return SB19.T.invoke("ai-director",body);},
+  agent(l){const a=S.accounts&&S.accounts[l||"ai.dir"];return {login:l||"ai.dir",name:String((a&&a.name)||"Александр Волков (ИИ)").replace(/\s*\(ИИ\)$/,""),photo:(typeof PHOTOS==="object"&&PHOTOS["__ai_dir"])||"ai-office/dir-portrait.webp"};},
+  el(id){return document.getElementById(id);},
+  ensure(){if(this.el("zc37call"))return;
+    const st=document.createElement("style");st.textContent=AGX37_CSS;document.head.appendChild(st);
+    document.body.insertAdjacentHTML("beforeend",`<div class="zc37call" id="zc37call" hidden><div class="zc37card" role="dialog" aria-label="Звонок ИИ-агенту">
+      <div class="zc37top"><span class="zc37chip">${T1("Звонок через портал||门户通话")}</span><span id="zc37time">00:00</span></div>
+      <div class="zc37av"><span class="ring"></span><span class="ring r2"></span><div id="zc37img" class="ph"></div></div><h2 id="zc37name"></h2><div class="zc37st" id="zc37st"></div>
+      <div class="zc37wave" id="zc37wave">${"<i></i>".repeat(24)}</div><div class="zc37trans" id="zc37trans" hidden></div>
+      <div class="zc37ctrl"><button type="button" class="cbtn on" id="zc37mic">${AGX37_SV(AGX37_IC.mic)}<small>${T1(UI.ag37Mic)}</small></button><button type="button" class="cbtn" id="zc37txt">${AGX37_SV(AGX37_IC.text)}<small>${T1(UI.ag37Text)}</small></button>
+        <button type="button" class="cbtn" id="zc37min">${AGX37_SV(AGX37_IC.min)}<small>${T1(UI.ag37Min)}</small></button><button type="button" class="cbtn end" id="zc37end">${AGX37_SV(AGX37_IC.end)}<small>${T1(UI.ag37End)}</small></button></div></div></div>
+      <div class="zc37mini" id="zc37mini" hidden><span class="dot"></span><img id="zc37mimg" alt=""><span class="t"><b id="zc37mname"></b><small id="zc37mst"></small></span><span class="tm" id="zc37mtime">00:00</span>
+        <button type="button" id="zc37mmic" title="${T1(UI.ag37Mic)}">${AGX37_SV(AGX37_IC.mic)}</button><button type="button" id="zc37mmax" title="${T1("Развернуть||展开")}">${AGX37_SV(AGX37_IC.max)}</button><button type="button" class="end" id="zc37mend" title="${T1(UI.ag37End)}">${AGX37_SV(AGX37_IC.end)}</button></div>
+      <div class="zc37ring" id="zc37ring" hidden><img id="zc37rimg" alt=""><div class="t"><b id="zc37rname"></b><small>${T1(UI.ag37Ring)}</small></div><button type="button" class="acc" id="zc37racc">${AGX37_SV(AGX37_IC.phone)}<span>${T1(UI.ag37Acc)}</span></button><button type="button" class="dec" id="zc37rdec">${AGX37_SV(AGX37_IC.end)}<span>${T1(UI.ag37Dec)}</span></button></div>
+      <div class="zc37hist" id="zc37hist" hidden><div class="box"><div class="hd"><b>${T1(UI.ag37Hist)}</b><button type="button" id="zc37hx">✕</button></div><div class="ls" id="zc37hls"></div></div></div>`);
+    this.el("zc37end").onclick=()=>this.end();this.el("zc37mend").onclick=()=>this.end();
+    this.el("zc37mic").onclick=()=>this.mic();this.el("zc37mmic").onclick=()=>this.mic();
+    this.el("zc37txt").onclick=()=>{const t=this.el("zc37trans");t.hidden=!t.hidden;this.el("zc37txt").classList.toggle("on",!t.hidden);if(!t.hidden)t.scrollTop=1e6;};
+    this.el("zc37min").onclick=()=>this.minimize(true);this.el("zc37mmax").onclick=()=>this.minimize(false);
+    this.el("zc37racc").onclick=()=>this.answer(true);this.el("zc37rdec").onclick=()=>this.answer(false);
+    this.el("zc37hx").onclick=()=>{this.el("zc37hist").hidden=true;};this.el("zc37hist").onclick=e=>{if(e.target.id==="zc37hist")this.el("zc37hist").hidden=true;};
+    document.addEventListener("keydown",e=>{if(e.key==="Escape"&&this.c&&!this.c.min)this.minimize(true);});},
+  st(t){const a=this.el("zc37st"),b=this.el("zc37mst");if(a)a.textContent=t;if(b)b.textContent=t;},
+  minimize(v){const c=this.c;if(!c)return;c.min=v;this.el("zc37call").hidden=v;this.el("zc37mini").hidden=!v;},
+  mic(){const c=this.c;if(!c||!c.mic)return;c.muted=!c.muted;c.mic.getAudioTracks().forEach(t=>t.enabled=!c.muted);this.el("zc37mic").classList.toggle("on",!c.muted);this.el("zc37mmic").classList.toggle("off",c.muted);
+    this.st(c.muted?T1("Микрофон выключен||麦克风已关闭"):T1("Разговор идёт||通话中"));},
+  line(who,delta,newLine){const c=this.c;if(!c)return;let l=c.lines[c.lines.length-1];if(newLine||!l||l.who!==who){l={who,text:""};c.lines.push(l);}l.text+=delta;
+    const box=this.el("zc37trans");if(box){box.innerHTML=c.lines.slice(-30).map(x=>`<div class="tl ${x.who}"><b>${x.who==="ag"?esc(c.ag.name.split(" ")[0]):x.who==="sys"?"✓":T1("Вы||您")}</b><span>${esc(x.text)}</span></div>`).join("");box.scrollTop=1e6;}},
+  /* начать звонок (cid — исходящий звонок агента, на который ответили) */
+  async start(o){o=o||{};this.ensure();if(this.c){this.minimize(false);return;}
+    if(!this.srv()){toast(T1("Звонок — только с сервером||通话仅在服务器模式下可用"));return;}
+    if(!window.RTCPeerConnection||!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){toast(T1("Звонок в этом браузере недоступен — откройте портал в Chrome||此浏览器不支持通话，请使用Chrome"));return;}
+    const ag=this.agent(o.agent);const c=this.c={ag,cid:o.cid||null,lines:[],orders:[],t0:0,ended:false,busy:0,min:false};
+    this.el("zc37img").style.backgroundImage=`url(${ag.photo})`;this.el("zc37name").textContent=ag.name;this.el("zc37mname").textContent=ag.name;this.el("zc37mimg").src=ag.photo;
+    this.el("zc37trans").innerHTML="";this.el("zc37trans").hidden=true;this.el("zc37txt").classList.remove("on");this.el("zc37time").textContent="00:00";this.el("zc37mtime").textContent="00:00";
+    this.el("zc37mic").classList.add("on");this.el("zc37mmic").classList.remove("off");this.st(T1("Соединение…||连接中…"));this.el("zc37mini").hidden=true;this.el("zc37call").hidden=false;this.el("zc37call").classList.add("ringing");
+    try{c.mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){this.fail(T1("Нет доступа к микрофону — разрешите его в браузере||无法使用麦克风，请在浏览器中允许"));return;}
+    if(this.c!==c){c.mic.getTracks().forEach(t=>t.stop());return;}
+    const pc=c.pc=new RTCPeerConnection();c.mic.getTracks().forEach(t=>pc.addTrack(t,c.mic));
+    c.audio=document.createElement("audio");c.audio.autoplay=true;pc.ontrack=e=>{c.audio.srcObject=e.streams[0];};
+    const dc=c.dc=pc.createDataChannel("oai-events");dc.onmessage=e=>{let ev;try{ev=JSON.parse(e.data);}catch(_){return;}this.on(ev);};
+    pc.onconnectionstatechange=()=>{if(["failed","disconnected"].includes(pc.connectionState)&&this.c===c&&!c.ended)this.end(T1("Связь прервалась||连接中断"));};
+    try{await pc.setLocalDescription(await pc.createOffer());
+      await new Promise(r=>{if(pc.iceGatheringState==="complete")return r();const t=setTimeout(r,2500);pc.addEventListener("icegatheringstatechange",()=>{if(pc.iceGatheringState==="complete"){clearTimeout(t);r();}});});
+      const r=await this.inv({action:"call_start",sdp:pc.localDescription.sdp,call_id:c.cid});if(this.c!==c)return;
+      await pc.setRemoteDescription({type:"answer",sdp:r.sdp});}
+    catch(e){this.fail(e&&e.code==="no_openai"?T1("Звонок ещё не подключён: на сервере нет ключа OpenAI||通话未启用：服务器没有OpenAI密钥"):String((e&&e.message)||e));}},
+  on(ev){const c=this.c;if(!c)return;const t=ev.type||"";
+    if(t==="session.started"){this.el("zc37call").classList.remove("ringing");c.t0=Date.now();this.st(T1("Разговор идёт||通话中"));
+      c.timer=setInterval(()=>{const s=Math.floor((Date.now()-c.t0)/1000),v=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");this.el("zc37time").textContent=v;this.el("zc37mtime").textContent=v;},500);}
+    else if(t==="session.input_transcript.delta")this.line("me",ev.delta||"");
+    else if(t==="session.output_transcript.delta"){this.line("ag",ev.delta||"");const w=this.el("zc37wave"),m=this.el("zc37mini");w.classList.add("talk");m.classList.add("talk");clearTimeout(c.wt);c.wt=setTimeout(()=>{w.classList.remove("talk");m.classList.remove("talk");},900);}
+    else if(t==="session.delegation.created"&&ev.delegation&&ev.delegation.id)this.turn(ev.delegation.id);
+    else if(t==="session.closed")c.closed=true;
+    else if(t==="error"||/\.failed$/.test(t)){const m=(ev.error&&ev.error.message)||"";if(m)this.line("sys",T1("Ошибка: ||错误：")+m,true);}},
+  async turn(did){const c=this.c;if(!c)return;c.busy++;this.st(T1("Смотрит данные…||正在查看数据…"));
+    const send=txt=>{if(c.dc&&c.dc.readyState==="open")c.dc.send(JSON.stringify({type:"session.commentary.append",event_id:"r"+Date.now(),delegation_id:did,content:String(txt).slice(0,1500)}));};
+    try{const said=c.lines.filter(l=>l.who!=="sys"&&l.text.trim()).slice(-16).map(l=>({who:l.who,text:l.text}));
+      const r=await this.inv({action:"call_turn",said,call_id:c.cid});if(this.c!==c)return;
+      if(r&&r.order){c.orders.push(r.order);this.line("sys",T1("Поручение №||任务 №")+r.order+T1(" принято|| 已接受"),true);}
+      send((r&&r.say)||T1("Не смог проверить — повторите, пожалуйста.||无法查询，请再说一遍。"));}
+    catch(e){send(T1("Сейчас не получается проверить данные, попробуйте чуть позже.||暂时无法查询数据，请稍后再试。"));}
+    finally{c.busy--;if(this.c===c&&!c.busy&&!c.muted)this.st(T1("Разговор идёт||通话中"));}},
+  fail(t){toast(t);this.end(null,true);},
+  async end(reason,silent){const c=this.c;if(!c||c.ended)return;c.ended=true;clearInterval(c.timer);
+    try{if(c.dc&&c.dc.readyState==="open"){c.dc.send(JSON.stringify({type:"session.close"}));for(let i=0;i<20&&!c.closed;i++)await new Promise(r=>setTimeout(r,100));}}catch(e){}
+    try{c.pc&&c.pc.close();}catch(e){}try{c.mic&&c.mic.getTracks().forEach(t=>t.stop());}catch(e){}if(c.audio)c.audio.srcObject=null;
+    const sec=c.t0?Math.round((Date.now()-c.t0)/1000):0;this.c=null;this.el("zc37call").hidden=true;this.el("zc37mini").hidden=true;this.el("zc37call").classList.remove("ringing");
+    if(reason)toast(reason);
+    if(sec>0&&!silent){try{await this.inv({action:"call_end",sec,call_id:c.cid,lines:c.lines.filter(l=>l.who!=="sys"&&l.text.trim()).slice(-60),orders:c.orders});}catch(e){}}
+    try{window.dispatchEvent(new CustomEvent("agx37-callend",{detail:{sec}}));}catch(e){}},
+  /* входящий звонок агента: уведомление «aicall» → звонок в портале; ответ — ai_call_answer */
+  async check(){if(!this.srv()||this.c||this.ringing)return;const me=U().login,items=((S.notif||{})[me]||{}).items||[];
+    for(const it of items){if(it.type!=="aicall"||it.read||this.seen[it.id])continue;this.seen[it.id]=1;const cid=Number(it.ref);if(!(cid>0))continue;
+      let row=null;try{row=await SB19.T.one("ai_calls","id",cid);}catch(e){row=null;}
+      if(row&&row.status==="ringing"&&Date.now()-Date.parse(row.at)<85000){this.ring(cid);return;}}},
+  ring(cid){this.ensure();const ag=this.agent("ai.dir");this.ringing={cid,t:setTimeout(()=>this.stopRing(),75000)};
+    this.el("zc37rimg").src=ag.photo;this.el("zc37rname").textContent=ag.name+" (ИИ)";this.el("zc37ring").hidden=false;this.beep(true);},
+  stopRing(){const r=this.ringing;if(!r)return;clearTimeout(r.t);this.ringing=null;this.el("zc37ring").hidden=true;this.beep(false);},
+  async answer(acc){const r=this.ringing;if(!r)return;this.stopRing();
+    try{const x=await SB19.T.rpc("ai_call_answer",{cid:r.cid,accept:!!acc});if(acc){if(x&&x.status==="active")this.start({cid:r.cid});else toast(T1("Звонок уже завершён||通话已结束"));}}
+    catch(e){toast(String((e&&e.message)||e));}},
+  beep(on){try{if(!on){if(this.bt){clearInterval(this.bt);this.bt=null;}return;}const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ac=this.ac||(this.ac=new AC());
+    const one=()=>{[0,.18].forEach(d=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=720;g.gain.value=.06;o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+d);o.stop(ac.currentTime+d+.12);});};
+    one();this.bt=setInterval(one,1800);}catch(e){}},
+  /* запись звонка в переписке: карточка, текст разговора разворачивается */
+  cardHtml(m,who){const k=m.call||{},s=Number(k.sec)||0,mm=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");const ag=this.agent("ai.dir").name.split(" ")[0];
+    const title=k.status==="missed"?T1("Пропущенный звонок||未接来电"):k.status==="declined"?T1("Звонок отклонён||通话被拒绝"):T1("Звонок через портал||门户通话")+" · "+mm;
+    const sub=(k.dir==="out"?T1("звонил ИИ-агент||AI助理来电"):T1("вы звонили||您拨打"))+(Array.isArray(k.orders)&&k.orders.length?" · "+T1("поручения||任务")+" №"+k.orders.join(", №"):"");
+    const ls=Array.isArray(k.lines)?k.lines:[];
+    return `<div class="call37"><div class="h"><span class="ic${k.status==="missed"||k.status==="declined"?" miss":""}">${AGX37_SV(AGX37_IC.phone)}</span><span><b>${esc(title)}</b><small>${esc(sub)}</small></span></div>
+      ${k.status!=="done"&&m.text?`<div class="tx">${esc(m.text)}</div>`:""}${k.purpose&&k.status==="done"?`<div class="pp">${T1("Цель||目的")}: ${esc(k.purpose)}</div>`:""}
+      ${ls.length?`<details><summary>${T1(UI.ag37Talk)} · ${ls.length}</summary><div class="ls">${ls.map(l=>`<div><b>${l.who==="ag"?esc(ag):esc(who||T1("Вы||您"))}:</b> ${esc(l.text)}</div>`).join("")}</div></details>`:""}</div>`;},
+  history(k){this.ensure();const ms=(typeof Chat22!=="undefined"?Chat22.msgs(k):[]).filter(m=>m.call).slice().reverse();
+    this.el("zc37hls").innerHTML=ms.length?ms.map(m=>`<div class="it"><div class="d">${esc(String(m.at||"").replace("T"," ").slice(0,16))}</div>${this.cardHtml(m)}</div>`).join(""):`<div class="em">${T1(UI.ag37NoCalls)}</div>`;
+    this.el("zc37hist").hidden=false;}
+};
+/* «Чаты»: запись звонка — карточкой; в переписке с агентом вверху — «Позвонить» и «История звонков» */
+const _bubAg37=Chat22.bubble;Chat22.bubble=function(m,mine,peerRead,last){if(!m||!m.call||m.deleted)return _bubAg37.apply(this,arguments);
+  const h=_bubAg37.call(this,Object.assign({},m,{text:""}),mine,peerRead,last);return h.replace('<span class="mt22">',AgxCall37.cardHtml(m)+'<span class="mt22">');};
+const _thrAg37c=Chat22.threadHtml;Chat22.threadHtml=function(){const h=_thrAg37c.apply(this,arguments);const k=this.peer;
+  if(!k||this.isGroup(k)||!(typeof AgxChat37!=="undefined"&&AgxChat37.is(k)))return h;
+  return h.replace('<span class="sp22"></span>',`<span class="sp22"></span><button type="button" class="ib22" data-ag37call="${esc(k)}" title="${T1(UI.ag37Call)}">${AGX37_SV(AGX37_IC.phone)}</button><button type="button" class="ib22" data-ag37hist="${esc(k)}" title="${T1(UI.ag37Hist)}">${AGX37_SV(AGX37_IC.hist)}</button>`);};
+document.addEventListener("click",e=>{const a=e.target.closest("[data-ag37call]");if(a){e.preventDefault();AgxCall37.start({agent:a.dataset.ag37call});return;}
+  const h=e.target.closest("[data-ag37hist]");if(h){e.preventDefault();AgxCall37.history(h.dataset.ag37hist);}},true);
+setInterval(()=>{try{AgxCall37.check();}catch(e){}},2500);
+const _logoutAg37c=Auth.logout;Auth.logout=function(){try{AgxCall37.stopRing();AgxCall37.end(null,true);}catch(e){}return _logoutAg37c.apply(this,arguments);};
+const AGX37_CSS=`
+.zc37call{position:fixed;inset:0;z-index:2000;background:rgba(14,19,30,.62);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px}.zc37call[hidden]{display:none}
+.zc37card{width:min(440px,100%);background:linear-gradient(180deg,#1E2A40,#141A26);color:#fff;border-radius:22px;padding:20px 22px 18px;box-shadow:0 30px 80px rgba(0,0,0,.45);display:flex;flex-direction:column;align-items:center;gap:8px;font:14px/1.45 Inter,system-ui,sans-serif}
+.zc37top{width:100%;display:flex;justify-content:space-between;align-items:center;font-variant-numeric:tabular-nums;color:#C9D5E6;font-size:13px}.zc37chip{background:rgba(255,255,255,.1);border-radius:999px;padding:3px 11px;font-size:12px;font-weight:600}
+.zc37av{position:relative;width:112px;height:112px;margin:10px 0 4px}.zc37av .ph{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.85);background:#E8EDF4 center 20%/cover no-repeat;width:106px;height:106px}
+.zc37av .ring{position:absolute;inset:-8px;border-radius:50%;border:2px solid rgba(154,176,208,.5);animation:zc37r 2s infinite}.zc37av .r2{animation-delay:1s}.zc37call:not(.ringing) .ring{animation-duration:3.2s;opacity:.5}
+@keyframes zc37r{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+.zc37card h2{margin:0;font:700 20px Montserrat,Inter,sans-serif;color:#fff}.zc37st{color:#9AB0D0;font-size:13px;min-height:18px}
+.zc37wave{display:flex;gap:3px;align-items:center;height:30px;margin:4px 0}.zc37wave i{width:3px;height:4px;border-radius:2px;background:#6782AC;transition:height .15s}
+.zc37wave.talk i{animation:zc37w .9s ease-in-out infinite}.zc37wave.talk i:nth-child(3n){animation-delay:.2s}.zc37wave.talk i:nth-child(4n){animation-delay:.35s}.zc37wave.talk i:nth-child(5n){animation-delay:.5s}@keyframes zc37w{50%{height:26px;background:#9AB0D0}}
+.zc37trans{width:100%;max-height:190px;overflow:auto;background:rgba(255,255,255,.06);border-radius:12px;padding:8px 10px;font-size:12.5px;display:flex;flex-direction:column;gap:6px}.zc37trans[hidden]{display:none}
+.zc37trans .tl b{color:#9AB0D0;margin-right:6px;font-weight:600}.zc37trans .tl.me b{color:#7CC39F}
+.zc37ctrl{display:flex;gap:10px;margin-top:6px}.zc37ctrl .cbtn{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;color:#C9D5E6;font-size:10.5px;width:66px;cursor:pointer;padding:0}
+.zc37ctrl .cbtn svg{width:50px;height:50px;padding:14px;border-radius:50%;background:rgba(255,255,255,.1);transition:.15s}.zc37ctrl .cbtn:hover svg{background:rgba(255,255,255,.18)}.zc37ctrl .cbtn.on svg{background:#3A5A8C}.zc37ctrl .cbtn.end svg{background:#C0483F}
+.zc37mini{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:2000;display:flex;align-items:center;gap:9px;background:#1E2A40;color:#fff;border-radius:999px;padding:6px 8px 6px 10px;box-shadow:0 10px 30px rgba(0,0,0,.35);font:13px Inter,system-ui,sans-serif;max-width:calc(100vw - 32px)}.zc37mini[hidden]{display:none}
+.zc37mini .dot{width:8px;height:8px;border-radius:50%;background:#3F8768;animation:zc37p 1.4s infinite}.zc37mini.talk .dot{background:#7CC39F}@keyframes zc37p{50%{opacity:.35}}
+.zc37mini img{width:30px;height:30px;border-radius:50%;object-fit:cover;object-position:50% 20%}.zc37mini .t{display:flex;flex-direction:column;min-width:0}.zc37mini .t b{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zc37mini .t small{color:#9AB0D0;font-size:11px;white-space:nowrap}
+.zc37mini .tm{font-variant-numeric:tabular-nums;color:#C9D5E6;margin:0 4px}.zc37mini button{width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}.zc37mini button svg{width:16px;height:16px}
+.zc37mini button.end{background:#C0483F}.zc37mini button.off{background:#7a3a35}
+.zc37ring{position:fixed;right:16px;bottom:16px;z-index:2001;display:flex;align-items:center;gap:10px;background:#1E2A40;color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.4);font:13px Inter,system-ui,sans-serif;animation:zc37in .3s}.zc37ring[hidden]{display:none}
+@keyframes zc37in{from{transform:translateY(20px);opacity:0}}
+.zc37ring img{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:50% 20%;box-shadow:0 0 0 3px rgba(124,195,159,.5);animation:zc37p 1.2s infinite}.zc37ring .t{display:flex;flex-direction:column;margin-right:6px}.zc37ring .t small{color:#9AB0D0}
+.zc37ring button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:#C9D5E6;font-size:10.5px;cursor:pointer;padding:0}.zc37ring button svg{width:40px;height:40px;padding:10px;border-radius:50%;color:#fff}
+.zc37ring .acc svg{background:#3F8768}.zc37ring .dec svg{background:#C0483F}
+.zc37hist{position:fixed;inset:0;z-index:1999;background:rgba(14,19,30,.45);display:flex;align-items:center;justify-content:center;padding:16px}.zc37hist[hidden]{display:none}
+.zc37hist .box{width:min(520px,100%);max-height:80vh;display:flex;flex-direction:column;background:var(--card,#fff);color:var(--ink,#1E2430);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.zc37hist .hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line,#E6E9EE)}.zc37hist .hd button{border:0;background:none;font-size:16px;cursor:pointer;color:inherit}
+.zc37hist .ls{overflow:auto;padding:10px 16px 16px;display:flex;flex-direction:column;gap:10px}.zc37hist .it .d{font-size:11.5px;color:var(--ink-3,#737C8A);margin-bottom:3px}.zc37hist .em{color:var(--ink-3,#737C8A);text-align:center;padding:20px}
+.call37{display:flex;flex-direction:column;gap:5px;min-width:220px;max-width:420px}.call37 .h{display:flex;align-items:center;gap:9px}.call37 .h b{display:block;font-size:13.5px}.call37 .h small{display:block;font-size:11.5px;opacity:.75}
+.call37 .ic{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#E6F0EA;color:#3F8768;flex:none}.call37 .ic.miss{background:#F7E9E6;color:#B9574B}.call37 .ic svg{width:16px;height:16px}
+.call37 .tx,.call37 .pp{font-size:12.5px;white-space:pre-wrap}.call37 .pp{opacity:.8}.call37 details{font-size:12.5px}.call37 summary{cursor:pointer;font-weight:600;opacity:.85}
+.call37 .ls{margin-top:6px;display:flex;flex-direction:column;gap:4px;max-height:260px;overflow:auto;padding:6px 8px;border-radius:8px;background:rgba(127,127,127,.08)}
+@media(max-width:520px){.zc37mini .t small{display:none}.zc37ring{left:12px;right:12px}}`;
+
 /* ═══════════════════════════ версия 1.9 · ИИ-СОТРУДНИКИ В «ЧАТАХ» И В ЧАТЕ ДЕЛА (решения владельца 26.10.2026) ═══════════════════════════
    • ИИ-сотрудник (сейчас — Руководитель отдела ИИ-агентов) есть в «Чатах», как обычный сотрудник: личная переписка и группы.
      Сервер: учётка ai.dir (kind = 'agent'), chat_send и группы принимают агента (миграция 20261026000200_ai_agents).
@@ -15901,7 +16060,7 @@ AGXW.renderChat=renderChat;
 function renderDm(){const box=$('#agMsgs');if(!box)return;const me=API.dm.me(),ms=API.dm.msgs('ai.dir').filter(m=>!m.deleted);
  const last=ms[ms.length-1],wait=last&&last.by===me&&Date.now()-dmWait<120000;
  const h=(ms.length?'':'<div class="msg sys"><div class="b">Это ваша личная переписка с руководителем отдела — та же, что в «Чатах». Напишите поручение или вопрос.</div></div>')
-  +ms.slice(-60).map(m=>{const vs=(m.files||[]).filter(f=>f.voice),fl=(m.files||[]).filter(f=>!f.voice);
+  +ms.slice(-60).map(m=>{if(m.call&&typeof AgxCall37!=='undefined')return`<div class="msg ${m.by===me?'me':'ag'}"><div class="b">${AgxCall37.cardHtml(m)}</div><time>${esc(String(m.at||'').replace('T',' ').slice(5,16))}</time></div>`;const vs=(m.files||[]).filter(f=>f.voice),fl=(m.files||[]).filter(f=>!f.voice);
    const body=esc(m.text||'')+vs.map(f=>`${m.text?'<br>':''}🎤 Голосовое · ${Math.floor((f.dur||0)/60)}:${String((f.dur||0)%60).padStart(2,'0')}${f.tr?`<span class="vtr">${esc(f.tr)}</span>`:''}`).join('')+fl.map(f=>`<br>📎 ${esc(f.name||'файл')}`).join('');
    return`<div class="msg ${m.by===me?'me':'ag'}"><div class="b">${body}</div><time>${esc(String(m.at||'').replace('T',' ').slice(5,16))}</time></div>`;}).join('')
   +(wait?'<div class="msg ag typing"><div class="b"><i></i><i></i><i></i></div></div>':'');
@@ -15937,59 +16096,9 @@ const Rec={r:null,
   if(r.mr.state!=='inactive'){r.mr.onstop=done;try{r.mr.stop();}catch(e){done();}}else done();}};
 ROOT.addEventListener('click',e=>{const b=e.target.closest('[data-mic]');if(b){e.preventDefault();Rec.toggle(b.dataset.mic,b);}});
 ROOT.addEventListener('keydown',e=>{if(e.key==='Escape'&&Rec.r)Rec.stop(false);});
-/* ---------- звонок через портал (решение владельца 26.10.2026, вариант B): голос — OpenAI GPT-Live по WebRTC, ответы — наш агент ----------
-   Браузер ↔ OpenAI: звук; события — канал «oai-events». Когда GPT-Live передаёт вопрос (session.delegation.created), портал отправляет
-   последние реплики в ai-director (call_turn) и возвращает ответ агента (session.commentary.append) — GPT-Live его озвучивает. */
-{const SV=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
- ROOT.insertAdjacentHTML('beforeend',`<div class="zc-call" id="zcCall" hidden><div class="zc-call-card" role="dialog" aria-label="Звонок ИИ-агенту"><div class="zc-call-top"><span class="chp pri">Звонок через портал</span><span id="zcCallTime">00:00</span></div><div class="zc-call-av"><span class="ring"></span><span class="ring r2"></span><div id="zcCallImg" class="ph"></div></div><h2 id="zcCallName"></h2><div class="zc-call-st" id="zcCallSt">Соединение…</div><div class="zc-wave" id="zcWave">${'<i></i>'.repeat(24)}</div><div class="zc-trans" id="zcTrans"></div><div class="zc-call-ctrl"><button type="button" class="cbtn on" id="zcMic">${SV('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>')}<small>Микрофон</small></button><button type="button" class="cbtn end" id="zcEnd">${SV('<path d="M3 15c5-4.5 13-4.5 18 0l-2.4 2.6-3.2-1.6v-2.5a11 11 0 0 0-6.8 0V16l-3.2 1.6z"/>')}<small>Завершить</small></button></div><div class="zc-call-note">Голос — OpenAI (GPT-Live), ответы — руководитель отдела по данным портала. Указания в разговоре становятся поручениями. Только для УП.</div></div></div>`);}
-const Call={c:null,
- line(who,delta,newLine){const c=this.c;if(!c)return;let l=c.lines[c.lines.length-1];if(newLine||!l||l.who!==who){l={who,text:''};c.lines.push(l);}l.text+=delta;this.paint();},
- paint(){const c=this.c,box=$('#zcTrans');if(!c||!box)return;box.innerHTML=c.lines.slice(-14).map(l=>`<div class="tl ${l.who}"><b>${l.who==='ag'?'Александр':l.who==='sys'?'✓':'Вы'}</b><span>${esc(l.text)}</span></div>`).join('');box.scrollTop=1e6;},
- st(t){const e=$('#zcCallSt');if(e)e.textContent=t;},
- async start(a){if(this.c)return;if(API.demo){toast('Демо-режим: звонок — только с сервером');return;}if(!D.on){toast('Руководитель отдела выключен — включите его в профиле');return;}
-  if(!window.RTCPeerConnection||!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){toast('Звонок в этом браузере недоступен — откройте портал в Chrome');return;}
-  const c=this.c={a,lines:[],orders:[],t0:0,ended:false,busy:0};
-  const ph=$('#zcCallImg');ph.style.backgroundImage='url('+ASSETS.directorPortrait+')';ph.style.backgroundSize='cover';ph.style.backgroundPosition='50% 20%';
-  $('#zcCallName').textContent=a.person;$('#zcTrans').innerHTML='';$('#zcCallTime').textContent='00:00';this.st('Соединение…');$('#zcCall').hidden=false;$('#zcCall').classList.add('ringing');$('#zcMic').classList.add('on');
-  try{c.mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){this.fail('Нет доступа к микрофону — разрешите его в браузере');return;}
-  if(this.c!==c){c.mic.getTracks().forEach(t=>t.stop());return;}
-  const pc=c.pc=new RTCPeerConnection();c.mic.getTracks().forEach(t=>pc.addTrack(t,c.mic));
-  c.audio=document.createElement('audio');c.audio.autoplay=true;pc.ontrack=e=>{c.audio.srcObject=e.streams[0];};
-  const dc=c.dc=pc.createDataChannel('oai-events');dc.onmessage=e=>{let ev;try{ev=JSON.parse(e.data);}catch(_){return;}this.on(ev);};
-  pc.onconnectionstatechange=()=>{if(['failed','disconnected'].includes(pc.connectionState)&&this.c===c&&!c.ended)this.end('Связь прервалась');};
-  try{await pc.setLocalDescription(await pc.createOffer());
-   await new Promise(r=>{if(pc.iceGatheringState==='complete')return r();const t=setTimeout(r,2500);pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);r();}});});
-   const r=await API.invoke('ai-director',{action:'call_start',sdp:pc.localDescription.sdp});if(this.c!==c)return;
-   c.id=r&&r.id;await pc.setRemoteDescription({type:'answer',sdp:r.sdp});this.st('Соединение…');}
-  catch(e){this.fail(e&&e.code==='no_openai'?'Звонок ещё не подключён: на сервере нет ключа OpenAI':errText(e));}},
- on(ev){const c=this.c;if(!c)return;const t=ev.type||'';
-  if(t==='session.started'){$('#zcCall').classList.remove('ringing');c.t0=Date.now();this.st('Разговор идёт · говорите');
-   c.timer=setInterval(()=>{const s=Math.floor((Date.now()-c.t0)/1000);$('#zcCallTime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');},500);}
-  else if(t==='session.input_transcript.delta'){this.line('me',ev.delta||'');}
-  else if(t==='session.output_transcript.delta'){this.line('ag',ev.delta||'');const w=$('#zcWave');w.classList.add('talk');clearTimeout(c.wt);c.wt=setTimeout(()=>w.classList.remove('talk'),900);}
-  else if(t==='session.delegation.created'&&ev.delegation&&ev.delegation.id)this.turn(ev.delegation.id);
-  else if(t==='session.closed'){c.closed=true;}
-  else if(t==='error'||/\.failed$/.test(t)){const m=(ev.error&&ev.error.message)||'';if(m)this.line('sys','Ошибка: '+m,true);}},
- async turn(did){const c=this.c;if(!c)return;c.busy++;this.st('Александр смотрит данные…');
-  try{const said=c.lines.filter(l=>l.who!=='sys'&&l.text.trim()).slice(-16).map(l=>({who:l.who,text:l.text}));
-   const r=await API.invoke('ai-director',{action:'call_turn',said});if(this.c!==c)return;
-   if(r&&r.order){c.orders.push(r.order);this.line('sys',`Поручение №${r.order} принято`,true);}
-   const say=String((r&&r.say)||'Не смог проверить — повторите, пожалуйста.').slice(0,1500);
-   if(c.dc&&c.dc.readyState==='open')c.dc.send(JSON.stringify({type:'session.commentary.append',event_id:'r'+Date.now(),delegation_id:did,content:say}));}
-  catch(e){if(c.dc&&c.dc.readyState==='open')c.dc.send(JSON.stringify({type:'session.commentary.append',event_id:'r'+Date.now(),delegation_id:did,content:'Сейчас не получается проверить данные, попробуйте чуть позже.'}));}
-  finally{c.busy--;if(this.c===c&&!c.busy)this.st('Разговор идёт · говорите');}},
- fail(t){toast(t);this.end(null,true);},
- async end(reason,silent){const c=this.c;if(!c||c.ended)return;c.ended=true;clearInterval(c.timer);
-  try{if(c.dc&&c.dc.readyState==='open'){c.dc.send(JSON.stringify({type:'session.close'}));for(let i=0;i<20&&!c.closed;i++)await new Promise(r=>setTimeout(r,100));}}catch(e){}
-  try{c.pc&&c.pc.close();}catch(e){}try{c.mic&&c.mic.getTracks().forEach(t=>t.stop());}catch(e){}if(c.audio)c.audio.srcObject=null;
-  const sec=c.t0?Math.round((Date.now()-c.t0)/1000):0;this.c=null;$('#zcCall').hidden=true;$('#zcCall').classList.remove('ringing');
-  if(reason)toast(reason);
-  if(sec>0&&!silent){try{await API.invoke('ai-director',{action:'call_end',sec,lines:c.lines.filter(l=>l.who!=='sys').slice(-12),orders:c.orders});}catch(e){}
-   localEv.push({ts:Date.now(),text:`Звонок через портал · ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`});await load(true);}}};
-AGXW.call=Call;
-$('#zcEnd').onclick=()=>Call.end();
-$('#zcMic').onclick=()=>{const c=Call.c;if(!c||!c.mic)return;const on=!$('#zcMic').classList.contains('on');c.mic.getAudioTracks().forEach(t=>t.enabled=on);$('#zcMic').classList.toggle('on',on);Call.st(on?'Разговор идёт · говорите':'Микрофон выключен');};
-ROOT.addEventListener('keydown',e=>{if(e.key==='Escape'&&Call.c)Call.end();});
+/* ---------- звонок через портал: общий модуль портала (sections/agents/call.js — окно, свёрнутый режим, входящие звонки агента) ---------- */
+AGXW.call={start:a=>{if(typeof AgxCall37==='undefined'){toast('Звонок недоступен');return;}if(!D.on){toast('Руководитель отдела выключен — включите его в профиле');return;}AgxCall37.start({agent:'ai.dir'});}};
+window.addEventListener('agx37-callend',()=>{if(AGXW.load)setTimeout(()=>AGXW.load(true),1500);});
 /* ---------- собрать отчёт сейчас ---------- */
 AGXW.build=async function(kind){if(API.demo){toast('Демо-режим: отчёты собираются только на сервере');return;}if(busy)return toast('Отчёт уже собирается');if(!D.on)return toast('Руководитель отдела выключен — включите его в профиле');
  busy=true;toast(`Собираю ${KIND[kind]} отчёт — обычно до минуты`);setTimeout(()=>load(true),1500);
