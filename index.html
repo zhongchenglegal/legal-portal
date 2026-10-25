@@ -10443,7 +10443,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="d492421bc0f7";
+const ZC_BUILD="0c345908d0c0";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -15166,19 +15166,25 @@ const AgxCall37={c:null,ringing:null,seen:{},
     const pc=c.pc=new RTCPeerConnection();c.mic.getTracks().forEach(t=>pc.addTrack(t,c.mic));
     c.audio=document.createElement("audio");c.audio.autoplay=true;pc.ontrack=e=>{c.audio.srcObject=e.streams[0];};
     const dc=c.dc=pc.createDataChannel("oai-events");dc.onmessage=e=>{let ev;try{ev=JSON.parse(e.data);}catch(_){return;}this.on(ev);};
-    pc.onconnectionstatechange=()=>{if(["failed","disconnected"].includes(pc.connectionState)&&this.c===c&&!c.ended)this.end(T1("Связь прервалась||连接中断"));};
+    /* связь: «disconnected» часто короткий — ждём 8 с восстановления; «failed» — сразу. Причина — понятным текстом и в консоль */
+    const lost=()=>c.started?T1("Связь прервалась — проверьте интернет и позвоните ещё раз||连接中断，请检查网络后重试"):T1("Не удалось соединиться с голосовым сервером. Проверьте интернет (если включён VPN — попробуйте без него) и позвоните ещё раз||无法连接语音服务器，请检查网络（如开启VPN请关闭）后重试");
+    pc.onconnectionstatechange=()=>{const s=pc.connectionState;try{console.info("[звонок ИИ-агенту] связь:",s);}catch(e){}if(this.c!==c||c.ended)return;
+      if(s==="connected"){clearTimeout(c.lostT);c.lostT=null;if(c.started)this.st(T1("Разговор идёт||通话中"));return;}
+      if(s==="failed"){this.end(lost());return;}
+      if(s==="disconnected"&&!c.lostT){this.st(T1("Связь пропала — восстанавливаю…||连接中断，正在恢复…"));c.lostT=setTimeout(()=>{if(this.c===c&&!c.ended&&pc.connectionState!=="connected")this.end(lost());},8000);}};
+    c.connT=setTimeout(()=>{if(this.c===c&&!c.ended&&!c.started)this.end(lost());},20000);
     try{await pc.setLocalDescription(await pc.createOffer());
       await new Promise(r=>{if(pc.iceGatheringState==="complete")return r();const t=setTimeout(r,2500);pc.addEventListener("icegatheringstatechange",()=>{if(pc.iceGatheringState==="complete"){clearTimeout(t);r();}});});
       const r=await this.inv({action:"call_start",sdp:pc.localDescription.sdp,call_id:c.cid});if(this.c!==c)return;
       await pc.setRemoteDescription({type:"answer",sdp:r.sdp});}
     catch(e){this.fail(e&&e.code==="no_openai"?T1("Звонок ещё не подключён: на сервере нет ключа OpenAI||通话未启用：服务器没有OpenAI密钥"):String((e&&e.message)||e));}},
   on(ev){const c=this.c;if(!c)return;const t=ev.type||"";
-    if(t==="session.started"){this.el("zc37call").classList.remove("ringing");c.t0=Date.now();this.st(T1("Разговор идёт||通话中"));
+    if(t==="session.started"){c.started=true;clearTimeout(c.connT);this.el("zc37call").classList.remove("ringing");c.t0=Date.now();this.st(T1("Разговор идёт||通话中"));
       c.timer=setInterval(()=>{const s=Math.floor((Date.now()-c.t0)/1000),v=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");this.el("zc37time").textContent=v;this.el("zc37mtime").textContent=v;},500);}
     else if(t==="session.input_transcript.delta")this.line("me",ev.delta||"");
     else if(t==="session.output_transcript.delta"){this.line("ag",ev.delta||"");const w=this.el("zc37wave"),m=this.el("zc37mini");w.classList.add("talk");m.classList.add("talk");clearTimeout(c.wt);c.wt=setTimeout(()=>{w.classList.remove("talk");m.classList.remove("talk");},900);}
     else if(t==="session.delegation.created"&&ev.delegation&&ev.delegation.id)this.turn(ev.delegation.id);
-    else if(t==="session.closed")c.closed=true;
+    else if(t==="session.closed"){c.closed=true;if(!c.ended)this.end(T1("Звонок завершён||通话已结束"));}
     else if(t==="error"||/\.failed$/.test(t)){const m=(ev.error&&ev.error.message)||"";if(m)this.line("sys",T1("Ошибка: ||错误：")+m,true);}},
   async turn(did){const c=this.c;if(!c)return;c.busy++;this.st(T1("Смотрит данные…||正在查看数据…"));
     const send=txt=>{if(c.dc&&c.dc.readyState==="open")c.dc.send(JSON.stringify({type:"session.commentary.append",event_id:"r"+Date.now(),delegation_id:did,content:String(txt).slice(0,1500)}));};
@@ -15189,7 +15195,7 @@ const AgxCall37={c:null,ringing:null,seen:{},
     catch(e){send(T1("Сейчас не получается проверить данные, попробуйте чуть позже.||暂时无法查询数据，请稍后再试。"));}
     finally{c.busy--;if(this.c===c&&!c.busy&&!c.muted)this.st(T1("Разговор идёт||通话中"));}},
   fail(t){toast(t);this.end(null,true);},
-  async end(reason,silent){const c=this.c;if(!c||c.ended)return;c.ended=true;clearInterval(c.timer);
+  async end(reason,silent){const c=this.c;if(!c||c.ended)return;c.ended=true;clearInterval(c.timer);clearTimeout(c.lostT);clearTimeout(c.connT);
     try{if(c.dc&&c.dc.readyState==="open"){c.dc.send(JSON.stringify({type:"session.close"}));for(let i=0;i<20&&!c.closed;i++)await new Promise(r=>setTimeout(r,100));}}catch(e){}
     try{c.pc&&c.pc.close();}catch(e){}try{c.mic&&c.mic.getTracks().forEach(t=>t.stop());}catch(e){}if(c.audio)c.audio.srcObject=null;
     const sec=c.t0?Math.round((Date.now()-c.t0)/1000):0;this.c=null;this.el("zc37call").hidden=true;this.el("zc37mini").hidden=true;this.el("zc37call").classList.remove("ringing");
