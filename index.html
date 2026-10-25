@@ -10443,7 +10443,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="db68a64e6e78";
+const ZC_BUILD="d492421bc0f7";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -16139,6 +16139,123 @@ derive();paintAll();load();
 })();
 return AGXW;
 }
+
+/* ═══════════════════════════ версия 1.9 · АУДИОЗВОНКИ МЕЖДУ СОТРУДНИКАМИ В «ЧАТАХ» (решение владельца 26.10.2026) ═══════════════════════════
+   • В личной переписке с сотрудником (адвокат, юрист, УП) вверху — 📞: звонок прямо в портале. Голос идёт напрямую между
+     браузерами (WebRTC), без ИИ; сервер только передаёт предложение и ответ соединения и ведёт журнал (rtc_calls, миграция 20261026000600).
+   • Входящий звонок — внизу справа «Принять» / «Отклонить» на любой странице портала; без ответа 45 секунд — пропущенный.
+   • Окно разговора: микрофон, «Свернуть» (звонок идёт плашкой внизу, порталом можно пользоваться), «Завершить».
+   • Запись звонка — в личной переписке: «📞 Аудиозвонок · 3:12», «Звонок отклонён», «Пропущенный звонок».
+   • Звонок ИИ-агенту — отдельный (sections/agents/call.js). Группы — пока без звонков. */
+Object.assign(UI,{rtc38Call:"Аудиозвонок||语音通话",rtc38Ring:"звонит вам||正在呼叫您",rtc38Out:"Вызов…||正在呼叫…",rtc38Conn:"Соединение…||连接中…",rtc38Talk:"Разговор идёт||通话中",
+  rtc38Acc:"Принять||接听",rtc38Dec:"Отклонить||拒绝",rtc38Mic:"Микрофон||麦克风",rtc38Min:"Свернуть||最小化",rtc38End:"Завершить||结束",rtc38Busy:"Вы уже в звонке||您正在通话中",
+  rtc38NoMic:"Нет доступа к микрофону — разрешите его в браузере||无法使用麦克风，请在浏览器中允许",rtc38Fail:"Не удалось соединиться — проверьте интернет и попробуйте ещё раз||连接失败，请检查网络后重试",
+  rtc38Decl:"Собеседник отклонил звонок||对方拒绝了通话",rtc38Miss:"Собеседник не ответил||对方未接听",rtc38Ended:"Звонок завершён||通话已结束",rtc38NoBr:"Звонок в этом браузере недоступен — откройте портал в Chrome||此浏览器不支持通话，请使用Chrome"});
+const RTC38_SV=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const RTC38_IC={phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+  end:'<path d="M3 15c5-4.5 13-4.5 18 0l-2.4 2.6-3.2-1.6v-2.5a11 11 0 0 0-6.8 0V16l-3.2 1.6z"/>',min:'<path d="M5 14h14M9 18l3 3 3-3"/>',max:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>'};
+const Rtc38={c:null,ring:null,seen:{},subOff:null,ice:null,
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&!!U()&&!isClient();},
+  me(){return (U()||{}).login;},
+  el(id){return document.getElementById(id);},
+  busy(){return !!this.c||(typeof AgxCall37!=="undefined"&&!!AgxCall37.c);},
+  canCall(l){const a=S.accounts&&S.accounts[l];return !!a&&!a.ai&&a.active!==false&&l!==this.me();},
+  ensure(){if(this.el("zc38call"))return;const st=document.createElement("style");st.textContent=RTC38_CSS;document.head.appendChild(st);
+    document.body.insertAdjacentHTML("beforeend",`<div class="zc38call" id="zc38call" hidden><div class="zc38card" role="dialog" aria-label="${T1(UI.rtc38Call)}">
+      <div class="zc38top"><span class="zc38chip">${T1(UI.rtc38Call)}</span><span id="zc38time">00:00</span></div><div class="zc38av" id="zc38av"></div><h2 id="zc38name"></h2><div class="zc38st" id="zc38st"></div>
+      <div class="zc38ctrl"><button type="button" class="on" id="zc38mic">${RTC38_SV(RTC38_IC.mic)}<small>${T1(UI.rtc38Mic)}</small></button><button type="button" id="zc38min">${RTC38_SV(RTC38_IC.min)}<small>${T1(UI.rtc38Min)}</small></button><button type="button" class="end" id="zc38end">${RTC38_SV(RTC38_IC.end)}<small>${T1(UI.rtc38End)}</small></button></div></div></div>
+      <div class="zc38mini" id="zc38mini" hidden><span class="dot"></span><span class="av" id="zc38mav"></span><span class="t"><b id="zc38mname"></b><small id="zc38mst"></small></span><span class="tm" id="zc38mtime">00:00</span>
+        <button type="button" id="zc38mmic">${RTC38_SV(RTC38_IC.mic)}</button><button type="button" id="zc38mmax">${RTC38_SV(RTC38_IC.max)}</button><button type="button" class="end" id="zc38mend">${RTC38_SV(RTC38_IC.end)}</button></div>
+      <div class="zc38ring" id="zc38ring" hidden><span class="av" id="zc38rav"></span><div class="t"><b id="zc38rname"></b><small>${T1(UI.rtc38Ring)}</small></div><button type="button" class="acc" id="zc38racc">${RTC38_SV(RTC38_IC.phone)}<span>${T1(UI.rtc38Acc)}</span></button><button type="button" class="dec" id="zc38rdec">${RTC38_SV(RTC38_IC.end)}<span>${T1(UI.rtc38Dec)}</span></button></div>`);
+    this.el("zc38end").onclick=()=>this.hang();this.el("zc38mend").onclick=()=>this.hang();this.el("zc38mic").onclick=()=>this.mic();this.el("zc38mmic").onclick=()=>this.mic();
+    this.el("zc38min").onclick=()=>this.minimize(true);this.el("zc38mmax").onclick=()=>this.minimize(false);
+    this.el("zc38racc").onclick=()=>this.accept();this.el("zc38rdec").onclick=()=>this.decline();},
+  st(t){[this.el("zc38st"),this.el("zc38mst")].forEach(e=>{if(e)e.textContent=t;});},
+  show(peer){const nm=accName(peer);this.el("zc38av").innerHTML=avatarHtml(peer);this.el("zc38mav").innerHTML=avatarHtml(peer);this.el("zc38name").textContent=nm;this.el("zc38mname").textContent=nm;
+    this.el("zc38time").textContent="00:00";this.el("zc38mtime").textContent="00:00";this.el("zc38mic").classList.add("on");this.el("zc38mmic").classList.remove("off");this.el("zc38mini").hidden=true;this.el("zc38call").hidden=false;},
+  minimize(v){const c=this.c;if(!c)return;c.min=v;this.el("zc38call").hidden=v;this.el("zc38mini").hidden=!v;},
+  mic(){const c=this.c;if(!c||!c.mic)return;c.muted=!c.muted;c.mic.getAudioTracks().forEach(t=>t.enabled=!c.muted);this.el("zc38mic").classList.toggle("on",!c.muted);this.el("zc38mmic").classList.toggle("off",c.muted);},
+  async servers(){if(this.ice)return this.ice;try{const r=await SB19.T.rpc("rtc_ice_servers",{});this.ice=Array.isArray(r)&&r.length?r:[{urls:"stun:stun.l.google.com:19302"}];}catch(e){this.ice=[{urls:"stun:stun.l.google.com:19302"}];}return this.ice;},
+  async media(){if(!window.RTCPeerConnection||!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){toast(T1(UI.rtc38NoBr));return null;}
+    try{return await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});}catch(e){toast(T1(UI.rtc38NoMic));return null;}},
+  async peer(c){const pc=c.pc=new RTCPeerConnection({iceServers:await this.servers()});c.mic.getTracks().forEach(t=>pc.addTrack(t,c.mic));
+    c.audio=document.createElement("audio");c.audio.autoplay=true;pc.ontrack=e=>{c.audio.srcObject=e.streams[0];};
+    pc.onconnectionstatechange=()=>{if(this.c!==c)return;if(pc.connectionState==="connected"&&!c.t0){c.t0=Date.now();this.st(T1(UI.rtc38Talk));this.tone(false);
+        c.timer=setInterval(()=>{const s=Math.floor((Date.now()-c.t0)/1000),v=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");this.el("zc38time").textContent=v;this.el("zc38mtime").textContent=v;},500);}
+      if(pc.connectionState==="failed"){toast(T1(UI.rtc38Fail));this.hang();}};
+    return pc;},
+  gather(pc){return new Promise(r=>{if(pc.iceGatheringState==="complete")return r();const t=setTimeout(r,3000);pc.addEventListener("icegatheringstatechange",()=>{if(pc.iceGatheringState==="complete"){clearTimeout(t);r();}});});},
+  /* исходящий */
+  async call(peer){if(!this.srv())return;this.ensure();if(this.busy()){toast(T1(UI.rtc38Busy));return;}if(!this.canCall(peer))return;
+    const c=this.c={peer,dir:"out",t0:0};this.show(peer);this.st(T1(UI.rtc38Conn));
+    c.mic=await this.media();if(!c.mic){this.clean();return;}if(this.c!==c){c.mic.getTracks().forEach(t=>t.stop());return;}
+    try{const pc=await this.peer(c);await pc.setLocalDescription(await pc.createOffer());await this.gather(pc);if(this.c!==c)return;
+      c.id=Number(await SB19.T.rpc("rtc_invite",{callee:peer,offer:pc.localDescription.sdp}));this.st(T1(UI.rtc38Out));this.tone(true,"back");
+      c.limit=setTimeout(()=>{if(this.c===c&&!c.answered){toast(T1(UI.rtc38Miss));this.hang();}},45000);this.watch(c);}
+    catch(e){toast(String((e&&e.message)||e).replace(/^.*?ERROR:\s*/,""));this.clean();}},
+  /* состояние звонка: живое обновление + запасной опрос */
+  watch(c){const apply=async row=>{if(!row||this.c!==c||Number(row.id)!==c.id)return;
+      if(c.dir==="out"&&row.status==="answered"&&row.answer&&!c.answered){c.answered=true;clearTimeout(c.limit);this.st(T1(UI.rtc38Conn));try{await c.pc.setRemoteDescription({type:"answer",sdp:row.answer});}catch(e){toast(T1(UI.rtc38Fail));this.hang();}}
+      if(["ended","declined","missed"].includes(row.status)){toast(row.status==="declined"&&c.dir==="out"?T1(UI.rtc38Decl):row.status==="missed"&&c.dir==="out"?T1(UI.rtc38Miss):T1(UI.rtc38Ended));this.clean();}};
+    try{c.off=SB19.T.subscribe("rtc_calls","id=eq."+c.id,ev=>apply(ev.row));}catch(e){}
+    c.poll=setInterval(async()=>{try{apply(await SB19.T.one("rtc_calls","id",c.id));}catch(e){}},1500);},
+  /* входящий */
+  listen(){if(this.subOff||!this.srv())return;const me=this.me();
+    try{this.subOff=SB19.T.subscribe("rtc_calls","callee=eq."+me,ev=>{const r=ev.row;if(r&&r.status==="ringing")this.incoming(r);else if(r&&this.ring&&Number(r.id)===this.ring.id&&r.status!=="ringing")this.stopRing();});}catch(e){}
+    this.pollIn=setInterval(async()=>{if(!this.srv())return;try{const p=await SB19.T.rpc("rtc_pending",{});(p||[]).forEach(r=>this.incoming(Object.assign({status:"ringing"},r)));
+      if(this.ring){const r=await SB19.T.one("rtc_calls","id",this.ring.id);if(!r||r.status!=="ringing")this.stopRing();}}catch(e){}},4000);},
+  incoming(r){const id=Number(r.id);if(!id||this.seen[id])return;this.seen[id]=1;if(this.busy())return;this.ensure();
+    this.ring={id,caller:r.caller,t:setTimeout(()=>this.stopRing(),46000)};this.el("zc38rav").innerHTML=avatarHtml(r.caller);this.el("zc38rname").textContent=accName(r.caller);this.el("zc38ring").hidden=false;this.tone(true,"ring");},
+  stopRing(){const r=this.ring;if(!r)return;clearTimeout(r.t);this.ring=null;this.el("zc38ring").hidden=true;this.tone(false);},
+  async accept(){const r=this.ring;if(!r)return;this.stopRing();if(this.busy()){toast(T1(UI.rtc38Busy));return;}
+    const c=this.c={peer:r.caller,dir:"in",id:r.id,t0:0,answered:true};this.show(r.caller);this.st(T1(UI.rtc38Conn));
+    c.mic=await this.media();if(!c.mic){try{await SB19.T.rpc("rtc_end",{cid:r.id});}catch(e){}this.clean();return;}
+    try{const row=await SB19.T.one("rtc_calls","id",r.id);if(!row||row.status!=="ringing"){toast(T1(UI.rtc38Ended));this.clean();return;}
+      const pc=await this.peer(c);await pc.setRemoteDescription({type:"offer",sdp:row.offer});await pc.setLocalDescription(await pc.createAnswer());await this.gather(pc);if(this.c!==c)return;
+      const a=await SB19.T.rpc("rtc_answer",{cid:r.id,answer:pc.localDescription.sdp});if(!a||a.status!=="answered"){toast(T1(UI.rtc38Ended));this.clean();return;}this.watch(c);}
+    catch(e){toast(String((e&&e.message)||e).replace(/^.*?ERROR:\s*/,""));this.hang();}},
+  async decline(){const r=this.ring;if(!r)return;this.stopRing();try{await SB19.T.rpc("rtc_end",{cid:r.id});}catch(e){}},
+  async hang(){const c=this.c;if(!c)return;const id=c.id;this.clean();if(id){try{await SB19.T.rpc("rtc_end",{cid:id});}catch(e){}}},
+  clean(){const c=this.c;if(!c)return;this.c=null;clearTimeout(c.limit);clearInterval(c.poll);clearInterval(c.timer);try{c.off&&c.off();}catch(e){}this.tone(false);
+    try{c.pc&&c.pc.close();}catch(e){}try{c.mic&&c.mic.getTracks().forEach(t=>t.stop());}catch(e){}if(c.audio)c.audio.srcObject=null;
+    const a=this.el("zc38call"),b=this.el("zc38mini");if(a)a.hidden=true;if(b)b.hidden=true;},
+  tone(on,kind){try{if(this.tt){clearInterval(this.tt);this.tt=null;}if(!on)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ac=this.ac||(this.ac=new AC());
+    const one=()=>{(kind==="ring"?[0,.2]:[0]).forEach(d=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=kind==="ring"?760:440;g.gain.value=.05;o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+d);o.stop(ac.currentTime+d+(kind==="ring"?.14:.9));});};
+    one();this.tt=setInterval(one,kind==="ring"?1800:3000);}catch(e){}},
+  reset(){try{this.stopRing();this.hang();}catch(e){}try{this.subOff&&this.subOff();}catch(e){}this.subOff=null;clearInterval(this.pollIn);this.pollIn=null;this.ice=null;this.seen={};}
+};
+/* «Чаты»: 📞 вверху личной переписки с сотрудником; запись звонка — карточкой */
+const _thrRtc38=Chat22.threadHtml;Chat22.threadHtml=function(){const h=_thrRtc38.apply(this,arguments);const k=this.peer;
+  if(!k||this.isGroup(k)||!Rtc38.srv()||!Rtc38.canCall(k))return h;
+  return h.replace('<span class="sp22"></span>',`<span class="sp22"></span><button type="button" class="ib22" data-rtc38="${esc(k)}" title="${T1(UI.rtc38Call)}">${RTC38_SV(RTC38_IC.phone)}</button>`);};
+const _bubRtc38=Chat22.bubble;Chat22.bubble=function(m,mine,peerRead,last){if(!m||!m.rtc||m.deleted)return _bubRtc38.apply(this,arguments);
+  const k=m.rtc,s=Number(k.sec)||0,me=Rtc38.me(),out=k.caller===me,bad=k.status!=="ended";
+  const title=k.status==="ended"?T1(UI.rtc38Call)+" · "+Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):k.status==="declined"?T1("Звонок отклонён||通话被拒绝"):T1("Пропущенный звонок||未接来电");
+  const card=`<div class="rtc38c"><span class="ic${bad?" miss":""}">${RTC38_SV(RTC38_IC.phone)}</span><span><b>${esc(title)}</b><small>${out?T1("исходящий||拨出"):T1("входящий||来电")}</small></span></div>`;
+  return _bubRtc38.call(this,Object.assign({},m,{text:""}),mine,peerRead,last).replace('<span class="mt22">',card+'<span class="mt22">');};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-rtc38]");if(b){e.preventDefault();Rtc38.call(b.dataset.rtc38);}},true);
+/* слушать входящие после входа сотрудника */
+setInterval(()=>{try{if(Rtc38.srv())Rtc38.listen();}catch(e){}},3000);
+const _logoutRtc38=Auth.logout;Auth.logout=function(){Rtc38.reset();return _logoutRtc38.apply(this,arguments);};
+const RTC38_CSS=`
+.zc38call{position:fixed;inset:0;z-index:2000;background:rgba(14,19,30,.55);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:16px}.zc38call[hidden],.zc38mini[hidden],.zc38ring[hidden]{display:none!important}
+.zc38card{width:min(380px,100%);background:linear-gradient(180deg,#1E2A40,#141A26);color:#fff;border-radius:22px;padding:20px 22px 18px;box-shadow:0 30px 80px rgba(0,0,0,.45);display:flex;flex-direction:column;align-items:center;gap:8px;font:14px/1.45 Inter,system-ui,sans-serif}
+.zc38top{width:100%;display:flex;justify-content:space-between;color:#C9D5E6;font-size:13px;font-variant-numeric:tabular-nums}.zc38top .zc38chip{background:rgba(255,255,255,.1);border-radius:999px;padding:3px 11px;font-size:12px;font-weight:600}
+.zc38av{width:104px;height:104px;margin:12px 0 4px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px rgba(255,255,255,.85),0 0 0 10px rgba(154,176,208,.18);display:grid;place-items:center;background:#E8EDF4;color:#3A5A8C;font:700 30px Montserrat,sans-serif}
+.zc38av img,.zc38av .vi{width:100%;height:100%;object-fit:cover;display:grid;place-items:center}.zc38card h2{margin:0;font:700 19px Montserrat,Inter,sans-serif;color:#fff;text-align:center}.zc38st{color:#9AB0D0;font-size:13px;min-height:18px}
+.zc38ctrl{display:flex;gap:14px;margin-top:10px}.zc38ctrl button{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;color:#C9D5E6;font-size:10.5px;width:66px;cursor:pointer;padding:0}
+.zc38ctrl svg{width:50px;height:50px;padding:14px;border-radius:50%;background:rgba(255,255,255,.1)}.zc38ctrl .on svg{background:#3A5A8C}.zc38ctrl .end svg{background:#C0483F}
+.zc38mini{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:2000;display:flex;align-items:center;gap:9px;background:#1E2A40;color:#fff;border-radius:999px;padding:6px 8px 6px 10px;box-shadow:0 10px 30px rgba(0,0,0,.35);font:13px Inter,system-ui,sans-serif;max-width:calc(100vw - 32px)}
+.zc38mini .dot{width:8px;height:8px;border-radius:50%;background:#3F8768;animation:zc38p 1.4s infinite}@keyframes zc38p{50%{opacity:.35}}
+.zc38mini .av,.zc38ring .av{width:30px;height:30px;border-radius:50%;overflow:hidden;flex:none;display:grid;place-items:center;background:#E8EDF4;color:#3A5A8C;font-weight:700;font-size:12px}.zc38mini .av img,.zc38ring .av img{width:100%;height:100%;object-fit:cover}
+.zc38mini .t{display:flex;flex-direction:column;min-width:0}.zc38mini .t b{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zc38mini .t small{color:#9AB0D0;font-size:11px}.zc38mini .tm{font-variant-numeric:tabular-nums;color:#C9D5E6;margin:0 4px}
+.zc38mini button{width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}.zc38mini button svg{width:16px;height:16px}.zc38mini button.end{background:#C0483F}.zc38mini button.off{background:#7a3a35}
+.zc38ring{position:fixed;right:16px;bottom:16px;z-index:2001;display:flex;align-items:center;gap:10px;background:#1E2A40;color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.4);font:13px Inter,system-ui,sans-serif}
+.zc38ring .av{width:46px;height:46px;box-shadow:0 0 0 3px rgba(124,195,159,.5);animation:zc38p 1.2s infinite}.zc38ring .t{display:flex;flex-direction:column;margin-right:6px}.zc38ring .t small{color:#9AB0D0}
+.zc38ring button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:#C9D5E6;font-size:10.5px;cursor:pointer;padding:0}.zc38ring button svg{width:40px;height:40px;padding:10px;border-radius:50%;color:#fff}.zc38ring .acc svg{background:#3F8768}.zc38ring .dec svg{background:#C0483F}
+.rtc38c{display:flex;align-items:center;gap:9px;min-width:200px}.rtc38c b{display:block;font-size:13.5px}.rtc38c small{display:block;font-size:11.5px;opacity:.75}
+.rtc38c .ic{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#E6F0EA;color:#3F8768;flex:none}.rtc38c .ic.miss{background:#F7E9E6;color:#B9574B}.rtc38c .ic svg{width:16px;height:16px}
+@media(max-width:520px){.zc38mini .t small{display:none}.zc38ring{left:12px;right:12px}}`;
 
 /* ══ Кабинет клиента — только клиентская часть данных (решение владельца 19.10.2026, правила К-1 … К-6 — sections/client/ПРАВИЛА.md) ══
    Сервер (миграция 20261019003000_client_view) ведёт клиентские копии дел, заседаний, жалоб и обращений; прямое чтение и прямая
