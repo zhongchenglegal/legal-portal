@@ -10443,7 +10443,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="0c345908d0c0";
+const ZC_BUILD="7fab699dcc50";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10526,7 +10526,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="1.9";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="1.10";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12020,7 +12020,7 @@ const HELP21={
     "Язык — кнопки «RU · 中文 · Oʻz»: на экране входа и в «Настройках» (шестерёнка внизу слева). Выбор сохраняется в вашей учётке: уведомления, в том числе в Telegram, приходят на этом языке.||语言——“RU · 中文 · Oʻz”按钮：在登录页面和“设置”（左下角齿轮）中。所选语言保存在您的账号中：通知（包括Telegram）将以该语言发送。"]},
    {id:"home",t:"Главная и «План на день»||首页与“今日计划”",b:[
     "В «Плане на день» под датой — месяц и год; нажмите на них, чтобы сразу выбрать нужную дату (без листания по месяцам).||“今日计划”日期下方显示年月；点击即可直接选择日期（无需逐月翻页）。",
-    "На главной — «План на день»: ваши события, дедлайны дел, задания сопровождения, задачи и поручения на выбранный день.||首页显示“今日计划”：所选日期的事件、案件截止日、顾问任务、任务与指派事项。",
+    "«План на день» — значок календаря в шапке (или клавиша N на любой странице): ваши события, дедлайны дел, задания сопровождения, задачи, поручения и заметки на выбранный день.||“今日计划”——顶部的日历图标（或在任意页面按 N 键）：所选日期的事件、案件截止日、顾问任务、任务、指派事项和备忘。",
     "«+ Событие» добавляет встречу, заседание или звонок в ваш план. Дедлайны дел попадают в план сами.||“+ 事件”可将会议、庭审或电话加入计划。案件截止日自动显示。",
     "Заметки — под календарём «Плана на день»: напишите текст и нажмите Enter (начните со времени — «15:00 позвонить в банк» — время подставится само). Скрепка прикрепляет файл, микрофон записывает голосовое. Квадратик — «сделано». Невыполненное за прошлые дни само переходит на сегодня с красной пометкой «с 17.10».||备忘位于“今日计划”日历下方：输入内容后按回车（以时间开头——“15:00 给银行打电话”——会自动填入时间）。回形针附加文件，麦克风录制语音。方框表示“已完成”。过去未完成的备忘会自动移到今天，并带红色标记“自 17.10”。",
     "Нажмите на заметку — откроется окно: день, время, «Напомнить» (если указано время: в указанное время, за 15 минут, за час, за день — push и Telegram), «Кому» (поставить коллеге — ему придёт уведомление), дело, файлы и голосовые, комментарии. Заметку видите только вы; если поставили коллеге — вы и он. Менять и удалять её может только автор; коллега отмечает «сделано», прикрепляет файлы и пишет комментарии.||点击备忘打开窗口：日期、时间、“提醒”（填写时间后：到点、提前15分钟、1小时、1天——推送和Telegram）、“给谁”（给同事——对方会收到通知）、案件、文件和语音、评论。备忘仅您可见；给了同事则您和对方可见。只有作者可修改和删除；同事可标记完成、附加文件和评论。",
@@ -12094,7 +12094,7 @@ const HELP21={
     "«Изменить доступ» меняет роль. Матрица прав показывает, какие разделы видит каждая роль.||“修改权限”可更改角色。权限矩阵显示各角色可见的栏目。",
     "Адвокат видит только свои дела (где он участник), их клиентов, корреспонденцию и свои финансы.||律师只能看到自己参与的案件、其客户、函件及本人财务。"]},
    {id:"cal",t:"Календарь||日历",b:[
-    "Пункт меню «Календарь» — только у управляющего адвоката: планы всех сотрудников, дедлайны дел, задания, поручения. У вас на главной — свой «План на день».||“日历”菜单仅管理合伙人可见：全体员工计划、案件截止日、任务、指派。首页显示您自己的“今日计划”。",
+    "Пункт меню «Календарь» — только у управляющего адвоката: планы всех сотрудников, дедлайны дел, задания, поручения. Ваш «План на день» — значок календаря в шапке.||“日历”菜单仅管理合伙人可见：全体员工计划、案件截止日、任务、指派。您自己的“今日计划”在顶部日历图标中。",
     "В «Календаре» — только события, заметок сотрудников там нет: заметки личные и видны только автору (и коллеге, которому заметка поставлена). Свои заметки — на главной под «Планом на день».||“日历”中只有事件，没有员工备忘：备忘是个人的，仅作者（及被指派的同事）可见。您自己的备忘在首页“今日计划”下方。"]},
    {id:"reg",t:"Реестр договоров||合同登记簿",b:[
     "«Реестр договоров» в «Администрировании»: номер, дата, клиент, организация, вид услуги, ведущий, стоимость, порядок и статус оплаты, файл. Фильтры по году, организации и статусу, выгрузка в Excel.||“管理”中的“合同登记簿”：编号、日期、客户、主体、服务类型、主办律师、费用、付款方式与状态、文件。可按年份、主体、状态筛选并导出Excel。",
@@ -12119,6 +12119,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v110home",d:"2026-10-27",t:"Версия 1.10: новая главная, «План на день» и «Требует внимания» в шапке||1.10版：新主页，顶部「今日计划」和「需要关注」",b:["Главная управляющего адвоката: «Активность в платформе», «Нагрузка сотрудников», «Дела по видам», «Рост фирмы»; финансовые блоки — в «Финансы → Обзор».||管理律师主页：「系统活跃度」「员工工作量」「按类型的案件」「事务所增长」；财务模块移至「财务 → 概览」。","«План на день» — значок календаря в шапке у всех сотрудников: панель справа с календарём, событиями и заметками; клавиша N открывает её с любой страницы.||「今日计划」——所有员工顶部的日历图标：右侧面板含日历、事件和备忘；在任意页面按 N 键即可打开。","«Требует внимания» — треугольник в шапке: счётчик сигналов (красный — если есть серьёзные), по нажатию — список со ссылками.||「需要关注」——顶部三角图标：信号计数（有严重信号时为红色），点击显示带链接的列表。","Учитывается время работы в портале (рабочие дни, 10:00–19:00); каждый сотрудник видит своё на главной.||系统统计在门户中的工作时间（工作日 10:00–19:00）；每位员工在主页查看自己的数据。"]},
 {id:"v18card",d:"2026-10-25",t:"Версия 1.8: новое оформление карточки дела||1.8版：案件卡片新外观",b:["Карточка дела в разовых услугах, судебных делах и сопровождении — белая обложка: полоса этапов по верхнему краю, этап, срок и чей ход — в ячейках сводки, вкладки внизу обложки.||一次性服务、诉讼案件和法律顾问的案件卡片采用白色封面：顶部为阶段进度条，阶段、期限和当前负责方显示在摘要格中，标签页位于封面底部。","Блоки разделены: где нужно действовать — с синей рамкой, ещё не доступные разделы — пунктиром; до договора разделы этапа стоят в две колонки рядом с «Что мешает и что дальше».||模块分开显示：需要操作的模块带蓝色边框，尚未开放的部分为虚线框；签约前阶段的各部分与“阻碍与下一步”并排两列显示。","Тексты, кнопки и действия — прежние, поменялся только вид.||文字、按钮和操作不变，仅外观更新。"]},
 {id:"v17osh",d:"2026-10-24",t:"Версия 1.7: исправления по сообщениям об ошибках||1.7版：根据错误报告的修复",b:["Премия: закрытые разовые дела (этап «Отправление в архив») больше не числятся «не закрытыми».||奖金：已关闭的一次性案件（“归档”阶段）不再显示为“未关闭”。","Пока ценовая политика не утверждена, диапазон цены — только ориентир, пояснение не требуется.||价格政策批准前，价格区间仅供参考，无需说明。","В новой заявке клиента нужно выбрать — первый клиент больше не подставляется сам; кнопки шагов — «Далее», «Найти клиента», «Создать заявку».||新申请必须选择客户——不再自动选中第一个客户；步骤按钮为“下一步”“查找客户”“创建申请”。","КП без доступа клиента в кабинет — «отправка отмечена сотрудником», а не «доставлено».||客户无门户权限时，报价显示“员工已标记发送”，而非“已送达”。","Пеня, сумма иска и цена не могут быть меньше нуля; дата договора позже срока — предупреждение.||违约金、诉讼金额和价格不能小于零；合同日期晚于期限时会提示。","«Судебный контроль» открывается и после обновления страницы.||“诉讼监控”刷新页面后仍可打开。","Если сервер не принял действие этапа до договора, окно открывается снова с введённым.||若服务器未接受签约前阶段的操作，窗口会带着已输入内容重新打开。","Клиент, указанный и другой стороной этого же дела, — возможный конфликт для проверки УП.||客户同时被列为本案对方时，标记为可能的冲突，由管理合伙人审核。"]},
 {id:"v16osh",d:"2026-10-24",t:"Версия 1.6: исправления по сообщениям об ошибках||1.6版：根据错误报告的修复",b:["Сохранение дела адвокатом больше не отклоняется «Ведущего назначает управляющий адвокат»: в «Редактировать дело» ведущий показан текстом, а поля этапов берутся из базы.||律师保存案件不再被“主办律师由管理律师指定”拒绝：“编辑案件”中主办律师以文字显示，阶段字段取自数据库。","«История» дела: кто что изменил — было → стало. Данные «Приёма заявки» можно изменить до договора; свою «Новую» заявку в «Заявках» — тоже.||案件“历史”：谁改了什么——原值 → 新值。签约前可修改“受理申请”信息；“申请”中自己的“新”申请也可修改。","Задачи: исполнитель — из людей дела (себя — всегда); статус меняют автор, исполнитель, ведущий и УП.||任务：执行人从案件成员中选择（始终可选自己）；状态可由创建人、执行人、主办律师和管理律师更改。","«Сообщить об ошибке» — из любого окна: ⚠ в заголовке окна или Ctrl+Shift+E; форма справа, окно не закрывается.||“报告错误”——可在任何窗口中：窗口标题的⚠或 Ctrl+Shift+E；表单在右侧，原窗口不关闭。","Ctrl+V скриншота или файла — в окна с «Прикрепить файл», задачи, форму ошибки и «Документы» дела; файлы можно перетащить в окно.||Ctrl+V 粘贴截图或文件——到带“附加文件”的窗口、任务、错误表单和案件“文件”；文件可拖入窗口。","КП: двойное нажатие больше не создаёт дубль; «Открыть все версии» и «Сравнить две»; «Изменить» — новая версия; «Удалить» — неотправленную.||报价：双击不再生成重复；“查看全部版本”和“对比两版”；“修改”——新版本；“删除”——未发送的版本。","Условия оплаты: поля появляются по выбранной оплате. «Пакет услуг» видят адвокаты и юристы. Календарь: месяц, год и выбор даты. Несколько файлов — в папку сразу. Переводчик: значок «копировать» у перевода. При обрыве связи портал сам проверяет, выполнено ли действие.||付款条件：字段随付款方式出现。律师和法务可查看“服务套餐”。日历：年月及日期选择。可一次将多个文件移入文件夹。翻译：译文旁的复制图标。连接中断时门户会自动检查操作是否完成。","Сохранение из окна, открытого давно, больше не возвращает этап, ведущего и оплату дела, изменённые за это время; поступление пересчитывает дело на сервере и пишет строку в его историю.||打开已久的窗口保存时，不再还原期间已更改的阶段、主办律师和付款；收款由服务器重新计算案件并记入其历史。"]},
@@ -17326,6 +17327,357 @@ if(typeof CL1!=="undefined"){const _pgC5c=CL1.page.bind(CL1);CL1.page=function(s
 .ks25.r5k{grid-template-columns:repeat(6,minmax(0,1fr))}.r5p0 .k25{cursor:default}
 @media (max-width:1350px){.ks25.r5k{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (max-width:700px){.ks25.r5k{grid-template-columns:repeat(2,minmax(0,1fr))}.r5t .r5p{width:100%}}`;
   (document.head||document.documentElement).appendChild(st);}
+
+/* ═══════════ ГЛАВНАЯ · УЧЁТ ВРЕМЕНИ В ПОРТАЛЕ (версия 1.10, решения владельца 26.10.2026) ═══════════
+   Пока вкладка открыта и за последние 10 минут были действия (мышь, клавиатура, касание, прокрутка), портал раз в минуту
+   отмечает минуту работы на сервере (public.act_ping). Рабочее время, опоздания, средние часы и уведомления УП считает сервер
+   (миграция 20261027000100_home_stats). Только рабочий режим (сервер) и только сотрудники; в демо-режиме ничего не отправляется. */
+const Act38={last:Date.now(),timer:null,ok:true,IDLE:10*60000,
+  on(){return typeof SRV21==="function"&&SRV21()&&this.ok&&!!U()&&!isClient();},
+  touch(){this.last=Date.now();},
+  async ping(){if(!this.on()||document.visibilityState==="hidden"||Date.now()-this.last>this.IDLE)return;
+    try{await SB19.T.rpc("act_ping");}catch(e){if(/act_ping|PGRST202|Could not find/i.test(String(e&&(e.message||e))))this.stop(true);}},
+  start(){if(this.timer||!this.on())return;this.touch();
+    if(!this._ev){this._ev=()=>this.touch();["pointerdown","keydown","wheel","touchstart","mousemove","scroll"].forEach(t=>document.addEventListener(t,this._ev,{passive:true,capture:true}));}
+    this.ping();this.timer=setInterval(()=>this.ping(),60000);},
+  stop(missing){if(this.timer)clearInterval(this.timer);this.timer=null;if(missing)this.ok=false;}
+};
+/* запускается и останавливается вместе с отметкой «в сети» чатов (после входа / при выходе) */
+if(typeof Pres22!=="undefined"){const _ps38=Pres22.start.bind(Pres22),_pst38=Pres22.stop.bind(Pres22);
+  Pres22.start=function(){try{Act38.start();}catch(e){}return _ps38.apply(this,arguments);};
+  Pres22.stop=function(){try{Act38.stop();}catch(e){}return _pst38.apply(this,arguments);};}
+
+/* ═══════════ ГЛАВНАЯ · ВЕРСИЯ 1.10 (решения владельца 25–26.10.2026; макет design-home-final.html) ═══════════
+   Главная управляющего адвоката — четыре блока:
+     ряд 1: «Активность в платформе» (широкий) и «Нагрузка сотрудников»; ряд 2: «Дела по видам» и «Рост фирмы» (широкий).
+   Прежние блоки главной убраны («Объём работы», «Загрузка сотрудников — дела», «Дела по видам и стадиям», «Работа сотрудников»,
+   «Заметки руководителя», «Требует внимания», «План на день», «Загрузка переводчиков», «Цели подразделений», «Приостановки»,
+   «КП вне ценовой политики»); финансовые («Поступления», «Доля выплат в базе», «База исполнителей») — в «Финансы → Обзор».
+   «План на день» и «Требует внимания» — кнопками в верхней панели (у всех сотрудников).
+   Числа считает сервер (миграция 20261027000100_home_stats): home_growth — раз в день, home_load и act_stats — при открытии.
+   В демо-режиме (и если на сервере ещё нет функций) — тот же расчёт здесь, по видимым делам. */
+/* текст на языке пользователя; узбекский — сразу из словаря UZ21 (блоки рисуются после общего перевода страницы) */
+const t36=x=>{const v=T1(x);return lang==="uz"&&typeof UZ21!=="undefined"&&UZ21[v]?UZ21[v]:v;};
+const H36={
+  c:{},st:{sec:"all",view:null,adv:null,day:null},
+  mp(){return !!U()&&!isClient()&&(isFounder()||hasF("managing"));},
+  srv(){return typeof SRV21==="function"&&SRV21();},
+  noFn(e){return /PGRST202|Could not find the function|function .* does not exist/i.test(String(e&&(e.message||e)));},
+  /* ── данные: кэш, загрузка с сервера, расчёт здесь ── */
+  TTL:{g:6*3600e3,l:60e3,a:60e3},FN:{g:"home_growth",l:"home_load",a:"act_stats"},
+  get(k){const me=(U()||{}).login;if(this.c._who!==me){this.c={_who:me};this.st={sec:"all",view:null,adv:null,day:null};}const x=this.c[k];const fresh=x&&Date.now()-x.t<this.TTL[k]&&(k!=="g"||x.day===todayS());if(!fresh)this.load(k);return x?x.d:null;},
+  async load(k){if(this.c["_"+k])return;this.c["_"+k]=1;let d=null;
+    try{if(this.srv()){try{d=await SB19.T.rpc(this.FN[k]);}catch(e){if(!this.noFn(e))console.warn("h36",k,e);d=k==="a"?{off:true}:null;}}
+      if(!d)d=k==="g"?this.calcG():k==="l"?this.calcL():this.demoA();}
+    catch(e){console.warn("h36 calc",k,e);}
+    finally{this.c["_"+k]=0;}
+    if(d&&this.c._who===(U()||{}).login){this.c[k]={t:Date.now(),day:todayS(),d};if(Router.cur==="home")this.paint(k);}},
+  all(){return typeof MMall==="function"?MMall():MM();},
+  openDay(m){if(m.pipeline==="lost")return null;const h=(m.pipelineHistory||[]).find(x=>x.step==="contract");const v=m.contractSignedAt||(h&&h.at)||(m.pipeline==="contract"?m.opened:"");return v?String(v).slice(0,10):null;},
+  closedDay(m){if(m.status!=="closed"||m.pipeline==="lost")return null;return String(m.archivedAt||(typeof closedDate==="function"&&closedDate(m))||m.closed||todayS()).slice(0,10);},
+  createdDay(m){const h=(m.pipelineHistory||[])[0];return String((h&&h.at)||m.opened||"").slice(0,10)||null;},
+  calcG(){const ms=this.all();const td=todayS();const ods=ms.map(m=>this.openDay(m)).filter(Boolean).sort();const start=ods[0]||td;const days=[];for(let d=start;d<=td;d=addDays(d,1))days.push(d);
+    const out={start,today:td};
+    ["all","oneoff","court","support"].forEach(sv=>{const mm=ms.filter(m=>sv==="all"||m.svc===sv).map(m=>({o:this.openDay(m),c:this.closedDay(m)})).filter(x=>x.o);
+      const o=days.map(d=>mm.filter(x=>x.o<=d).length),c=days.map(d=>mm.filter(x=>x.c&&x.c<=d).length),n=days.length,at=(a,i)=>i>=0?a[i]:0;
+      out[sv]={o,c,k:{o30:o[n-1]-at(o,n-31),o30p:at(o,n-31)-at(o,n-61),c30:c[n-1]-at(c,n-31),c30p:at(c,n-31)-at(c,n-61),w:o[n-1]-c[n-1],wp:at(o,n-31)-at(c,n-31),
+        paused:ms.filter(m=>(sv==="all"||m.svc===sv)&&m.status!=="closed"&&m.pipeline==="contract"&&m.paused).length}};});
+    return out;},
+  calcL(){const ms=this.all(),td=todayS();const weeks=[7,6,5,4,3,2,1,0].map(k=>addDays(td,-7*k));
+    const open=m=>m.status!=="closed"&&m.pipeline!=="lost",late=m=>!!m.deadline&&m.deadline<td;
+    const at=(w,f)=>ms.filter(m=>m.pipeline!=="lost"&&f(m)).filter(m=>{const cr=this.createdDay(m),cd=this.closedDay(m);return cr&&cr<=w&&(!cd||cd>w);}).length;
+    const mpE=new Set(Object.values(S.accounts||{}).filter(a=>a&&(a.funcs||[]).some(f=>f==="founder"||f==="managing")).map(a=>a.emp));
+    const emps=staffIds().filter(e=>ALL[e]&&["adv","jur","int"].includes(ALL[e].type)&&!ALL[e].vac&&(!mpE.has(e)||ms.some(m=>m.lead===e&&open(m))));
+    const people=emps.map(e=>{const mine=ms.filter(m=>m.lead===e&&open(m));const work=mine.filter(m=>m.pipeline==="contract");
+      const prof=(S.profiles||{})[e]||{};const first=ms.filter(m=>m.lead===e).map(m=>this.createdDay(m)).filter(Boolean).sort()[0];
+      const since=((prof.work||{}).hired||first||td).slice(0,10);const hist=weeks.map(w=>at(w,m=>m.lead===e));
+      const snaps=[];for(let w=since>first||!first?since:first;w<=td;w=addDays(w,7))snaps.push(at(w,m=>m.lead===e));
+      return {login:e,emp:e,n:dispName(e),since,pre:mine.length-work.length,work:work.length,late:work.filter(late).length,tot:mine.length,hist,avg:snaps.length?+(snaps.reduce((a,b)=>a+b,0)/snaps.length).toFixed(1):0};})
+      .sort((a,b)=>b.tot-a.tot||a.n.localeCompare(b.n));
+    const kinds=["court","oneoff","support"].map(sv=>{const o=ms.filter(m=>m.svc===sv&&m.status!=="closed"&&m.pipeline!=="lost");return {svc:sv,work:o.filter(m=>m.pipeline==="contract").length,pre:o.filter(m=>m.pipeline!=="contract").length};});
+    return {people,kinds,trend:weeks.map(w=>at(w,()=>true)),weeks};},
+  /* демо: учёт времени появляется только в рабочем режиме — для показа берутся правдоподобные числа */
+  demoA(){const td=todayS(),now=new Date();let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+    const days=[];for(let i=13;i>=0;i--){const d=addDays(td,-i),wd=new Date(d+"T12:00:00").getDay();days.push({d,w:wd!==0&&wd!==6,on:true});}
+    const me=(U()||{}).login;const accs=Object.values(S.accounts||{}).filter(a=>a&&a.emp&&a.active!==false&&!(ALL[a.emp]&&ALL[a.emp].vac)).slice(0,7);
+    const rows=accs.map((a,k)=>{const lateP=k%3===1?.35:.08,skip=k===accs.length-1?[9,10,13]:k===accs.length-2?[13]:[];
+      const ds=days.map((x,i)=>{if(skip.includes(i)||(!x.w&&rnd()>.15))return null;const f=x.w?(rnd()<lateP?11+rnd()*2:9.6+rnd()*1.3):11+rnd()*3;const m=Math.round((x.w?(4+rnd()*4):1+rnd())*60*(i===13?.6:1));
+        return {f:String(Math.floor(f)).padStart(2,"0")+":"+String(Math.floor((f%1)*60)).padStart(2,"0"),m,mw:Math.round(m*.92)};});
+      const lastI=ds.map((v,i)=>v?i:-1).filter(i=>i>=0).pop();const online=lastI===13&&k<2;
+      const lastD=lastI>=0?days[lastI].d:addDays(td,-20);const lt=online?now:new Date(lastD+"T"+(lastI===13?"13:05":"18:40"));
+      let gap=0;for(let i=13;i>=0;i--){if(!days[i].w)continue;if(ds[i])break;if(i===13&&now.getHours()<11)continue;gap++;}
+      const wk=ds.filter((v,i)=>v&&days[i].w&&i<13);
+      return {login:a.login,n:(a.name||dispName(a.emp)).split("||")[0],pos:a.pos||"",last:ymdL(lt)+"T"+String(lt.getHours()).padStart(2,"0")+":"+String(lt.getMinutes()).padStart(2,"0"),online,days:ds,
+        avg:wk.length?+(wk.reduce((s,v)=>s+v.mw,0)/wk.length/60).toFixed(1):null,gap};});
+    const mine=this.mp()?rows:rows.filter(r=>r.login===me);
+    return {days,rows:mine.sort((a,b)=>String(b.last).localeCompare(String(a.last))),now:ymdL(now)+"T"+String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0"),mp:this.mp(),demo:true};},
+  /* ── оформление ── */
+  css(v){return getComputedStyle(document.querySelector(".h36")||document.body).getPropertyValue(v).trim();},
+  ico:{act:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',load:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
+    kinds:'<path d="M4 6h16M4 12h16M4 18h10"/>',grow:'<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>'},
+  card(id,ic,title,extra){return `<div class="card h36c" id="${id}"><div class="h36h"><span class="h36i"><svg viewBox="0 0 24 24">${this.ico[ic]}</svg></span><h4>${t36(title)}</h4>${extra||""}</div><div class="h36b"><div class="h36load">…</div></div></div>`;},
+  body(){const sec=[["all","Все||全部"],["oneoff","Разовые||一次性"],["court","Суд||诉讼"],["support","Сопровождение||法律顾问"]];
+    return `<div class="h36"><div class="h36r r1">${this.card("h36Act","act","Активность в платформе||系统活跃度")}${this.card("h36Load","load","Нагрузка сотрудников||员工工作量")}</div>
+      <div class="h36r r2">${this.card("h36Kinds","kinds","Дела по видам||按类型的案件")}${this.card("h36Grow","grow","Рост фирмы||事务所增长",`<div class="h36seg">${sec.map(([k,l])=>`<button data-h36sec="${k}" class="${this.st.sec===k?"on":""}">${t36(l)}</button>`).join("")}</div>`)}</div></div>`;},
+  mine(){return `<div class="h36 h36me">${this.card("h36Act","act","Моя активность в платформе||我的系统活跃度")}</div>`;},
+  paint(k){try{if(k==="g")this.pGrow();else if(k==="l"){this.pLoad();this.pKinds();}else this.pAct();}catch(e){console.warn("h36 paint",k,e);}},
+  paintAll(){if(document.getElementById("h36Grow")){this.paint("g");this.paint("l");}if(document.getElementById("h36Act"))this.paint("a");},
+  box(id){const c=document.getElementById(id);return c?c.querySelector(".h36b"):null;},
+  fd(d){return +d.slice(8,10)+"."+d.slice(5,7);},
+  MONU:["yan","fev","mar","apr","may","iyun","iyul","avg","sen","okt","noy","dek"],MON:["янв||1月","фев||2月","мар||3月","апр||4月","май||5月","июн||6月","июл||7月","авг||8月","сен||9月","окт||10月","ноя||11月","дек||12月"],
+  arrow(v){return `<span class="h36d ${v>0?"up":v<0?"dn":"eq"}">${v>0?"↑ +"+v:v<0?"↓ "+v:"→ 0"}</span>`;},
+  /* ── «Рост фирмы» ── */
+  pGrow(){const bx=this.box("h36Grow");if(!bx)return;const g=this.get("g");if(!g){bx.innerHTML=`<div class="h36load">…</div>`;return;}
+    const s=g[this.st.sec]||g.all,N=s.o.length,days=[];for(let i=0,d=g.start;i<N;i++,d=addDays(d,1))days.push(d);
+    const k=s.k;const v=this.st.view&&this.st.view[1]<N?this.st.view:[0,N-1];const o=s.o.slice(v[0],v[1]+1),c=s.c.slice(v[0],v[1]+1),ds=days.slice(v[0],v[1]+1),n=ds.length;
+    bx.innerHTML=`<div class="h36kpi"><div><small><i style="background:var(--h36o)"></i>${t36("открыто за 30 дней||30天内开立")}</small><b>${k.o30} ${this.arrow(k.o30-k.o30p)}</b></div><div><small><i style="background:var(--h36cl)"></i>${t36("закрыто за 30 дней||30天内结案")}</small><b>${k.c30} ${this.arrow(k.c30-k.c30p)}</b></div><div><small>${t36("в работе сейчас||当前进行中")}</small><b>${k.w} ${this.arrow(k.w-k.wp)}</b></div></div>
+      <div class="h36strip" id="h36gs"></div><svg class="h36svg" id="h36g"></svg><div class="h36foot" id="h36gf"></div>`;
+    const svg=bx.querySelector("#h36g"),W=Math.max(260,svg.clientWidth||bx.clientWidth),H=250,L=30,R=40,T=14,B=26,pw=W-L-R,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);svg.setAttribute("height",H);
+    let mx=Math.max(4,...o);const raw=mx/4,pw10=Math.pow(10,Math.floor(Math.log10(raw))),step=[1,2,5,10].map(q=>q*pw10).find(q=>q>=raw);mx=Math.ceil(mx/step)*step;
+    const cx=i=>L+(n>1?pw*i/(n-1):pw/2),y=val=>T+ph-val/mx*ph,co=this.css("--h36o"),cc=this.css("--h36cl");
+    let h=`<defs><linearGradient id="h36go" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${co}" stop-opacity=".22"/><stop offset="1" stop-color="${co}" stop-opacity="0"/></linearGradient><linearGradient id="h36gc" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${cc}" stop-opacity=".28"/><stop offset="1" stop-color="${cc}" stop-opacity=".02"/></linearGradient></defs>`;
+    for(let q=0;q<=mx;q+=step)h+=`<line x1="${L}" x2="${W-R}" y1="${y(q)}" y2="${y(q)}" class="${q?"gl":"gl0"}"/><text class="ax" x="${L-7}" y="${y(q)+4}" text-anchor="end">${q}</text>`;
+    const mstep=pw/(n/30.4)<36?2:1;const lab=n<=16?(d,i)=>(pw/n>=34||i%2===0?this.fd(d):""):n<=70?(d,i)=>(+d.slice(8,10)%7===1||i===0?this.fd(d):""):d=>(d.slice(8,10)==="01"&&(+d.slice(5,7))%mstep===0?(lang==="uz"?this.MONU[+d.slice(5,7)-1]:t36(this.MON[+d.slice(5,7)-1])):"");
+    ds.forEach((d,i)=>{const t=lab(d,i);if(t)h+=`<text class="ax" x="${cx(i)}" y="${H-6}" text-anchor="middle">${t}</text>`;});
+    const ln=p=>p.map((q,i)=>(i?"L":"M")+q.join(",")).join(" ");const po=o.map((x,i)=>[cx(i),y(x)]),pc=c.map((x,i)=>[cx(i),y(x)]);
+    h+=`<path d="${ln(po)} L${po[n-1][0]},${y(0)} L${po[0][0]},${y(0)}Z" fill="url(#h36go)"/><path d="${ln(pc)} L${pc[n-1][0]},${y(0)} L${pc[0][0]},${y(0)}Z" fill="url(#h36gc)"/>`;
+    h+=`<path d="${ln(po)}" fill="none" stroke="${co}" stroke-width="2.2" stroke-linejoin="round"/><path d="${ln(pc)}" fill="none" stroke="${cc}" stroke-width="2.2" stroke-linejoin="round"/>`;
+    [[po,o,co],[pc,c,cc]].forEach(([p,a,col])=>{const e=p[n-1];h+=`<circle cx="${e[0]}" cy="${e[1]}" r="4" fill="${col}" class="ring"/><text x="${e[0]+9}" y="${e[1]+4}" class="endv" style="fill:${col}">${a[n-1]}</text>`;});
+    h+=`<line id="h36cr" y1="${T}" y2="${y(0)}" class="cr" opacity="0"/><rect id="h36sel" y="${T}" height="${ph}" class="sel" opacity="0"/><rect id="h36hit" x="${L}" y="${T}" width="${pw}" height="${ph}" fill="transparent" style="cursor:crosshair"/>`;
+    svg.innerHTML=h;const hit=svg.querySelector("#h36hit"),cr=svg.querySelector("#h36cr"),sel=svg.querySelector("#h36sel"),strip=bx.querySelector("#h36gs");let drag=null;
+    const idx=e=>{const r=svg.getBoundingClientRect();return Math.max(0,Math.min(n-1,Math.round(((e.clientX-r.left)*W/r.width-L)/(pw/Math.max(1,n-1)))));};
+    hit.onmousemove=e=>{const i=idx(e);cr.setAttribute("x1",cx(i));cr.setAttribute("x2",cx(i));cr.setAttribute("opacity",".45");const d=new Date(ds[i]+"T12:00:00");
+      const ps=ds[i]===g.today&&k.paused?` · ${t36("на паузе||暂停")} ${k.paused}`:"";
+      strip.innerHTML=`<b>${esc(lang==="uz"?["Ya","Du","Se","Ch","Pa","Ju","Sh"][d.getDay()]+", "+d.getDate()+"-"+MONTHS_UZ_FULL[d.getMonth()].toLowerCase():d.toLocaleDateString(lang==="zh"?"zh-CN":"ru-RU",{weekday:"short",day:"numeric",month:"long"}))}</b><span><i style="background:${co}"></i>${t36("открыто всего||共开立")} <b>${o[i]}</b></span><span><i style="background:${cc}"></i>${t36("из них закрыто||其中结案")} <b>${c[i]}</b></span><span>${t36("в работе||进行中")} <b>${o[i]-c[i]}</b>${ps}</span>`;
+      if(drag!=null){const a=Math.min(drag,i),b=Math.max(drag,i);sel.setAttribute("x",cx(a));sel.setAttribute("width",cx(b)-cx(a));sel.setAttribute("opacity",".12");}};
+    hit.onmouseleave=()=>{cr.setAttribute("opacity","0");strip.innerHTML="";};
+    hit.onmousedown=e=>{e.preventDefault();drag=idx(e);};
+    hit.onmouseup=e=>{if(drag==null)return;const i=idx(e),a=Math.min(drag,i),b=Math.max(drag,i);drag=null;sel.setAttribute("opacity","0");if(b-a>=3){this.st.view=[v[0]+a,v[0]+b];this.pGrow();}};
+    const ft=bx.querySelector("#h36gf");if(v[0]>0||v[1]<N-1){ft.innerHTML=`<span>${this.fd(ds[0])} – ${this.fd(ds[n-1])}</span><button data-h36reset>${t36("Сначала||全部")}</button>`;ft.querySelector("[data-h36reset]").onclick=()=>{this.st.view=null;this.pGrow();};}},
+  /* ── «Нагрузка сотрудников» ── */
+  pLoad(){const bx=this.box("h36Load");if(!bx)return;const L0=this.get("l");if(!L0){bx.innerHTML=`<div class="h36load">…</div>`;return;}
+    const P=L0.people||[],n=P.length,work=this.css("--h36w"),pre=this.css("--h36p"),late=this.css("--h36late"),sel=this.st.adv;
+    const sum=f=>P.reduce((s,a)=>s+(+a[f]||0),0);
+    bx.innerHTML=`<div class="h36kpi"><div><small>${t36("дел у ведущих||主办律师案件")}</small><b>${sum("tot")}</b></div><div><small><i style="background:${work}"></i>${t36("в работе||进行中")}</small><b>${sum("work")}</b></div><div><small><i style="background:${pre}"></i>${t36("до начала||开始前")}</small><b>${sum("pre")}</b></div><div><small>${t36("просрочено||逾期")}</small><b class="${sum("late")?"red":""}">${sum("late")}</b></div><div><small>${t36("сотрудники||员工")}</small><b>${n}</b></div></div>
+      <svg class="h36svg" id="h36l"></svg><div class="h36trend" id="h36lt"></div>`;
+    const svg=bx.querySelector("#h36l"),W=Math.max(260,svg.clientWidth||bx.clientWidth),nP=P.length,H=nP&&(Math.max(260,svg.clientWidth||bx.clientWidth)-58)/nP<64?272:240,Lp=26,R=16,T=22,B=nP&&(Math.max(260,svg.clientWidth||bx.clientWidth)-58)/nP<64?66:34,DX=16,DY=-9,pw=W-Lp-R-DX,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);svg.setAttribute("height",H);
+    let mx=Math.max(2,...P.map(a=>a.tot));const step=mx<=6?1:mx<=12?2:5;mx=Math.ceil(mx/step)*step;const y=v=>T+ph-v/mx*ph,bw=pw/Math.max(1,n),w=Math.min(58,bw*.56);
+    const mix=(c,p,to)=>`color-mix(in srgb, ${c} ${100-p}%, ${to})`;
+    let h=`<defs><pattern id="h36hp" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="${work}"/><rect width="2.5" height="6" fill="${late}"/></pattern><pattern id="h36hps" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="${mix(work,28,"black")}"/><rect width="2.5" height="6" fill="${mix(late,28,"black")}"/></pattern>${[["h36fw",work],["h36fp",pre]].map(([id,c])=>`<linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${mix(c,12,"white")}"/><stop offset="1" stop-color="${c}"/></linearGradient>`).join("")}</defs>`;
+    h+=`<path d="M${Lp},${y(0)} L${Lp+DX},${y(0)+DY} L${W-R},${y(0)+DY} L${W-R-DX},${y(0)}Z" class="floor"/>`;
+    for(let v=0;v<=mx;v+=step)h+=`<line x1="${Lp+DX}" x2="${W-R}" y1="${y(v)+DY}" y2="${y(v)+DY}" class="${v?"gl":"gl0"}"/><text class="ax" x="${Lp-7}" y="${y(v)+4}" text-anchor="end">${v}</text>`;
+    /* подписи: при узких столбиках — под углом и укороченные */
+    const tilt=bw<64,nmT=(a,cx)=>{let t=String(a.n||"").split(" ")[0];const mxc=tilt?11:Math.max(4,Math.floor(bw/7));if(t.length>mxc)t=t.slice(0,mxc-1)+"…";return tilt?`<text class="ax nm" transform="translate(${cx},${H-B+14}) rotate(-35)" text-anchor="end">${esc(t)}<title>${esc(a.n)}</title></text>`:`<text class="ax nm" x="${cx}" y="${H-10}" text-anchor="middle">${esc(t)}<title>${esc(a.n)}</title></text>`;};
+    P.forEach((a,i)=>{const x=Lp+bw*i+(bw-w)/2,tot=a.tot,ok=a.work-a.late;
+      const face=(v0,v1,front,side)=>{if(v1<=v0)return "";const y0=y(v0),y1=y(v1);return `<path class="pt" data-i="${i}" d="M${x+w},${y0} L${x+w+DX},${y0+DY} L${x+w+DX},${y1+DY} L${x+w},${y1}Z" fill="${side}"/><rect class="pt" data-i="${i}" x="${x}" y="${y1}" width="${w}" height="${y0-y1}" fill="${front}"/>`;};
+      h+=face(0,ok,"url(#h36fw)",mix(work,28,"black"))+face(ok,a.work,"url(#h36hp)","url(#h36hps)")+face(a.work,tot,"url(#h36fp)",mix(pre,22,"black"));
+      const num=(v0,v1)=>v1>v0&&y(v0)-y(v1)>=16?`<text x="${x+w/2}" y="${(y(v0)+y(v1))/2+3.5}" text-anchor="middle" class="inum">${v1-v0}</text>`:"";
+      if([ok>0,a.late>0,a.pre>0].filter(Boolean).length>1)h+=num(0,ok)+num(ok,a.work)+num(a.work,tot);
+      if(tot){const yt=y(tot),topc=a.pre?pre:a.late?late:work;h+=`<path class="pt" data-i="${i}" d="M${x},${yt} L${x+DX},${yt+DY} L${x+w+DX},${yt+DY} L${x+w},${yt}Z" fill="${mix(topc,35,"white")}"/><line x1="${x}" x2="${x}" y1="${yt}" y2="${y(0)}" stroke="rgba(255,255,255,.35)"/>`;}
+      else h+=`<path class="pt empty" data-i="${i}" d="M${x},${y(0)} L${x+DX},${y(0)+DY} L${x+w+DX},${y(0)+DY} L${x+w},${y(0)}Z"/>`;
+      h+=`<text x="${x+w/2+DX/2}" y="${y(tot)+DY-8}" text-anchor="middle" class="tnum">${tot}</text>${nmT(a,x+w/2)}`;});
+    svg.innerHTML=h;svg.classList.toggle("dim",sel!=null);svg.querySelectorAll(".pt").forEach(p=>{p.classList.toggle("on",+p.dataset.i===sel);p.onclick=()=>{this.st.adv=this.st.adv===+p.dataset.i?null:+p.dataset.i;this.pLoad();};});
+    /* нижний блок: общий тренд или выбранный сотрудник (стаж, средняя за весь стаж, сейчас к средней, 8 недель) */
+    const tw=190,th=36,spark=arr=>{const m=Math.max(1,...arr),pts=arr.map((v,i)=>[i*tw/Math.max(1,arr.length-1),th-v/m*th+2]),l=pts.map((p,i)=>(i?"L":"M")+p.join(",")).join(" ");return `<svg width="${tw}" height="${th+6}" style="width:${tw}px;height:${th+6}px;flex:none;overflow:visible"><path d="${l} L${tw},${th+4} L0,${th+4}Z" class="sa"/><path d="${l}" class="sl"/><circle cx="${tw}" cy="${pts[pts.length-1][1]}" r="3.5" class="sd"/></svg>`;};
+    const pill=(v,txt)=>`<span class="h36d ${v>0?"up":v<0?"dn":"eq"}">${v>0?"↑ +":v<0?"↓ ":"→ "}${txt}</span>`;const tr=bx.querySelector("#h36lt");
+    if(sel==null||!P[sel]){const t=L0.trend||[];const d=(t[t.length-1]||0)-(t[t.length-5]||0);
+      tr.innerHTML=spark(t.length?t:[0,0])+`<div><small>${t36("всего в работе, 8 недель||进行中总数，8周")}</small><b>${t36(d>0?"нагрузка растёт||工作量上升":d<0?"нагрузка снижается||工作量下降":"нагрузка без изменений||工作量不变")} ${pill(d,Math.abs(d)+" "+t36("за месяц||本月"))}</b></div>`;}
+    else{const a=P[sel],avg=+a.avg||0,dv=+(a.tot-avg).toFixed(1);const sd=String(a.since||todayS());const mo=Math.max(0,(+todayS().slice(0,4)-+sd.slice(0,4))*12+(+todayS().slice(5,7))-(+sd.slice(5,7)));
+      const stag=mo<1?t36("меньше месяца||不到一个月"):mo<12?mo+" "+t36("мес.||个月"):Math.floor(mo/12)+" "+t36("г.||年")+(mo%12?" "+mo%12+" "+t36("мес.||个月"):"");
+      tr.innerHTML=spark(a.hist&&a.hist.length?a.hist:[0,0])+`<div><small>${esc(a.n)} · ${t36("работает||工作")} ${stag} (${t36("с||自")} ${this.fd(sd)}.${sd.slice(0,4)})</small><b>${t36("средняя нагрузка||平均工作量")} ${avg.toFixed(1)} · ${t36("сейчас||当前")} ${a.tot} ${pill(dv,Math.abs(dv)+" "+t36("к средней||对比平均"))}</b></div><button class="h36x" title="${t36("снять выбор||取消选择")}">✕</button>`;
+      tr.querySelector(".h36x").onclick=()=>{this.st.adv=null;this.pLoad();};}},
+  /* ── «Дела по видам» ── */
+  pKinds(){const bx=this.box("h36Kinds");if(!bx)return;const L0=this.get("l");if(!L0){bx.innerHTML=`<div class="h36load">…</div>`;return;}
+    const lab={court:"Судебные дела||诉讼案件",oneoff:"Разовые услуги||一次性服务",support:"Юр. сопровождение||法律顾问"};const K=L0.kinds||[];const mx=Math.max(1,...K.map(k=>k.work+k.pre));
+    bx.innerHTML=K.map(k=>{const t=k.work+k.pre;return `<div class="h36kind" data-h36go="${k.svc}" title="${t36("открыть раздел||打开栏目")}"><div class="nm">${t36(lab[k.svc])}</div><div class="stk" style="width:${Math.max(t?8:0,t/mx*100)}%">${k.work?`<i class="w" style="flex:${k.work}">${k.work}</i>`:""}${k.pre?`<i class="p" style="flex:${k.pre}">${k.pre}</i>`:""}</div><div class="tot">${t}</div></div>`;}).join("")
+      +`<div class="h36leg"><span><i style="background:var(--h36w)"></i>${t36("в работе||进行中")}</span><span><i style="background:var(--h36p)"></i>${t36("до начала хода дела||案件开始前")}</span></div>`;
+    bx.querySelectorAll("[data-h36go]").forEach(el=>el.onclick=()=>Router.go(el.dataset.h36go));},
+  /* ── «Активность в платформе» ── */
+  pAct(){const bx=this.box("h36Act");if(!bx)return;const A=this.get("a");if(!A){bx.innerHTML=`<div class="h36load">…</div>`;return;}
+    if(A.off){bx.innerHTML=`<div class="empty2">${t36("Учёт времени включится после обновления сервера||服务器更新后将启用时间统计")}</div>`;return;}
+    const D=A.days||[],R0=A.rows||[],nowS=String(A.now||""),td=nowS.slice(0,10),hr=+nowS.slice(11,13)||0,WD=lang==="zh"?["日","一","二","三","四","五","六"]:lang==="uz"?["Ya","Du","Se","Ch","Pa","Ju","Sh"]:["вс","пн","вт","ср","чт","пт","сб"];
+    const wdOf=d=>WD[new Date(d+"T12:00:00").getDay()],hm=m=>(m/60).toFixed(1);
+    const status=r=>{const ti=D.length-1,t=r.days[ti],tw=D[ti]&&D[ti].w;
+      if(r.gap>=2)return ["r",r.gap+" "+t36("раб. дн. без входа||个工作日未登录")];
+      if(r.gap===1)return ["y",!t&&tw?t36("сегодня нет||今天未登录"):"1 "+t36("раб. дн. без входа||个工作日未登录")];
+      if(t&&tw&&t.f>="11:00")return ["y",t36("опоздание||迟到")];if(!t&&tw&&hr<11)return ["",t36("ещё не заходил||尚未登录")];return ["g",t36("вовремя||准时")];};
+    const lastTxt=r=>{if(r.online)return `<span class="onl">${t36("онлайн||在线")}</span>`;if(!r.last)return "—";const d=r.last.slice(0,10),t=r.last.slice(11,16);
+      const dd=Math.round((new Date(td+"T12:00:00")-new Date(d+"T12:00:00"))/864e5);return `${dd===0?t36("сегодня||今天"):dd===1?t36("вчера||昨天"):wdOf(d)+" "+this.fd(d)} <small>${t}</small>`;};
+    const dot=(r,i)=>{const x=D[i],v=r.days[i];const tip=`${wdOf(x.d)} ${this.fd(x.d)}${v?" · "+v.f+" · "+hm(v.m)+" "+t36("ч||小时"):" · "+t36("не заходил||未登录")}`;
+      const cls=!x.on&&!v?"na":!x.w?("we"+(v?" on":"")):!v?(x.d===td&&hr<11?"pend":"miss"):v.f>="11:00"?"late":"ok";return `<i class="${cls}" title="${esc(tip)}"></i>`;};
+    const miss=A.mp?R0.filter(r=>r.gap>0):[];
+    let h=A.mp?`<div class="h36sum"><span>${t36("сегодня зашли||今天已登录")} <b>${R0.filter(r=>r.days[D.length-1]).length}</b> ${t36("из||/")} ${R0.length}</span>${miss.map(r=>`<span class="miss ${r.gap>=2?"":"y"}">${esc(String(r.n).split(" ")[0])} · ${r.gap===1?t36("сегодня нет||今天未登录"):r.gap+" "+t36("раб. дн.||个工作日")}</span>`).join("")}</div><svg class="h36svg" id="h36a"></svg><div id="h36ad"></div>`:"";
+    h+=`<div class="h36tw"><table class="h36t"><tr><th>${t36("Сотрудник||员工")}</th><th>${t36("Последний вход||最后登录")}</th><th>${t36("Статус||状态")}</th><th>${t36("14 дней||14天")}</th><th class="r">${t36("Часов в раб. день||每工作日小时")}</th></tr>`
+      +R0.map(r=>{const [sc,st]=status(r);const ph=typeof accPhoto==="function"?accPhoto(r.login):"";return `<tr class="${r.gap>=2?"bad":""}"><td><div class="who">${ph?`<img src="${ph}" alt="">`:`<span class="av">${esc(typeof initials==="function"?initials(r.n):String(r.n).slice(0,2))}</span>`}<div><b>${esc(r.n)}</b><small>${esc(typeof roleOf25==="function"?roleOf25(r.login):r.pos||"")}</small></div></div></td>
+        <td class="last">${lastTxt(r)}</td><td><span class="st ${sc}">${esc(st)}</span></td><td><div class="dots">${D.map((_,i)=>dot(r,i)).join("")}</div></td><td class="r"><b>${r.avg==null?"—":(+r.avg).toFixed(1)}</b></td></tr>`;}).join("")+`</table></div>`;
+    bx.innerHTML=h;if(!A.mp)return;
+    /* столбики: сколько сотрудников работало в день; нажатие — кто, во сколько пришёл, сколько часов */
+    const svg=bx.querySelector("#h36a"),W=Math.max(260,svg.clientWidth||bx.clientWidth),H=124,L=22,R=8,T=14,B=34,pw=W-L-R,ph=H-T-B,n=D.length,mx=Math.max(1,R0.length);svg.setAttribute("viewBox",`0 0 ${W} ${H}`);svg.setAttribute("height",H);
+    const y=v=>T+ph-v/mx*ph,bw=pw/n,w=Math.min(24,bw*.5);let s=`<line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" class="gl0"/><line x1="${L}" x2="${W-R}" y1="${y(mx)}" y2="${y(mx)}" class="norm"/><text class="ax" x="${W-R}" y="${y(mx)-4}" text-anchor="end">${t36("все||全部")} ${mx}</text>`;
+    D.forEach((x,i)=>{const cnt=R0.filter(r=>r.days[i]).length,bx0=L+bw*i+(bw-w)/2,full=cnt===mx&&x.w,on=this.st.day===i;
+      s+=`<g class="bar" data-i="${i}"><rect x="${bx0-6}" y="${T}" width="${w+12}" height="${ph}" rx="6" class="${on?"hl":"hb"}"/><rect x="${bx0}" y="${y(cnt)}" width="${w}" height="${Math.max(0,y(0)-y(cnt))}" rx="4" class="${!x.w?"we":full?"full":"part"}"/>${cnt?`<text x="${bx0+w/2}" y="${y(cnt)-5}" text-anchor="middle" class="bn">${cnt}</text>`:""}${bw<34?`<text class="ax${x.w?"":" off"}" x="${bx0+w/2}" y="${H-8}" text-anchor="middle">${+x.d.slice(8,10)}</text>`:`<text class="ax${x.w?"":" off"}" x="${bx0+w/2}" y="${H-14}" text-anchor="middle">${wdOf(x.d)}</text><text class="ax${x.w?"":" off"}" x="${bx0+w/2}" y="${H-2}" text-anchor="middle">${this.fd(x.d)}</text>`}</g>`;});
+    svg.innerHTML=s;svg.querySelectorAll(".bar").forEach(g=>g.onclick=()=>{this.st.day=this.st.day===+g.dataset.i?null:+g.dataset.i;this.pAct();});
+    const dl=bx.querySelector("#h36ad");if(this.st.day!=null&&D[this.st.day]){const i=this.st.day,x=D[i];const list=R0.map(r=>({r,v:r.days[i]})).sort((a,b)=>(a.v?a.v.f:"99").localeCompare(b.v?b.v.f:"99"));
+      dl.innerHTML=`<div class="h36day"><h5>${wdOf(x.d)} ${this.fd(x.d)}${x.w?"":" · "+t36("выходной||休息日")}<button class="h36x">✕</button></h5>${list.map(({r,v})=>v?`<div class="row"><b>${esc(r.n)}</b><span>${v.f}${x.w&&v.f>="11:00"?` <em>${t36("опоздание||迟到")}</em>`:""}</span><span class="r">${hm(v.m)} ${t36("ч||小时")}</span></div>`:`<div class="row no"><span>${esc(r.n)}</span><span>—</span><span class="r">${t36("не заходил||未登录")}</span></div>`).join("")}</div>`;
+      dl.querySelector(".h36x").onclick=()=>{this.st.day=null;this.pAct();};}}
+};
+/* ── главная: у УП — четыре блока; у остальных — их главная без «Плана на день» (он наверху) и «Моя активность» ── */
+Home.founder=function(){return H36.body();};Home.coo=Home.founder;
+{const _hh36=Home.html;Home.html=function(){const mp=H36.mp();let h;
+  if(mp&&wsType()!=="founder"){const ws=wsType(),sv=Home[ws];Home[ws]=Home.founder;try{h=_hh36.apply(this,arguments);}finally{Home[ws]=sv;}}else h=_hh36.apply(this,arguments);
+  if(mp||!U()||isClient())return h;
+  const box=document.createElement("div");box.innerHTML=h;box.querySelectorAll(".dayp").forEach(d=>{const c=d.closest(".card");if(c)c.remove();});
+  const me=H36.mine();const col=box.querySelector(".cols>div");if(col)col.insertAdjacentHTML("afterbegin",me);else box.insertAdjacentHTML("beforeend",`<div style="margin-top:14px">${me}</div>`);
+  return box.innerHTML;};}
+{const _pb36=Pages.bind;Pages.bind=function(vp){_pb36.apply(this,arguments);if(Router.cur!=="home"||!vp)return;
+  vp.querySelectorAll("[data-h36sec]").forEach(b=>b.onclick=()=>{H36.st.sec=b.dataset.h36sec;H36.st.view=null;vp.querySelectorAll("[data-h36sec]").forEach(x=>x.classList.toggle("on",x===b));H36.pGrow();});
+  requestAnimationFrame(()=>H36.paintAll());};}
+window.addEventListener("resize",()=>{clearTimeout(H36._rz);H36._rz=setTimeout(()=>{if(Router.cur==="home")H36.paintAll();},150);});
+/* после выхода — новые данные для следующего пользователя */
+if(typeof SB19!=="undefined"&&SB19.reset){const _rs36=SB19.reset.bind(SB19);SB19.reset=function(){H36.c={};H36.st={sec:"all",view:null,adv:null,day:null};return _rs36.apply(this,arguments);};}
+
+/* ═══ «Финансы → Обзор»: «Поступления» (по организациям LEGAL / ООО), «Доля выплат в базе», «База исполнителей · месяц» ═══ */
+if(typeof Dash!=="undefined"&&Dash.revenue){Dash.revenue=function(){const M=todayS().slice(0,7);const months=Array.from({length:6},(_,i)=>addMonth(M,-5+i));const ps=Object.values(S.payments||{});
+  const by=(m,ent)=>r2(ps.filter(p=>monthOf(p.date)===m&&(p.entity||"legal")===ent).reduce((s,p)=>s+Pay.base(p),0));const legal=months.map(m=>Math.round(by(m,"legal"))),llc=months.map(m=>Math.round(by(m,"llc")));
+  const rows=[["legal",by(M,"legal")],["llc",by(M,"llc")]].filter(r=>r[1]>0).sort((a,b)=>b[1]-a[1]);const mx=Math.max(1,...rows.map(r=>r[1]));
+  return `<div class="card"><h4>${t36("Поступления по организациям||按机构收款")} <small style="margin-left:auto;font-weight:600;color:var(--ink-3)">$ · ${t36(UI.pBaseT)}</small></h4>${Chart.bars(months.map(m=>MON_S(m)),[{name:ENTITY_S.legal,color:"var(--ink)",values:legal},{name:ENTITY_S.llc,color:"#B4262A",values:llc}],{h:150,ticks:6,w:700})}
+    <div style="font:800 9.5px 'Manrope',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:10px 0 6px">${fmtM(M)}</div><div class="hb2">${rows.map(([e,v])=>`<div class="r"><div class="nm"><span class="entbadge ${e}" style="font-size:8.5px;padding:0 4px">${t36(ENTITY_S[e])}</span></div><div class="tr"><i style="width:${(v/mx*100).toFixed(1)}%"></i></div><div class="v">${fmtUsd(v)}</div></div>`).join("")||`<div class="empty2">${t36(UI.noData)}</div>`}</div></div>`;};}
+{const _fin36=Pages.fin;Pages.fin=function(){const h=_fin36.apply(this,arguments);if(this._ft!=="fin"||(typeof Adv21!=="undefined"&&Adv21.on())||!can("payroll"))return h;
+  let add="";try{add=`<div class="dash" style="margin-top:14px">${Dash.revenue()}${Dash.payShare()}</div><div style="margin-top:14px">${Dash.execBase(payPeople())}</div>`;}catch(e){console.warn("fin36",e);return h;}
+  const mk=`<div class="card" style="margin-top:14px"><h4>${t36(UI.hDebt)} · `;const i=h.lastIndexOf(mk);return i<0?h+add:h.slice(0,i)+add+h.slice(i);};}
+
+/* ═══ верхняя панель: «План на день» (панель справа) и «Требует внимания» (список) ═══ */
+const Top36={
+  SER:["pay","tasks:p=late&sc=all","matters:p=kplate","overdues"],
+  ICO:{plan:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',attn:'<path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.5M12 17.5h.01"/>'},
+  rows(){if(typeof Dash==="undefined"||!Dash.attention)return [];const box=document.createElement("div");try{box.innerHTML=Dash.attention();}catch(e){return [];}
+    return [...box.querySelectorAll(".it[data-go]")].map(el=>({go:el.dataset.go,n:+(el.querySelector("b")||{}).textContent||0,t:((el.querySelectorAll("span")[0]||{}).textContent||"").trim()})).filter(r=>r.n>0);},
+  ensure(){const po=document.getElementById("po21Btn")||document.getElementById("bellBtn");if(!po||!U()||isClient()||document.getElementById("at36Btn"))return;
+    const b=(id,bd,ic,t)=>`<button class="bell hb21 t36" id="${id}" title="${esc(t)}" aria-label="${esc(t)}"><svg viewBox="0 0 24 24">${this.ICO[ic]}</svg><span class="bd" id="${bd}" style="display:none">0</span></button>`;
+    po.insertAdjacentHTML("beforebegin",b("pl36Btn","pl36Bd","plan",t36("План на день (N)||今日计划 (N)"))+b("at36Btn","at36Bd","attn",t36("Требует внимания||需要关注")));
+    document.getElementById("pl36Btn").onclick=e=>{e.stopPropagation();Plan36.toggle(true);};
+    document.getElementById("at36Btn").onclick=e=>{e.stopPropagation();this.toggle();};
+    document.querySelectorAll("#rl21Btn").forEach(x=>x.remove());this.badge();},
+  badge(){try{const pb=document.getElementById("pl36Bd"),ab=document.getElementById("at36Bd");if(!pb||!ab)return;
+    const np=typeof NT30!=="undefined"&&NT30.on()?NT30.of(todayS()).filter(n=>!n.done).length:0;pb.textContent=np;pb.style.display=np?"inline-flex":"none";pb.classList.add("grey");
+    const rs=this.rows(),na=rs.reduce((s,r)=>s+r.n,0),ser=rs.some(r=>this.SER.includes(r.go));ab.textContent=na>99?"99+":na;ab.style.display=na?"inline-flex":"none";ab.classList.toggle("grey",!ser);
+    if(this.open)this.paint();}catch(e){}},
+  toggle(o){this.open=o==null?!this.open:o;let p=document.getElementById("at36Pop");if(!this.open){if(p)p.remove();return;}
+    if(!p){p=document.createElement("div");p.id="at36Pop";p.className="at36pop";document.body.appendChild(p);}this.paint();},
+  paint(){const p=document.getElementById("at36Pop"),btn=document.getElementById("at36Btn");if(!p||!btn)return;const rs=this.rows(),n=rs.reduce((s,r)=>s+r.n,0);
+    p.innerHTML=`<h5>${t36("Требует внимания||需要关注")}${n?" · "+n:""}</h5>${rs.length?rs.map(r=>`<a data-go36="${esc(r.go)}"><b class="${this.SER.includes(r.go)?"ser":""}">${r.n}</b><span>${esc(r.t)}</span><i>→</i></a>`).join(""):`<div class="empty2">✓ ${t36("Всё в порядке||一切正常")}</div>`}`;
+    const r=btn.getBoundingClientRect();p.style.top=(r.bottom+8)+"px";p.style.right=Math.max(8,innerWidth-r.right-60)+"px";
+    p.querySelectorAll("[data-go36]").forEach(a=>a.onclick=e=>{e.stopPropagation();this.toggle(false);const g=a.dataset.go36;if(g==="notif")Notif.open("assign");else{const i=g.indexOf(":");if(i>0)Router.go(g.slice(0,i),g.slice(i+1));else Router.go(g);}});}
+};
+const Plan36={
+  open:false,
+  scope(){return typeof Cal21Role!=="undefined"&&Cal21Role.on()?Cal21Role.mine():undefined;},
+  toggle(o){this.open=o==null?!this.open:o;let d=document.getElementById("pl36");
+    if(!this.open){if(d){d.classList.remove("open");document.getElementById("pl36Ov").classList.remove("open");/* после анимации — пусто: на странице не остаётся второго экземпляра «Плана» */setTimeout(()=>{if(!this.open){const b=d.querySelector(".pl36b");if(b)b.innerHTML="";}},300);}return;}
+    if(!d){document.body.insertAdjacentHTML("beforeend",`<div class="pl36ov" id="pl36Ov"></div><aside class="pl36" id="pl36" aria-label="${esc(t36("План на день||今日计划"))}"><div class="pl36b"></div></aside>`);d=document.getElementById("pl36");
+      document.getElementById("pl36Ov").onclick=()=>this.toggle(false);}
+    Pages._dp=Pages._dp||{sel:todayS(),m:todayS().slice(0,7)};this.paint();requestAnimationFrame(()=>{d.classList.add("open");document.getElementById("pl36Ov").classList.add("open");
+      setTimeout(()=>{const i=d.querySelector("[data-nt30add]");if(i)i.focus();},260);});},
+  paint(){const d=document.getElementById("pl36");if(!d)return;const b=d.querySelector(".pl36b");const a=document.activeElement,k=a&&a.dataset&&a.dataset.nt30add,v=k?a.value:null,s=k?a.selectionStart:0;
+    let h="";try{h=Dash.planner(this.scope());}catch(e){console.warn("plan36",e);}b.innerHTML=h;
+    const h4=b.querySelector(".card>h4");if(h4)h4.insertAdjacentHTML("beforeend",`<button class="pl36x" title="${t36("Закрыть (Esc)||关闭 (Esc)")}">✕</button>`);
+    const x=b.querySelector(".pl36x");if(x)x.onclick=()=>this.toggle(false);
+    const go=()=>{this.paint();};
+    b.querySelectorAll("[data-dp]").forEach(el=>el.onclick=()=>{Pages._dp.sel=el.dataset.dp;Pages._dp.m=el.dataset.dp.slice(0,7);go();});
+    b.querySelectorAll("[data-dpn]").forEach(el=>el.onclick=()=>{const n=+el.dataset.dpn;Pages._dp.sel=n?addDays(Pages._dp.sel,n):todayS();Pages._dp.m=Pages._dp.sel.slice(0,7);go();});
+    b.querySelectorAll("[data-dpm]").forEach(el=>el.onclick=()=>{const [yy,mm]=Pages._dp.m.split("-").map(Number);const dt=new Date(yy,mm-1+(+el.dataset.dpm),1);Pages._dp.m=ymdL(dt).slice(0,7);go();});
+    b.querySelectorAll("[data-ev]").forEach(el=>el.onclick=e=>{e.stopPropagation();Ev.open(el.dataset.ev);});
+    b.querySelectorAll("[data-matter]").forEach(el=>el.onclick=e=>{e.stopPropagation();this.toggle(false);Router.go("matter",el.dataset.matter);});
+    b.querySelectorAll('[data-act="openTask"]').forEach(el=>el.onclick=e=>{e.stopPropagation();Task.open(el.dataset.id);});
+    b.querySelectorAll("[data-po21cal]").forEach(el=>el.onclick=e=>{e.stopPropagation();Assign.open(el.dataset.po21cal);});
+    b.querySelectorAll("[data-ev21new]").forEach(el=>el.onclick=e=>{e.stopPropagation();Ev.create({date:el.dataset.ev21new,emp:(U()||{}).emp});});
+    if(k){const i=b.querySelector(`[data-nt30add="${CSS.escape(k)}"]`);if(i){i.value=v;i.focus();try{i.setSelectionRange(s,s);}catch(e){}}}}
+};
+/* кнопки в шапке — после кнопок «Поручения»/«Сообщения»; счётчики — вместе с остальными */
+{const _rw36=renderWho;renderWho=function(){const r=_rw36.apply(this,arguments);try{Top36.ensure();}catch(e){console.warn("top36",e);}return r;};}
+if(typeof Notif!=="undefined"){const _nb36=Notif.badge.bind(Notif);Notif.badge=function(){const r=_nb36.apply(this,arguments);Top36.badge();return r;};}
+/* «Обновить» в шапке убран (решение владельца 26.10.2026) */
+if(typeof Push21!=="undefined"&&Push21.reloadBtn)Push21.reloadBtn=function(){};
+/* панель «План» перерисовывается при любых изменениях (заметки, события, перерисовка страницы) */
+{const _rr36=Router.render.bind(Router);Router.render=function(){const r=_rr36.apply(this,arguments);try{if(Plan36.open)Plan36.paint();Top36.badge();}catch(e){}return r;};}
+setTimeout(()=>{if(typeof NT30!=="undefined"&&NT30.rerender){const _nr36=NT30.rerender.bind(NT30);NT30.rerender=function(){if(Plan36.open){Plan36.paint();Top36.badge();if(typeof Pop30!=="undefined"&&Pop30.id)Pop30.paint();return;}return _nr36.apply(this,arguments);};}},0);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(Plan36.open)Plan36.toggle(false);if(Top36.open)Top36.toggle(false);return;}
+  const t=e.target,tag=(t&&t.tagName||"").toLowerCase();if(e.ctrlKey||e.metaKey||e.altKey||["input","textarea","select"].includes(tag)||(t&&t.isContentEditable))return;
+  if((e.key==="n"||e.key==="N"||e.key==="т"||e.key==="Т")&&U()&&!isClient()&&document.getElementById("pl36Btn")){e.preventDefault();Plan36.toggle(true);}});
+document.addEventListener("click",e=>{if(Top36.open&&!(e.target.closest&&e.target.closest("#at36Pop,#at36Btn")))Top36.toggle(false);});
+/* шаблоны уведомлений УП о пропущенном рабочем дне (сервер: zc.act_notify_run) */
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{act38Miss:"{n} не заходил в портал {d}||{n} {d} 未登录系统",act38Miss2:"{n} не заходил в портал 2 рабочих дня подряд ({d1}, {d2})||{n} 连续2个工作日未登录系统（{d1}、{d2}）"});
+
+/* ═══ оформление ═══ */
+(function(){const st=document.createElement("style");st.textContent=`
+.h36{--h36o:#2F64B0;--h36cl:#2B9470;--h36w:#3A5A8C;--h36p:#A9BBD6;--h36late:#C8655A;--h36ok:#3F8768;--h36lt:#E8B10C;--h36ms:#D6362B;display:grid;gap:16px}
+:root[data-theme="dark"] .h36{--h36o:#5B8DD6;--h36cl:#2FA078;--h36w:#6782AC;--h36p:#3C4A66;--h36late:#D07A6E;--h36ok:#62A98A}
+.h36r{display:grid;gap:16px;align-items:start}.h36r.r1{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}.h36r.r2{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}
+@media(max-width:1100px){.h36r.r1,.h36r.r2{grid-template-columns:minmax(0,1fr)}}
+.h36c{padding:0!important;border-radius:16px!important;overflow:hidden}.h36h{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.h36h h4{margin:0!important;padding:0!important;border:0!important;font:600 15px var(--font-h)!important}.h36h h4::before{display:none!important}
+.h36i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--pri-soft);color:var(--pri);flex:none}.h36i svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.h36b{padding:14px 20px 18px}.h36load{color:var(--ink-3);padding:30px 0;text-align:center}
+.h36seg{margin-left:auto;display:flex;background:var(--surface2);border-radius:9px;padding:3px;flex-wrap:wrap}.h36seg button{border:0;background:transparent;font:600 12px var(--font);color:var(--ink-2);padding:5px 10px;border-radius:7px;cursor:pointer}.h36seg button.on{background:var(--surface);color:var(--pri);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.h36kpi{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:flex-end;margin-bottom:10px}.h36kpi>div{display:flex;flex-direction:column;gap:2px}.h36kpi small{font-size:11.5px;color:var(--ink-3)}.h36kpi small i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.h36kpi b{font:700 22px/1 var(--font);display:flex;align-items:center;gap:7px}.h36kpi b.red{color:var(--h36late)}
+.h36d{font:700 12px var(--font);border-radius:99px;padding:3px 8px;background:var(--ok-soft);color:var(--ok)}.h36d.eq{background:var(--surface2);color:var(--ink-3)}.h36d.dn{background:var(--red-soft);color:var(--red)}
+.h36strip{min-height:22px;font-size:12.5px;color:var(--ink-2);display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:4px}.h36strip b{color:var(--ink)}.h36strip i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+.h36svg{display:block;width:100%;overflow:visible;user-select:none}.h36svg .ax{font:500 11px var(--font);fill:var(--ink-3)}.h36svg .ax.off{opacity:.6}.h36svg .ax.nm{fill:var(--ink-2);font-weight:600}
+.h36svg .gl{stroke:var(--line)}.h36svg .gl0{stroke:var(--line-2)}.h36svg .cr{stroke:var(--ink-3)}.h36svg .sel{fill:var(--pri)}.h36svg .ring{stroke:var(--surface);stroke-width:2}.h36svg .endv{font:700 12px var(--font)}
+.h36svg .floor{fill:var(--surface2)}.h36svg .inum{font:600 10.5px var(--font);fill:#fff;opacity:.9;pointer-events:none}.h36svg .tnum{font:700 14px var(--font-h);fill:var(--ink)}.h36svg .pt{cursor:pointer;transition:opacity .15s}.h36svg .pt.empty{fill:var(--line)}
+.h36svg.dim .pt{opacity:.3}.h36svg.dim .pt.on{opacity:1}
+.h36foot{font-size:12px;color:var(--ink-3);margin-top:8px;display:flex;gap:12px;align-items:center}.h36foot button,.h36x{border:0;background:var(--surface2);color:var(--ink-2);font:600 12px var(--font);padding:4px 10px;border-radius:7px;cursor:pointer}
+.h36trend{display:flex;align-items:center;gap:16px;padding:10px 12px;background:var(--surface2);border-radius:12px;margin-top:12px;min-width:0}.h36trend>div{min-width:0}.h36trend small{font-size:11.5px;color:var(--ink-3);display:block}.h36trend b{font:700 14px var(--font);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.h36trend .h36x{margin-left:auto;align-self:flex-start;background:var(--surface)}.h36trend .sa{fill:var(--pri);opacity:.1}.h36trend .sl{fill:none;stroke:var(--pri);stroke-width:2}.h36trend .sd{fill:var(--pri)}
+.h36kind{display:grid;grid-template-columns:150px minmax(0,1fr) 36px;gap:14px;align-items:center;padding:12px 8px;border-radius:12px;cursor:pointer;transition:background .15s}.h36kind:hover{background:var(--surface2)}.h36kind .nm{font-weight:600}.h36kind .tot{font:700 17px var(--font-h);text-align:right}
+.h36kind .stk{display:flex;height:26px;border-radius:8px;overflow:hidden;background:var(--surface2);min-width:0}.h36kind .stk i{display:flex;align-items:center;justify-content:center;font:600 11px var(--font);font-style:normal;color:#fff}.h36kind .stk i+i{margin-left:2px}
+.h36kind .stk .w{background:linear-gradient(180deg,color-mix(in srgb,var(--h36w) 85%,#fff),var(--h36w))}.h36kind .stk .p{background:var(--h36p)}
+.h36leg{display:flex;gap:16px;font-size:12px;color:var(--ink-3);margin-top:12px;padding:0 8px;flex-wrap:wrap}.h36leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.h36sum{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-bottom:12px}.h36sum b{font:700 20px/1 var(--font);color:var(--ink)}
+.h36sum .miss{display:inline-flex;align-items:center;gap:6px;background:var(--red-soft);color:var(--red);border-radius:99px;padding:4px 10px;font-weight:600;font-size:12.5px}.h36sum .miss.y{background:var(--warn-soft);color:var(--warn-d)}
+.h36svg .bar{cursor:pointer}.h36svg .hb{fill:transparent}.h36svg .hl{fill:var(--pri-soft)}.h36svg .part{fill:var(--h36w);opacity:.9}.h36svg .full{fill:var(--h36ok)}.h36svg .we{fill:var(--ink-3);opacity:.45}.h36svg .bn{font:600 11px var(--font);fill:var(--ink-2)}.h36svg .norm{stroke:var(--ink-3);stroke-dasharray:3 4;opacity:.6}
+.h36day{margin:10px 0 2px;background:var(--surface2);border-radius:12px;padding:10px 14px;font-size:12.5px}.h36day h5{font:600 12.5px var(--font);margin:0 0 6px;display:flex;align-items:center}.h36day h5 .h36x{margin-left:auto;background:var(--surface)}
+.h36day .row{display:grid;grid-template-columns:1fr 110px 80px;gap:10px;padding:3px 0;color:var(--ink-2)}.h36day .row b{color:var(--ink);font-weight:600}.h36day .row.no{color:var(--ink-3)}.h36day .row .r{text-align:right;font-variant-numeric:tabular-nums}.h36day em{font-style:normal;color:var(--warn-d)}
+.h36tw{overflow-x:auto}.h36t{width:100%;border-collapse:collapse;margin-top:14px;min-width:520px;font-size:13px}.h36t th{font:600 10px var(--font);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:6px;border-bottom:1px solid var(--line)}
+.h36t td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}.h36t .r{text-align:right;font-variant-numeric:tabular-nums}.h36t tr.bad td{background:color-mix(in srgb,var(--red-soft) 45%,transparent)}
+.h36t .who{display:flex;align-items:center;gap:10px}.h36t .who img,.h36t .who .av{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none}.h36t .who .av{display:grid;place-items:center;font:700 10.5px var(--font-h);color:var(--pri);background:var(--pri-soft)}.h36t .who b{font-weight:600;display:block}.h36t .who small{color:var(--ink-3);font-size:11.5px}
+.h36t .last{white-space:nowrap}.h36t .last small{color:var(--ink-3);font-size:11.5px}.h36t .onl{display:inline-flex;align-items:center;gap:6px;color:var(--ok);font-weight:600}.h36t .onl::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+.h36t .st{display:inline-flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap;color:var(--ink-2)}.h36t .st::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ink-3)}.h36t .st.g::before{background:var(--ok)}.h36t .st.y{color:var(--warn-d)}.h36t .st.y::before{background:var(--warn)}.h36t .st.r{color:var(--red)}.h36t .st.r::before{background:var(--red)}
+.h36t .dots{display:flex;gap:2px}.h36t .dots i{width:9px;height:9px;border-radius:2.5px;flex:none;border:1px solid var(--line-2)}.h36t .dots i.ok{background:var(--h36ok);border-color:var(--h36ok)}.h36t .dots i.late{background:var(--h36lt);border-color:var(--h36lt)}.h36t .dots i.miss{background:var(--h36ms);border-color:var(--h36ms)}
+.h36t .dots i.we{border-style:dashed}.h36t .dots i.we.on{background:var(--ink-3);border-color:var(--ink-3);border-style:solid;opacity:.5}.h36t .dots i.na{opacity:.35}.h36t .dots i.pend{border-color:var(--ink-3)}
+.h36me{margin-bottom:14px}.h36me .h36t{margin-top:0}
+.bell .bd.grey{background:var(--ink-3)!important}
+.at36pop{position:fixed;z-index:200;width:360px;max-width:calc(100vw - 16px);background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh-3);padding:8px}
+.at36pop h5{font:600 11.5px var(--font);color:var(--ink-3);padding:6px 10px 8px;margin:0;text-transform:uppercase;letter-spacing:.04em}
+.at36pop a{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:9px;cursor:pointer;font-size:13.5px;color:var(--ink)}.at36pop a:hover{background:var(--surface2)}.at36pop a b{width:24px;text-align:center;font:700 14px var(--font);color:var(--ink-2)}.at36pop a b.ser{color:#D6362B}.at36pop a span{flex:1}.at36pop a i{color:var(--ink-3);font-style:normal}
+.pl36ov{position:fixed;inset:0;background:var(--ov-bg,rgba(20,26,38,.35));z-index:180;opacity:0;pointer-events:none;transition:opacity .2s}.pl36ov.open{opacity:1;pointer-events:auto}
+.pl36{position:fixed;top:0;right:0;width:470px;max-width:100vw;height:100vh;height:100dvh;background:var(--surface);box-shadow:-10px 0 40px rgba(0,0,0,.2);z-index:181;transform:translateX(105%);transition:transform .25s cubic-bezier(.2,.7,.3,1);overflow:auto}
+.pl36.open{transform:none}.pl36 .card{box-shadow:none!important;border:0!important;border-radius:0!important;margin:0!important}.pl36 .card>h4{position:sticky;top:0;background:var(--surface);z-index:2}
+.pl36x{border:0;background:var(--surface2);color:var(--ink-2);width:30px;height:30px;border-radius:9px;cursor:pointer;margin-left:8px;flex:none}
+/* телефон: в шапке на две кнопки больше — значки и отступы чуть меньше, чтобы всё помещалось в ширину экрана */
+@media(max-width:380px){html body:not(.client-ui) .app>.top #whoBox button.bell.hb21{width:29px!important;height:29px!important}.app>.top .mark .lg21h{height:13px!important}}
+@media(max-width:480px){html body:not(.client-ui) .app>.top #whoBox{gap:2px!important}.app>.top{padding-left:8px!important;padding-right:8px!important}#whoBox .bell.hb21{width:31px!important;height:31px!important;min-width:0!important}#whoBox .bell.hb21 svg{width:17px;height:17px}#whoBox .bell .bd{transform:scale(.9)}.top .mark .lg21h{height:15px!important}.app>.top{gap:6px}}
+@media(max-width:700px){.pl36{width:100vw}.h36b{padding:12px 14px 16px}.h36h{padding:12px 14px}.h36kind{grid-template-columns:110px minmax(0,1fr) 30px;gap:10px}.at36pop{right:8px!important;left:8px;width:auto}}
+`;document.head.appendChild(st);})();
+
+/* узбекский */
+if(typeof UZ21!=="undefined")Object.assign(UZ21,{"Активность в платформе":"Platformadagi faollik","Нагрузка сотрудников":"Xodimlar yuklamasi","Дела по видам":"Turlar boʻyicha ishlar","Рост фирмы":"Firma oʻsishi","Моя активность в платформе":"Platformadagi faolligim",
+  "открыто за 30 дней":"30 kunda ochilgan","закрыто за 30 дней":"30 kunda yopilgan","в работе сейчас":"hozir ishda","дел у ведущих":"yetakchilardagi ishlar","в работе":"ishda","до начала":"boshlanishigacha","просрочено":"muddati oʻtgan","сотрудники":"xodimlar",
+  "до начала хода дела":"ish jarayoni boshlanishigacha","Сотрудник":"Xodim","Последний вход":"Oxirgi kirish","Статус":"Holat","14 дней":"14 kun","Часов в раб. день":"Ish kunida soat","онлайн":"onlayn","сегодня":"bugun","вчера":"kecha",
+  "вовремя":"oʻz vaqtida","опоздание":"kechikish","сегодня нет":"bugun yoʻq","ещё не заходил":"hali kirmagan","не заходил":"kirmagan","выходной":"dam olish kuni","Сначала":"Boshidan","Требует внимания":"Eʼtibor talab qiladi","План на день (N)":"Kun rejasi (N)","Всё в порядке":"Hammasi joyida",
+  "Поступления по организациям":"Tashkilotlar boʻyicha tushumlar",
+  "сегодня зашли":"bugun kirganlar","раб. дн. без входа":"ish kuni kirmagan","раб. дн.":"ish kuni","ч":"soat","все":"hammasi","снять выбор":"tanlovni bekor qilish","работает":"ishlaydi","мес.":"oy","г.":"yil","с":"dan",
+  "средняя нагрузка":"oʻrtacha yuklama","сейчас":"hozir","к средней":"oʻrtachaga nisbatan","всего в работе, 8 недель":"jami ishda, 8 hafta","нагрузка растёт":"yuklama oshmoqda","нагрузка снижается":"yuklama kamaymoqda",
+  "нагрузка без изменений":"yuklama oʻzgarmagan","за месяц":"bir oyda","меньше месяца":"bir oydan kam","открыть раздел":"boʻlimni ochish","открыто всего":"jami ochilgan","из них закрыто":"shundan yopilgan","на паузе":"pauzada",
+  "Юр. сопровождение":"Yuridik kuzatuv","Разовые":"Bir martalik","Закрыть (Esc)":"Yopish (Esc)","Учёт времени включится после обновления сервера":"Vaqt hisobi server yangilangach yoqiladi",
+  "«План на день» — значок календаря в шапке (или клавиша N на любой странице): ваши события, дедлайны дел, задания сопровождения, задачи, поручения и заметки на выбранный день.":"«Kun rejasi» — yuqoridagi kalendar belgisi (yoki istalgan sahifada N tugmasi): tanlangan kun uchun tadbirlaringiz, ishlar muddatlari, kuzatuv vazifalari, vazifalar, topshiriqlar va eslatmalar.",
+  "Пункт меню «Календарь» — только у управляющего адвоката: планы всех сотрудников, дедлайны дел, задания, поручения. Ваш «План на день» — значок календаря в шапке.":"«Kalendar» menyu bandi faqat boshqaruvchi advokatda: barcha xodimlar rejalari, ishlar muddatlari, vazifalar, topshiriqlar. Sizning «Kun rejasi» — yuqoridagi kalendar belgisi.",
+  "Версия 1.10: новая главная, «План на день» и «Требует внимания» в шапке":"1.10-versiya: yangi bosh sahifa, yuqorida «Kun rejasi» va «Eʼtibor talab qiladi»",
+  "Главная управляющего адвоката: «Активность в платформе», «Нагрузка сотрудников», «Дела по видам», «Рост фирмы»; финансовые блоки — в «Финансы → Обзор».":"Boshqaruvchi advokat bosh sahifasi: «Platformadagi faollik», «Xodimlar yuklamasi», «Turlar boʻyicha ishlar», «Firma oʻsishi»; moliyaviy bloklar — «Moliya → Umumiy koʻrinish»da.",
+  "«План на день» — значок календаря в шапке у всех сотрудников: панель справа с календарём, событиями и заметками; клавиша N открывает её с любой страницы.":"«Kun rejasi» — barcha xodimlarda yuqoridagi kalendar belgisi: oʻngda kalendar, tadbirlar va eslatmalar paneli; N tugmasi uni istalgan sahifadan ochadi.",
+  "«Требует внимания» — треугольник в шапке: счётчик сигналов (красный — если есть серьёзные), по нажатию — список со ссылками.":"«Eʼtibor talab qiladi» — yuqoridagi uchburchak: signallar soni (jiddiylari boʻlsa — qizil), bosilganda havolali roʻyxat.",
+  "Учитывается время работы в портале (рабочие дни, 10:00–19:00); каждый сотрудник видит своё на главной.":"Portaldagi ish vaqti hisobga olinadi (ish kunlari, 10:00–19:00); har bir xodim oʻzinikini bosh sahifada koʻradi.",});
 
 /* ═══════════════════════════ версия 1.5 · ЗАМЕТКИ В «ПЛАНЕ НА ДЕНЬ» (решения владельца 21.10.2026) ═══════════════════════════
    Макет — design-calnotes.html (версия 5). Правила — sections/notes/ПРАВИЛА.md (Зм-1 …), сервер — миграция 20261021000100_day_notes.sql.
