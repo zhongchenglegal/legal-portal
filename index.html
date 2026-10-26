@@ -10443,7 +10443,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="ba465c298e63";
+const ZC_BUILD="3619e2424f4b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -12119,6 +12119,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v110over",d:"2026-10-27",t:"Версия 1.10: все просрочки — в разделе «Просрочки»||1.10版：所有逾期集中在「逾期」栏目",b:["«Просрочки» — в меню «Работа», перед «Архивом». Управляющий адвокат видит всё, адвокаты и юристы — только своё.||「逾期」位于「工作」菜单「档案」之前。管理律师查看全部，律师和法务仅查看自己的。","Просрочено сейчас — по блокам: разовые услуги (срок дела), судебные дела (процессуальные сроки и срок дела), юр. сопровождение (задания), задачи по делам, поручения, КП не отправлено вовремя. Нажатие на строку открывает дело.||当前逾期按模块显示：一次性服务（案件期限）、诉讼案件（程序期限和案件期限）、法律顾问（任务）、案件任务、指令、未按时发送报价。点击行即可打开案件。","Дела на паузе по вине клиента просроченными не считаются. Ниже — «Сдано с опозданием», как раньше.||因客户原因暂停的案件不计为逾期。下方为「逾期交付」，与以前相同。"]},
 {id:"v110home",d:"2026-10-27",t:"Версия 1.10: новая главная, «План на день» и «Требует внимания» в шапке||1.10版：新主页，顶部「今日计划」和「需要关注」",b:["Главная управляющего адвоката: «Активность в платформе», «Нагрузка сотрудников», «Дела по видам», «Рост фирмы»; финансовые блоки — в «Финансы → Обзор».||管理律师主页：「系统活跃度」「员工工作量」「按类型的案件」「事务所增长」；财务模块移至「财务 → 概览」。","«План на день» — значок календаря в шапке у всех сотрудников: панель справа с календарём, событиями и заметками; клавиша N открывает её с любой страницы.||「今日计划」——所有员工顶部的日历图标：右侧面板含日历、事件和备忘；在任意页面按 N 键即可打开。","«Требует внимания» — треугольник в шапке: счётчик сигналов (красный — если есть серьёзные), по нажатию — список со ссылками.||「需要关注」——顶部三角图标：信号计数（有严重信号时为红色），点击显示带链接的列表。","Учитывается время работы в портале (рабочие дни, 10:00–19:00); каждый сотрудник видит своё на главной.||系统统计在门户中的工作时间（工作日 10:00–19:00）；每位员工在主页查看自己的数据。"]},
 {id:"v18card",d:"2026-10-25",t:"Версия 1.8: новое оформление карточки дела||1.8版：案件卡片新外观",b:["Карточка дела в разовых услугах, судебных делах и сопровождении — белая обложка: полоса этапов по верхнему краю, этап, срок и чей ход — в ячейках сводки, вкладки внизу обложки.||一次性服务、诉讼案件和法律顾问的案件卡片采用白色封面：顶部为阶段进度条，阶段、期限和当前负责方显示在摘要格中，标签页位于封面底部。","Блоки разделены: где нужно действовать — с синей рамкой, ещё не доступные разделы — пунктиром; до договора разделы этапа стоят в две колонки рядом с «Что мешает и что дальше».||模块分开显示：需要操作的模块带蓝色边框，尚未开放的部分为虚线框；签约前阶段的各部分与“阻碍与下一步”并排两列显示。","Тексты, кнопки и действия — прежние, поменялся только вид.||文字、按钮和操作不变，仅外观更新。"]},
 {id:"v17osh",d:"2026-10-24",t:"Версия 1.7: исправления по сообщениям об ошибках||1.7版：根据错误报告的修复",b:["Премия: закрытые разовые дела (этап «Отправление в архив») больше не числятся «не закрытыми».||奖金：已关闭的一次性案件（“归档”阶段）不再显示为“未关闭”。","Пока ценовая политика не утверждена, диапазон цены — только ориентир, пояснение не требуется.||价格政策批准前，价格区间仅供参考，无需说明。","В новой заявке клиента нужно выбрать — первый клиент больше не подставляется сам; кнопки шагов — «Далее», «Найти клиента», «Создать заявку».||新申请必须选择客户——不再自动选中第一个客户；步骤按钮为“下一步”“查找客户”“创建申请”。","КП без доступа клиента в кабинет — «отправка отмечена сотрудником», а не «доставлено».||客户无门户权限时，报价显示“员工已标记发送”，而非“已送达”。","Пеня, сумма иска и цена не могут быть меньше нуля; дата договора позже срока — предупреждение.||违约金、诉讼金额和价格不能小于零；合同日期晚于期限时会提示。","«Судебный контроль» открывается и после обновления страницы.||“诉讼监控”刷新页面后仍可打开。","Если сервер не принял действие этапа до договора, окно открывается снова с введённым.||若服务器未接受签约前阶段的操作，窗口会带着已输入内容重新打开。","Клиент, указанный и другой стороной этого же дела, — возможный конфликт для проверки УП.||客户同时被列为本案对方时，标记为可能的冲突，由管理合伙人审核。"]},
@@ -17655,8 +17656,7 @@ const Plan36={
 /* кнопки в шапке — после кнопок «Поручения»/«Сообщения»; счётчики — вместе с остальными */
 {const _rw36=renderWho;renderWho=function(){const r=_rw36.apply(this,arguments);try{Top36.ensure();}catch(e){console.warn("top36",e);}return r;};}
 if(typeof Notif!=="undefined"){const _nb36=Notif.badge.bind(Notif);Notif.badge=function(){const r=_nb36.apply(this,arguments);Top36.badge();return r;};}
-/* «Обновить» в шапке убран (решение владельца 26.10.2026) */
-if(typeof Push21!=="undefined"&&Push21.reloadBtn)Push21.reloadBtn=function(){};
+/* «Обновить» в шапке окна приложения — как в 1.9 (v21_pwa.js; решение владельца 26.10.2026 «как было раньше») */
 /* панель «План» перерисовывается при любых изменениях (заметки, события, перерисовка страницы) */
 {const _rr36=Router.render.bind(Router);Router.render=function(){const r=_rr36.apply(this,arguments);try{if(Plan36.open)Plan36.paint();Top36.badge();}catch(e){}return r;};}
 setTimeout(()=>{if(typeof NT30!=="undefined"&&NT30.rerender){const _nr36=NT30.rerender.bind(NT30);NT30.rerender=function(){if(Plan36.open){Plan36.paint();Top36.badge();if(typeof Pop30!=="undefined"&&Pop30.id)Pop30.paint();return;}return _nr36.apply(this,arguments);};}},0);
@@ -18112,6 +18112,146 @@ if(typeof Pre24!=="undefined"&&Pre24.kpBuild){const _kpImg27=Pre24.kpBuild.bind(
     if(!pdf)return _kpImg27(m);
     let s="";for(let k=0;k<pdf.length;k+=0x8000)s+=String.fromCharCode.apply(null,pdf.subarray(k,k+0x8000));const url="data:application/pdf;base64,"+btoa(s);
     const vno=((m.offer||{}).vers23||[]).length+1;return this.kpStore(m,`КП ${m.no} v${vno}.pdf`,url,pdf.length);};}
+
+/* ═══════════════════════════ v36 · «ПРОСРОЧКИ» (версия 1.10, решения владельца 26.10.2026) ═══════════════════════════
+   • Пункт меню «Просрочки» — в группе «Работа», перед «Архивом». УП видит всё, адвокат и юрист — только своё.
+   • «Просрочено сейчас» — по блокам, чтобы было видно, где и что просрочено: разовые услуги (срок дела), судебные дела
+     (процессуальные сроки и срок дела), юр. сопровождение (задания), задачи по делам, поручения, КП дольше нормы.
+     Нажатие на строку ведёт внутрь дела (поручение — в карточку поручения, задача — в задачу).
+   • Дела на паузе по вине клиента просроченными не считаются; процессуальные сроки суда пауза не останавливает (правило С-16).
+   • Считает сервер: public.overdue_now() (миграция 20261027000400_overdue_now). Пока миграции нет и в демо — тот же расчёт здесь.
+   • «Сдано с опозданием» — прежняя таблица раздела (data.overdues: пеня, снижение премии, решение); сотрудник видит свои. */
+const tOv=x=>{const v=T1(x);return lang==="uz"&&typeof UZ21!=="undefined"&&UZ21[v]?UZ21[v]:v;};
+const Ov36={
+  c:null,_ld:0,TTL:30e3,
+  BL:[["oneoff","Разовые услуги — срок дела||一次性服务——案件期限","oneoff"],["court","Судебные дела — сроки||诉讼案件——期限","court"],
+    ["support","Юр. сопровождение — задания||法律顾问——任务","support"],["tasks","Задачи по делам||案件任务","tasks"],
+    ["assign","Поручения||指令","assign"],["kp","КП не отправлено вовремя||未按时发送报价","kp"]],
+  ICO:{oneoff:'<path d="M9 3h6l1 3H8z"/><rect x="4" y="6" width="16" height="15" rx="2"/><path d="M8 12h8M8 16h5"/>',
+    court:'<path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0zM17 7l-3 7a3 3 0 0 0 6 0zM8 21h8"/>',
+    support:'<path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/>',
+    tasks:'<rect x="4" y="4" width="16" height="17" rx="2"/><path d="M8 9l2 2 4-4M8 16h8"/>',
+    assign:'<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',
+    kp:'<path d="M4 5h16v12H8l-4 3z"/><path d="M8 9h8M8 13h5"/>',
+    late:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'},
+  mp(){return !!U()&&!isClient()&&(isFounder()||hasF("managing"));},
+  srv(){return typeof SRV21==="function"&&SRV21();},
+  noFn(e){return /PGRST202|Could not find the function|function .* does not exist/i.test(String(e&&(e.message||e)));},
+  /* ── данные ── */
+  get(){const me=(U()||{}).login;const x=this.c;if(!x||x.who!==me||Date.now()-x.t>this.TTL)this.load();return x&&x.who===me?x.d:null;},
+  async load(){if(this._ld)return;this._ld=1;let d=null;
+    try{if(this.srv()){try{d=await SB19.T.rpc("overdue_now");}catch(e){if(!this.noFn(e))console.warn("ov36",e);}}if(!d)d=this.calc();}
+    catch(e){console.warn("ov36 calc",e);}finally{this._ld=0;}
+    if(d){this.c={who:(U()||{}).login,t:Date.now(),d};setTimeout(()=>{if(Router.cur==="overdues")this.paint();},0);}},
+  /* рабочих дней просрочки (zc.wd_left сервера): от дня срока до вчера, не меньше 1 */
+  wdLate(due){const td=todayS();if(!due||due>=td)return 0;let n=0,d=new Date(due+"T12:00:00");for(let g=0;g<800;g++){const s=ymdL(d);if(s>=td)break;if(Cal12.isWork(s))n++;d.setDate(d.getDate()+1);}return Math.max(1,n);},
+  /* тот же расчёт, что на сервере, — для демо и до выполнения миграции */
+  calc(){const td=todayS(),u=U()||{},me=u.emp||"-",ml=u.login||"-",mp=this.mp(),all=typeof MMall==="function"?MMall():MM();
+    const d10=s=>/^\d{4}-\d{2}-\d{2}/.test(String(s||""))?String(s).slice(0,10):"";
+    const cp=m=>!!(m.paused&&typeof m.paused==="object"&&m.paused.fault==="client"),pz=m=>!!(m.paused&&typeof m.paused==="object");
+    const mem=m=>[m.lead,m.cnLawyer,m.translator,m.reviewer,...(m.team||[]),...(m.executors||[]).map(x=>x&&x.emp)].filter(Boolean);
+    const base=m=>({mid:m.id,no:m.no,t:m.title,cl:m.clientId,pz:pz(m)});
+    const byWd=a=>a.sort((x,y)=>y.wd-x.wd||String(x.no||"").localeCompare(String(y.no||"")));
+    const dlCase=(svc)=>all.filter(m=>m.svc===svc&&m.status!=="closed"&&m.pipeline==="contract"&&!DONE11.includes(m.stage)&&d10(m.deadline)&&d10(m.deadline)<td&&!cp(m)&&(mp||mem(m).includes(me)))
+      .map(m=>Object.assign(base(m),{k:"deadline",emp:m.lead,due:d10(m.deadline),wd:this.wdLate(d10(m.deadline))}));
+    const court=[];all.filter(m=>m.svc==="court"&&m.status!=="closed"&&m.pipeline!=="lost").forEach(m=>(Array.isArray(m.courtDl24)?m.courtDl24:[]).forEach(x=>{
+      const due=d10(x&&x.due),resp=(x&&x.resp)||m.lead;if(!x||(x.st||"open")!=="open"||!due||due>=td)return;if(!(mp||me===resp||me===m.lead))return;
+      court.push(Object.assign(base(m),{k:"dl",id:x.id,it:x.what,emp:resp,due,wd:this.wdLate(due)}));}));
+    const support=[];all.filter(m=>m.svc==="support"&&m.status!=="closed"&&m.pipeline==="contract"&&!cp(m)).forEach(m=>(Array.isArray(m.assignments)?m.assignments:[]).forEach(a=>{
+      const due=d10(a&&a.deadline),emp=(a&&a.emp)||m.lead;if(!a||a.status==="done"||!due||due>=td)return;if(!(mp||me===emp||me===m.lead))return;
+      support.push(Object.assign(base(m),{k:"task",id:a.id,it:a.title,emp,due,wd:this.wdLate(due)}));}));
+    const tasks=Object.values(S.tasks||{}).filter(t=>t&&t.matterId&&t.status!=="done"&&d10(t.due)&&d10(t.due)<td&&(mp||t.emp===me)).map(t=>{const m=S.matters[t.matterId];
+      return m&&m.status!=="closed"&&m.pipeline!=="lost"&&!cp(m)?Object.assign(base(m),{k:"task",id:t.id,svc:m.svc,it:t.title,emp:t.emp,due:d10(t.due),wd:this.wdLate(d10(t.due))}):null;}).filter(Boolean);
+    const assign=Object.values(S.assign||{}).filter(a=>a&&!["reported","accepted","done","cancelled","rejected"].includes(a.status)&&d10(a.deadline)&&d10(a.deadline)<td&&(mp||a.to===me||a.to===ml||a.emp===me))
+      .map(a=>({k:a.kind||"council",id:a.id,it:a.title,to:a.to||a.emp,from:a.from,st:a.status,due:d10(a.deadline),wd:this.wdLate(d10(a.deadline))}));
+    const sla=(typeof ws17==="function"&&ws17().kpSlaWd)||2;
+    const kp=typeof KPSpeed17==="undefined"?[]:all.filter(m=>KPSpeed17.late(m)&&(mp||m.lead===me)).map(m=>{const la=KPSpeed17.leadAt(m)||"";return Object.assign(base(m),{k:"kp",emp:m.lead,due:la.slice(0,10),wd:Math.max(1,Math.ceil(WD(la,nowS())-sla)),sla});});
+    return {today:td,mp,sla,oneoff:byWd(dlCase("oneoff")),court:byWd([...court,...dlCase("court")]),support:byWd(support),tasks:byWd(tasks),assign:byWd(assign),kp:byWd(kp),local:true};},
+  /* «Сдано с опозданием»: УП — все, сотрудник — свои (ведущий, виновник задания или участник решения) */
+  done(){const me=(U()||{}).emp,mp=this.mp()||pos()==="coo",rows=[];
+    (typeof MMall==="function"?MMall():MM()).forEach(m=>{if(typeof migrateMatter11==="function")migrateMatter11(m);(m.overdues||[]).forEach(o=>{
+      if(mp||m.lead===me||o.emp===me||(o.decision&&(o.decision.items||[]).some(it=>it.emp===me)))rows.push({m,o});});});
+    return rows.sort((a,b)=>String(b.o.at||"").localeCompare(String(a.o.at||"")));},
+  /* ── вывод ── */
+  who(e){if(!e)return "";const a=S.accounts&&S.accounts[e];return dispName(a&&a.emp?a.emp:e);},
+  cli(id){const c=id&&S.clients&&S.clients[id];try{return c?clientName(c):"";}catch(e){return "";}},
+  title(r){const m=r.mid&&S.matters[r.mid];return m?mT18(m):(r.t?T1(r.t):"");},
+  svcL(s){return tOv(s==="court"?"Судебное дело||诉讼案件":s==="support"?"Юр. сопровождение||法律顾问":"Разовая услуга||一次性服务");},
+  what(key,r){if(key==="kp")return tOv("Заявка с {d} · норма {n} раб. дн.||线索自 {d} · 标准 {n} 个工作日").replace("{d}",fmtD(r.due)).replace("{n}",r.sla);
+    if(r.k==="deadline")return tOv("Срок дела||案件期限");if(key==="tasks")return esc(T1(r.it||""))+` <small>· ${this.svcL(r.svc)}</small>`;return esc(T1(r.it||""));},
+  row(key,r){const go=key==="assign"?"assign":key==="tasks"?"task":"matter",id=go==="matter"?r.mid:r.id;
+    const left=key==="assign"?`<b>${tOv("Поручение||指令")}</b><span>${esc(T1(r.it||""))}</span>${r.from?`<small>${tOv("от||来自")} ${esc(this.who(r.from))}</small>`:""}`
+      :`<b>${esc(r.no||"")}</b><span>${esc(this.title(r))}</span>${this.cli(r.cl)?`<small>${esc(this.cli(r.cl))}</small>`:""}`;
+    const mid=key==="assign"?`<span class="ov36who">${esc(this.who(r.to))}</span>`
+      :`<span class="ov36it">${this.what(key,r)}${r.pz?` <em class="ov36pz">${tOv("на паузе||暂停中")}</em>`:""}</span><span class="ov36who">${esc(this.who(r.emp))}</span>`;
+    const right=key==="kp"?`<small>${tOv("сверх нормы||超出标准")}</small>`:`<small>${tOv("срок||期限")} ${fmtD(r.due)}</small>`;
+    return `<div class="ov36r" data-ovgo="${go}" data-id="${esc(id||"")}" tabindex="0"><div class="ov36m">${left}</div><div class="ov36x">${mid}</div><div class="ov36d">${right}<b>${r.wd} ${tOv("раб. дн.||工作日")}</b></div></div>`;},
+  block([key,title,ic],list){return `<div class="card h36c ov36c" id="ov36_${key}"><div class="h36h"><span class="h36i"><svg viewBox="0 0 24 24">${this.ICO[ic]}</svg></span><h4>${tOv(title)}</h4><span class="ov36n${list.length?" on":""}">${list.length}</span></div>
+    <div class="ov36l">${list.length?list.map(r=>this.row(key,r)).join(""):`<div class="ov36e">${tOv("Просрочек нет||无逾期")}</div>`}</div></div>`;},
+  doneCard(){const rows=this.done();return `<div class="card h36c ov36c"><div class="h36h"><span class="h36i"><svg viewBox="0 0 24 24">${this.ICO.late}</svg></span><h4>${tOv("Сдано с опозданием||逾期交付")}</h4><span class="ov36n">${rows.length}</span></div>
+    <div class="ov36t">${rows.length?`<table class="tbl"><thead><tr><th>${T1(UI.mNo)}</th><th>${T1(UI.fType)}</th><th>${T1(UI.ltPlan)}</th><th>${T1(UI.ltFact)}</th><th class="num">${T1(UI.kWd)}</th><th>${T1(UI.ltClient)}</th><th>${T1(UI.ltPenalty)}</th><th>${T1(UI.ltDecide)}</th></tr></thead><tbody>${rows.map(({m,o})=>`<tr data-matter="${m.id}" style="cursor:pointer"><td><b>${esc(m.no)}</b><br><small>${esc(mT18(m).slice(0,40))}</small></td><td>${o.kind==="assignment"?T1(UI.ovAsg):T1(UI.ovMatter)}</td><td>${fmtD(o.deadline)}</td><td>${fmtD(String(o.actual||"").slice(0,10))}</td><td class="num" style="color:var(--red-d)">${o.wd}</td><td>${o.clientFault?"✓":"—"}</td><td>${o.penalty?fmtN(o.penalty.sum):"—"}</td><td>${o.decision?T1(o.decision.status==="approved"?UI.ltApproved:o.decision.status==="rejected"?UI.ltRejected:UI.ltProposed)+" · "+(o.decision.items||[]).map(it=>dispName(it.emp)+" "+it.pct+" %").join(", "):"—"}</td></tr>`).join("")}</tbody></table>`:`<div class="ov36e">${tOv("Нет||无")}</div>`}</div></div>`;},
+  body(d){return `<div class="ov36sum">${this.BL.map(([k,t])=>{const n=((d&&d[k])||[]).length;return `<button class="ov36chip${n?" on":""}" data-ovjump="${k}">${tOv(t).split(" — ")[0]}<b>${n}</b></button>`;}).join("")}</div>
+      <div class="ov36g">${this.BL.map(b=>this.block(b,(d&&d[b[0]])||[])).join("")}</div>`+this.doneCard();},
+  sub(d){return `${tOv("просрочено сейчас||当前逾期")}: ${this.BL.reduce((s,[k])=>s+(d[k]||[]).length,0)}`;},
+  page(){const d=this.get();
+    return F.hdr(T1(UI.nOverdues),`<span id="ov36sub">${d?this.sub(d):"…"}</span>`)+`<div id="ov36">${d?this.body(d):`<div class="card"><div class="h36load">…</div></div>`}</div>`;},
+  paint(){const box=document.getElementById("ov36"),d=this.c&&this.c.d;if(!box||!d)return;box.innerHTML=this.body(d);this.bind(box);
+    const sb=document.getElementById("ov36sub");if(sb)sb.textContent=this.sub(d);},
+  bind(root){if(!root)return;
+    root.querySelectorAll("[data-ovgo]").forEach(el=>{const go=()=>{const id=el.dataset.id;if(!id)return;if(el.dataset.ovgo==="task"&&typeof Task!=="undefined")Task.open(id);
+      else if(el.dataset.ovgo==="assign"&&typeof Assign!=="undefined")Assign.open(id);else Router.go("matter",id);};
+      el.onclick=go;el.onkeydown=e=>{if(e.key==="Enter")go();};});
+    root.querySelectorAll("[data-ovjump]").forEach(b=>b.onclick=()=>{const c=document.getElementById("ov36_"+b.dataset.ovjump);if(c)c.scrollIntoView({behavior:"smooth",block:"start"});});
+    root.querySelectorAll("tr[data-matter]").forEach(tr=>tr.onclick=()=>Router.go("matter",tr.dataset.matter));}
+};
+Object.assign(Router.extra,{overdues:()=>Ov36.page()});
+{const _pbOv=Pages.bind;Pages.bind=function(vp){_pbOv.apply(this,arguments);if(Router.cur==="overdues"&&vp)Ov36.bind(vp.querySelector("#ov36"));};}
+
+/* ── меню: «Просрочки» в «Работе» перед «Архивом» — УП, адвокаты и юристы ── */
+{const _navOv=navFor;navFor=function(){const g=_navOv.apply(this,arguments);if(!U()||isClient()||!g.length)return g;
+  let item=null;g.forEach(x=>{const a=x[1]||[];const i=a.findIndex(it=>it&&it[0]==="overdues");if(i>=0)item=a.splice(i,1)[0];});
+  const work=g[0][1];if(!Array.isArray(work))return g;const j=work.findIndex(it=>it&&it[0]==="archive");
+  work.splice(j>=0?j:work.length,0,item||["overdues",UI.nOverdues,"tasks"]);return g;};}
+if(typeof ADV21_DENY!=="undefined"){const i=ADV21_DENY.indexOf("overdues");if(i>=0)ADV21_DENY.splice(i,1);}
+if(typeof MX21_ADV!=="undefined")MX21_ADV.overdues=2;   /* «Матрица прав»: адвокат — только свои */
+
+if(typeof UZ21!=="undefined")Object.assign(UZ21,{
+  "Разовые услуги — срок дела":"Bir martalik xizmatlar — ish muddati","Судебные дела — сроки":"Sud ishlari — muddatlar",
+  "Юр. сопровождение — задания":"Yuridik kuzatuv — topshiriqlar","Задачи по делам":"Ishlar boʻyicha vazifalar","Поручения":"Topshiriqlar",
+  "КП не отправлено вовремя":"TK oʻz vaqtida yuborilmagan","Разовые услуги":"Bir martalik xizmatlar","Судебные дела":"Sud ishlari","Юр. сопровождение":"Yuridik kuzatuv",
+  "Просрочек нет":"Kechikishlar yoʻq","Сдано с опозданием":"Kechikib topshirilgan","Нет":"Yoʻq",
+  "просрочено сейчас":"hozir kechikkan","раб. дн.":"ish kuni","срок":"muddat","сверх нормы":"me'yordan ortiq","на паузе":"pauzada","Поручение":"Topshiriq","от":"dan",
+  "Срок дела":"Ish muddati",
+  "Версия 1.10: все просрочки — в разделе «Просрочки»":"1.10-versiya: barcha kechikishlar — «Kechikishlar» boʻlimida",
+  "«Просрочки» — в меню «Работа», перед «Архивом». Управляющий адвокат видит всё, адвокаты и юристы — только своё.":"«Kechikishlar» — «Ish» menyusida, «Arxiv»dan oldin. Boshqaruvchi advokat hammasini, advokatlar va yuristlar — faqat oʻzinikini koʻradi.",
+  "Просрочено сейчас — по блокам: разовые услуги (срок дела), судебные дела (процессуальные сроки и срок дела), юр. сопровождение (задания), задачи по делам, поручения, КП не отправлено вовремя. Нажатие на строку открывает дело.":"Hozir kechikkanlar bloklar boʻyicha: bir martalik xizmatlar (ish muddati), sud ishlari (protsessual muddatlar va ish muddati), yuridik kuzatuv (topshiriqlar), ishlar boʻyicha vazifalar, topshiriqlar, oʻz vaqtida yuborilmagan TK. Qatorni bossangiz, ish ochiladi.",
+  "Дела на паузе по вине клиента просроченными не считаются. Ниже — «Сдано с опозданием», как раньше.":"Mijoz aybi bilan pauzadagi ishlar kechikkan hisoblanmaydi. Pastda — avvalgidek «Kechikib topshirilgan».","Судебное дело":"Sud ishi","Разовая услуга":"Bir martalik xizmat","Заявка с {d} · норма {n} раб. дн.":"Ariza {d} dan · me'yor {n} ish kuni"});
+
+(()=>{const st=document.createElement("style");st.textContent=`
+.ov36sum{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.ov36chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink-2);font:500 12.5px var(--font);cursor:pointer}
+.ov36chip b{font:700 13px var(--font-num);color:var(--ink-3)}
+.ov36chip.on{border-color:color-mix(in srgb,var(--red,#D6362B) 35%,var(--line))}.ov36chip.on b{color:var(--red-d,#B42318)}
+.ov36g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px;align-items:start}
+.ov36c{margin:0!important}
+.ov36n{margin-left:auto;min-width:26px;height:22px;padding:0 8px;border-radius:11px;background:var(--surface2);color:var(--ink-3);font:700 12px/22px var(--font-num);text-align:center}
+.ov36n.on{background:color-mix(in srgb,var(--red,#D6362B) 12%,transparent);color:var(--red-d,#B42318)}
+.ov36l{max-height:420px;overflow:auto}
+@media(max-width:700px){.ov36l{max-height:none}}
+.ov36r{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 20px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+.ov36r:last-child{border-bottom:0}.ov36r:hover,.ov36r:focus{background:var(--surface2);outline:none}
+.ov36m,.ov36x{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ov36m b{font:700 12.5px var(--font-num);color:var(--ink)}.ov36m span{font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ov36m small,.ov36who{font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ov36it{font-size:12.5px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.ov36it small{color:var(--ink-3)}
+.ov36pz{font-style:normal;font-size:10.5px;padding:1px 6px;border-radius:6px;background:var(--surface2);color:var(--ink-3)}
+.ov36d{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.ov36d small{font-size:11px;color:var(--ink-3);white-space:nowrap}.ov36d b{font:700 13px var(--font-num);color:var(--red-d,#B42318);white-space:nowrap}
+.ov36e{padding:18px 20px;color:var(--ink-3);font-size:13px}
+.ov36t{overflow-x:auto}.ov36t .tbl{margin:0}
+@media(max-width:1100px){.ov36g{grid-template-columns:1fr}}
+@media(max-width:600px){.ov36r{grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 14px}.ov36x{grid-column:1/-1;grid-row:2}.ov36d{grid-row:1;grid-column:2}}
+`;document.head.appendChild(st);})();
 
 /* ══ Раздел «Юридическое сопровождение» · этап 1 — главный экран списка (макет design-support.html, решение владельца 19.10.2026) ══
    Как списки разовых услуг и судов (L25, v25_list.js): шапка с ⋯, плитки-фильтры, одна строка управления, таблица или карточки.
