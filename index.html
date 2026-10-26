@@ -10443,7 +10443,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="39b198783997";
+const ZC_BUILD="44076ccede26";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -15109,6 +15109,36 @@ const _navAgx37=navFor;navFor=function(){const g=_navAgx37.apply(this,arguments)
 const _pbindAgx37=Pages.bind;Pages.bind=function(vp){_pbindAgx37.call(this,vp);const slot=vp.querySelector("#agxSlot");if(slot&&Agx37.can())Agx37.mount(slot);};
 const _logoutAgx37=Auth.logout;Auth.logout=function(){Agx37.reset();return _logoutAgx37.apply(this,arguments);};
 
+/* версия 1.10 · Руководитель отдела ИИ-агентов — разрешение каждого действия прямо в «Чатах» (решения владельца 26.10.2026).
+   Под сообщением Александра с предложенными действиями (extra aiActs) — по каждому «Разрешить», «Вернуть с комментарием», «Отклонить».
+   То же — во вкладке «ИИ-агенты» → «Подтверждения». Решение — на сервере: ai_act_decide (только УП; выполняется с правами УП). */
+const AiActs38={
+  done:{},
+  srv(){return typeof SB19!=="undefined"&&SB19.T&&typeof SB19.T.rpc==="function"&&typeof B26!=="undefined"&&B26.srv&&B26.srv();},
+  row(c){const id=Number(c.id),st=this.done[id];
+    return `<div class="aa38" data-aa="${id}"><div class="aa38t">${esc(c.title||"")}${c.to?` <small>— ${esc(c.to)}</small>`:""}</div>`+
+      (st?`<div class="aa38s">${esc(st)}</div>`:`<div class="aa38b"><button type="button" class="btn sm pri" data-aaok="${id}">${T1("Разрешить||允许")}</button>`+
+      `<button type="button" class="btn sm" data-aaret="${id}">${T1("Вернуть||退回")}</button><button type="button" class="btn sm ghost" data-aano="${id}">${T1("Отклонить||拒绝")}</button></div>`+
+      `<div class="aa38f" hidden><textarea rows="2" maxlength="1000" placeholder="${esc(T1("Что изменить?||需要修改什么？"))}"></textarea><button type="button" class="btn sm pri" data-aasend="${id}">${T1("Вернуть с комментарием||附评论退回")}</button></div>`)+`</div>`;},
+  async decide(id,decision,note){if(!this.srv()){toast(T1("Решение — только при подключении к серверу||仅在连接服务器时可操作"));return;}
+    try{const r=await SB19.T.rpc("ai_act_decide",{aid:id,decision,note:note||null});
+      this.done[id]=decision==="approve"?(r&&r.status==="error"?T1("Не получилось: ||失败：")+(r.result||""):(r&&r.result)||T1("Выполнено||已完成")):decision==="reject"?T1("Отклонено||已拒绝"):T1("Возвращено на доработку||已退回");
+      toast(this.done[id]);}
+    catch(e){const m=String((e&&e.message)||e);toast(m.replace(/^.*?ERROR:\s*/,""));if(/уже обработано/.test(m))this.done[id]=T1("Уже решено||已处理");}
+    Router.render();}
+};
+const _bubAa38=Chat22.bubble;Chat22.bubble=function(m,mine,peerRead,last){const h=_bubAa38.apply(this,arguments);
+  if(!m||mine||m.deleted||m.by!=="ai.dir"||!Array.isArray(m.aiActs)||!m.aiActs.length)return h;
+  return h.replace('<span class="mt22">',`<div class="aa38w">${m.aiActs.map(c=>AiActs38.row(c)).join("")}</div><span class="mt22">`);};
+document.addEventListener("click",e=>{const t=e.target;if(!t||!t.closest)return;
+  const ok=t.closest("[data-aaok]");if(ok){e.preventDefault();AiActs38.decide(+ok.dataset.aaok,"approve");return;}
+  const no=t.closest("[data-aano]");if(no){e.preventDefault();AiActs38.decide(+no.dataset.aano,"reject");return;}
+  const rt=t.closest("[data-aaret]");if(rt){e.preventDefault();const f=rt.closest(".aa38").querySelector(".aa38f");if(f){f.hidden=false;const ta=f.querySelector("textarea");if(ta)ta.focus();}return;}
+  const sd=t.closest("[data-aasend]");if(sd){e.preventDefault();const ta=sd.closest(".aa38f").querySelector("textarea"),v=(ta&&ta.value||"").trim();if(!v){toast(T1("Напишите, что изменить||请写明需要修改什么"));return;}AiActs38.decide(+sd.dataset.aasend,"return",v);}},true);
+(function(){const st=document.createElement("style");st.textContent=`.aa38w{display:flex;flex-direction:column;gap:8px;margin-top:8px}.aa38{padding:8px 10px;border-radius:10px;background:rgba(127,127,127,.08)}
+.aa38t{font-weight:600;line-height:1.4}.aa38t small{font-weight:400;opacity:.75}.aa38b{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.aa38s{margin-top:4px;font-size:12.5px;opacity:.8}
+.aa38f{display:flex;flex-direction:column;gap:6px;margin-top:6px}.aa38f[hidden]{display:none}.aa38f textarea{width:100%;box-sizing:border-box;font:inherit;padding:6px 8px;border:1px solid var(--line,#E5E7EB);border-radius:8px;background:var(--paper,#fff);color:inherit}.aa38f .btn{align-self:flex-start}`;document.head.appendChild(st);})();
+
 /* ═══════════════════════════ версия 1.9 · ЗВОНОК ИИ-СОТРУДНИКУ ЧЕРЕЗ ПОРТАЛ (решения владельца 26.10.2026) ═══════════════════════════
    • Звонят УП, адвокаты и юристы: кнопка 📞 в «Чатах» (переписка с агентом) и «Позвонить» в профиле агента (раздел «ИИ-агенты»).
      С сотрудником агент говорит только о поручениях УП, которые его касаются (сервер: ai_call_ctx2, функция ai-director).
@@ -15311,9 +15341,55 @@ const _vhAg37=Chat22.voiceHtml;Chat22.voiceHtml=function(m,f,i,mine){const h=_vh
 const _thrAg37=CMsg.thread.bind(CMsg);CMsg.thread=function(m,forClient){const h=_thrAg37(m,forClient);if(forClient||!AgxChat37.list.length||m.status==="closed")return h;
   return h.replace('<div class="cmsend">',`<div class="cmsend"><div style="font-size:11.5px;color:var(--ink-3);margin-bottom:4px">${esc(T1(UI.ag37Hint))}</div>`);};
 /* загрузить список при первом показе портала; после перезагрузки учёток — вернуть агента */
-const _rrAg37=Router.render;Router.render=function(){if(AgxChat37.srv()){if(!AgxChat37.loaded&&!AgxChat37.busy){AgxChat37.busy=true;AgxChat37.load().then(()=>{AgxChat37.busy=false;if(["chats","matter","agents"].includes(Router.cur))Router.render();});}else AgxChat37.ensure();}
+const _rrAg37=Router.render;Router.render=function(){if(AgxChat37.srv()){if(!AgxChat37.loaded&&!AgxChat37.busy){AgxChat37.busy=true;AgxChat37.load().then(()=>{AgxChat37.busy=false;try{Notif.badge();}catch(e){}if(["chats","matter","agents"].includes(Router.cur))Router.render();});}  /* 26.10: счётчик «Сообщений» — заново, когда агенты загружены (иначе письма агента до входа не считались) */else AgxChat37.ensure();}
   return _rrAg37.apply(this,arguments);};
 const _logoutAg37=Auth.logout;Auth.logout=function(){AgxChat37.reset();return _logoutAg37.apply(this,arguments);};
+
+/* версия 1.10 · ИТ-специалист Даниил Соколов — ответ автора сообщения об ошибке (решения владельца 26.10.2026).
+   Исправление на сайте → Даниил просит автора проверить: в «Чатах» под его сообщением и в карточке сообщения («Помощь → Сообщения об ошибках»)
+   кнопки «Всё исправлено» (→ «закрыто») и «Не исправлено» (+ комментарий, → снова «новое»). Если Даниил задал вопрос — ответ в карточке
+   (в «Чатах» можно ответить и словами). Решения — на сервере: bug_it_answer, bug_it_reply. */
+const ItFb38={
+  done:{},
+  srv(){return typeof SB19!=="undefined"&&SB19.T&&typeof SB19.T.rpc==="function"&&typeof B26!=="undefined"&&B26.srv&&B26.srv();},
+  me(){try{return U().login;}catch(e){return "";}},
+  err(e){return (typeof B26!=="undefined"&&B26.eText)?B26.eText(e):String((e&&e.message)||e);},
+  btns(rid){if(this.done[rid])return `<div class="itfb38"><span class="itfb38d">${T1("Ответ отправлен — спасибо!||已提交，谢谢！")}</span></div>`;
+    return `<div class="itfb38" data-itfb="${esc(rid)}"><div class="itfb38b"><button type="button" class="btn sm pri" data-itok="${esc(rid)}">✓ ${T1("Всё исправлено||已全部修复")}</button>`+
+      `<button type="button" class="btn sm" data-itno="${esc(rid)}">✗ ${T1("Не исправлено||未修复")}</button></div>`+
+      `<div class="itfb38f" hidden><textarea rows="2" maxlength="1000" placeholder="${esc(T1("Что не так? (необязательно)||哪里不对？（可选）"))}"></textarea>`+
+      `<button type="button" class="btn sm pri" data-itsend="${esc(rid)}">${T1("Отправить||发送")}</button></div></div>`;},
+  async answer(rid,ok,note){if(!this.srv()){toast(T1("Ответ — только при подключении к серверу||仅在连接服务器时可回复"));return;}
+    try{await SB19.T.rpc("bug_it_answer",{rid,ok,note:note||null});this.done[rid]=1;
+      toast(ok?T1("Спасибо! Сообщение закрыто||谢谢！报告已关闭"):T1("Спасибо! Вернули в работу — управляющий партнёр в курсе||谢谢！已重新处理，管理合伙人已知悉"));}
+    catch(e){toast(this.err(e));if(/уже получен/.test(String((e&&e.message)||e)))this.done[rid]=1;}
+    try{if(typeof B26!=="undefined"&&B26.load)await B26.load();}catch(e){}Router.render();},
+  async reply(rid,text){if(!text)return;if(!this.srv()){toast(T1("Ответ — только при подключении к серверу||仅在连接服务器时可回复"));return;}
+    try{await SB19.T.rpc("bug_it_reply",{rid,body:text});toast(T1("Ответ отправлен — Даниил учтёт его при следующей проверке||已发送"));}catch(e){toast(this.err(e));}
+    try{if(typeof B26!=="undefined"&&B26.load)await B26.load();}catch(e){}Router.render();},
+  openBug(rid){try{Help21._t="bugs";if(typeof B26!=="undefined"){B26.f.tab="list";B26.f.sel=rid;B26.rows=null;}Router.go("help");}catch(e){}}
+};
+/* «Чаты»: кнопки под сообщением Даниила */
+const _bubIt38=Chat22.bubble;Chat22.bubble=function(m,mine,peerRead,last){const h=_bubIt38.apply(this,arguments);
+  if(!m||mine||m.deleted||m.by!=="ai.it")return h;
+  const add=m.itAsk&&m.itAsk.rid?ItFb38.btns(m.itAsk.rid):m.itQ&&m.itQ.rid?`<div class="itfb38"><button type="button" class="btn sm" data-itopen="${esc(m.itQ.rid)}">${T1("Открыть сообщение||打开报告")}</button></div>`:"";
+  return add?h.replace('<span class="mt22">',add+'<span class="mt22">'):h;};
+/* «Сообщения об ошибках»: у автора в карточке — просьба проверить и вопрос Даниила */
+const _cardIt38=B26.card;B26.card=function(r){const h=_cardIt38.apply(this,arguments),d=(r&&r.data)||{};
+  if(!r||r.author!==ItFb38.me())return h;let add="";
+  if(r.status==="fixed"&&d.itAsk&&!d.itAsk.answer)add=`<div class="itfb38c"><b>${esc(accName("ai.it"))}:</b> ${T1("исправлено в версии||已在版本中修复")} ${esc(d.itAsk.fixedIn||d.fixedIn||"")}. ${T1("Проверьте, пожалуйста, и ответьте||请检查并回复")}.${ItFb38.btns(r.id)}</div>`;
+  else if(r.status==="new"&&d.itQ&&!d.itQ.answered)add=`<div class="itfb38c"><b>${esc(accName("ai.it"))}:</b> ${esc(d.itQ.q||"")}<div class="itfb38f"><textarea rows="2" maxlength="2000" placeholder="${esc(T1("Ваш ответ||您的回答"))}"></textarea>`+
+    `<button type="button" class="btn sm pri" data-itrep="${esc(r.id)}">${T1("Ответить||回复")}</button></div></div>`;
+  return add?h.replace('<div class="b26cols">',add+'<div class="b26cols">'):h;};
+document.addEventListener("click",e=>{const t=e.target;if(!t||!t.closest)return;
+  const ok=t.closest("[data-itok]");if(ok){e.preventDefault();ItFb38.answer(ok.dataset.itok,true,null);return;}
+  const no=t.closest("[data-itno]");if(no){e.preventDefault();const f=no.closest(".itfb38").querySelector(".itfb38f");if(f){f.hidden=false;const ta=f.querySelector("textarea");if(ta)ta.focus();}return;}
+  const sd=t.closest("[data-itsend]");if(sd){e.preventDefault();const ta=sd.closest(".itfb38f").querySelector("textarea");ItFb38.answer(sd.dataset.itsend,false,(ta&&ta.value||"").trim());return;}
+  const rp=t.closest("[data-itrep]");if(rp){e.preventDefault();const ta=rp.closest(".itfb38f").querySelector("textarea");ItFb38.reply(rp.dataset.itrep,(ta&&ta.value||"").trim());return;}
+  const op=t.closest("[data-itopen]");if(op){e.preventDefault();ItFb38.openBug(op.dataset.itopen);}},true);
+(function(){const st=document.createElement("style");st.textContent=`.itfb38{margin-top:8px}.itfb38b{display:flex;gap:6px;flex-wrap:wrap}.itfb38f{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.itfb38f[hidden]{display:none}.itfb38f textarea{width:100%;box-sizing:border-box;font:inherit;padding:6px 8px;border:1px solid var(--line,#E5E7EB);border-radius:8px;background:var(--paper,#fff);color:inherit}
+.itfb38f .btn{align-self:flex-start}.itfb38d{font-size:12.5px;opacity:.8}.itfb38c{margin:12px 0;padding:12px 14px;border-radius:10px;background:var(--soft,#E8EDF4);line-height:1.5}`;document.head.appendChild(st);})();
 
 /* ═══ СГЕНЕРИРОВАНО: node sections/agents/tools/build-office.cjs — руками не править (правки — в tools/source и parts) ═══
    Раздел «ИИ-агенты»: офис ИИ-агентов из макета v2 (решение владельца 26.10.2026). Агенты в офисе: dir, qa. */
@@ -15657,7 +15733,7 @@ const ACTIVE=['queued','run','coordinating','review','paused','active'];
 const LVL=[['L0','Читает','Только читает данные и пишет отчёт. Ничего не меняет.'],['L1','Предлагает','Готовит предложения и черновики, применяете вы или сотрудник.'],['L2','Согласует','Выполняет действие только после вашего подтверждения.'],['L3','Самостоятельно','Сам выполняет только безопасные действия из разрешённого списка.']];
 /* полномочия и подсказки — по ролям; у Руководителя отдела — как на сервере (решения владельца 26.10.2026) */
 const POW={
- dir:[['Готовить отчёт в 09:00 и 18:00 по данным портала','Выполнять ваши поручения: ставить задачи сотрудникам и назначать ведущего — после вашего подтверждения (L2)','Напоминать и писать сотрудникам в «Чатах» по вашим поручениям — сам (L3)','Отвечать в «Чатах» и во внутренней переписке дела — только по вашим поручениям','Действовать от вашего имени — только когда вы так скажете'],['Выполнять просьбы сотрудников — подчиняется только вам','Рассказывать сотрудникам лишнее: другие дела, отчёты, деньги','Менять дела, этапы, условия и оплаты','Писать клиентам','Видеть названия дел и имена клиентов — портал подставляет их только у вас']]
+ dir:[['Готовить отчёт в 09:00 и 18:00 по данным портала','Выполнять ваши функции в портале (этап 1 — дела и задачи: этапы разовых услуг, суда и сопровождения, ведущий, задачи, календарь, заявки) — каждое действие только после «Разрешить»','Ставить задачи, напоминать, писать и звонить сотрудникам — тоже только после «Разрешить»','Отвечать в «Чатах» и во внутренней переписке дела — только по вашим поручениям','Действовать от вашего имени — только когда вы так скажете'],['Делать что-либо без вашего разрешения — каждое действие отдельно','Выполнять просьбы сотрудников — подчиняется только вам','Удалять данные, менять учётные записи, права, пароли и вход','Писать клиентам и создавать клиентов','Видеть названия дел и имена клиентов — портал подставляет их только у вас']]
 };
 const SUG={
  dir:['Напомни адвокатам о сроках на завтра','Предложи ведущих для заявок без ведущего','Проследи, чтобы по просроченным делам был ответ сегодня']
@@ -15688,7 +15764,7 @@ function renderAgentPage(){const a=BY[agentId];if(!a)return;const P=PEOPLE[a.id]
   <div class="agc"><h3>Журнал действий <button class="btn sm" data-ag="export" style="margin-left:auto">Выгрузить CSV</button></h3><ul class="ag-log" id="agLog"></ul></div>
  </div><div class="agp-col">
   <div class="agc ag-chat" id="agChat"><div class="ag-chat-h">${avatar(a)}<div><b>Чат с ${esc(a.first)}</b><small><i></i>та же переписка, что в «Чатах»</small></div><button class="btn sm" data-ag="openchat" title="Открыть в «Чатах»">↗</button><button class="btn sm call-btn" data-ag="call" title="Позвонить через портал">${PHONE}</button></div><div class="ag-msgs" id="agMsgs"></div><form class="ag-chatf" id="agChatForm"><input id="agChatIn" maxlength="1000" autocomplete="off" placeholder="Напишите ${esc(a.first)}…"><button class="btn ag-mic" type="button" data-mic="dm" title="Голосовое сообщение: нажмите, говорите, нажмите ещё раз" aria-label="Голосовое сообщение">🎤</button><button class="btn primary" type="submit" aria-label="Отправить">➤</button></form></div>
-  <div class="agc"><h3>Дать поручение</h3><form class="ag-form" id="agForm"><textarea id="agText" maxlength="1000" required placeholder="Что нужно сделать ${esc(a.first)}?"></textarea><label class="ag-allow"><input type="checkbox" id="agAllow"><span>Разрешить действия, нужные для этого поручения<small>Задачи сотрудникам — без вашего подтверждения, только по этому поручению</small></span></label><label class="ag-allow"><input type="checkbox" id="agAsMp"><span>От моего имени<small>Сотрудники увидят задачи и сообщения от вас, без упоминания ИИ</small></span></label><div class="row"><button class="btn primary" type="submit" style="margin-left:auto">Поручить ↗</button></div></form><div class="ag-sug">${(SUG[a.id]||[]).map(t=>`<button type="button" data-sug="${esc(t)}">${esc(t)}</button>`).join('')}</div><div class="sub" style="margin:10px 0 0">Задачи и назначение ведущего — после вашего подтверждения («Подтверждения»), напоминания и сообщения сотрудникам — сразу. Ответ — в чате справа.</div></div>
+  <div class="agc"><h3>Дать поручение</h3><form class="ag-form" id="agForm"><textarea id="agText" maxlength="1000" required placeholder="Что нужно сделать ${esc(a.first)}?"></textarea><input type="checkbox" id="agAllow" hidden><label class="ag-allow"><input type="checkbox" id="agAsMp"><span>От моего имени<small>Сотрудники увидят задачи и сообщения от вас, без упоминания ИИ</small></span></label><div class="row"><button class="btn primary" type="submit" style="margin-left:auto">Поручить ↗</button></div></form><div class="ag-sug">${(SUG[a.id]||[]).map(t=>`<button type="button" data-sug="${esc(t)}">${esc(t)}</button>`).join('')}</div><div class="sub" style="margin:10px 0 0">Каждое действие — задачи, напоминания, сообщения, звонки и ваши функции в портале — только после «Разрешить» («Подтверждения» или кнопки в чате). Ответ — в чате справа.</div></div>
   <div class="agc"><h3>Функция и задача</h3><dl class="ag-kv"><dt>Роль</dt><dd>${esc(P[1])}</dd><dt>Функция</dt><dd>${esc(P[2])}</dd><dt>Задача</dt><dd id="agTaskTxt">${esc(a.task)}</dd><dt>Когда работает</dt><dd>${esc(a.sched)}</dd></dl></div>
   <div class="agc"><h3>Инструкция агента <button class="btn sm" data-ag="instr" style="margin-left:auto">Изменить</button></h3><div id="agInstr"></div></div>
   <div class="agc"><h3>Полномочия</h3><dl class="ag-kv"><dt>Доступ</dt><dd>${esc(a.access)}</dd></dl><div class="ag-sw"><span><b>Пробный режим</b><small>Агент пишет, что сделал бы, но ничего не выполняет</small></span><button class="switch" id="agTrial" data-ag="trial" role="switch"></button></div><div class="ag-h">Самостоятельность</div><div class="ag-lv" id="agLv"></div><div class="ag-lvd" id="agLvD"></div><div class="ag-h">Может</div><ul class="ag-can">${pw[0].map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="ag-h">Не может</div><ul class="ag-cant">${pw[1].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
@@ -15958,13 +16034,13 @@ setDates();show();
 /* ===== Живые данные (версия 1.9): офис, поручения, журнал, профиль и чат — с сервера, вместо демо-симуляции макета.
    Сервер: ai_me, ai_dir_list, ai_chat_list, ai_set_on (миграция 20261026000100_ai_director), ai_orders_list, ai_order_create,
    ai_order_cancel, ai_act_decide (миграция 20261026000200_ai_agents), функция ai-director (build, ask, jobs).
-   Поручения — ваши поручения агенту, его отчёты и вопросы по отчёту. Задачи и назначение ведущего — после вашего подтверждения (L2),
-   напоминания и сообщения сотрудникам — сам (L3). Чат в профиле — та же личная переписка, что в «Чатах». ===== */
+   Поручения — ваши поручения агенту, его отчёты и вопросы по отчёту. Каждое действие агента (задачи, напоминания, сообщения, звонки, функции УП) —
+   только после «Разрешить» (решение владельца 26.10.2026). Чат в профиле — та же личная переписка, что в «Чатах». ===== */
 (function(){
 const D=BY.dir,data=AGXW.data={loaded:false,err:'',me:{},list:[],chat:[],orders:[]};
 let pendingQ=[],busy=false,localEv=[],timer=null,lastLoad=0,dmWait=0;
 D.lvl=2;D.log=[];D.runs=0;D.cost=0;D.limit=62;D.budget=25;D.q=null;
-const KINDL={task:'Задача сотруднику',assign:'Назначить ведущего',remind:'Напоминание сотруднику',msg:'Сообщение сотруднику'};
+const KINDL={task:'Задача сотруднику',assign:'Назначить ведущего',remind:'Напоминание сотруднику',msg:'Сообщение сотруднику',call:'Звонок сотруднику',mp:'Функция УП'};
 const pendingActs=()=>{const out=[];for(const o of data.orders||[])for(const a of o.actions||[])if(a.status==='pending'&&o.status!=='cancelled')out.push({o,a});return out;};
 AGXW.pendingCount=()=>pendingActs().length;
 WORK_CONTEXT.dir=['Данные портала · дела, сроки, суды, задачи, оплаты','Отчёт УП в 09:00 и 18:00, ответы в чате'];
@@ -16024,11 +16100,11 @@ cancelOrder=async function(id){const o=orders.find(x=>x.id===id);if(!o||o.kind!=
  try{await API.rpc('ai_order_cancel',{oid:o.oid});toast('Поручение отменено');}catch(e){toast(errText(e));}await load(true);};
 /* «Подтверждения»: все действия, которые ждут вашего решения */
 renderQueue=function(){const P=pendingActs();$('#queue').innerHTML=P.length?P.map(({o,a})=>{const M=a.args.matter?API.matter(a.args.matter):null;
-  return`<article class="qcard"><div class="qhead">${avatar(D)}<div><h3>${esc(KINDL[a.kind])}${a.to?' — '+esc(a.to):''}</h3><small>${esc(D.person)} · поручение №${o.id} · ${esc(tOf(Date.parse(a.at)))}${a.as_mp?' · от вашего имени':''}</small></div><span class="pill wait" style="margin-left:auto">Ваше решение</span></div>
-  <p>${a.args.title?`<b>${esc(a.args.title)}</b><br>`:''}${esc(a.args.text||'')}${M?`<br><small>Дело №${esc(M.no)} · ${esc(M.title)}${M.client?' · '+esc(M.client):''}</small>`:''}${a.args.due?`<br><small>Срок: ${esc(a.args.due)}</small>`:''}</p>
+  return`<article class="qcard"><div class="qhead">${avatar(D)}<div><h3>${esc(a.kind==='mp'?(a.args.title||KINDL.mp):KINDL[a.kind])}${a.to?' — '+esc(a.to):''}</h3><small>${esc(D.person)} · поручение №${o.id} · ${esc(tOf(Date.parse(a.at)))}${a.as_mp?' · от вашего имени':''}</small></div><span class="pill wait" style="margin-left:auto">Ваше решение</span></div>
+  <p>${a.args.title&&a.kind!=='mp'?`<b>${esc(a.args.title)}</b><br>`:''}${esc(a.args.text||'')}${a.kind==='mp'?`<br><small>Функция: ${esc(a.args.fn||'')}</small><details style='margin-top:4px'><summary style='cursor:pointer;font-size:12px'>Данные действия</summary><pre style='white-space:pre-wrap;font-size:12px;margin:4px 0 0'>${esc(JSON.stringify(a.args.params||{},null,1))}</pre></details>`:''}${M?`<br><small>Дело №${esc(M.no)} · ${esc(M.title)}${M.client?' · '+esc(M.client):''}</small>`:''}${a.args.due?`<br><small>Срок: ${esc(a.args.due)}</small>`:''}</p>
   <p style="font-size:12px;color:#737C8A;margin-top:-4px">Ваше поручение: «${esc(o.text.slice(0,200))}»</p>
-  <div class="qactions"><button class="btn primary" data-xdec="approve" data-aid="${a.id}">Согласовать</button><button class="btn" data-xdec="return" data-aid="${a.id}">Вернуть с комментарием</button><button class="btn ghost" data-xdec="reject" data-aid="${a.id}">Отклонить</button></div></article>`;}).join('')
- :'<div class="empty">Решений, которые ждут вас, нет. Задачи сотрудникам и назначение ведущего агент кладёт сюда; напоминания и сообщения отправляет сам.</div>';};
+  <div class="qactions"><button class="btn primary" data-xdec="approve" data-aid="${a.id}">Разрешить</button><button class="btn" data-xdec="return" data-aid="${a.id}">Вернуть с комментарием</button><button class="btn ghost" data-xdec="reject" data-aid="${a.id}">Отклонить</button></div></article>`;}).join('')
+ :'<div class="empty">Решений, которые ждут вас, нет. Каждое действие руководителя отдела — задачи, напоминания, сообщения, звонки и ваши функции в портале — появляется здесь и выполняется только после «Разрешить».</div>';};
 const _rs=renderStats;renderStats=function(){_rs();const n=AGXW.pendingCount(),st=$$('#stats .stat')[1];if(st){st.querySelector('b').textContent=n;const em=st.querySelector('em');if(em)em.textContent=n?'Действия ждут подтверждения':'Всё согласовано';}$('#queueCount').textContent=n;};
 AGXW.decide=async function(aid,kind){let note=null;if(kind==='return'){const r=await modal('Что нужно доработать?','Комментарий для руководителя отдела: он переделает действие с учётом замечания.',{comment:true,confirm:'Вернуть на доработку'});if(!r)return;note=r.comment;}
  try{const r=await API.rpc('ai_act_decide',{aid,decision:kind,note});toast(kind==='approve'?(r&&r.status==='error'?'Не получилось: '+(r.result||''):'Согласовано: '+(r&&r.result||'выполнено')):kind==='reject'?'Отклонено':'Возвращено на доработку');}
@@ -16118,7 +16194,7 @@ AGXW.setOn=async function(v){if(API.demo){toast('Демо-режим: включ
  try{data.me=await API.rpc('ai_set_on',{turn_on:!!v})||data.me;localEv.push({ts:Date.now(),text:v?'Включён управляющим партнёром':'Выключен управляющим партнёром: отчёты и чат остановлены'});derive();paintAll();toast(v?'Руководитель отдела включён':'Руководитель отдела выключен');}
  catch(e){toast(errText(e));}};
 $('#stopAll').onclick=async()=>{if(!D.on){await AGXW.setOn(true);return;}const ok=await modal('Остановить команду?','Все ИИ-агенты остановятся: отчёты по расписанию не собираются, чат не отвечает. Отчёты и история сохранятся.',{confirm:'Остановить всех'});if(ok)await AGXW.setOn(false);};
-AGXW.levelInfo=function(a,i){toast('Уровень задан вашим решением: задачи и назначение ведущего — после вашего подтверждения (L2), напоминания и сообщения сотрудникам — сам (L3)');};
+AGXW.levelInfo=function(a,i){toast('Уровень задан вашим решением: каждое действие — только после вашего разрешения (L2)');};
 /* правая карточка в офисе: выключатель, уровни и поручение — тоже через сервер */
 ROOT.addEventListener('click',e=>{
  if(e.target.closest('#profileToggle')){e.preventDefault();e.stopPropagation();AGXW.setOn(!BY[selected].on);return;}
@@ -16147,9 +16223,9 @@ derive();paintAll();load();
 })();
 /* ── parts/it.part.js ── */
 /* ===== ИИ-агент «ИТ-специалист» Даниил Соколов (решения владельца 26.10.2026) =====
-   Проверяет исправление ошибок и предложений из «Сообщить об ошибке» (уровень 1 — по документам: версия исправления,
-   опубликована ли она на сайте, выполнены ли миграции) и сам ставит «закрыто», «в работе» (не подтвердилось) и «дубликат» —
-   только по поручению УП: кнопка «Проверить сейчас» здесь или «проверь все и обнови статусы» в «Чатах».
+   Разбирает сообщения из «Сообщить об ошибке»: новые — только по поручению УП (кнопка «Проверить новые ошибки» или «проверь новые ошибки»
+   в «Чатах»): «исправлено» — по реестру исправлений, остальное решает сам (принято / не ошибка / дубликат / вопрос автору); исправленные — сам:
+   исправление на сайте → просит автора проверить → «закрыто» или снова «новое». Логика — на сервере (ai-director, миграции 0200 и 0300 ai_it).
    В офисе — сотрудник движка со стола «qa» (свой лист движений, см. tools/build-office.cjs); клик по нему, его табличке,
    мини-карточке или карточке в «Сотрудниках» открывает эту страницу (не страницу Руководителя отдела). */
 (function(){
@@ -16173,34 +16249,35 @@ const _ur2=updateRoutines;updateRoutines=function(){_ur2();const a=BY.qa;if(!a)r
 const _gs2=getState;getState=function(a){if(a.id!=='qa')return _gs2(a);return busy?'task':onBreak(a)?'rest':'work';};
 const _act2=activity;activity=function(a){if(a.id!=='qa')return _act2(a);return busy?'Проверяет исправления по поручению УП':onBreak(a)?'Короткий перерыв · на связи':'На связи · проверка — по поручению УП';};
 const _tn=typingNow;typingNow=function(a){return a.id==='qa'?busy:_tn(a);};
-const setBusy=v=>{busy=v;if(v)endBreak(BY.qa);stateChange(BY.qa);changed=true;};
+const setBusy=v=>{busy=v||false;if(v)endBreak(BY.qa);stateChange(BY.qa);changed=true;};
 stateChange(BY.qa);
 /* страница ИТ-специалиста */
 $('main').insertAdjacentHTML('beforeend','<section class="view" id="view-it" hidden></section>');
 const _sv=switchView;switchView=function(n){_sv(n);ROOT.classList.toggle('ag-open',n==='agent'||n==='it');};
 const fmt=ts=>{try{return new Intl.DateTimeFormat('ru-RU',{timeZone:'Asia/Tashkent',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(ts));}catch(e){return '';}};
 function paint(){const box=$('#view-it');if(!box||view!=='it')return;const L=(AGXW.itOrders||[]).slice().reverse(),mon=new Date().toISOString().slice(0,7);
- const month=L.filter(o=>String(o.at).slice(0,7)===mon),cnt=re=>month.reduce((n,o)=>{const m=String(o.reply||'').match(re);return n+(m?m[1].split(/[,;]/).filter(Boolean).length:0);},0);
+ const month=L.filter(o=>String(o.at).slice(0,7)===mon),cnt=re=>month.reduce((n,o)=>{const m=String(o.reply||'').match(re);return n+(m?m[1].split(/[,;]/).filter(x=>/ОШ-/.test(x)).length:0);},0);
+ const btn=(k,t)=>`<button class="btn ${k==='new'?'primary ':''}sm" data-it-check="${k}"${busy?' disabled':''}>${busy===k?'Проверяю…':t}</button>`;
  box.innerHTML=`<div class="agp"><div class="agp-top"><button class="btn sm" data-it-back="1">← ${itFrom==='team'?'К сотрудникам':'К офису'}</button><span class="crumbs">ИИ-агенты / ${itFrom==='team'?'Сотрудники':'Офис'} / <b>${esc(IT.name)}</b></span></div>
  <div class="agp-hero"><div class="agp-photo"><img src="${IT.photo}" alt="${esc(IT.name)}" style="object-position:50% 10%"><div class="ph-state"><i style="background:#3F8768"></i>${busy?'Проверяет':'На связи'}</div></div>
-  <div class="agp-info"><div><h1>${esc(IT.name)}</h1><div class="role">${esc(IT.role)} · ИИ-сотрудник · работает только по поручению УП</div></div>
-   <div class="agp-chips"><span class="chp pri">L3 · по поручению УП</span><span class="chp">уровень проверки 1 — по документам</span></div>
-   <div class="agp-func">Проверяет исправление ошибок и предложений из «Сообщить об ошибке»: записана ли версия исправления, опубликована ли она на сайте, выполнены ли миграции. Сам ставит «закрыто», «в работе» (если не подтвердилось) и «дубликат» — каждый раз с доказательством; автор получает уведомление. «Не ошибка» и решения по новым — ваши.</div>
-   <div class="agp-now"><div class="ag-h" style="margin-top:0">Последняя проверка</div><div class="t">${L[0]?esc(fmt(L[0].at)):'Ещё не было'}</div><div class="m" style="white-space:pre-line">${L[0]?esc(L[0].reply||''):'Нажмите «Проверить сейчас» или напишите ему в «Чатах»: «проверь все и обнови статусы».'}</div></div>
-   <div class="agp-actions"><button class="btn primary sm" data-it-check="1"${busy?' disabled':''}>${busy?'Проверяю…':'Проверить сейчас'}</button><button class="btn sm" data-it-chat="1">Написать в «Чатах»</button><button class="btn sm" data-it-bugs="1">Сообщения об ошибках</button></div></div></div>
- <div class="agp-kpis"><div class="kpi"><b>${month.length}</b><span>проверок за месяц</span></div><div class="kpi"><b>${cnt(/Закрыл: ([^.]*)\./)}</b><span>закрыто</span></div><div class="kpi"><b>${cnt(/Вернул в работу: ([^.]*)\./)}</b><span>возвращено в работу</span></div><div class="kpi"><b>${cnt(/Отметил дубликаты: ([^.]*)\./)}</b><span>дубликатов</span></div><div class="kpi"><b>${L.length}</b><span>проверок всего</span></div><div class="kpi"><b>Sonnet 5.5</b><span>только для дубликатов</span></div></div>
+  <div class="agp-info"><div><h1>${esc(IT.name)}</h1><div class="role">${esc(IT.role)} · ИИ-сотрудник · новые — по поручению УП</div></div>
+   <div class="agp-chips"><span class="chp pri">L3 · решает сам</span><span class="chp">новые — Opus 5.5</span><span class="chp">исправленные — автоматически</span></div>
+   <div class="agp-func">Разбирает сообщения из «Сообщить об ошибке». <b>Новые</b> — по вашей команде: «исправлено» ставит только если исправление есть в реестре исправлений и уже на сайте; остальные сам принимает, отмечает «не ошибка» или «дубликат», а если неясно — спрашивает автора. <b>Исправленные</b> — сам: как только исправление на сайте, просит автора проверить; «всё исправлено» — закрывает, «не исправлено» — возвращает в «новое». Нет ответа 2 дня — напоминает, 5 дней — пишет вам.</div>
+   <div class="agp-now"><div class="ag-h" style="margin-top:0">Последняя проверка</div><div class="t">${L[0]?esc(fmt(L[0].at)):'Ещё не было'}</div><div class="m" style="white-space:pre-line">${L[0]?esc(L[0].reply||''):'Нажмите «Проверить новые ошибки» или напишите ему в «Чатах»: «проверь новые ошибки».'}</div></div>
+   <div class="agp-actions">${btn('new','Проверить новые ошибки')}${btn('fixed','Проверить исправленные')}<button class="btn sm" data-it-chat="1">Написать в «Чатах»</button><button class="btn sm" data-it-bugs="1">Сообщения об ошибках</button></div></div></div>
+ <div class="agp-kpis"><div class="kpi"><b>${month.length}</b><span>проверок за месяц</span></div><div class="kpi"><b>${cnt(/Принял: ([^\n]*)/)}</b><span>принято</span></div><div class="kpi"><b>${cnt(/Не ошибка: ([^\n]*)/)}</b><span>не ошибка</span></div><div class="kpi"><b>${cnt(/Дубликаты: ([^\n]*)/)}</b><span>дубликатов</span></div><div class="kpi"><b>${cnt(/Спросил авторов: ([^\n]*)/)}</b><span>вопросов авторам</span></div><div class="kpi"><b>${cnt(/(?:Исправлено \(по реестру[^:]*|попросил авторов проверить): ([^\n]*)/)}</b><span>отправлено авторам на проверку</span></div></div>
  <div class="agp-grid"><div class="agp-col"><div class="agc"><h3>История проверок <small>${L.length?L.length+' всего':''}</small></h3>${L.length?`<ul class="ag-log">${L.slice(0,40).map(o=>`<li><time>${esc(fmt(o.at))}</time><span style="white-space:pre-line">${esc(o.reply||o.text||'')}</span></li>`).join('')}</ul>`:'<div class="ag-empty">Проверок ещё не было.</div>'}</div></div>
-  <div class="agp-col"><div class="agc"><h3>Полномочия</h3><div class="ag-h">Может</div><ul class="ag-can"><li>Читать сообщения об ошибках и предложения</li><li>Сверять: версию исправления, публикацию на сайте, миграции в облаке</li><li>Ставить «закрыто», «в работе», «дубликат» — с доказательством</li></ul><div class="ag-h">Не может</div><ul class="ag-cant"><li>Ставить «не ошибка» и решать по новым обращениям</li><li>Работать без поручения УП</li><li>Менять код и данные портала</li></ul></div>
-  <div class="agc"><h3>Чтобы проверка работала</h3><div class="sub" style="margin:0">Ставя «исправлено», указывайте версию и что изменено (имя миграции, если она есть) — без этого Даниилу нечем проверять. Живое воспроизведение ошибок в браузере — следующий этап.</div></div></div></div></div>`;}
+  <div class="agp-col"><div class="agc"><h3>Полномочия</h3><div class="ag-h">Может</div><ul class="ag-can"><li>Разбирать новые сообщения: «принято», «не ошибка», «дубликат», вопрос автору</li><li>Ставить «исправлено» — только по реестру исправлений, когда версия на сайте и миграции выполнены</li><li>Просить автора проверить исправление; закрывать по его ответу или возвращать в «новое»</li><li>Напоминать автору и сообщать вам о молчании</li></ul><div class="ag-h">Не может</div><ul class="ag-cant"><li>Разбирать новые без вашей команды</li><li>Закрывать без ответа автора</li><li>Видеть снимки экрана и имена клиентов (в ИИ уходят метки)</li><li>Менять код и данные портала</li></ul></div>
+  <div class="agc"><h3>Реестр исправлений</h3><div class="sub" style="margin:0">Сессия, которая исправила ошибку, при публикации добавляет строку в реестр (legal.zhongcheng.uz/fixes.json): номер ОШ, версия, что изменено, миграции и тесты. По нему Даниил отмечает «исправлено». Сам он сейчас проверяет по документам и тестам из реестра; живую проверку в браузере — отдельным этапом.</div></div></div></div></div>`;}
 AGXW.openIt=function(from){itFrom=from||view||'office';switchView('it');paint();API.scrollTop();};
 const _rr=AGXW.reportsRefresh;AGXW.reportsRefresh=function(){_rr&&_rr();paint();};
 ROOT.addEventListener('click',async e=>{
  if(e.target.closest('[data-it-back]')){switchView(itFrom==='team'?'team':'office');if(itFrom==='team')renderTeam();return;}
  if(e.target.closest('[data-it-chat]')){API.dm.open(IT.login);return;}
  if(e.target.closest('[data-it-bugs]')){try{Help21._t='bugs';if(typeof B26!=='undefined')B26.rows=null;Router.go('help');}catch(_){}return;}
- if(e.target.closest('[data-it-check]')){if(busy)return;if(API.demo){toast('Демо-режим: проверка — только с сервером');return;}
-  setBusy(true);paint();toast('Даниил проверяет исправления…');
-  try{const r=await API.invoke('ai-director',{action:'it_check'});toast(`Готово: закрыто ${r.closed||0}, в работу ${r.back||0}, дубликатов ${r.dup||0}`);}
+ const ck=e.target.closest('[data-it-check]');if(ck){if(busy)return;if(API.demo){toast('Демо-режим: проверка — только с сервером');return;}
+  const mode=ck.dataset.itCheck==='new'?'new':'fixed';setBusy(mode);paint();toast(mode==='new'?'Даниил разбирает новые сообщения…':'Даниил проверяет исправленные…');
+  try{const r=await API.invoke('ai-director',{action:'it_check',mode});toast(mode==='new'?`Готово: исправлено ${r.fixed||0}, принято ${r.accepted||0}, не ошибка ${r.notbug||0}, дубликатов ${r.dup||0}, вопросов ${r.asked||0}`:`Готово: отправлено авторам на проверку ${r.asked||0}, ждут публикации ${r.wait||0}`);}
   catch(err){toast(String((err&&err.message)||err));}
   finally{setBusy(false);if(AGXW.load)await AGXW.load(true);paint();}}},true);
 })();
