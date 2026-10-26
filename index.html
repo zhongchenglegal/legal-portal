@@ -10443,7 +10443,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="3619e2424f4b";
+const ZC_BUILD="39b198783997";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -17617,7 +17617,7 @@ const Top36={
     po.insertAdjacentHTML("beforebegin",b("pl36Btn","pl36Bd","plan",t36("План на день (N)||今日计划 (N)"))+b("at36Btn","at36Bd","attn",t36("Требует внимания||需要关注")));
     document.getElementById("pl36Btn").onclick=e=>{e.stopPropagation();Plan36.toggle(true);};
     document.getElementById("at36Btn").onclick=e=>{e.stopPropagation();this.toggle();};
-    document.querySelectorAll("#rl21Btn").forEach(x=>x.remove());this.badge();},
+    this.badge();},
   badge(){try{const pb=document.getElementById("pl36Bd"),ab=document.getElementById("at36Bd");if(!pb||!ab)return;
     const np=typeof NT30!=="undefined"&&NT30.on()?NT30.of(todayS()).filter(n=>!n.done).length:0;pb.textContent=np;pb.style.display=np?"inline-flex":"none";pb.classList.add("grey");
     const rs=this.rows(),na=rs.reduce((s,r)=>s+r.n,0),ser=rs.some(r=>this.SER.includes(r.go));ab.textContent=na>99?"99+":na;ab.style.display=na?"inline-flex":"none";ab.classList.toggle("grey",!ser);
