@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="a1ffbc4da0e9";
+const ZC_BUILD="36c24ada05ef";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="2.0";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="2.1";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12122,6 +12122,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v21cli",d:"2026-10-27",t:"Версия 2.1: клиенты без дублей, подписанный и устный договор||2.1版：客户不重复、已签署与口头合同",b:["Новый клиент: если клиент с таким названием или ИНН уже есть, портал покажет его — второй раз создать может только УП; совпадение телефона или почты — предупреждение.||新客户：如已存在相同名称或税号的客户，门户会显示该客户——只有管理合伙人可再次创建；电话或邮箱相同时仅提示。","Карточка клиента у УП: «Объединить…» — дела, поступления, переписка, доступы в кабинет и договоры переходят к одному клиенту.||管理合伙人的客户卡片：“合并…”——案件、收款、往来、门户访问和合同归入同一客户。","«Регистрация договора»: «Как заключён договор» — уже подписан или устно (дело сразу в работе, нужны дата, стоимость и порядок оплаты; файл договора — позже).||“合同登记”：“合同签订方式”——已签署或口头（案件直接进入工作，需日期、金额和付款方式；合同文件可稍后上传）。"]},
 {id:"v20osh",d:"2026-10-27",t:"Версия 2.0: исправления по сообщениям об ошибках||2.0版：根据错误报告的修复",b:["«Просрочено» в списках и раздел «Просрочки» считают одинаково и с карточками: срок дела до договора тоже просрочка; отказ и пауза по вине клиента — нет.||列表中的“逾期”与“逾期”栏目和卡片计算一致：签约前的案件期限也算逾期；拒绝和因客户原因暂停的不算。","«Переписка» дела: скриншот или файл можно вставить Ctrl+V — он прикрепится к сообщению.||案件“往来沟通”：可用 Ctrl+V 粘贴截图或文件，将附加到消息中。","«События»: у каждого непрочитанного — «✓ Прочитано», можно отметить по одному.||“动态”：每条未读都有“✓ 已读”，可逐条标记。","Поручение руководителя: тот, кто дал поручение, или УП может его изменить (название, описание, срок, исполнитель) и удалить в любом статусе; исполнитель получает уведомление.||上级指令：下达人或管理合伙人可修改（标题、描述、期限、执行人）并在任何状态下删除；执行人会收到通知。","Звонки в «Чатах»: значок в записи звонка больше не растягивается на пол-экрана после перезагрузки.||“聊天”通话：重新加载后，通话记录中的图标不再放大到半个屏幕。","Поручение: блок «Обсуждение» — комментарии с файлами и голосовыми; вторая сторона получает уведомление.||指令：“讨论”栏——可附文件和语音的评论；另一方会收到通知。","«Чаты»: на правой панели — история звонков с собеседником.||“聊天”：右侧面板显示与对方的通话记录。","«Управление → Доступы»: «Удалить» — для учёток без дел, задач и переписки (тестовых); настоящих сотрудников — «Отключить».||“管理 → 访问权限”：“删除”——用于无案件、任务和通信的账户（测试账户）；真实员工请“停用”。","«Финансы → Зарплаты»: убраны блоки «Без премии» и «Сигналы».||“财务 → 工资”：已移除“无奖金”和“提示”栏。"]},
 {id:"v110over",d:"2026-10-27",t:"Версия 1.10: все просрочки — в разделе «Просрочки»||1.10版：所有逾期集中在「逾期」栏目",b:["«Просрочки» — в меню «Работа», перед «Архивом». Управляющий адвокат видит всё, адвокаты и юристы — только своё.||「逾期」位于「工作」菜单「档案」之前。管理律师查看全部，律师和法务仅查看自己的。","Просрочено сейчас — по блокам: разовые услуги (срок дела), судебные дела (процессуальные сроки и срок дела), юр. сопровождение (задания), задачи по делам, поручения, КП не отправлено вовремя. Нажатие на строку открывает дело.||当前逾期按模块显示：一次性服务（案件期限）、诉讼案件（程序期限和案件期限）、法律顾问（任务）、案件任务、指令、未按时发送报价。点击行即可打开案件。","Дела на паузе по вине клиента просроченными не считаются. Ниже — «Сдано с опозданием», как раньше.||因客户原因暂停的案件不计为逾期。下方为「逾期交付」，与以前相同。"]},
 {id:"v110home",d:"2026-10-27",t:"Версия 1.10: новая главная, «План на день» и «Требует внимания» в шапке||1.10版：新主页，顶部「今日计划」和「需要关注」",b:["Главная управляющего адвоката: «Активность в платформе», «Нагрузка сотрудников», «Дела по видам», «Рост фирмы»; финансовые блоки — в «Финансы → Обзор».||管理律师主页：「系统活跃度」「员工工作量」「按类型的案件」「事务所增长」；财务模块移至「财务 → 概览」。","«План на день» — значок календаря в шапке у всех сотрудников: панель справа с календарём, событиями и заметками; клавиша N открывает её с любой страницы.||「今日计划」——所有员工顶部的日历图标：右侧面板含日历、事件和备忘；在任意页面按 N 键即可打开。","«Требует внимания» — треугольник в шапке: счётчик сигналов (красный — если есть серьёзные), по нажатию — список со ссылками.||「需要关注」——顶部三角图标：信号计数（有严重信号时为红色），点击显示带链接的列表。","Учитывается время работы в портале (рабочие дни, 10:00–19:00); каждый сотрудник видит своё на главной.||系统统计在门户中的工作时间（工作日 10:00–19:00）；每位员工在主页查看自己的数据。"]},
@@ -13710,7 +13711,8 @@ if(typeof Pipe!=="undefined"){
   /* после подписания — работа начинается сама (или «Формирование команды», если этап включён) */
   const _ps22=Pipe.set.bind(Pipe);
   Pipe.set=async function(id,step){const m0=matter(id);const was=m0&&m0.pipeline;const r=await _ps22(id,step);const m=matter(id);
-    if(!pr22oneoff(m)||step!=="contract"||was==="contract"||m.pipeline!=="contract"||m.stage&&m.stage!=="received")return r;
+    /* 2.1 (решение владельца 27.10.2026 «3. исправь», передано сессией ИИ-агентов): сам переходит в работу и суд, и сопровождение — как разовая услуга */
+    if(!(pr22oneoff(m)||(m&&(m.svc==="court"||m.svc==="support")))||step!=="contract"||was==="contract"||m.pipeline!=="contract"||m.stage&&m.stage!=="received")return r;
     const l=St21.list(m);const to=l.includes("team")?"team":"work";
     if(to==="work"&&typeof Gate21!=="undefined"&&Gate21.start(m).length)return r;   /* условия старта не выполнены — остаётся «Подготовка к работе» */
     m.stage=to;m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:to,at:nowS(),by:U().emp,from:"received",auto:true});
@@ -15143,6 +15145,13 @@ document.addEventListener("click",e=>{const t=e.target;if(!t||!t.closest)return;
 .aa38t{font-weight:600;line-height:1.4}.aa38t small{font-weight:400;opacity:.75}.aa38b{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.aa38s{margin-top:4px;font-size:12.5px;opacity:.8}
 .aa38f{display:flex;flex-direction:column;gap:6px;margin-top:6px}.aa38f[hidden]{display:none}.aa38f textarea{width:100%;box-sizing:border-box;font:inherit;padding:6px 8px;border:1px solid var(--line,#E5E7EB);border-radius:8px;background:var(--paper,#fff);color:inherit}.aa38f .btn{align-self:flex-start}`;document.head.appendChild(st);})();
 
+/* версия 2.0 · Руководитель отдела ИИ-агентов — заявки, клиенты, корреспонденция (решения владельца 27.10.2026, этап 5 плана развития).
+   В карточке действия в «Чатах» — клиент, к которому относится действие (решение В: имена клиентов — только в разговоре с УП и в действиях).
+   Сервер: миграция 20261027001200_ai_clients (клиент в действии — zc.ai_client_fill). */
+const _rowCl39=AiActs38.row.bind(AiActs38);AiActs38.row=function(c){let h=_rowCl39(c);if(!c||!c.client||!c.client.name)return h;
+  const i=h.indexOf("</div>");return h.slice(0,i+6)+`<div class="aa38s ac39">${T1("Клиент||客户")}: <b>${esc(c.client.name)}</b>${c.client.new?` <small>(${T1("новый||新客户")})</small>`:""}</div>`+h.slice(i+6);};
+(function(){const st=document.createElement("style");st.textContent=`.ac39{margin-top:4px}`;document.head.appendChild(st);})();
+
 /* версия 2.0 · Руководитель отдела ИИ-агентов — деньги и договоры (решения владельца 27.10.2026, этап 4 плана развития).
    В карточке действия в «Чатах» — сумма и кто её внёс; сумма от 100 000 000 сум — после «Разрешить» кнопка «Подтверждаю сумму …»
    (второе подтверждение, ai_act_confirm2). В «Поступлениях» — отметка «ИИ» у поступлений, внесённых агентом.
@@ -16541,6 +16550,17 @@ ROOT.addEventListener('click',async e=>{const b=e.target.closest('[data-x2]');if
   catch(err){toast(errText(err));}await AGXW.load(true);});
 (function(){const st=document.createElement('style');st.textContent=`#agx .zc-money{margin:6px 0;padding:6px 10px;border-radius:8px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.35);line-height:1.45}
 #agx .zc-money-s{font-size:12.5px;margin-top:2px}#agx .zc-money-w{color:#B45309;font-weight:600}[data-theme="dark"] #agx .zc-money-w{color:#FBBF24}`;document.head.appendChild(st);})();
+})();
+/* ── parts/clients.part.js ── */
+/* ===== Руководитель отдела: заявки, клиенты, корреспонденция (решения владельца 27.10.2026, этап 5 плана развития) =====
+   В «Подтверждениях», «Ходе поручения» и «Решениях» отчёта — клиент, к которому относится действие (если в карточке ещё нет дела с клиентом).
+   Сервер: миграция 20261027001200_ai_clients (zc.ai_client_fill). */
+(function(){
+const actOf=id=>{for(const o of (AGXW.data||{}).orders||[])for(const a of o.actions||[])if(Number(a.id)===Number(id))return a;return null;};
+function fix(){ROOT.querySelectorAll('[data-xdec="approve"][data-aid]:not([data-cfix])').forEach(b=>{b.dataset.cfix='1';const a=actOf(b.dataset.aid),c=a&&a.args&&a.args.client;if(!c||!c.name||a.args.matter)return;
+  b.parentElement.insertAdjacentHTML('beforebegin',`<div class="zc-cl">Клиент: <b>${esc(c.name)}</b>${c.new?' <small>(новый)</small>':''}</div>`);});}
+new MutationObserver(fix).observe(ROOT,{childList:true,subtree:true});
+(function(){const st=document.createElement('style');st.textContent=`#agx .zc-cl{margin:6px 0;font-size:13px}`;document.head.appendChild(st);})();
 })();
 return AGXW;
 }
@@ -18966,6 +18986,11 @@ if(typeof CP!=="undefined"&&typeof Pre24C!=="undefined"){
 {const st=document.createElement("style");st.id="s2css";st.textContent=`
 .s2hint{font-size:12px;color:var(--ink-3);line-height:1.45;background:var(--surface2);border-radius:8px;padding:8px 10px}
 .card.s2asg .lbl9,.card.s2mo .lbl9{display:none}`;(document.head||document.documentElement).appendChild(st);}
+/* 2.1 (решение владельца 27.10.2026 «да, добавь», передано сессией ИИ-агентов): «Договор подписан» в сопровождении — не при возможном конфликте интересов (как разовые и суд; сервер — mp_contract_sign) */
+if(typeof Pipe!=="undefined"&&typeof Conflict17!=="undefined"){const _psS21=Pipe.set.bind(Pipe);
+  Pipe.set=async function(id,step){const m=matter(id);if(m&&m.svc==="support"&&step==="contract"){await Conflict17.run(m);
+      if(m.conflict&&(m.conflict.status==="possible"||m.conflict.status==="confirmed")){await saveDoc("matters",m);toast(T1(UI.cfBlock17));Router.render();return;}}
+    return _psS21(id,step);};}
 
 /* ═══════════════════════════ РАЗДЕЛ «ЮРИДИЧЕСКОЕ СОПРОВОЖДЕНИЕ» · ЭТАП 0 — ЗАЩИТА ДАННЫХ ═══════════════════════════
    Решение владельца 19.10.2026 (правила Сп-2, Сп-7, Сп-9 … Сп-12 — sections/support/ПРАВИЛА.md; миграция 20261019004000_support_stage0).
@@ -20767,6 +20792,124 @@ window.UZ21=Object.assign(window.UZ21||{},{
   "«События»: у каждого непрочитанного — «✓ Прочитано», можно отметить по одному.":"«Voqealar»: har bir oʻqilmaganida «✓ Oʻqildi» — bittalab belgilash mumkin.",
   "Поручение руководителя: тот, кто дал поручение, или УП может его изменить (название, описание, срок, исполнитель) и удалить в любом статусе; исполнитель получает уведомление.":"Rahbar topshirigʻi: uni bergan kishi yoki boshqaruvchi advokat oʻzgartirishi (nom, tavsif, muddat, ijrochi) va istalgan holatda oʻchirishi mumkin; ijrochi xabar oladi.",
   "Звонки в «Чатах»: значок в записи звонка больше не растягивается на пол-экрана после перезагрузки.":"«Chatlar»dagi qoʻngʻiroqlar: qayta yuklangandan keyin qoʻngʻiroq yozuvidagi belgi endi ekranning yarmigacha choʻzilmaydi."
+});
+
+/* ═══════════════════════════ версия 2.1 · ОШ-0022 — ДУБЛИ КЛИЕНТОВ, ОБЪЕДИНЕНИЕ, ПОДПИСАННЫЙ И УСТНЫЙ ДОГОВОР (решения владельца 27.10.2026) ═══════════════════════════
+   Сервер — миграция backend/supabase/migrations/20261027002000_v21_clients.sql (проверки и объединение — там, портал только показывает).
+     • новый клиент: до записи портал спрашивает сервер (client_similar) о похожих клиентах. Совпало название или ИНН — сотрудник не
+       создаёт второго (сервер всё равно не даст), открывает существующего; УП может «Всё равно создать». Совпал только телефон или почта —
+       предупреждение, можно продолжить;
+     • объединённые клиенты в списках не показываются; в карточке клиента у УП — «Объединить…» и подсказка о возможных дублях;
+     • «Регистрация договора»: «Как заключён договор» — ещё не подписан (как раньше: «Подписание договора»), уже подписан или устно
+       (сразу «Договор подписан», нужны дата, стоимость и порядок оплаты; файл договора — по желанию, позже, в «Договоре»). */
+const Dup40={
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&!!U()&&!isClient();},
+  mp(){return isFounder()||hasF("managing");},
+  async similar(d){if(!this.srv())return [];try{const r=await SB19.T.rpc("client_similar",{d});return Array.isArray(r)?r:[];}catch(e){if(/PGRST202|Could not find the function|client_similar/i.test(String((e&&(e.message||e.code))||e)))return [];throw e;}},
+  /* перед созданием клиента: true — создавать, false — нет */
+  async gate(c){const list=await this.similar(c);if(!list.length)return true;const hard=list.filter(x=>x.hard),mp=this.mp();
+    const rows=list.map(x=>`<div class="rep"><b>${esc(x.name)}</b> <small style="color:var(--ink-3)">· ${esc(x.why||"")}</small> <button type="button" class="btn sm ghost" data-dup40="${esc(x.id)}">${T1(UI.dup40Open)}</button></div>`).join("");
+    const text=hard.length?(mp?UI.dup40HardMp:UI.dup40Hard):UI.dup40Soft;
+    const p=Dlg.ask({title:T1(UI.dup40T),text:T1(text),fields:[{type:"html",html:rows}],okText:hard.length&&!mp?"ОК||确定":UI.dup40Create,cancelText:UI.cancel});
+    setTimeout(()=>document.querySelectorAll("#mdD [data-dup40]").forEach(b=>b.onclick=()=>{const id=b.dataset.dup40;try{document.getElementById("dlgNo").click();}catch(e){}this._open=id;}),60);
+    const v=await p;if(this._open){const id=this._open;this._open=null;setTimeout(()=>{if(S.clients[id])Router.go("client",id);else toast(T1(UI.dup40NoAccess));},50);return false;}
+    if(!v)return false;if(hard.length&&!mp)return false;return true;}
+};
+/* новый клиент: проверка до записи (обычная запись и «быстрый» клиент из окна дела) */
+{const _sd40=saveDoc;saveDoc=function(col,obj){
+    if(col!=="clients"||!obj||!obj.id||S.clients[obj.id]||obj._dup40||!Dup40.srv())return _sd40.apply(this,arguments);
+    const args=arguments,self=this;
+    return (async()=>{if(!await Dup40.gate(obj)){const e=new Error("");e.silent40=true;throw e;}obj._dup40=true;try{return await _sd40.apply(self,args);}finally{delete obj._dup40;}})();};
+  const safe=fn=>async function(){try{return await fn.apply(this,arguments);}catch(e){if(e&&e.silent40)return null;throw e;}};
+  Cli.create=safe(Cli.create);if(typeof Cli21!=="undefined"&&Cli21.quickNew)Cli21.quickNew=safe(Cli21.quickNew.bind(Cli21));}
+
+/* объединённые клиенты — не в списках (данные уже у оставленного клиента) */
+{const _snap40=SB19.snap.bind(SB19);const mg=d=>!!(d&&typeof d.data==="object"&&d.data&&d.data.mergedInto);
+  SB19.snap=function(docs,changes){return _snap40((docs||[]).filter(d=>!mg(d)),changes?changes.map(c=>c&&mg(c.doc)?Object.assign({},c,{type:"removed"}):c):changes);};}
+
+/* карточка клиента: у УП — «Объединить…» и подсказка о возможных дублях */
+const Merge40={
+  async run(keep,pre){const k=client(keep);if(!k||!Dup40.mp())return;let sim=[];try{sim=await Dup40.similar(Object.assign({},k,{id:keep}));}catch(e){}
+    const simIds=new Set(sim.map(x=>x.id));const all=Object.values(S.clients).filter(c=>c&&c.id!==keep&&!c.mergedInto);
+    const opts=[...sim.filter(x=>S.clients[x.id]).map(x=>[x.id,"★ "+x.name+" · "+x.why]),...all.filter(c=>!simIds.has(c.id)).sort((a,b)=>String(clientName(a)).localeCompare(String(clientName(b)),"ru")).map(c=>[c.id,clientName(c)])];
+    if(!opts.length){toast(T1(UI.mg40None));return;}
+    const v=await Dlg.ask({title:T1(UI.mg40T)+" · "+clientName(k),text:T1(UI.mg40Text).replace("{k}",clientName(k)),fields:[{k:"drop",label:T1(UI.mg40Drop),type:"select",value:pre&&opts.some(o=>o[0]===pre)?pre:opts[0][0],options:opts}],okText:UI.mg40Do,danger:true});
+    if(!v||!v.drop)return;const d=client(v.drop);if(!await Dlg.confirm(T1(UI.mg40T)+"?",T1(UI.mg40Q).replace("{d}",clientName(d)).replace("{k}",clientName(k)),true))return;
+    let r;try{r=await SB19.T.rpc("client_merge",{keep,drop:v.drop});}catch(e){toast(String((e&&e.message)||e));return;}
+    delete S.clients[v.drop];toast(T1(UI.mg40Done).replace("{n}",String((r&&r.matters)||0)));Router.go("client",keep);},
+  async hint(id){const box=document.getElementById("mg40hint");if(!box)return;let sim=[];try{sim=(await Dup40.similar(Object.assign({},client(id),{id}))).filter(x=>S.clients[x.id]);}catch(e){return;}
+    if(!sim.length||!document.getElementById("mg40hint"))return;
+    box.innerHTML=`<div class="banner warn" style="margin:0 0 12px"><b>${T1(UI.mg40Hint)}</b> ${sim.map(x=>`<a data-client="${esc(x.id)}" style="cursor:pointer">${esc(x.name)}</a> <small>(${esc(x.why)})</small> <button type="button" class="btn sm" data-mg40="${esc(x.id)}">${T1(UI.mg40Short)}</button>`).join(" · ")}</div>`;
+    box.querySelectorAll("[data-mg40]").forEach(b=>b.onclick=()=>Merge40.run(id,b.dataset.mg40));box.querySelectorAll("[data-client]").forEach(a=>a.onclick=()=>Router.go("client",a.dataset.client));}
+};
+{const _pc40=Pages.client;Pages.client=function(id){let out=_pc40.apply(this,arguments);const c=client(id);if(!c||isClient()||!Dup40.mp()||!Dup40.srv())return out;
+  out=out.replace(/(<button[^>]*data-act="editClient"[^>]*>[\s\S]*?<\/button>)/,`$1<button class="btn" data-act40="merge">${T1(UI.mg40T)}…</button>`);
+  setTimeout(()=>Merge40.hint(id),0);return `<div id="mg40hint"></div>`+out;};
+  document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest('[data-act40="merge"]');if(b&&Router.cur==="client"){e.preventDefault();Merge40.run(Router.arg);}},true);}
+
+/* ── «Регистрация договора»: как заключён договор ── */
+{const KINDS=["draft","signed","oral"];
+  const _f=Matter.fields;Matter.fields=function(m){const f=_f.apply(this,arguments);if((m&&m.id)||Matter._mode24!=="reg")return f;
+    let i=f.findIndex(x=>x&&x.k==="ownNo21");if(i<0)i=f.findIndex(x=>x&&x.k==="cn21");if(i<0)return f;
+    const need=v=>v.kind40==="signed"||v.kind40==="oral";
+    f.splice(i+1,0,
+      {k:"kind40",label:T1(UI.rk40),type:"select",value:"draft",options:KINDS.map(k=>[k,T1(UI["rk40"+k])]),hint:T1(UI.rk40H),
+        check:v=>v.cn21==="own"&&v.kind40==="draft"?T1(UI.rk40Own):""},
+      {k:"date40",label:T1(UI.rk40Date),type:"date",value:todayS(),check:v=>need(v)&&!/^\d{4}-\d{2}-\d{2}/.test(v.date40||"")?T1(UI.rk40NeedDate):""},
+      {k:"pay40",label:T1(UI.st21PayOrder),type:"select",value:"",options:[["","—"],...Object.keys(PAYO21).map(k=>[k,T1(PAYO21[k])])],check:v=>need(v)&&!v.pay40?T1(UI.rk40NeedPay):""},
+      {k:"pct40",label:T1(UI.rk40Pct),type:"number",value:"",check:v=>need(v)&&v.pay40==="prepay"&&!(+v.pct40>=1&&+v.pct40<=99)?T1(UI.rk40NeedPct):""},
+      {k:"first40",label:T1(UI.rk40First),type:"number",value:"",check:v=>need(v)&&v.pay40==="stages"&&!(+v.first40>0)?T1(UI.rk40NeedFirst):""});
+    const fee=f.find(x=>x&&x.k==="fee");if(fee){const ch=fee.check;fee.check=v=>need(v)&&!(+v.fee>0)?T1(UI.rk40NeedCost):(ch?ch(v):"");}
+    return f;};
+  /* поля условий — только для «подписан» и «устно» */
+  const _ask=Dlg.ask.bind(Dlg);Dlg.ask=function(o){const p=_ask(o);const k=document.getElementById("dlg_kind40");if(!k)return p;
+    const w=id=>{const el=document.getElementById("dlg_"+id);return el&&(el.closest(".form>*")||el.parentElement);};const cn=document.getElementById("dlg_cn21"),po=document.getElementById("dlg_pay40");
+    const sync=()=>{if(cn&&cn.value==="own"&&k.value==="draft")k.value="signed";const on=k.value!=="draft";["date40","pay40"].forEach(id=>{const x=w(id);if(x)x.hidden=!on;});
+      const a=w("pct40"),b=w("first40");if(a)a.hidden=!(on&&po&&po.value==="prepay");if(b)b.hidden=!(on&&po&&po.value==="stages");};
+    k.addEventListener("change",sync);if(cn)cn.addEventListener("change",sync);if(po)po.addEventListener("change",sync);sync();return p;};
+  const _a=Matter.apply.bind(Matter);Matter.apply=function(m,v){const isNew=!m.no&&!S.matters[m.id];const r=_a(m,v);
+    if(!isNew||Matter._mode24!=="reg"||!(v.kind40==="signed"||v.kind40==="oral"))return r;
+    const me=U(),at=nowS();m.cost=+v.fee||0;m.currency=m.currency||"UZS";if(m.currency==="UZS")m.fee=m.cost;m.payOrder=v.pay40;
+    if(v.pay40==="prepay")m.payPct21=+v.pct40;else delete m.payPct21;if(v.pay40==="stages")m.payFirst21=+v.first40;else delete m.payFirst21;
+    m.contract=Object.assign({},m.contract||{},{regKind:v.kind40,date:v.date40},v.kind40==="oral"?{oral:true}:{});
+    m.contractSigned=true;m.contractSignedAt=at;m.contractSignedBy=me.login;v.pipeline="contract";
+    m.history=m.history||[];m.history.push({at,by:me.emp,what:T1(v.kind40==="oral"?UI.rk40HistOral:UI.rk40HistSigned).replace("{d}",fmtD(v.date40))});return r;};
+  /* дата договора — и в записи реестра договоров клиента */
+  const _num=Reg21.number.bind(Reg21);Reg21.number=async function(m){const info=await _num(m);const k=m.contract||{};if(info&&info.rec&&k.date&&!info.rec.date){info.rec.date=k.date;if(k.oral)info.rec.oral=true;}return info;};}
+
+Object.assign(UI,{dup40T:"Похожий клиент уже есть||已有相似客户",dup40Open:"Открыть||打开",dup40Create:"Всё равно создать||仍然创建",dup40NoAccess:"Карточка этого клиента вам не открыта — обратитесь к УП||您无权打开该客户卡片——请联系管理合伙人",
+  dup40Hard:"Клиент с таким названием или ИНН уже заведён. Второй раз создать его может только управляющий адвокат — откройте существующего.||已存在相同名称或税号的客户。只有管理合伙人可以再次创建——请打开现有客户。",
+  dup40HardMp:"Клиент с таким названием или ИНН уже заведён. Откройте существующего или создайте нового (вы — УП).||已存在相同名称或税号的客户。请打开现有客户，或创建新客户（您是管理合伙人）。",
+  dup40Soft:"Совпадает телефон или почта с другим клиентом. Проверьте — возможно, это тот же клиент.||电话或邮箱与其他客户相同。请核实——可能是同一客户。",
+  mg40T:"Объединить||合并",mg40Short:"Объединить||合并",mg40Drop:"Кого присоединить к этому клиенту||将哪个客户并入本客户",mg40Do:"Объединить||合并",mg40None:"Других клиентов нет||没有其他客户",
+  mg40Text:"Дела, поступления, переписка, обращения, доступы в кабинет и договоры выбранного клиента перейдут к «{k}». Выбранный клиент будет помечен «объединён» и пропадёт из списков.||所选客户的案件、收款、往来、请求、客户门户访问和合同将转至“{k}”。所选客户将标记为“已合并”，并从列表中消失。",
+  mg40Q:"«{d}» будет присоединён к «{k}». Отменить объединение нельзя.||“{d}”将并入“{k}”。合并后无法撤销。",mg40Done:"Клиенты объединены; дел перенесено: {n}||客户已合并；转移案件：{n}",
+  mg40Hint:"Возможно, дубль:||可能重复：",
+  rk40:"Как заключён договор||合同签订方式",rk40draft:"Ещё не подписан — подготовить||尚未签署——准备合同",rk40signed:"Уже подписан||已签署",rk40oral:"Устно — без письменного договора||口头约定——无书面合同",
+  rk40H:"Подписан или устно — дело сразу в работе; файл договора можно загрузить позже в «Договоре»||已签署或口头——案件直接进入工作；合同文件可稍后在“合同”中上传",
+  rk40Own:"Свой номер — для уже подписанного договора: выберите «Уже подписан»||自有编号用于已签署合同：请选择“已签署”",
+  rk40Date:"Дата договора (договорённости)||合同（约定）日期",rk40NeedDate:"Укажите дату договора||请填写合同日期",rk40NeedPay:"Укажите порядок оплаты||请选择付款方式",
+  rk40Pct:"Предоплата, %||预付款，%",rk40NeedPct:"Предоплата — от 1 до 99 %||预付款为 1–99%",rk40First:"Сумма первого этапа||第一阶段金额",rk40NeedFirst:"Укажите сумму первого этапа||请填写第一阶段金额",
+  rk40NeedCost:"Укажите стоимость по договору||请填写合同金额",
+  rk40HistSigned:"Зарегистрирован подписанный договор от {d}||登记已签署合同，日期 {d}",rk40HistOral:"Зарегистрирована устная договорённость от {d} (файл договора — позже)||登记口头约定，日期 {d}（合同文件稍后上传）"});
+window.UZ21=Object.assign(window.UZ21||{},{
+  "Версия 2.1: клиенты без дублей, подписанный и устный договор":"2.1-versiya: takrorsiz mijozlar, imzolangan va ogʻzaki shartnoma",
+  "Новый клиент: если клиент с таким названием или ИНН уже есть, портал покажет его — второй раз создать может только УП; совпадение телефона или почты — предупреждение.":"Yangi mijoz: shunday nom yoki STIR bilan mijoz bor boʻlsa, portal uni koʻrsatadi — qayta faqat boshqaruvchi advokat yaratadi; telefon yoki pochta mos kelsa — ogohlantirish.",
+  "Карточка клиента у УП: «Объединить…» — дела, поступления, переписка, доступы в кабинет и договоры переходят к одному клиенту.":"Boshqaruvchi advokatda mijoz kartochkasi: «Birlashtirish…» — ishlar, tushumlar, yozishmalar, kabinetga kirish va shartnomalar bitta mijozga oʻtadi.",
+  "«Регистрация договора»: «Как заключён договор» — уже подписан или устно (дело сразу в работе, нужны дата, стоимость и порядок оплаты; файл договора — позже).":"«Shartnomani roʻyxatga olish»: «Shartnoma qanday tuzilgan» — imzolangan yoki ogʻzaki (ish darhol ishga tushadi, sana, narx va toʻlov tartibi kerak; shartnoma fayli — keyinroq).",
+  "Похожий клиент уже есть":"Oʻxshash mijoz allaqachon bor","Открыть":"Ochish","Всё равно создать":"Baribir yaratish","Карточка этого клиента вам не открыта — обратитесь к УП":"Bu mijoz kartochkasi sizga ochiq emas — boshqaruvchi advokatga murojaat qiling",
+  "Клиент с таким названием или ИНН уже заведён. Второй раз создать его может только управляющий адвокат — откройте существующего.":"Bunday nom yoki STIR bilan mijoz allaqachon bor. Qayta faqat boshqaruvchi advokat yaratishi mumkin — mavjudini oching.",
+  "Клиент с таким названием или ИНН уже заведён. Откройте существующего или создайте нового (вы — УП).":"Bunday nom yoki STIR bilan mijoz allaqachon bor. Mavjudini oching yoki yangisini yarating (siz — boshqaruvchi advokat).",
+  "Совпадает телефон или почта с другим клиентом. Проверьте — возможно, это тот же клиент.":"Telefon yoki pochta boshqa mijoz bilan bir xil. Tekshiring — balki bu oʻsha mijozdir.",
+  "Объединить":"Birlashtirish","Кого присоединить к этому клиенту":"Qaysi mijozni shu mijozga qoʻshish","Других клиентов нет":"Boshqa mijozlar yoʻq",
+  "Дела, поступления, переписка, обращения, доступы в кабинет и договоры выбранного клиента перейдут к «{k}». Выбранный клиент будет помечен «объединён» и пропадёт из списков.":"Tanlangan mijozning ishlari, tushumlari, yozishmalari, murojaatlari, kabinetga kirishlari va shartnomalari «{k}»ga oʻtadi. Tanlangan mijoz «birlashtirilgan» deb belgilanadi va roʻyxatlardan yoʻqoladi.",
+  "«{d}» будет присоединён к «{k}». Отменить объединение нельзя.":"«{d}» «{k}»ga qoʻshiladi. Birlashtirishni bekor qilib boʻlmaydi.","Клиенты объединены; дел перенесено: {n}":"Mijozlar birlashtirildi; oʻtkazilgan ishlar: {n}",
+  "Возможно, дубль:":"Ehtimol, takror:","Как заключён договор":"Shartnoma qanday tuzilgan","Ещё не подписан — подготовить":"Hali imzolanmagan — tayyorlash","Уже подписан":"Allaqachon imzolangan","Устно — без письменного договора":"Ogʻzaki — yozma shartnomasiz",
+  "Подписан или устно — дело сразу в работе; файл договора можно загрузить позже в «Договоре»":"Imzolangan yoki ogʻzaki — ish darhol ishga tushadi; shartnoma faylini keyinroq «Shartnoma»da yuklash mumkin",
+  "Свой номер — для уже подписанного договора: выберите «Уже подписан»":"Oʻz raqami — imzolangan shartnoma uchun: «Allaqachon imzolangan»ni tanlang",
+  "Дата договора (договорённости)":"Shartnoma (kelishuv) sanasi","Укажите дату договора":"Shartnoma sanasini kiriting","Укажите порядок оплаты":"Toʻlov tartibini tanlang","Предоплата, %":"Oldindan toʻlov, %","Предоплата — от 1 до 99 %":"Oldindan toʻlov — 1 dan 99 % gacha",
+  "Сумма первого этапа":"Birinchi bosqich summasi","Укажите сумму первого этапа":"Birinchi bosqich summasini kiriting","Укажите стоимость по договору":"Shartnoma boʻyicha narxni kiriting",
+  "Зарегистрирован подписанный договор от {d}":"{d} sanali imzolangan shartnoma roʻyxatga olindi","Зарегистрирована устная договорённость от {d} (файл договора — позже)":"{d} sanali ogʻzaki kelishuv roʻyxatga olindi (shartnoma fayli — keyinroq)"
 });
 
 
