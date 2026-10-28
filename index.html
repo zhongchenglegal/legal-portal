@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="0ac4d7677db3";
+const ZC_BUILD="2f2f8f599528";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="2.3";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="2.4";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12122,6 +12122,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v24docs",d:"2026-10-28",t:"Версия 2.4: версии важных документов и переводы||2.4版：重要文件版本与译文",b:["Вкладка «Документы» дела: «Важные документы» — договор, иск, заключение, доверенность с версиями (v1, v2…); прежние версии сохраняются.||案件“文件”选项卡：“重要文件”——合同、起诉状、法律意见书、授权委托书，含版本（v1、v2…）；旧版本保留。","Статусы версии: черновик, проверен, подписан (ставит ведущий); подписанную версию изменить нельзя.||版本状态：草稿、已审核、已签署（由负责人标记）；已签署版本不可更改。","Переводы UZ/RU/CN/EN привязаны к версии оригинала; новая версия оригинала помечает перевод «нужно проверить»; тот же файл второй раз — предупреждение.||UZ/RU/CN/EN 译文对应原件版本；原件新版本会将译文标记为“需核对”；重复上传同一文件会提示。"]},
 {id:"v23jr",d:"2026-10-28",t:"Версия 2.3: понятный журнал с фильтрами||2.3版：带筛选的清晰日志",b:["Раздел «Журнал» в «Администрировании»: кто, когда и что сделал; фильтры — дело, сотрудник, период, вид действия, поиск; понятные названия вместо технических кодов.||“管理”中的“日志”栏目：谁、何时、做了什么；筛选——案件、员工、期间、操作类型、搜索；用清晰名称代替技术代码。","УП видит весь журнал и может выгрузить CSV; адвокат и юрист — только записи по своим делам.||管理合伙人可查看全部日志并导出 CSV；律师和法务仅可查看其案件的记录。","Карточка дела → «История»: журнал действий по делу.||案件卡片 → “历史”：案件操作日志。"]},
 {id:"v22sched",d:"2026-10-27",t:"Версия 2.2: график платежей||2.2版：付款计划",b:["Карточка дела → «Финансы»: «График платежей» — к оплате сейчас, просрочено, будущие и оплачено; ведущий меняет график кнопкой «Изменить график» (сумма строк = стоимости договора).||案件卡片 → “财务”：“付款计划”——当前应付、逾期、未来付款和已付；负责人可通过“修改计划”调整（各行合计 = 合同金额）。","Пока график не задан, он собран из порядка оплаты; платёж просрочен со следующего дня после срока.||未设定计划时，按付款方式自动生成；付款自到期次日起视为逾期。","Дебиторка, «Долги клиентов» и «Просрочки» (блок «Платежи») показывают просрочку и сумму к оплате по графику; клиент видит график в кабинете.||应收款、“客户欠款”和“逾期”（“付款”栏）按计划显示逾期和应付金额；客户可在门户中查看计划。"]},
 {id:"v21cli",d:"2026-10-27",t:"Версия 2.1: клиенты без дублей, подписанный и устный договор||2.1版：客户不重复、已签署与口头合同",b:["Новый клиент: если клиент с таким названием или ИНН уже есть, портал покажет его — второй раз создать может только УП; совпадение телефона или почты — предупреждение.||新客户：如已存在相同名称或税号的客户，门户会显示该客户——只有管理合伙人可再次创建；电话或邮箱相同时仅提示。","Карточка клиента у УП: «Объединить…» — дела, поступления, переписка, доступы в кабинет и договоры переходят к одному клиенту.||管理合伙人的客户卡片：“合并…”——案件、收款、往来、门户访问和合同归入同一客户。","«Регистрация договора»: «Как заключён договор» — уже подписан или устно (дело сразу в работе, нужны дата, стоимость и порядок оплаты; файл договора — позже).||“合同登记”：“合同签订方式”——已签署或口头（案件直接进入工作，需日期、金额和付款方式；合同文件可稍后上传）。"]},
@@ -21109,6 +21110,84 @@ window.UZ21=Object.assign(window.UZ21||{},{
   "Каждая строка — платёж: срок, сумма и основание (этап, предоплата, месяц). Сумма строк должна равняться стоимости договора. Платёж просрочен со следующего дня после срока.":"Har bir qator — toʻlov: muddat, summa va asos (bosqich, oldindan toʻlov, oy). Qatorlar summasi shartnoma narxiga teng boʻlishi kerak. Toʻlov muddatdan keyingi kundan kechikkan hisoblanadi.",
   "например: этап 2 — после экспертизы":"masalan: 2-bosqich — ekspertizadan keyin","Удалить строку":"Qatorni oʻchirish","Платёж":"Toʻlov","Вернуть по порядку оплаты":"Toʻlov tartibi boʻyicha qaytarish","Итого":"Jami",
   "Сумма графика {a} не равна стоимости договора {c}":"Jadval summasi {a} shartnoma narxi {c} ga teng emas","Платежи по графику — не оплачено в срок":"Jadval boʻyicha toʻlovlar — muddatida toʻlanmagan"
+});
+
+/* ═══════════════════════════ версия 2.4 · ОШ-0025 — ВЕРСИИ ВАЖНЫХ ДОКУМЕНТОВ И ПЕРЕВОДЫ (решения владельца 27.10.2026) ═══════════════════════════
+   Решения: отметку «подписан» ставит ведущий; ИИ-перевода документов пока нет — только привязка готовых переводов; версии — только для
+   важных документов: договор, иск, заключение, доверенность.
+   Данные и проверки — сервер public.doc25_act (миграция 20261028000200_v24_docs.sql); портал показывает:
+     • карточка дела → «Документы»: блок «Важные документы» — документ, вид, язык, последняя версия и статус; история версий;
+       «Новая версия», «Проверен», «Подписан» (ведущий), «+ Перевод»; у перевода — к какой версии оригинала он сделан и «нужно проверить»;
+     • тот же файл (отпечаток SHA-256) уже есть в деле — предупреждение, загрузка — только после подтверждения. */
+const Doc42={
+  TYPES:{contract:"Договор||合同",claim:"Иск||起诉状",opinion:"Заключение||法律意见书",poa:"Доверенность||授权委托书"},
+  LANGS:{ru:"RU",uz:"UZ",zh:"CN",en:"EN"},
+  ST:{draft:["","Черновик||草稿"],reviewed:["rev","Проверен||已审核"],signed:["ok","Подписан||已签署"]},
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&!!U()&&!isClient();},
+  canEd(m){return !!m&&m.status!=="closed"&&typeof Card22!=="undefined"&&Card22.folderEd(m);},
+  lead(m){return !!m&&!!U()&&m.lead===U().emp;},
+  last(d){const v=d.versions||[];return v[v.length-1]||null;},
+  pick(){return new Promise(res=>{const i=document.createElement("input");i.type="file";i.style.display="none";document.body.appendChild(i);
+    i.onchange=()=>{const f=i.files&&i.files[0];i.remove();res(f||null);};i.addEventListener("cancel",()=>{i.remove();res(null);});i.click();});},
+  async hash(f){try{const b=await f.arrayBuffer();const h=await crypto.subtle.digest("SHA-256",b);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,"0")).join("");}catch(e){return "";}},
+  /* файл → хранилище (тот же путь, что вложения чата) → описание с отпечатком */
+  async upload(file){const h=await this.hash(file);const meta=await Chat22.uploadFile(file);if(!meta)return null;return Object.assign({},meta,{hash:h});},
+  async act(mid,act,a){try{const r=await SB19.T.rpc("doc25_act",{mid,act,a});await this.reload(mid);return r;}
+    catch(e){const msg=String((e&&e.message)||e);if(/уже есть в деле/.test(msg)&&!a.force&&await Dlg.confirm(T1(UI.dc42Dup),msg,false))return this.act(mid,act,Object.assign({},a,{force:true}));toast(msg);return null;}},
+  async reload(mid){try{const r=await SB19.docGet("matters",mid);if(r&&r.exists)S.matters[mid]=Object.assign({},r.data(),{id:mid});}catch(e){}Router.render();},
+  async create(mid){const m=matter(mid);if(!this.canEd(m))return;
+    const v=await Dlg.ask({title:T1(UI.dc42New)+" · "+m.no,text:T1(UI.dc42NewText),fields:[{k:"type",label:T1(UI.dc42Type),type:"select",value:"contract",options:Object.keys(this.TYPES).map(k=>[k,T1(this.TYPES[k])])},
+      {k:"title",label:T1(UI.dc42Title),value:""},{k:"lang",label:T1(UI.dc42Lang),type:"select",value:"ru",options:Object.keys(this.LANGS).map(k=>[k,this.LANGS[k]])}],okText:UI.dc42PickFile});
+    if(!v)return;const f=await this.pick();if(!f)return;const file=await this.upload(f);if(!file)return;
+    await this.act(mid,"create",{type:v.type,title:String(v.title||"").trim()||f.name,lang:v.lang,file});},
+  async version(mid,did){const f=await this.pick();if(!f)return;const file=await this.upload(f);if(!file)return;await this.act(mid,"version",{doc:did,file});},
+  async translate(mid,did){const m=matter(mid);const d=(m.docs25||[]).find(x=>x.id===did);if(!d)return;
+    const v=await Dlg.ask({title:T1(UI.dc42Tr)+" · "+d.title,text:T1(UI.dc42TrText),fields:[{k:"lang",label:T1(UI.dc42Lang),type:"select",value:d.lang==="zh"?"ru":"zh",options:Object.keys(this.LANGS).filter(k=>k!==d.lang).map(k=>[k,this.LANGS[k]])}],okText:UI.dc42PickFile});
+    if(!v)return;const f=await this.pick();if(!f)return;const file=await this.upload(f);if(!file)return;await this.act(mid,"translate",{doc:did,lang:v.lang,file});},
+  async status(mid,did,n,st){if(st==="signed"&&!await Dlg.confirm(T1(UI.dc42SignQ),T1(UI.dc42SignT),false))return;await this.act(mid,"status",{doc:did,n,st});},
+  chip(st){const s=this.ST[st]||this.ST.draft;return `<span class="dc42s ${s[0]}">${T1(s[1])}</span>`;},
+  verList(mid,d){return `<div class="dc42v" hidden>${(d.versions||[]).slice().reverse().map(v=>`<div class="dc42vr"><b>v${v.n}</b> ${this.chip(v.st)} <a data-dc42f="${esc(d.id)}" data-n="${v.n}" style="cursor:pointer">${esc(v.file&&v.file.name||"")}</a>
+      <small>${fmtDT(v.at)} · ${esc(dispName(v.by))}${v.stBy?` · ${T1(this.ST[v.st][1])}: ${esc(dispName(v.stBy))}`:""}</small></div>`).join("")}</div>`;},
+  item(m,d,isTr){const L=this.last(d);const ed=this.canEd(m);const orig=isTr?(m.docs25||[]).find(x=>x.id===d.of):null;const on=orig?this.last(orig):null;
+    const btns=ed?[`<button type="button" class="btn sm" data-dc42="ver" data-d="${esc(d.id)}">${T1(isTr?UI.dc42TrVer:UI.dc42Ver)}</button>`,
+      L&&L.st==="draft"?`<button type="button" class="btn sm ghost" data-dc42="rev" data-d="${esc(d.id)}" data-n="${L.n}">✓ ${T1(UI.dc42Rev)}</button>`:"",
+      L&&L.st!=="signed"&&this.lead(m)?`<button type="button" class="btn sm ghost" data-dc42="sign" data-d="${esc(d.id)}" data-n="${L.n}">✍ ${T1(UI.dc42Sign)}</button>`:"",
+      !isTr?`<button type="button" class="btn sm ghost" data-dc42="tr" data-d="${esc(d.id)}">+ ${T1(UI.dc42Tr)}</button>`:"",
+      isTr&&d.stale?`<button type="button" class="btn sm ghost" data-dc42="ok" data-d="${esc(d.id)}">${T1(UI.dc42Ok)}</button>`:""].join(""):"";
+    return `<div class="dc42i${isTr?" tr":""}"><div class="dc42h"><span class="dc42t">${isTr?"↳ ":""}<b>${esc(d.title)}</b> <small>${T1(this.TYPES[d.type]||"")} · ${this.LANGS[d.lang]||d.lang}</small></span>
+        ${L?`<span>v${L.n} ${this.chip(L.st)}</span>`:""}${isTr?`<small class="dc42of">${T1(UI.dc42Of).replace("{n}",d.ofVer||1)}</small>`:""}${isTr&&d.stale?`<span class="dc42s red">${T1(UI.dc42Stale).replace("{n}",on?on.n:"?")}</span>`:""}</div>
+      <div class="dc42b">${L&&L.file?`<button type="button" class="btn sm ghost" data-dc42f="${esc(d.id)}" data-n="${L.n}">${T1(UI.dc42Open)}</button>`:""}<button type="button" class="btn sm ghost" data-dc42="hist">${T1(UI.dc42Hist)} · ${(d.versions||[]).length}</button>${btns}</div>${this.verList(m.id,d)}</div>`;},
+  card(m){const docs=m.docs25||[];const origs=docs.filter(d=>!d.of);
+    return `<h4>${T1(UI.dc42T)}${this.canEd(m)?`<button type="button" class="btn sm" data-dc42="new" style="margin-left:auto">+ ${T1(UI.dc42New)}</button>`:""}</h4>
+      ${origs.length?origs.map(d=>this.item(m,d,false)+docs.filter(t=>t.of===d.id).map(t=>this.item(m,t,true)).join("")).join(""):`<div class="fhint">${T1(UI.dc42None)}</div>`}`;},
+  bind(box,m){const mid=m.id;box.querySelectorAll("[data-dc42]").forEach(b=>b.onclick=()=>{const a=b.dataset.dc42,d=b.dataset.d,n=+b.dataset.n;
+      if(a==="new")this.create(mid);else if(a==="ver")this.version(mid,d);else if(a==="tr")this.translate(mid,d);else if(a==="rev")this.status(mid,d,n,"reviewed");
+      else if(a==="sign")this.status(mid,d,n,"signed");else if(a==="ok")this.act(mid,"ok",{doc:d});else if(a==="hist"){const v=b.closest(".dc42i").querySelector(".dc42v");if(v)v.hidden=!v.hidden;}});
+    box.querySelectorAll("[data-dc42f]").forEach(a=>a.onclick=()=>{const d=(matter(mid).docs25||[]).find(x=>x.id===a.dataset.dc42f);const v=d&&(d.versions||[]).find(x=>x.n===+a.dataset.n);if(v&&v.file)Files.open(v.file);});}
+};
+/* карточка дела → «Документы»: блок «Важные документы» в начале вкладки */
+{const _b42d=Card22.build.bind(Card22);Card22.build=function(id,html,m){const out=_b42d(id,html,m);m=m||matter(id);if(!m||!Doc42.srv())return out;
+    const tp=document.createElement("template");tp.innerHTML=out;const p=tp.content.querySelector('[data-c22pane="2"]');if(!p)return out;
+    const box=document.createElement("div");box.className="card dc42";box.id="dc42_"+id;box.innerHTML=Doc42.card(m);p.prepend(box);return tp.innerHTML;};
+  const _bd42d=Card22.bind.bind(Card22);Card22.bind=function(vp,m){const r=_bd42d.apply(this,arguments);try{const b=vp&&m&&vp.querySelector("#dc42_"+m.id);if(b)Doc42.bind(b,m);}catch(e){}return r;};}
+
+Object.assign(UI,{dc42T:"Важные документы||重要文件",dc42New:"Важный документ||重要文件",dc42None:"Договор, иск, заключение, доверенность — с версиями и переводами. Пока нет.||合同、起诉状、法律意见书、授权委托书——含版本和译文。暂无。",
+  dc42NewText:"Документ с версиями: вид, название и язык. Затем выберите файл.||带版本的文件：类型、名称和语言，然后选择文件。",dc42Type:"Вид документа||文件类型",dc42Title:"Название||名称",dc42Lang:"Язык||语言",dc42PickFile:"Выбрать файл||选择文件",
+  dc42Ver:"Новая версия||新版本",dc42TrVer:"Новая версия перевода||新译文版本",dc42Rev:"Проверен||已审核",dc42Sign:"Подписан||已签署",dc42Tr:"Перевод||译文",dc42Ok:"Проверено — без изменений||已核对——无需修改",
+  dc42Open:"Открыть||打开",dc42Hist:"Версии||版本",dc42Of:"к версии оригинала v{n}||对应原件 v{n}",dc42Stale:"нужно проверить: оригинал уже v{n}||需核对：原件已为 v{n}",
+  dc42TrText:"Перевод привязывается к текущей версии оригинала. Когда у оригинала появится новая версия, перевод будет помечен «нужно проверить».||译文对应原件的当前版本。原件出现新版本时，译文将标记为“需核对”。",
+  dc42Dup:"Такой файл уже есть||文件已存在",dc42SignQ:"Отметить версию подписанной?||将此版本标记为已签署？",dc42SignT:"Подписанную версию нельзя изменить; новые изменения — новой версией.||已签署的版本不可更改；新的修改请上传新版本。"});
+(()=>{const st=document.createElement("style");st.textContent=`.dc42 h4{display:flex;align-items:center;gap:8px}.dc42i{border-top:1px solid var(--line,#E6E9EE);padding:8px 0}.dc42i.tr{padding-left:18px}
+.dc42h{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.dc42t small{color:var(--ink-3)}.dc42of{color:var(--ink-3)}.dc42b{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.dc42s{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--surface2,#F4F5F7);color:var(--ink-2)}.dc42s.ok{background:#E6F0EA;color:#3F8768}.dc42s.rev{background:#E8EEF8;color:#3B5C8F}.dc42s.red{background:#F7E9E6;color:#B9574B}
+.dc42v{margin-top:6px;padding:6px 10px;border-radius:8px;background:var(--surface2,#F4F5F7)}.dc42vr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;padding:3px 0}.dc42vr small{color:var(--ink-3)}`;document.head.appendChild(st);})();
+window.UZ21=Object.assign(window.UZ21||{},{"Версия 2.4: версии важных документов и переводы":"2.4-versiya: muhim hujjatlar versiyalari va tarjimalar","Вкладка «Документы» дела: «Важные документы» — договор, иск, заключение, доверенность с версиями (v1, v2…); прежние версии сохраняются.":"Ishning «Hujjatlar» yorligʻi: «Muhim hujjatlar» — shartnoma, da'vo, xulosa, ishonchnoma versiyalari bilan (v1, v2…); oldingi versiyalar saqlanadi.","Статусы версии: черновик, проверен, подписан (ставит ведущий); подписанную версию изменить нельзя.":"Versiya holatlari: qoralama, tekshirilgan, imzolangan (yetakchi belgilaydi); imzolangan versiyani oʻzgartirib boʻlmaydi.","Переводы UZ/RU/CN/EN привязаны к версии оригинала; новая версия оригинала помечает перевод «нужно проверить»; тот же файл второй раз — предупреждение.":"UZ/RU/CN/EN tarjimalari asl nusxa versiyasiga bogʻlangan; asl nusxaning yangi versiyasi tarjimani «tekshirish kerak» deb belgilaydi; bir xil faylni qayta yuklash — ogohlantirish.","Важные документы":"Muhim hujjatlar","Важный документ":"Muhim hujjat","Договор":"Shartnoma","Иск":"Da'vo arizasi","Заключение":"Xulosa","Доверенность":"Ishonchnoma",
+  "Договор, иск, заключение, доверенность — с версиями и переводами. Пока нет.":"Shartnoma, da'vo, xulosa, ishonchnoma — versiyalar va tarjimalar bilan. Hozircha yoʻq.",
+  "Документ с версиями: вид, название и язык. Затем выберите файл.":"Versiyali hujjat: turi, nomi va tili. Keyin faylni tanlang.","Вид документа":"Hujjat turi","Название":"Nomi","Язык":"Til","Выбрать файл":"Faylni tanlash",
+  "Новая версия":"Yangi versiya","Новая версия перевода":"Tarjimaning yangi versiyasi","Проверен":"Tekshirilgan","Подписан":"Imzolangan","Перевод":"Tarjima","Проверено — без изменений":"Tekshirildi — oʻzgarishsiz",
+  "Открыть":"Ochish","Версии":"Versiyalar","к версии оригинала v{n}":"asl nusxaning v{n} versiyasiga","нужно проверить: оригинал уже v{n}":"tekshirish kerak: asl nusxa endi v{n}",
+  "Перевод привязывается к текущей версии оригинала. Когда у оригинала появится новая версия, перевод будет помечен «нужно проверить».":"Tarjima asl nusxaning joriy versiyasiga bogʻlanadi. Asl nusxada yangi versiya paydo boʻlsa, tarjima «tekshirish kerak» deb belgilanadi.",
+  "Такой файл уже есть":"Bunday fayl allaqachon bor","Отметить версию подписанной?":"Versiyani imzolangan deb belgilaysizmi?","Подписанную версию нельзя изменить; новые изменения — новой версией.":"Imzolangan versiyani oʻzgartirib boʻlmaydi; yangi oʻzgarishlar — yangi versiya bilan.","Черновик":"Qoralama"
 });
 
 
