@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="36c24ada05ef";
+const ZC_BUILD="0ed485287977";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="2.1";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="2.2";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12122,6 +12122,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v22sched",d:"2026-10-27",t:"Версия 2.2: график платежей||2.2版：付款计划",b:["Карточка дела → «Финансы»: «График платежей» — к оплате сейчас, просрочено, будущие и оплачено; ведущий меняет график кнопкой «Изменить график» (сумма строк = стоимости договора).||案件卡片 → “财务”：“付款计划”——当前应付、逾期、未来付款和已付；负责人可通过“修改计划”调整（各行合计 = 合同金额）。","Пока график не задан, он собран из порядка оплаты; платёж просрочен со следующего дня после срока.||未设定计划时，按付款方式自动生成；付款自到期次日起视为逾期。","Дебиторка, «Долги клиентов» и «Просрочки» (блок «Платежи») показывают просрочку и сумму к оплате по графику; клиент видит график в кабинете.||应收款、“客户欠款”和“逾期”（“付款”栏）按计划显示逾期和应付金额；客户可在门户中查看计划。"]},
 {id:"v21cli",d:"2026-10-27",t:"Версия 2.1: клиенты без дублей, подписанный и устный договор||2.1版：客户不重复、已签署与口头合同",b:["Новый клиент: если клиент с таким названием или ИНН уже есть, портал покажет его — второй раз создать может только УП; совпадение телефона или почты — предупреждение.||新客户：如已存在相同名称或税号的客户，门户会显示该客户——只有管理合伙人可再次创建；电话或邮箱相同时仅提示。","Карточка клиента у УП: «Объединить…» — дела, поступления, переписка, доступы в кабинет и договоры переходят к одному клиенту.||管理合伙人的客户卡片：“合并…”——案件、收款、往来、门户访问和合同归入同一客户。","«Регистрация договора»: «Как заключён договор» — уже подписан или устно (дело сразу в работе, нужны дата, стоимость и порядок оплаты; файл договора — позже).||“合同登记”：“合同签订方式”——已签署或口头（案件直接进入工作，需日期、金额和付款方式；合同文件可稍后上传）。"]},
 {id:"v20osh",d:"2026-10-27",t:"Версия 2.0: исправления по сообщениям об ошибках||2.0版：根据错误报告的修复",b:["«Просрочено» в списках и раздел «Просрочки» считают одинаково и с карточками: срок дела до договора тоже просрочка; отказ и пауза по вине клиента — нет.||列表中的“逾期”与“逾期”栏目和卡片计算一致：签约前的案件期限也算逾期；拒绝和因客户原因暂停的不算。","«Переписка» дела: скриншот или файл можно вставить Ctrl+V — он прикрепится к сообщению.||案件“往来沟通”：可用 Ctrl+V 粘贴截图或文件，将附加到消息中。","«События»: у каждого непрочитанного — «✓ Прочитано», можно отметить по одному.||“动态”：每条未读都有“✓ 已读”，可逐条标记。","Поручение руководителя: тот, кто дал поручение, или УП может его изменить (название, описание, срок, исполнитель) и удалить в любом статусе; исполнитель получает уведомление.||上级指令：下达人或管理合伙人可修改（标题、描述、期限、执行人）并在任何状态下删除；执行人会收到通知。","Звонки в «Чатах»: значок в записи звонка больше не растягивается на пол-экрана после перезагрузки.||“聊天”通话：重新加载后，通话记录中的图标不再放大到半个屏幕。","Поручение: блок «Обсуждение» — комментарии с файлами и голосовыми; вторая сторона получает уведомление.||指令：“讨论”栏——可附文件和语音的评论；另一方会收到通知。","«Чаты»: на правой панели — история звонков с собеседником.||“聊天”：右侧面板显示与对方的通话记录。","«Управление → Доступы»: «Удалить» — для учёток без дел, задач и переписки (тестовых); настоящих сотрудников — «Отключить».||“管理 → 访问权限”：“删除”——用于无案件、任务和通信的账户（测试账户）；真实员工请“停用”。","«Финансы → Зарплаты»: убраны блоки «Без премии» и «Сигналы».||“财务 → 工资”：已移除“无奖金”和“提示”栏。"]},
 {id:"v110over",d:"2026-10-27",t:"Версия 1.10: все просрочки — в разделе «Просрочки»||1.10版：所有逾期集中在「逾期」栏目",b:["«Просрочки» — в меню «Работа», перед «Архивом». Управляющий адвокат видит всё, адвокаты и юристы — только своё.||「逾期」位于「工作」菜单「档案」之前。管理律师查看全部，律师和法务仅查看自己的。","Просрочено сейчас — по блокам: разовые услуги (срок дела), судебные дела (процессуальные сроки и срок дела), юр. сопровождение (задания), задачи по делам, поручения, КП не отправлено вовремя. Нажатие на строку открывает дело.||当前逾期按模块显示：一次性服务（案件期限）、诉讼案件（程序期限和案件期限）、法律顾问（任务）、案件任务、指令、未按时发送报价。点击行即可打开案件。","Дела на паузе по вине клиента просроченными не считаются. Ниже — «Сдано с опозданием», как раньше.||因客户原因暂停的案件不计为逾期。下方为「逾期交付」，与以前相同。"]},
@@ -18487,13 +18488,15 @@ const Ov36={
   c:null,_ld:0,TTL:30e3,
   BL:[["oneoff","Разовые услуги — срок дела||一次性服务——案件期限","oneoff"],["court","Судебные дела — сроки||诉讼案件——期限","court"],
     ["support","Юр. сопровождение — задания||法律顾问——任务","support"],["tasks","Задачи по делам||案件任务","tasks"],
-    ["assign","Поручения||指令","assign"],["kp","КП не отправлено вовремя||未按时发送报价","kp"]],
+    ["assign","Поручения||指令","assign"],["kp","КП не отправлено вовремя||未按时发送报价","kp"],
+    ["pay","Платежи по графику — не оплачено в срок||付款计划——未按期付款","pay"]],   /* 2.2 · ОШ-0023: просроченные платежи (сервер overdue_now, блок pay) */
   ICO:{oneoff:'<path d="M9 3h6l1 3H8z"/><rect x="4" y="6" width="16" height="15" rx="2"/><path d="M8 12h8M8 16h5"/>',
     court:'<path d="M12 3v18M5 7h14M7 7l-3 7a3 3 0 0 0 6 0zM17 7l-3 7a3 3 0 0 0 6 0zM8 21h8"/>',
     support:'<path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/>',
     tasks:'<rect x="4" y="4" width="16" height="17" rx="2"/><path d="M8 9l2 2 4-4M8 16h8"/>',
     assign:'<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',
     kp:'<path d="M4 5h16v12H8l-4 3z"/><path d="M8 9h8M8 13h5"/>',
+    pay:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/>',
     late:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'},
   mp(){return !!U()&&!isClient()&&(isFounder()||hasF("managing"));},
   srv(){return typeof SRV21==="function"&&SRV21();},
@@ -18528,7 +18531,7 @@ const Ov36={
       .map(a=>({k:a.kind||"council",id:a.id,it:a.title,to:a.to||a.emp,from:a.from,st:a.status,due:d10(a.deadline),wd:this.wdLate(d10(a.deadline))}));
     const sla=(typeof ws17==="function"&&ws17().kpSlaWd)||2;
     const kp=typeof KPSpeed17==="undefined"?[]:all.filter(m=>KPSpeed17.late(m)&&(mp||m.lead===me)).map(m=>{const la=KPSpeed17.leadAt(m)||"";return Object.assign(base(m),{k:"kp",emp:m.lead,due:la.slice(0,10),wd:Math.max(1,Math.ceil(WD(la,nowS())-sla)),sla});});
-    return {today:td,mp,sla,oneoff:byWd(dlCase("oneoff")),court:byWd([...court,...dlCase("court")]),support:byWd(support),tasks:byWd(tasks),assign:byWd(assign),kp:byWd(kp),local:true};},
+    return {today:td,mp,sla,oneoff:byWd(dlCase("oneoff")),court:byWd([...court,...dlCase("court")]),support:byWd(support),tasks:byWd(tasks),assign:byWd(assign),kp:byWd(kp),pay:[],local:true};},
   /* «Сдано с опозданием»: УП — все, сотрудник — свои (ведущий, виновник задания или участник решения) */
   done(){const me=(U()||{}).emp,mp=this.mp()||pos()==="coo",rows=[];
     (typeof MMall==="function"?MMall():MM()).forEach(m=>{if(typeof migrateMatter11==="function")migrateMatter11(m);(m.overdues||[]).forEach(o=>{
@@ -18539,7 +18542,7 @@ const Ov36={
   cli(id){const c=id&&S.clients&&S.clients[id];try{return c?clientName(c):"";}catch(e){return "";}},
   title(r){const m=r.mid&&S.matters[r.mid];return m?mT18(m):(r.t?T1(r.t):"");},
   svcL(s){return tOv(s==="court"?"Судебное дело||诉讼案件":s==="support"?"Юр. сопровождение||法律顾问":"Разовая услуга||一次性服务");},
-  what(key,r){if(key==="kp")return tOv("Заявка с {d} · норма {n} раб. дн.||线索自 {d} · 标准 {n} 个工作日").replace("{d}",fmtD(r.due)).replace("{n}",r.sla);
+  what(key,r){if(key==="pay")return esc(T1(r.it||""))+` <small>· ${fmtN(Math.round(+r.amt||0))} ${T1(UI.sum)}</small>`;if(key==="kp")return tOv("Заявка с {d} · норма {n} раб. дн.||线索自 {d} · 标准 {n} 个工作日").replace("{d}",fmtD(r.due)).replace("{n}",r.sla);
     if(r.k==="deadline")return tOv("Срок дела||案件期限");if(key==="tasks")return esc(T1(r.it||""))+` <small>· ${this.svcL(r.svc)}</small>`;return esc(T1(r.it||""));},
   row(key,r){const go=key==="assign"?"assign":key==="tasks"?"task":"matter",id=go==="matter"?r.mid:r.id;
     const left=key==="assign"?`<b>${tOv("Поручение||指令")}</b><span>${esc(T1(r.it||""))}</span>${r.from?`<small>${tOv("от||来自")} ${esc(this.who(r.from))}</small>`:""}`
@@ -20910,6 +20913,105 @@ window.UZ21=Object.assign(window.UZ21||{},{
   "Дата договора (договорённости)":"Shartnoma (kelishuv) sanasi","Укажите дату договора":"Shartnoma sanasini kiriting","Укажите порядок оплаты":"Toʻlov tartibini tanlang","Предоплата, %":"Oldindan toʻlov, %","Предоплата — от 1 до 99 %":"Oldindan toʻlov — 1 dan 99 % gacha",
   "Сумма первого этапа":"Birinchi bosqich summasi","Укажите сумму первого этапа":"Birinchi bosqich summasini kiriting","Укажите стоимость по договору":"Shartnoma boʻyicha narxni kiriting",
   "Зарегистрирован подписанный договор от {d}":"{d} sanali imzolangan shartnoma roʻyxatga olindi","Зарегистрирована устная договорённость от {d} (файл договора — позже)":"{d} sanali ogʻzaki kelishuv roʻyxatga olindi (shartnoma fayli — keyinroq)"
+});
+
+/* ═══════════════════════════ версия 2.2 · ОШ-0023 — ГРАФИК ПЛАТЕЖЕЙ (решения владельца 27.10.2026) ═══════════════════════════
+   Решения: график заполняет ведущий (УП не подтверждает); платёж просрочен со следующего дня после срока; графики — и для уже
+   подписанных дел (пока ведущий не задал свой — собран из порядка оплаты); клиент видит свой график в кабинете.
+   Расчёт и проверки — на сервере (миграция 20261027002100_v22_sched.sql: sched_of, sched_list, sched_set, overdue_now → pay);
+   портал только показывает:
+     • карточка дела → «Финансы»: «График платежей» — к оплате сейчас, просрочено, будущие, оплачено; строки со сроком, основанием,
+       суммой и тем, что по ней оплачено; ведущему и УП — «Изменить график» (сумма строк = стоимости договора);
+     • «Финансы → Обзор» (дебиторка УП) и «Долги клиентов» (адвокат): к оплате сейчас / просрочено / будущие;
+     • кабинет клиента: график его дела. */
+const Sch41={
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&!!U();},
+  one:{},lst:null,_lt:0,_ll:0,
+  money(v){return fmtN(Math.round(+v||0))+" "+T1(UI.sum);},
+  async of(mid){if(!this.srv())return null;try{const r=await SB19.T.rpc("sched_of",{mid});this.one[mid]=r;return r;}catch(e){if(/PGRST202|Could not find the function|sched_of/i.test(String((e&&(e.message||e.code))||e)))return null;throw e;}},
+  /* сводка по делам для дебиторки: раз в минуту; по приходу — перерисовать страницу */
+  list(){if(!this.srv()||isClient())return null;if(!this._ll&&Date.now()-this._lt>60e3){this._ll=1;
+      SB19.T.rpc("sched_list",{}).then(r=>{this.lst=(r&&r.m)||{};this._lt=Date.now();this._ll=0;if(Router.cur==="fin"||Router.cur==="home")Router.render();}).catch(()=>{this._ll=0;this._lt=Date.now();});}
+    return this.lst;},
+  st(r){return r.st==="paid"?["ok",T1(UI.sc41Paid)]:r.st==="overdue"?["red",T1(UI.sc41Over).replace("{n}",r.days)]:r.st==="due"?["warn",T1(UI.sc41Due)]:["",T1(UI.sc41Fut)];},
+  sum(d){return `<div class="sc41k"><div><small>${T1(UI.sc41Now)}</small><b${+d.dueNow>0?' class="w"':""}>${this.money(d.dueNow)}</b></div><div><small>${T1(UI.sc41Ov)}</small><b${+d.overdue>0?' class="r"':""}>${this.money(d.overdue)}</b></div>
+    <div><small>${T1(UI.sc41Fu)}</small><b>${this.money(d.future)}</b></div><div><small>${T1(UI.sc41Pd)}</small><b class="g">${this.money(d.paid)}</b></div></div>`;},
+  rows(d,client){return `<table class="tbl sc41t"><thead><tr><th>${T1(UI.sc41DueC)}</th><th>${T1(UI.sc41Basis)}</th><th class="num">${T1(UI.sc41Amt)}</th><th class="num">${T1(UI.sc41PdC)}</th><th class="num">${T1(UI.sc41Left)}</th><th>${T1(UI.d31St)}</th></tr></thead><tbody>${
+      (d.rows||[]).map(r=>{const [c,t]=this.st(r);return `<tr><td>${r.due?fmtD(r.due):"—"}</td><td>${esc(T1(r.basis||""))}</td><td class="num">${this.money(r.amount)}</td><td class="num">${this.money(r.paid)}</td><td class="num">${this.money(r.left)}</td><td><span class="sc41s ${c}">${esc(t)}</span></td></tr>`;}).join("")
+      ||`<tr><td colspan="6" class="empty2">${T1(UI.sc41None)}</td></tr>`}</tbody></table>${d.auto&&!client?`<div class="fhint" style="margin-top:6px">${T1(UI.sc41Auto)}</div>`:""}${Math.abs((+d.total||0)-(+d.cost||0))>0.5&&!client?`<div class="fhint" style="color:var(--red)">${T1(UI.sc41Diff)}</div>`:""}`;},
+  card(d,client){if(!d||!d.on)return "";return `<h4>${T1(UI.sc41T)}${d.canEdit?`<button type="button" class="btn sm" data-sc41ed="${esc(d.mid)}" style="margin-left:auto">${T1(UI.sc41Edit)}</button>`:""}</h4>${this.sum(d)}${this.rows(d,client)}`;},
+  async fill(box,mid,client){let d=null;try{d=await this.of(mid);}catch(e){box.innerHTML=`<div class="fhint" style="color:var(--red)">${esc(String((e&&e.message)||e))}</div>`;return;}
+    if(!d||!d.on){box.remove();return;}box.innerHTML=this.card(d,client);const b=box.querySelector("[data-sc41ed]");if(b)b.onclick=()=>this.edit(mid);},
+  /* ── редактор графика (ведущий, УП): строки — срок, сумма, основание ── */
+  async edit(mid){const m=matter(mid);const d=this.one[mid]||await this.of(mid);if(!m||!d||!d.canEdit)return;
+    let rows=(d.rows||[]).map(r=>({due:r.due||"",amount:+r.amount||0,basis:T1(r.basis||"")}));if(!rows.length)rows=[{due:todayS(),amount:+m.cost||0,basis:""}];
+    const cost=+m.cost||0;const tot=()=>Math.round(rows.reduce((s,r)=>s+(+r.amount||0),0)*100)/100;
+    const html=()=>`<div class="sc41e"><table class="tbl"><thead><tr><th>${T1(UI.sc41DueC)}</th><th class="num">${T1(UI.sc41Amt)}</th><th>${T1(UI.sc41Basis)}</th><th></th></tr></thead><tbody>${rows.map((r,i)=>`<tr>
+      <td><input type="date" class="fi" data-sc41="due" data-i="${i}" value="${esc(r.due)}"></td><td><input type="number" class="fi" data-sc41="amount" data-i="${i}" value="${esc(String(r.amount))}" style="text-align:right"></td>
+      <td><input class="fi" data-sc41="basis" data-i="${i}" value="${esc(r.basis)}" placeholder="${esc(T1(UI.sc41BasisPh))}"></td><td><button type="button" class="btn sm ghost" data-sc41x="${i}" title="${T1(UI.sc41Del)}">✕</button></td></tr>`).join("")}</tbody></table>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap"><button type="button" class="btn sm" data-sc41add="1">+ ${T1(UI.sc41Add)}</button><button type="button" class="btn sm ghost" data-sc41reset="1">${T1(UI.sc41Reset)}</button>
+      <span class="sp"></span><span id="sc41tot">${T1(UI.sc41Tot)}: <b>${this.money(tot())}</b> / ${this.money(cost)}</span></div></div>`;
+    let reset=false;
+    const wire=()=>{const md=document.getElementById("mdD");const host=md&&md.querySelector(".sc41e");if(!host)return;const box=host.parentElement;
+      const paint=()=>{const t=document.getElementById("sc41tot");if(t){t.innerHTML=`${T1(UI.sc41Tot)}: <b style="color:${Math.abs(tot()-cost)>0.01?"var(--red)":"var(--ok)"}">${this.money(tot())}</b> / ${this.money(cost)}`;}};
+      const redraw=()=>{box.innerHTML=html();wire();};
+      host.querySelectorAll("[data-sc41]").forEach(el=>el.oninput=()=>{const r=rows[+el.dataset.i];if(!r)return;r[el.dataset.sc41]=el.dataset.sc41==="amount"?(+el.value||0):el.value;paint();});
+      host.querySelectorAll("[data-sc41x]").forEach(b=>b.onclick=()=>{rows.splice(+b.dataset.sc41x,1);if(!rows.length)rows.push({due:todayS(),amount:0,basis:""});redraw();});
+      const add=host.querySelector("[data-sc41add]");if(add)add.onclick=()=>{const left=Math.max(0,Math.round((cost-tot())*100)/100);rows.push({due:(rows[rows.length-1]||{}).due||todayS(),amount:left,basis:""});redraw();};
+      const rs=host.querySelector("[data-sc41reset]");if(rs)rs.onclick=()=>{reset=true;const ok=document.getElementById("dlgOk");if(ok)ok.click();};paint();};
+    const p=Dlg.ask({title:T1(UI.sc41T)+" · "+m.no,text:T1(UI.sc41EdText),wide:true,fields:[{type:"html",html:html()}],okText:"Сохранить||保存"});setTimeout(wire,40);
+    const v=await p;if(v===null||v===undefined)return;
+    const send=reset?[]:rows.map((r,i)=>({id:"r"+(i+1),due:r.due,amount:+r.amount||0,basis:String(r.basis||"").trim()}));
+    if(!reset&&Math.abs(tot()-cost)>0.01){toast(T1(UI.sc41NeedTot).replace("{a}",this.money(tot())).replace("{c}",this.money(cost)));return this.edit(mid);}
+    try{const r=await SB19.T.rpc("sched_set",{mid,rows_:send});this.one[mid]=r;this._lt=0;}catch(e){toast(String((e&&e.message)||e));return;}
+    toast(T1(UI.saved));Router.render();}
+};
+/* карточка дела → «Финансы»: место под график (заполняется с сервера) */
+{const _b41=Card22.build.bind(Card22);Card22.build=function(id,html,m){const out=_b41(id,html,m);m=m||matter(id);if(!m||m.pipeline!=="contract"||!Sch41.srv()||isClient())return out;
+    const tp=document.createElement("template");tp.innerHTML=out;const p=tp.content.querySelector('[data-c22pane="4"]');if(!p)return out;
+    const box=document.createElement("div");box.className="card sc41";box.id="sc41_"+id;box.innerHTML=`<h4>${T1(UI.sc41T)}</h4><div class="fhint">${T1(UI.sc41Load)}</div>`;
+    const fin=p.querySelector(".c22fin");if(fin)fin.after(box);else p.prepend(box);return tp.innerHTML;};
+  const _bd41=Card22.bind.bind(Card22);Card22.bind=function(vp,m){const r=_bd41.apply(this,arguments);try{const box=vp&&m&&vp.querySelector("#sc41_"+m.id);if(box)Sch41.fill(box,m.id,false);}catch(e){}return r;};}
+
+/* «Финансы → Обзор»: дебиторка — к оплате сейчас / просрочено / будущие */
+if(typeof Debt31!=="undefined"){Debt31.table=function(L){if(!L.length)return `<div class="empty2">${T1(UI.d31None)}</div>`;const S41=Sch41.list();
+  const cell=(x,k)=>{const s=S41&&S41[x.m.id];if(!s)return `<td class="num" style="color:var(--ink-3)">${S41?"—":"…"}</td>`;const v=+s[k]||0;const col=k==="overdue"&&v>0?"var(--red)":k==="dueNow"&&v>0?"var(--warn)":"";return `<td class="num">${col?`<b style="color:${col}">`:""}${this.money(v,x.cur)}${col?"</b>":""}${k==="overdue"&&v>0&&s.days?`<br><small style="color:var(--ink-3)">${T1(UI.sc41Days).replace("{n}",s.days)}</small>`:""}</td>`;};
+  return `<table class="tbl"><thead><tr><th>${T1(UI.mNo)}</th><th>${T1(UI.mClient)}</th><th class="num">${T1(UI.d31Cost)}</th><th class="num">${T1(UI.d31Paid)}</th><th class="num">${T1(UI.sc41Now)}</th><th class="num">${T1(UI.sc41Ov)}</th><th class="num">${T1(UI.sc41Fu)}</th><th>${T1(UI.d31St)}</th></tr></thead><tbody>${L.map(x=>{const m=x.m,c=client(m.clientId);
+    return `<tr data-matter="${m.id}" style="cursor:pointer"><td><b>${esc(m.no)}</b><br><small style="color:var(--ink-3)">${esc(mT18(m).slice(0,40))}</small></td><td>${esc(c?clientName(c):"—")}</td><td class="num">${this.money(+m.cost||0,x.cur)}</td><td class="num">${this.money(x.paid,x.cur)}</td>${cell(x,"dueNow")}${cell(x,"overdue")}${cell(x,"future")}<td>${typeof payLabel==="function"?payLabel(m.paymentStatus||"unpaid"):""}</td></tr>`;}).join("")}</tbody></table>`;};}
+/* «Долги клиентов» (адвокат): под каждой строкой — к оплате сейчас и просрочено */
+if(typeof Fin21!=="undefined"&&Fin21.html){const _fh41=Fin21.html.bind(Fin21);Fin21.html=function(){const h=_fh41.apply(this,arguments);const S41=Sch41.list();if(!S41||typeof h!=="string")return h;
+  const tp=document.createElement("template");tp.innerHTML=h;tp.content.querySelectorAll(".reqrow[data-matter]").forEach(r=>{const s=S41[r.dataset.matter];if(!s)return;const sp=r.querySelector("span:nth-of-type(2)");if(!sp)return;
+    const x=document.createElement("small");x.className="sc41l";x.innerHTML=`<br>${T1(UI.sc41Now)}: <b${+s.dueNow>0?' style="color:var(--warn)"':""}>${Sch41.money(s.dueNow)}</b> · ${T1(UI.sc41Ov)}: <b${+s.overdue>0?' style="color:var(--red)"':""}>${Sch41.money(s.overdue)}</b>`;sp.appendChild(x);});
+  return tp.innerHTML;};}
+
+/* кабинет клиента: график его дела */
+if(typeof CP!=="undefined"&&CP.matter){const _cpm41=CP.matter.bind(CP);CP.matter=function(id){const h=_cpm41.apply(this,arguments);if(!Sch41.srv()||!isClient()||typeof h!=="string")return h;
+  setTimeout(()=>{const b=document.getElementById("sc41c_"+id);if(b)Sch41.fill(b,id,true);},0);
+  return h+`<div class="card sc41" id="sc41c_${esc(id)}" style="margin-top:14px"><h4>${T1(UI.sc41T)}</h4><div class="fhint">${T1(UI.sc41Load)}</div></div>`;};}
+
+Object.assign(UI,{sc41T:"График платежей||付款计划",sc41Load:"Загрузка…||加载中…",sc41Edit:"Изменить график||修改计划",sc41Now:"К оплате сейчас||当前应付",sc41Ov:"Просрочено||逾期",sc41Fu:"Будущие платежи||未来付款",sc41Pd:"Оплачено||已付",
+  sc41DueC:"Срок||期限",sc41Basis:"Основание||依据",sc41Amt:"Сумма||金额",sc41PdC:"Оплачено||已付",sc41Left:"Осталось||剩余",sc41Paid:"оплачено||已付",sc41Over:"просрочено {n} дн.||逾期 {n} 天",sc41Due:"срок сегодня||今日到期",sc41Fut:"предстоит||待付",
+  sc41None:"Строк графика нет||无付款计划行",sc41Auto:"График собран из порядка оплаты договора — ведущий может уточнить его кнопкой «Изменить график».||计划根据合同付款方式自动生成——负责人可通过“修改计划”调整。",
+  sc41Diff:"Сумма графика не совпадает со стоимостью договора — уточните график.||计划总额与合同金额不一致——请调整计划。",sc41Days:"до {n} дн.||最长 {n} 天",
+  sc41EdText:"Каждая строка — платёж: срок, сумма и основание (этап, предоплата, месяц). Сумма строк должна равняться стоимости договора. Платёж просрочен со следующего дня после срока.||每行为一笔付款：期限、金额和依据（阶段、预付款、月份）。各行合计须等于合同金额。付款自到期次日起视为逾期。",
+  sc41BasisPh:"например: этап 2 — после экспертизы||例如：第二阶段——鉴定之后",sc41Del:"Удалить строку||删除行",sc41Add:"Платёж||付款",sc41Reset:"Вернуть по порядку оплаты||恢复按付款方式",sc41Tot:"Итого||合计",
+  sc41NeedTot:"Сумма графика {a} не равна стоимости договора {c}||计划总额 {a} 不等于合同金额 {c}"});
+(()=>{const st=document.createElement("style");st.textContent=`.sc41 h4{display:flex;align-items:center;gap:8px}.sc41k{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:6px 0 10px}
+.sc41k>div{background:var(--surface2,#F4F5F7);border-radius:10px;padding:8px 10px}.sc41k small{display:block;font-size:11.5px;color:var(--ink-3)}.sc41k b{font-size:15px}.sc41k b.r{color:var(--red)}.sc41k b.w{color:var(--warn)}.sc41k b.g{color:var(--ok)}
+.sc41s{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--surface2,#F4F5F7);color:var(--ink-2)}.sc41s.ok{background:#E6F0EA;color:#3F8768}.sc41s.red{background:#F7E9E6;color:#B9574B}.sc41s.warn{background:#FBF1DD;color:#9A6A12}
+.sc41e .fi{min-width:0;width:100%}.sc41e td{padding:4px 6px}@media(max-width:700px){.sc41k{grid-template-columns:repeat(2,minmax(0,1fr))}}`;document.head.appendChild(st);})();
+window.UZ21=Object.assign(window.UZ21||{},{
+  "Версия 2.2: график платежей":"2.2-versiya: toʻlov jadvali",
+  "Карточка дела → «Финансы»: «График платежей» — к оплате сейчас, просрочено, будущие и оплачено; ведущий меняет график кнопкой «Изменить график» (сумма строк = стоимости договора).":"Ish kartochkasi → «Moliya»: «Toʻlov jadvali» — hozir toʻlanishi kerak, muddati oʻtgan, kelgusi va toʻlangan; yetakchi «Jadvalni oʻzgartirish» bilan oʻzgartiradi (qatorlar summasi = shartnoma narxi).",
+  "Пока график не задан, он собран из порядка оплаты; платёж просрочен со следующего дня после срока.":"Jadval belgilanmaguncha toʻlov tartibidan tuziladi; toʻlov muddatdan keyingi kundan kechikkan hisoblanadi.",
+  "Дебиторка, «Долги клиентов» и «Просрочки» (блок «Платежи») показывают просрочку и сумму к оплате по графику; клиент видит график в кабинете.":"Debitorlik, «Mijozlar qarzlari» va «Muddati oʻtganlar» («Toʻlovlar» bloki) jadval boʻyicha kechikish va toʻlanadigan summani koʻrsatadi; mijoz jadvalni kabinetda koʻradi.",
+  "График платежей":"Toʻlov jadvali","Загрузка…":"Yuklanmoqda…","Изменить график":"Jadvalni oʻzgartirish","К оплате сейчас":"Hozir toʻlanishi kerak","Просрочено":"Muddati oʻtgan","Будущие платежи":"Kelgusi toʻlovlar","Оплачено":"Toʻlangan",
+  "Срок":"Muddat","Основание":"Asos","Сумма":"Summa","Осталось":"Qoldi","оплачено":"toʻlangan","просрочено {n} дн.":"{n} kun kechikkan","срок сегодня":"muddat bugun","предстоит":"kutilmoqda","Строк графика нет":"Jadval qatorlari yoʻq",
+  "График собран из порядка оплаты договора — ведущий может уточнить его кнопкой «Изменить график».":"Jadval shartnomaning toʻlov tartibidan tuzilgan — yetakchi uni «Jadvalni oʻzgartirish» tugmasi bilan aniqlashtirishi mumkin.",
+  "Сумма графика не совпадает со стоимостью договора — уточните график.":"Jadval summasi shartnoma narxiga mos emas — jadvalni aniqlashtiring.","до {n} дн.":"{n} kungacha",
+  "Каждая строка — платёж: срок, сумма и основание (этап, предоплата, месяц). Сумма строк должна равняться стоимости договора. Платёж просрочен со следующего дня после срока.":"Har bir qator — toʻlov: muddat, summa va asos (bosqich, oldindan toʻlov, oy). Qatorlar summasi shartnoma narxiga teng boʻlishi kerak. Toʻlov muddatdan keyingi kundan kechikkan hisoblanadi.",
+  "например: этап 2 — после экспертизы":"masalan: 2-bosqich — ekspertizadan keyin","Удалить строку":"Qatorni oʻchirish","Платёж":"Toʻlov","Вернуть по порядку оплаты":"Toʻlov tartibi boʻyicha qaytarish","Итого":"Jami",
+  "Сумма графика {a} не равна стоимости договора {c}":"Jadval summasi {a} shartnoma narxi {c} ga teng emas","Платежи по графику — не оплачено в срок":"Jadval boʻyicha toʻlovlar — muddatida toʻlanmagan"
 });
 
 
