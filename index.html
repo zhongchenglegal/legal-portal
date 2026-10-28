@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="2f2f8f599528";
+const ZC_BUILD="609a14e831fb";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="2.4";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="2.5";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12122,6 +12122,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v25osh",d:"2026-10-28",t:"Версия 2.5: сопровождение — абонплата в месяц; решения агента в чате; чаты без автооткрытия||2.5版：法律顾问按月收费；聊天中的智能体决定；聊天不再自动打开",b:["«Регистрация договора» сопровождения: абонплата в месяц, срок договора в месяцах и дата начала; сопровождение только абонентское — порядок оплаты всегда «ежемесячно».||法律顾问“登记合同”：每月顾问费、合同期限（月）和开始日期；法律顾问仅按月收费——付款方式始终为“按月”。","«Изменить дело» у сопровождения: без «Оплаты», «Суда», «№ дела в суде» и «Стадии»; срок договора показан строкой и меняется продлением; после подписания абонплату меняет УП.||法律顾问“修改案件”：不再显示“付款方式”“法院”“法院案号”和“阶段”；合同期限以文字显示，通过续约修改；签署后月费由管理合伙人修改。","Чат с ИИ-агентом: у пунктов, решённых в «ИИ-агенты → Подтверждения», вместо кнопок «Разрешить / Вернуть / Отклонить» — принятое решение.||与智能体的聊天：已在“智能体 → 确认”中处理的事项，不再显示“允许 / 退回 / 拒绝”按钮，而显示已作出的决定。","«Чаты» открываются без выбранной переписки — выберите чат слева; повторный клик по открытому чату закрывает переписку.||“聊天”打开时不再自动选择对话——请在左侧选择；再次点击已打开的聊天即可关闭对话。"]},
 {id:"v24docs",d:"2026-10-28",t:"Версия 2.4: версии важных документов и переводы||2.4版：重要文件版本与译文",b:["Вкладка «Документы» дела: «Важные документы» — договор, иск, заключение, доверенность с версиями (v1, v2…); прежние версии сохраняются.||案件“文件”选项卡：“重要文件”——合同、起诉状、法律意见书、授权委托书，含版本（v1、v2…）；旧版本保留。","Статусы версии: черновик, проверен, подписан (ставит ведущий); подписанную версию изменить нельзя.||版本状态：草稿、已审核、已签署（由负责人标记）；已签署版本不可更改。","Переводы UZ/RU/CN/EN привязаны к версии оригинала; новая версия оригинала помечает перевод «нужно проверить»; тот же файл второй раз — предупреждение.||UZ/RU/CN/EN 译文对应原件版本；原件新版本会将译文标记为“需核对”；重复上传同一文件会提示。"]},
 {id:"v23jr",d:"2026-10-28",t:"Версия 2.3: понятный журнал с фильтрами||2.3版：带筛选的清晰日志",b:["Раздел «Журнал» в «Администрировании»: кто, когда и что сделал; фильтры — дело, сотрудник, период, вид действия, поиск; понятные названия вместо технических кодов.||“管理”中的“日志”栏目：谁、何时、做了什么；筛选——案件、员工、期间、操作类型、搜索；用清晰名称代替技术代码。","УП видит весь журнал и может выгрузить CSV; адвокат и юрист — только записи по своим делам.||管理合伙人可查看全部日志并导出 CSV；律师和法务仅可查看其案件的记录。","Карточка дела → «История»: журнал действий по делу.||案件卡片 → “历史”：案件操作日志。"]},
 {id:"v22sched",d:"2026-10-27",t:"Версия 2.2: график платежей||2.2版：付款计划",b:["Карточка дела → «Финансы»: «График платежей» — к оплате сейчас, просрочено, будущие и оплачено; ведущий меняет график кнопкой «Изменить график» (сумма строк = стоимости договора).||案件卡片 → “财务”：“付款计划”——当前应付、逾期、未来付款和已付；负责人可通过“修改计划”调整（各行合计 = 合同金额）。","Пока график не задан, он собран из порядка оплаты; платёж просрочен со следующего дня после срока.||未设定计划时，按付款方式自动生成；付款自到期次日起视为逾期。","Дебиторка, «Долги клиентов» и «Просрочки» (блок «Платежи») показывают просрочку и сумму к оплате по графику; клиент видит график в кабинете.||应收款、“客户欠款”和“逾期”（“付款”栏）按计划显示逾期和应付金额；客户可在门户中查看计划。"]},
@@ -21189,6 +21190,111 @@ window.UZ21=Object.assign(window.UZ21||{},{"Версия 2.4: версии ва�
   "Перевод привязывается к текущей версии оригинала. Когда у оригинала появится новая версия, перевод будет помечен «нужно проверить».":"Tarjima asl nusxaning joriy versiyasiga bogʻlanadi. Asl nusxada yangi versiya paydo boʻlsa, tarjima «tekshirish kerak» deb belgilanadi.",
   "Такой файл уже есть":"Bunday fayl allaqachon bor","Отметить версию подписанной?":"Versiyani imzolangan deb belgilaysizmi?","Подписанную версию нельзя изменить; новые изменения — новой версией.":"Imzolangan versiyani oʻzgartirib boʻlmaydi; yangi oʻzgarishlar — yangi versiya bilan.","Черновик":"Qoralama"
 });
+
+/* ═══════════════════════════ версия 2.5 · ОШ-0048, 0050, 0052, 0053 (решения владельца 28.10.2026) ═══════════════════════════
+   ОШ-0050 (вариант А): сопровождение — только абонентское. «Регистрация договора» сопровождения спрашивает абонплату в месяц,
+     срок в месяцах и дату начала; выбора «Фиксированный», «100 % предоплата» и т. п. нет. Сервер (zc.guard_sup25, миграция
+     20261028000300_v25_osh) сам ставит порядок оплаты «ежемесячно» и считает начало и конец договора.
+   ОШ-0048: «Изменить дело» у сопровождения — без «Оплаты», «Суда», «№ дела в суде», «Стадии» и «Дедлайна»; абонплата — «в месяц»,
+     срок договора показан строкой (меняется продлением). После подписания абонплату меняет УП (правило сервера прежнее).
+   ОШ-0052: кнопки «Разрешить / Вернуть / Отклонить» под сообщением агента показывают текущее решение — и принятое
+     в «ИИ-агенты → Подтверждения» (сервер public.ai_acts_state25, только УП).
+   ОШ-0053: «Чаты» открываются без выбранной переписки; повторный клик по открытому чату закрывает переписку. */
+window.UZ21=Object.assign(window.UZ21||{},{"Абонплата в месяц, сум":"Oylik abonent toʻlovi, soʻm",
+  "Срок договора":"Shartnoma muddati","меняется продлением (доп. соглашением) во вкладке «Договор и пакет»":"«Shartnoma va paket» boʻlimida uzaytirish (qoʻshimcha kelishuv) orqali oʻzgaradi",
+  "После подписания абонплату меняет управляющий адвокат":"Imzolangandan keyin abonent toʻlovini boshqaruvchi advokat oʻzgartiradi",
+  "Сопровождение — абонентское: абонплата за календарный месяц, первый и последний месяцы — по дням":"Kuzatuv — abonent asosida: toʻlov kalendar oyi uchun, birinchi va oxirgi oylar kunlar boʻyicha",
+  "Укажите дату начала договора":"Shartnoma boshlanish sanasini koʻrsating","Укажите абонплату в месяц":"Oylik abonent toʻlovini koʻrsating",
+  "Версия 2.5: сопровождение — абонплата в месяц; решения агента в чате; чаты без автооткрытия":"2.5-versiya: kuzatuv — oylik abonent toʻlovi; chatda agent qarorlari; chatlar avtomatik ochilmaydi",
+  "«Регистрация договора» сопровождения: абонплата в месяц, срок договора в месяцах и дата начала; сопровождение только абонентское — порядок оплаты всегда «ежемесячно».":"Kuzatuv «Shartnomani roʻyxatga olish»: oylik abonent toʻlovi, shartnoma muddati (oy) va boshlanish sanasi; kuzatuv faqat abonent asosida — toʻlov tartibi doim «har oy».",
+  "«Изменить дело» у сопровождения: без «Оплаты», «Суда», «№ дела в суде» и «Стадии»; срок договора показан строкой и меняется продлением; после подписания абонплату меняет УП.":"Kuzatuvda «Ishni oʻzgartirish»: «Toʻlov», «Sud», «Sud ishi №» va «Bosqich»siz; shartnoma muddati satr bilan koʻrsatiladi va uzaytirish orqali oʻzgaradi; imzolangandan keyin abonent toʻlovini BA oʻzgartiradi.",
+  "Чат с ИИ-агентом: у пунктов, решённых в «ИИ-агенты → Подтверждения», вместо кнопок «Разрешить / Вернуть / Отклонить» — принятое решение.":"SI-agent bilan chat: «SI-agentlar → Tasdiqlashlar»da hal qilingan bandlarda «Ruxsat / Qaytarish / Rad etish» tugmalari oʻrniga qabul qilingan qaror.",
+  "«Чаты» открываются без выбранной переписки — выберите чат слева; повторный клик по открытому чату закрывает переписку.":"«Chatlar» tanlangan yozishmasiz ochiladi — chapdan chatni tanlang; ochiq chatni yana bosish yozishmani yopadi.",
+  "Отклонено":"Rad etildi","Возвращено на доработку":"Qayta ishlashga qaytarildi","Выполнено":"Bajarildi","Не получилось: ":"Bajarilmadi: "});
+
+/* ── ОШ-0050, 0048: формы сопровождения ── */
+{const MP43=()=>isFounder()||hasF("managing");
+  const need=v=>v.kind40==="signed"||v.kind40==="oral";
+  const hide=x=>Object.assign({},x,{_hide43:true,required:false,check:undefined});
+  const termTxt=m=>{const s=m.supStart24||m.opened||"",e=m.deadline||"";if(!s&&!e)return "—";
+    let n=+m.supMonths24||0;if(!n&&s&&e){const a=new Date(s+"T00:00:00"),b=new Date(e+"T00:00:00");if(!isNaN(a)&&!isNaN(b))n=Math.max(1,Math.round(((b-a)/864e5+1)/30.44));}
+    return (n?n+" "+T1("мес.||个月")+" · ":"")+(s?fmtD(s):"…")+" — "+(e?fmtD(e):"…");};
+  /* Matter._svc читаем до вызова: внутренний слой (v11_work) сбрасывает его при первом построении формы */
+  const _f=Matter.fields;Matter.fields=function(m){const pre=Matter._svc;const f=_f.apply(this,arguments);const ed=!!(m&&m.id);
+    const sv=f.find(x=>x&&x.k==="svc");if(!(ed?sp2(m):(pre==="support"||(!pre&&sv&&sv.value==="support"))))return f;
+    const fee=T1("Абонплата в месяц||每月顾问费")+", "+T1(UI.sum);
+    if(!ed){if(Matter._mode24!=="reg")return f;
+      const out=f.map(x=>{if(!x)return x;
+        if(x.k==="fee")return Object.assign({},x,{label:fee,hint:T1("Сопровождение — абонентское: абонплата за календарный месяц, первый и последний месяцы — по дням||法律顾问为包月服务：按自然月收费，首月和末月按天计算")});
+        if(x.k==="billing"||x.k==="deadline"||x.k==="pct40"||x.k==="first40")return hide(x);
+        if(x.k==="pay40")return Object.assign(hide(x),{value:"monthly",options:[["monthly",T1(UI.s2PayM)]]});
+        return x;});
+      const i=out.findIndex(x=>x&&x.k==="fee");
+      const st=(()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;})();
+      out.splice(i<0?out.length:i+1,0,
+        {k:"spMonths",label:T1(UI.s2Months),type:"number",value:12,check:v=>need(v)&&!(+v.spMonths>=1&&+v.spMonths<=60&&Math.round(+v.spMonths)===+v.spMonths)?T1(UI.s2MonthsErr):""},
+        {k:"spStart",label:T1(UI.s2Start),type:"date",value:st,check:v=>need(v)&&!/^\d{4}-\d{2}-\d{2}$/.test(v.spStart||"")?T1("Укажите дату начала договора||请填写合同开始日期"):""});
+      const fe=out.find(x=>x&&x.k==="fee");if(fe){const ch=fe.check;fe.check=v=>need(v)&&!(+v.fee>0)?T1("Укажите абонплату в месяц||请填写每月顾问费"):(ch?ch(v):"");}
+      return out;}
+    /* «Изменить дело» */
+    const signed=m.pipeline==="contract"||!!m.contractSigned;
+    const out=f.map(x=>{if(!x)return x;
+      if(["billing","court","caseNo","status","deadline"].includes(x.k))return hide(x);
+      if(x.k==="fee"){const y=Object.assign({},x,{label:fee});if(signed&&!MP43()){y.type="select";y.options=[[String(x.value??""),fmtN(+x.value||0)]];y.hint=T1("После подписания абонплату меняет управляющий адвокат||签署后由管理合伙人修改月费");}return y;}
+      return x;});
+    const i=out.findIndex(x=>x&&x.k==="fee");
+    out.splice(i<0?out.length:i+1,0,{k:"sp43term",type:"html",html:`<div class="fhint"><b>${esc(T1("Срок договора||合同期限"))}:</b> ${esc(termTxt(m))} · ${esc(T1("меняется продлением (доп. соглашением) во вкладке «Договор и пакет»||通过“合同与套餐”中的续约（补充协议）修改"))}</div>`});
+    return out;};
+  /* скрытые поля: значение остаётся, поле не видно; «Порядок оплаты» регистрации — всегда «ежемесячно» */
+  const _ask=Dlg.ask.bind(Dlg);Dlg.ask=function(o){const p=_ask(o);const fs=(o&&o.fields)||[];if(!fs.some(x=>x&&x._hide43))return p;
+    const form=document.querySelector("#mdD .form");const ws={};
+    if(form)fs.forEach((x,i)=>{const w=form.children[i];if(x&&w){ws[x.k]=w;if(x._hide43)w.hidden=true;}});
+    const k=document.getElementById("dlg_kind40");
+    if(k){const sync=()=>{const on=k.value!=="draft";["spMonths","spStart"].forEach(id=>{if(ws[id])ws[id].hidden=!on;});["pay40","pct40","first40"].forEach(id=>{if(ws[id])ws[id].hidden=true;});};
+      k.addEventListener("change",sync);const cn=document.getElementById("dlg_cn21");if(cn)cn.addEventListener("change",sync);sync();}
+    return p;};
+  const _a=Matter.apply.bind(Matter);Matter.apply=function(m,v){const isNew=!m.no&&!(S.matters||{})[m.id];const r=_a(m,v);if(!sp2(m))return r;
+    m.billing="subscription";
+    if(isNew){m.payOrder="monthly";delete m.payPct21;delete m.payFirst21;
+      if(Matter._mode24==="reg"&&need(v)){const n=+v.spMonths||0,s=String(v.spStart||"");m.supMonths24=n;m.supStart24=s;if(s){m.opened=s;m.deadline=SP2.end(s,n);}}}
+    return r;};}
+
+/* ── ОШ-0052: решения по действиям агента — текущие, с сервера ── */
+if(typeof AiActs38!=="undefined"){
+  const AiSt43={asked:{},q:new Set(),tm:0,
+    on(){return AiActs38.srv()&&(isFounder()||hasF("managing"));},
+    lbl(a){if(a.status==="done")return a.result||T1("Выполнено||已完成");if(a.status==="error")return T1("Не получилось: ||失败：")+(a.result||"");
+      if(a.status==="rejected")return T1("Отклонено||已拒绝");if(a.status==="returned")return T1("Возвращено на доработку||已退回");return a.result||a.status;},
+    want(id){if(!id||AiActs38.done[id]||!this.on())return;const t=this.asked[id]||0;if(Date.now()-t<15000)return;this.q.add(id);
+      clearTimeout(this.tm);this.tm=setTimeout(()=>this.load(),250);},
+    async load(){const ids=[...this.q].slice(0,200);this.q.clear();if(!ids.length)return;const now=Date.now();ids.forEach(i=>this.asked[i]=now);
+      let rs=[];try{rs=await SB19.T.rpc("ai_acts_state25",{ids})||[];}catch(e){return;}
+      let ch=false;(Array.isArray(rs)?rs:[]).forEach(a=>{const id=Number(a.id);if(a.status&&a.status!=="pending"&&!AiActs38.done[id]){AiActs38.done[id]=this.lbl(a);ch=true;}});
+      if(ch&&Router.cur==="chats")Chat22.refresh(true);}};
+  window.AiSt43=AiSt43;
+  const _row=AiActs38.row.bind(AiActs38);AiActs38.row=function(c){AiSt43.want(Number(c&&c.id));return _row(c);};}
+
+/* ── ОШ-0053: «Чаты» без автоматически открытой переписки; повторный клик по чату — закрыть ── */
+{const _pg=Chat22.page.bind(Chat22);Chat22.page=function(arg){return _pg(arg==null?"":arg);};
+  const _no=Notif.open.bind(Notif);Notif.open=function(tab,peer){if(tab==="msgs"&&!peer&&Router.cur!=="chats"&&U()&&!isClient())Chat22.peer=null;return _no(tab,peer);};
+  document.addEventListener("click",e=>{const el=e.target&&e.target.closest&&e.target.closest("#ch22list [data-ch22]");if(!el||Router.cur!=="chats")return;
+    const l=el.dataset.ch22;if(!l||l!==Chat22.peer||(typeof Voice22!=="undefined"&&Voice22.r))return;
+    e.preventDefault();e.stopPropagation();
+    const t=document.getElementById("ch22ta");if(t&&!(Chat22.edit||{})[l])Chat22.drafts[l]=t.value;
+    Chat22.peer=null;Chat22.rpk=null;document.body.classList.remove("ch22open");Router.go("chats");},true);}
+/* ── журнал (передано сессией «2.0», решение владельца 28.10.2026): у записи портала — ссылка на дело (ref) ──
+   Раньше audit() писал только текст, и «Журнал» угадывал дело по номеру в начале текста. Теперь ref: явный второй аргумент;
+   иначе на странице дела — это дело; иначе — дело с номером из начала текста, если такой номер у одного дела.
+   Сервер (public.audit_view) берёт дело по ref, старые записи — по-прежнему по тексту. Подпись записи (Audit17.hashOf) ref не включает. */
+const Audit43={refOf(what,ref){if(ref)return String(ref);const ms=S.matters||{};
+    if(Router.cur==="matter"&&Router.arg&&ms[Router.arg])return Router.arg;
+    const mm=/^\s*№?\s*([^\s:]{1,24}):/.exec(String(what||""));if(!mm)return null;
+    const hit=Object.values(ms).filter(x=>x&&String(x.no||"")===mm[1]);return hit.length===1?hit[0].id:null;}};
+audit=async function(what,ref){ref=Audit43.refOf(what,ref);
+  S.audit=S.audit||{entries:[]};const prev=(S.audit.entries||[]).find(x=>x.h);
+  const e={id:"au"+Date.now().toString(36)+rnd17(4),at:ymdhmL(new Date()),by:Auth.user?Auth.user.login:"—",what:String(what),p:prev?prev.h:""};e.h=Audit17.hashOf(e);if(ref)e.ref=ref;
+  S.audit.entries=[e,...(S.audit.entries||[])].slice(0,1500);
+  if(S.db){const w=db=>db.doc("auditLog/"+e.id).set(e);try{await w(S.db);}catch(err){SaveQ17.fail(w,err);}}};
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
