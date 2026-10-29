@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="609a14e831fb";
+const ZC_BUILD="ce1aed5272f8";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="2.5";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="2.6";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12122,6 +12122,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v26out",d:"2026-10-29",t:"Версия 2.6: после выхода страница перезагружается||2.6版：退出后页面重新加载",b:["После «Выйти» портал полностью перезагружает страницу: на этом компьютере не остаётся ничего от прежнего пользователя — следующий вошедший видит только своё (ОШ-0059).||点击“退出”后门户完全重新加载页面：本电脑上不再保留上一位用户的任何数据，下一位登录者只看到自己的内容（ОШ-0059）。"]},
 {id:"v25osh",d:"2026-10-28",t:"Версия 2.5: сопровождение — абонплата в месяц; решения агента в чате; чаты без автооткрытия||2.5版：法律顾问按月收费；聊天中的智能体决定；聊天不再自动打开",b:["«Регистрация договора» сопровождения: абонплата в месяц, срок договора в месяцах и дата начала; сопровождение только абонентское — порядок оплаты всегда «ежемесячно».||法律顾问“登记合同”：每月顾问费、合同期限（月）和开始日期；法律顾问仅按月收费——付款方式始终为“按月”。","«Изменить дело» у сопровождения: без «Оплаты», «Суда», «№ дела в суде» и «Стадии»; срок договора показан строкой и меняется продлением; после подписания абонплату меняет УП.||法律顾问“修改案件”：不再显示“付款方式”“法院”“法院案号”和“阶段”；合同期限以文字显示，通过续约修改；签署后月费由管理合伙人修改。","Чат с ИИ-агентом: у пунктов, решённых в «ИИ-агенты → Подтверждения», вместо кнопок «Разрешить / Вернуть / Отклонить» — принятое решение.||与智能体的聊天：已在“智能体 → 确认”中处理的事项，不再显示“允许 / 退回 / 拒绝”按钮，而显示已作出的决定。","«Чаты» открываются без выбранной переписки — выберите чат слева; повторный клик по открытому чату закрывает переписку.||“聊天”打开时不再自动选择对话——请在左侧选择；再次点击已打开的聊天即可关闭对话。"]},
 {id:"v24docs",d:"2026-10-28",t:"Версия 2.4: версии важных документов и переводы||2.4版：重要文件版本与译文",b:["Вкладка «Документы» дела: «Важные документы» — договор, иск, заключение, доверенность с версиями (v1, v2…); прежние версии сохраняются.||案件“文件”选项卡：“重要文件”——合同、起诉状、法律意见书、授权委托书，含版本（v1、v2…）；旧版本保留。","Статусы версии: черновик, проверен, подписан (ставит ведущий); подписанную версию изменить нельзя.||版本状态：草稿、已审核、已签署（由负责人标记）；已签署版本不可更改。","Переводы UZ/RU/CN/EN привязаны к версии оригинала; новая версия оригинала помечает перевод «нужно проверить»; тот же файл второй раз — предупреждение.||UZ/RU/CN/EN 译文对应原件版本；原件新版本会将译文标记为“需核对”；重复上传同一文件会提示。"]},
 {id:"v23jr",d:"2026-10-28",t:"Версия 2.3: понятный журнал с фильтрами||2.3版：带筛选的清晰日志",b:["Раздел «Журнал» в «Администрировании»: кто, когда и что сделал; фильтры — дело, сотрудник, период, вид действия, поиск; понятные названия вместо технических кодов.||“管理”中的“日志”栏目：谁、何时、做了什么；筛选——案件、员工、期间、操作类型、搜索；用清晰名称代替技术代码。","УП видит весь журнал и может выгрузить CSV; адвокат и юрист — только записи по своим делам.||管理合伙人可查看全部日志并导出 CSV；律师和法务仅可查看其案件的记录。","Карточка дела → «История»: журнал действий по делу.||案件卡片 → “历史”：案件操作日志。"]},
@@ -15196,6 +15197,51 @@ if(typeof Payment!=="undefined"&&Payment.table){const _ptAm39=Payment.table.bind
 .am39s{font-size:12.5px;margin-top:2px}.am39w{color:#B45309;font-weight:600}.am39c{display:inline-block;padding:1px 6px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(99,102,241,.12);color:#4F46E5;margin-right:4px}
 [data-theme="dark"] .am39w{color:#FBBF24}[data-theme="dark"] .am39c{color:#A5B4FC}`;document.head.appendChild(st);})();
 
+/* версия 2.6 · Руководитель отдела ИИ-агентов — поручения из «Чатов» (решения владельца 29.10.2026, Б и Г).
+   Под сообщением Александра о поручении (extra aiOrder) — «Открыть поручение №…»: раздел «ИИ-агенты», окно поручения с перепиской
+   (parts/ctl.part.js открывает его по Agx37.pendingOrder после загрузки данных). Под отчётом «считаю выполненным» (extra aiReview) —
+   «Принять» и «Вернуть с замечанием» прямо в «Чатах». Решение — на сервере: ai_order_review (только УП), миграция 20261029001000_ai_follow.
+   «Разрешить всё (N)» под сообщением Александра с несколькими действиями (утренний обход и др.) — одной кнопкой, каждое действие проходит
+   обычное разрешение на сервере (ai_acts_approve, миграция 20261029001100_ai_round); суммы от 100 000 000 сум — вторая кнопка, как раньше. */
+const AiOrd40={
+  done:{},
+  srv(){return typeof SB19!=="undefined"&&SB19.T&&typeof SB19.T.rpc==="function"&&typeof B26!=="undefined"&&B26.srv&&B26.srv();},
+  block(m){const o=Number(m.aiOrder||m.aiReview),rv=Number(m.aiReview),st=this.done[rv];
+    let h=`<div class="ao40"><button type="button" class="btn sm" data-aoopen="${o}">${T1("Открыть поручение №||打开任务 №")}${o}</button>`;
+    if(rv)h+=st?`<span class="ao40s">${esc(st)}</span>`:`<button type="button" class="btn sm pri" data-aook="${rv}">${T1("Принять||接受")}</button><button type="button" class="btn sm" data-aoret="${rv}">${T1("Вернуть||退回")}</button>`;
+    h+=`</div>`;
+    if(rv&&!st)h+=`<div class="ao40f" hidden><textarea rows="2" maxlength="1000" placeholder="${esc(T1("Что не так, что доделать?||哪里不对，需要补充什么？"))}"></textarea><button type="button" class="btn sm pri" data-aosend="${rv}">${T1("Вернуть с замечанием||附意见退回")}</button></div>`;
+    return h;},
+  async review(oid,accept,note){if(!this.srv()){toast(T1("Решение — только при подключении к серверу||仅在连接服务器时可操作"));return;}
+    try{await SB19.T.rpc("ai_order_review",{oid,accept,note:note||null});this.done[oid]=accept?T1("Принято — поручение закрыто||已接受，任务已关闭"):T1("Возвращено с замечанием||已附意见退回");toast(this.done[oid]);}
+    catch(e){const s=String((e&&e.message)||e);toast(s.replace(/^.*?ERROR:\s*/,""));}
+    Router.render();},
+  pend(m){return (m.aiActs||[]).map(c=>Number(c.id)).filter(id=>id>0&&!(typeof AiActs38!=="undefined"&&AiActs38.done[id]));},
+  async approveAll(ids){if(!this.srv()){toast(T1("Решение — только при подключении к серверу||仅在连接服务器时可操作"));return;}
+    try{const R=await SB19.T.rpc("ai_acts_approve",{ids});let ok=0,n2=0,bad=0;
+      for(const x of R||[]){if(x.need2){n2++;if(typeof AiMoney39!=="undefined")AiMoney39.need2[x.id]=AiMoney39.sums[x.id];}
+        else{AiActs38.done[x.id]=x.status==="error"?T1("Не получилось: ||失败：")+(x.result||""):(x.result||T1("Выполнено||已完成"));if(x.status==="error")bad++;else ok++;}}
+      toast(T1("Разрешено||已允许")+": "+ok+(n2?" · "+T1("ждут подтверждения суммы||待确认金额")+": "+n2:"")+(bad?" · "+T1("не получилось||失败")+": "+bad:""));}
+    catch(e){toast(String((e&&e.message)||e).replace(/^.*?ERROR:\s*/,""));}
+    Router.render();},
+  open(oid){if(typeof Agx37==="undefined"||!Agx37.can()){toast(T1("Раздел «ИИ-агенты» доступен только управляющему партнёру||仅管理合伙人可用"));return;}
+    Agx37.pendingOrder=Number(oid);Router.go("agents");}
+};
+const _bubAo40=Chat22.bubble;Chat22.bubble=function(m,mine,peerRead,last){let h=_bubAo40.apply(this,arguments);
+  if(!m||mine||m.deleted||m.by!=="ai.dir")return h;
+  const pd=Array.isArray(m.aiActs)?AiOrd40.pend(m):[];
+  if(pd.length>=2)h=h.replace('<span class="mt22">',`<div class="ao40"><button type="button" class="btn sm pri" data-aoall="${pd.join(",")}">${T1("Разрешить всё||全部允许")} (${pd.length})</button></div><span class="mt22">`);
+  if(!(Number(m.aiOrder)>0||Number(m.aiReview)>0))return h;
+  return h.replace('<span class="mt22">',AiOrd40.block(m)+'<span class="mt22">');};
+document.addEventListener("click",e=>{const t=e.target;if(!t||!t.closest)return;
+  const al=t.closest("[data-aoall]");if(al){e.preventDefault();al.disabled=true;AiOrd40.approveAll(al.dataset.aoall.split(",").map(Number));return;}
+  const op=t.closest("[data-aoopen]");if(op){e.preventDefault();AiOrd40.open(+op.dataset.aoopen);return;}
+  const ok=t.closest("[data-aook]");if(ok){e.preventDefault();AiOrd40.review(+ok.dataset.aook,true);return;}
+  const rt=t.closest("[data-aoret]");if(rt){e.preventDefault();const w=rt.closest(".ao40"),f=w&&w.nextElementSibling;if(f&&f.classList.contains("ao40f")){f.hidden=false;const ta=f.querySelector("textarea");if(ta)ta.focus();}return;}
+  const sd=t.closest("[data-aosend]");if(sd){e.preventDefault();const ta=sd.closest(".ao40f").querySelector("textarea"),v=(ta&&ta.value||"").trim();if(!v){toast(T1("Напишите замечание||请写明意见"));return;}AiOrd40.review(+sd.dataset.aosend,false,v);}},true);
+(function(){const st=document.createElement("style");st.textContent=`.ao40{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.ao40s{font-size:12.5px;opacity:.8;align-self:center}
+.ao40f{display:flex;flex-direction:column;gap:6px;margin-top:6px}.ao40f[hidden]{display:none}.ao40f textarea{width:100%;box-sizing:border-box;font:inherit;padding:6px 8px;border:1px solid var(--line,#E5E7EB);border-radius:8px;background:var(--paper,#fff);color:inherit}.ao40f .btn{align-self:flex-start}`;document.head.appendChild(st);})();
+
 /* версия 2.0 · оценка ответов Руководителя отдела ИИ-агентов (решения владельца 27.10.2026, этап 1 плана развития).
    УП ставит 👍 / 👎 (с замечанием) ответам Александра — в «Чатах», в чате профиля агента и под отчётом. Повторное нажатие — снять оценку.
    Замечания к 👎 агент учитывает в следующих ответах (ai_rules_ctx). Решение — на сервере: ai_rate, ai_my_ratings (только УП). */
@@ -15823,8 +15869,8 @@ const GEAR=SVG('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l
 const PHONE=SVG('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>');
 const CHAT=SVG('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>');
 AGXW.ICONS={PHONE,CHAT};
-const OST={queued:['В очереди','gray'],active:['В работе','pri'],run:['Выполняется','pri'],coordinating:['Распределяет','pri'],review:['Ждёт решения','warn'],done:['Готово','ok'],cancelled:['Не выполнено','red'],paused:['На паузе','gray']};
-const ACTIVE=['queued','run','coordinating','review','paused','active'];
+const OST={queued:['В очереди','gray'],active:['В работе','pri'],run:['Выполняется','pri'],coordinating:['Распределяет','pri'],review:['Ждёт решения','warn'],check:['Ждёт вашей проверки','warn'],done:['Готово','ok'],cancelled:['Не выполнено','red'],paused:['На паузе','gray']};
+const ACTIVE=['queued','run','coordinating','review','paused','active','check'];
 const LVL=[['L0','Читает','Только читает данные и пишет отчёт. Ничего не меняет.'],['L1','Предлагает','Готовит предложения и черновики, применяете вы или сотрудник.'],['L2','Согласует','Выполняет действие только после вашего подтверждения.'],['L3','Самостоятельно','Сам выполняет только безопасные действия из разрешённого списка.']];
 /* полномочия и подсказки — по ролям; у Руководителя отдела — как на сервере (решения владельца 26.10.2026) */
 const POW={
@@ -15855,7 +15901,7 @@ function renderAgentPage(){const a=BY[agentId];if(!a)return;const P=PEOPLE[a.id]
  <div class="agp-kpis" id="agKpis"></div>
  <div class="agp-grid"><div class="agp-col">
   <div id="agDec"></div>
-  <div class="agc"><h3>Поручения и контроль выполнения <small id="agOrdCnt"></small></h3><div class="agp-tabs" id="agTabs"><button data-agt="active">В работе</button><button data-agt="done">Выполненные</button><button data-agt="all">Все</button></div><div id="agOrders"></div></div>
+  <div class="agc"><h3>Поручения и контроль выполнения <small id="agOrdCnt"></small></h3><div class="agp-tabs" id="agTabs"><button data-agt="active">В работе</button><button data-agt="check">На проверке <b id="agChkN"></b></button><button data-agt="done">Выполненные</button><button data-agt="all">Все</button></div><div id="agOrders"></div></div>
   <div class="agc"><h3>Качество работы <small>за месяц</small></h3><div id="agQuality"></div></div>
   <div class="agc"><h3>Активность за неделю <small>отчёты и ответы по дням</small></h3><div id="agChart">${chart(a)}</div></div>
   <div class="agc"><h3>Связанные дела <small>из последнего отчёта</small></h3><div id="agCases"></div></div>
@@ -15881,7 +15927,8 @@ function updateAgentPage(force){if(view!=='agent'||!agentId||!$('#agKpis'))retur
  $('#agToggle').textContent=a.on?'Выключить':'Включить';
  const done=list.filter(x=>x.status==='done').length,act=list.filter(x=>ACTIVE.includes(x.status)).length,canc=list.filter(x=>x.status==='cancelled').length;
  $('#agKpis').innerHTML=[[a.runs,'запусков за месяц'],[done,'поручений выполнено'],[act,'поручений в работе'],[a.q?1:0,'ждёт вашего решения'],[canc,'не выполнено (ошибка)'],[fmt(a.cost)+' $','расход за месяц']].map(([b,t])=>`<div class="kpi"><b>${b}</b><span>${t}</span></div>`).join('');
- const rows=list.filter(x=>agTab==='all'||(agTab==='done'?['done','cancelled'].includes(x.status):ACTIVE.includes(x.status))).slice().reverse();
+ const rows=list.filter(x=>agTab==='all'||(agTab==='check'?x.status==='check':agTab==='done'?['done','cancelled'].includes(x.status):ACTIVE.includes(x.status))).slice().reverse();
+ const chkN=list.filter(x=>x.status==='check').length;if($('#agChkN'))$('#agChkN').textContent=chkN?String(chkN):'';
  $('#agOrdCnt').textContent=list.length?list.length+' всего':'';$$('#agTabs button').forEach(b=>b.classList.toggle('on',b.dataset.agt===agTab));
  $('#agOrders').innerHTML=rows.length?`<table class="agt"><thead><tr><th>№</th><th>Поручение</th><th>Срок</th><th>Ход</th><th>Статус</th><th></th></tr></thead><tbody>${rows.slice(0,40).map(orderRow).join('')}</tbody></table>`:`<div class="ag-empty">${agTab==='active'?'Сейчас поручений нет. Дайте задачу справа — ход выполнения появится здесь.':'Пока ничего нет.'}</div>`;
  if(a.q){const qo=orders.find(x=>x.id===a.q.orderId);$('#agDec').innerHTML=`<div class="ag-dec"><b>Ждёт вашего решения</b><div style="margin-top:6px;font-size:13.5px">${esc(a.q.text||qo?.result||qo?.text||'Результат подготовлен')}</div><div class="r"><button class="btn primary sm" data-agd="approve">Согласовать</button><button class="btn sm" data-agd="return">Вернуть с комментарием</button><button class="btn sm ghost" data-agd="reject">Отклонить</button></div></div>`;}else $('#agDec').innerHTML='';
@@ -16165,7 +16212,7 @@ function derive(){
  for(const q of pendingQ)items.push({ts:q.ts,kind:'ask',text:`Вопрос: «${q.text.slice(0,160)}»`,due:'сразу',status:'run',start:q.ts,expect:20,result:''});
  for(const o of data.orders||[]){const t=Date.parse(o.at),pend=(o.actions||[]).filter(a=>a.status==='pending').length,live=['new','active'].includes(o.status);
   items.push({ts:t,kind:'order',oid:o.id,text:`Поручение №${o.id}: «${o.text.slice(0,160)}»${o.as_mp?' · от вашего имени':''}${o.allow?' · действия разрешены':''}`,due:'—',
-   status:o.status==='new'?'run':o.status==='active'?(pend?'review':'active'):o.status==='done'?'done':'cancelled',start:t,expect:40,cancel:live,
+   status:o.status==='new'?'run':o.status==='active'?(pend?'review':'active'):o.status==='review'?'check':o.status==='done'?'done':'cancelled',start:t,expect:40,cancel:live,
    result:[o.reply,...(o.notes||[]).map(n=>n.text)].filter(Boolean).slice(-2).join(' · ')||(o.status==='new'?'':'—')});}
  items.sort((a,b)=>a.ts-b.ts);
  const keep=new Map(orders.map(o=>[o.key,o]));
@@ -16437,58 +16484,108 @@ const rb=$('#rpBody');if(rb&&typeof MutationObserver!=='undefined'){const add=()
 /* ===== Руководитель отдела: ход поручения и контроль исполнения (решения владельца 27.10.2026, этап 2 плана развития) =====
    Клик по поручению в профиле агента («Ход ›») — окно поручения: контроль (цель, следующая проверка, итог прошлой), шаги — что сделано,
    что запланировано (когда и при каком условии), что ждёт вашего решения, ход и ответы сотрудников. «Проверить сейчас», «Поставить /
-   снять с контроля». Логика — на сервере: ai_orders_list, ai_order_control_set, функция ai-director (ctl_check), миграция 20261027000800_ai_ctl. */
+   снять с контроля». Логика — на сервере: ai_orders_list, ai_order_control_set, функция ai-director (ctl_check), миграция 20261027000800_ai_ctl.
+   29.10.2026 (решения владельца Б, Г): «Ждёт вашей проверки» — отчёт Александра и «Принять / Вернуть с замечанием» (ai_order_review);
+   «Переписка по поручению» — лента (ai_order_thread: вы, Александр, ответы сотрудников, проверки) и поле ввода: пишете Александру прямо
+   в поручении, можно с файлом (ai_order_say) — он отвечает там же. Из «Чатов» — кнопка «Открыть поручение №…» (aiorder.js → Agx37.pendingOrder).
+   Сервер: миграция 20261029001000_ai_follow. Сотрудникам окно поручения не показывается (только УП). */
 (function(){
-let openId=0,busy=false;
+let openId=0,busy=false,sending=false,files=[];const thr={},thrAt={};
 const KL={task:'Задача',assign:'Назначить ведущего',remind:'Напоминание',msg:'Сообщение',call:'Звонок',mp:'Функция УП'};
 const SL={pending:['ждёт вашего решения','wait'],scheduled:['запланировано','pri'],done:['сделано','ok'],skipped:['не понадобилось','gray'],rejected:['отклонено','gray'],returned:['возвращено','warn'],error:['не получилось','red']};
 const CK={done:['выполнено','ok'],on_track:['идёт по плану','pri'],stalled:['нет движения','warn'],blocked:['есть препятствие','red']};
-const OS={new:'принято',active:'в работе',done:'выполнено',cancelled:'отменено',error:'ошибка'};
+const OS={new:'принято',active:'в работе',review:'ждёт вашей проверки',done:'выполнено',cancelled:'отменено',error:'ошибка'};
 const t=s=>{if(!s)return'';try{return new Intl.DateTimeFormat('ru-RU',{timeZone:'Asia/Tashkent',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(s));}catch(e){return'';}};
 const ord=()=>((AGXW.data||{}).orders||[]).find(o=>o.id===openId);
 $('#view-agent').insertAdjacentHTML('afterend','<div class="zc-ordp" id="zcOrd" hidden><div class="zc-ordp-in" role="dialog" aria-modal="true" aria-label="Ход поручения"><button class="zc-ordp-x" data-ordx="1" aria-label="Закрыть">×</button><div id="zcOrdB"></div></div></div>');
-function paintOrd(){const box=$('#zcOrdB');if(!box)return;const o=ord();if(!o){box.innerHTML='<div class="ag-empty">Поручение не найдено — обновите раздел.</div>';return;}
+async function loadThr(oid,force){if(API.demo||!oid)return;if(!force&&thrAt[oid]&&Date.now()-thrAt[oid]<15000)return;thrAt[oid]=Date.now();
+ try{thr[oid]=await API.rpc('ai_order_thread',{oid});}catch(e){thr[oid]=thr[oid]||[];}if(openId===oid)paintThr();}
+const WHO={mp:'Вы',agent:'Александр Волков',sys:''};
+function paintThr(){const box=$('#zcOrdT');if(!box)return;const L=thr[openId];
+ if(!L){box.innerHTML='<div class="ag-empty">Загружаю…</div>';return;}
+ box.innerHTML=L.length?L.map(m=>m.kind==='sys'?`<div class="zc-tm sys"><span>${esc(m.text)}</span><time>${esc(t(m.at))}</time></div>`:
+  `<div class="zc-tm ${m.kind}"><div class="zc-tm-h"><b>${esc(m.kind==='staff'?(m.name||m.by||'Сотрудник'):WHO[m.kind]||m.name||'')}</b><time>${esc(t(m.at))}</time></div><div class="zc-tm-t">${esc(m.text)}</div>${(m.files||[]).length?`<div class="zc-tm-f">${(m.files||[]).map(f=>'📎 '+esc(f.name||'файл')).join(' · ')}</div>`:''}</div>`).join(''):'<div class="ag-empty">Переписки пока нет.</div>';
+ box.scrollTop=box.scrollHeight;}
+function paintOrd(){const box=$('#zcOrdB');if(!box)return;const o=ord();
+ // набранный текст и фокус не теряются при обновлении данных
+ const inEl=$('#zcOrdIn'),rvEl=$('#zcOrdB .zc-ordp-rvf textarea'),keep={i:inEl?inEl.value:'',r:rvEl?rvEl.value:'',rOpen:!!(rvEl&&!rvEl.closest('.zc-ordp-rvf').hidden),f:document.activeElement===inEl?'i':document.activeElement===rvEl?'r':''};if(!o){box.innerHTML='<div class="ag-empty">Поручение не найдено — обновите раздел.</div>';return;}
  const lc=o.last_check||null,ck=lc?CK[lc.st]||[lc.st,'gray']:null,A=o.actions||[];
  const step=a=>{const s=SL[a.status]||[a.status,'gray'];
   return`<li class="zc-step"><div class="zc-step-h"><b>${esc(a.kind==='mp'?(a.args.title||KL.mp):(KL[a.kind]||a.kind))}${a.to?' — '+esc(a.to):''}</b><span class="chp ${s[1]}">${s[0]}</span></div>
    ${a.args.title&&a.kind!=='mp'?`<div>${esc(a.args.title)}</div>`:''}${a.args.text?`<div class="zc-step-t">${esc(a.args.text)}</div>`:''}
    ${a.due_at?`<div class="zc-step-m">Когда: ${esc(t(a.due_at))}</div>`:''}${a.cond?`<div class="zc-step-m">Если: ${esc(String(a.cond).replace(/^\s*если\s+/i,''))}</div>`:''}
-   ${a.result&&a.status!=='pending'&&!(a.status==='scheduled'&&/^Запланировано/.test(a.result))?`<div class="zc-step-m">${esc(a.result)}</div>`:''}
+   ${a.result&&a.status!=='pending'&&!(a.status==='scheduled'&&/^Запланировано/.test(a.result))?`<div class="zc-step-m">${esc(a.result)}</div>`:''}${a.nudged_at?`<div class="zc-step-m">Напомнил без ответа: ${esc(t(a.nudged_at))}</div>`:''}
    ${a.status==='pending'?`<div class="zc-step-b"><button class="btn primary sm" data-xdec="approve" data-aid="${a.id}">Разрешить</button><button class="btn sm" data-xdec="return" data-aid="${a.id}">Вернуть</button><button class="btn ghost sm" data-xdec="reject" data-aid="${a.id}">Отклонить</button></div>`:''}</li>`;};
  const notes=(o.notes||[]).slice().reverse().slice(0,30);
- box.innerHTML=`<div class="zc-ordp-h"><h2>Поручение №${o.id}</h2><span class="chp ${o.status==='done'?'ok':o.status==='cancelled'?'gray':'pri'}">${esc(OS[o.status]||o.status)}</span>${o.control?'<span class="chp warn">на контроле</span>':''}${o.as_mp?'<span class="chp">от вашего имени</span>':''}</div>
-  <div class="zc-ordp-sub">${esc(t(o.at))}</div><p class="zc-ordp-txt">${esc(o.text)}</p>
+ const rv=o.status==='review'?`<div class="zc-ordp-rv"><div class="ag-h" style="margin-top:0">Александр считает поручение выполненным — проверьте</div>${lc?`<div class="zc-ordp-rvt">${esc(lc.text||'')}</div>`:''}
+   <div class="zc-step-b"><button class="btn primary sm" data-ordrv="ok">Принять</button><button class="btn sm" data-ordrv="ret">Вернуть с замечанием</button></div>
+   <div class="zc-ordp-rvf" hidden><textarea rows="2" maxlength="1000" placeholder="Что не так, что доделать?"></textarea><button class="btn sm primary" data-ordrv="send">Вернуть</button></div></div>`:'';
+ box.innerHTML=`<div class="zc-ordp-h"><h2>Поручение №${o.id}</h2><span class="chp ${o.status==='done'?'ok':o.status==='cancelled'?'gray':o.status==='review'?'warn':'pri'}">${esc(OS[o.status]||o.status)}</span>${o.control?'<span class="chp warn">на контроле</span>':''}${o.as_mp?'<span class="chp">от вашего имени</span>':''}${o.oneoff?'<span class="chp">одноразовое</span>':''}</div>
+  <div class="zc-ordp-sub">${esc(t(o.at))}</div><p class="zc-ordp-txt">${esc(o.text)}</p>${rv}
   <div class="zc-ordp-c"><div class="ag-h" style="margin-top:0">Контроль исполнения</div>
    ${o.control||o.goal?`<div><b>Цель:</b> ${esc(o.goal||'—')}</div>${o.control&&o.next_check?`<div class="zc-step-m">Следующая проверка: ${esc(t(o.next_check))} · проверок: ${o.checks||0}</div>`:''}`:'<div class="sub" style="margin:0">Не на контроле. Поставьте — Александр будет сам проверять ход и предлагать напоминания (каждое — с вашего разрешения).</div>'}
-   ${lc?`<div class="zc-ordp-lc"><span class="chp ${ck[1]}">${esc(ck[0])}</span> <span class="zc-step-m">${esc(t(lc.at))}</span><div>${esc(lc.text||'')}</div></div>`:''}
-   <div class="zc-step-b" style="margin-top:8px"><button class="btn primary sm" data-ordck="1"${busy?' disabled':''}>${busy?'Проверяю…':'Проверить сейчас'}</button>${o.status==='cancelled'?'':`<button class="btn sm" data-ordctl="${o.control?0:1}">${o.control?'Снять с контроля':'Поставить на контроль'}</button>`}<button class="btn sm ghost" data-ordchat="1">Написать Александру</button></div></div>
+   ${lc&&o.status!=='review'?`<div class="zc-ordp-lc"><span class="chp ${ck[1]}">${esc(ck[0])}</span> <span class="zc-step-m">${esc(t(lc.at))}</span><div>${esc(lc.text||'')}</div></div>`:''}
+   <div class="zc-step-b" style="margin-top:8px"><button class="btn primary sm" data-ordck="1"${busy?' disabled':''}>${busy?'Проверяю…':'Проверить сейчас'}</button>${o.status==='cancelled'?'':`<button class="btn sm" data-ordctl="${o.control?0:1}">${o.control?'Снять с контроля':'Поставить на контроль'}</button>`}</div></div>
+  <div class="ag-h">Переписка по поручению</div><div class="zc-thr" id="zcOrdT"></div>
+  ${o.status==='cancelled'?'':`<div class="zc-cmp"><textarea id="zcOrdIn" rows="2" maxlength="3000" placeholder="Написать Александру по этому поручению…"></textarea>
+   <div class="zc-cmp-b"><label class="btn sm ghost" title="Приложить файл">📎 Файл<input type="file" id="zcOrdF" hidden multiple></label><span class="zc-cmp-f" id="zcOrdFl">${files.map(f=>esc(f.name)).join(', ')}</span><button class="btn primary sm" data-ordsay="1"${sending?' disabled':''}>${sending?'Отправляю…':'Отправить'}</button></div></div>`}
   <div class="ag-h">Шаги <small>${A.length||''}</small></div>${A.length?`<ul class="zc-steps">${A.map(step).join('')}</ul>`:'<div class="ag-empty">Шагов нет.</div>'}
-  <div class="ag-h">Ход и ответы</div>${o.reply?`<div class="zc-note"><time>ответ</time><span>${esc(o.reply)}</span></div>`:''}${notes.map(n=>`<div class="zc-note"><time>${esc(t(n.at))}</time><span>${esc(n.text)}</span></div>`).join('')||'<div class="ag-empty">Пока пусто.</div>'}`;}
-AGXW.openOrder=function(oid){openId=+oid;const p=$('#zcOrd');if(!p)return;p.hidden=false;paintOrd();};
-const close=()=>{const p=$('#zcOrd');if(p)p.hidden=true;openId=0;};
-const _rr=AGXW.reportsRefresh;AGXW.reportsRefresh=function(){_rr&&_rr();if(openId)paintOrd();};
+  <details class="zc-hist"><summary>Ход поручения (журнал)</summary>${o.reply?`<div class="zc-note"><time>ответ</time><span>${esc(o.reply)}</span></div>`:''}${notes.map(n=>`<div class="zc-note"><time>${esc(t(n.at))}</time><span>${esc(n.text)}</span></div>`).join('')||'<div class="ag-empty">Пока пусто.</div>'}</details>`;
+ const ni=$('#zcOrdIn');if(ni&&keep.i)ni.value=keep.i;const nr=$('#zcOrdB .zc-ordp-rvf textarea');if(nr){if(keep.r)nr.value=keep.r;if(keep.rOpen)nr.closest('.zc-ordp-rvf').hidden=false;}
+ if(keep.f==='i'&&ni)ni.focus();else if(keep.f==='r'&&nr)nr.focus();
+ paintThr();}
+AGXW.openOrder=function(oid){openId=+oid;files=[];const ni0=$('#zcOrdIn');if(ni0)ni0.value='';const p=$('#zcOrd');if(!p)return;p.hidden=false;paintOrd();loadThr(openId,true);};
+const close=()=>{const p=$('#zcOrd');if(p)p.hidden=true;openId=0;files=[];};
+// после обновления данных — перерисовать открытое окно; поручение, открытое кнопкой из «Чатов», — открыть
+const pendOpen=()=>{const pend=typeof Agx37!=='undefined'?Agx37.pendingOrder:0;if(pend&&((AGXW.data||{}).orders||[]).some(o=>o.id===+pend)){Agx37.pendingOrder=0;AGXW.openOrder(pend);return true;}return false;};
+const _rr=AGXW.reportsRefresh;AGXW.reportsRefresh=function(){_rr&&_rr();if(openId){paintOrd();loadThr(openId);}pendOpen();};
+// возврат на раздел (данные свежие — без загрузки): открыть сразу; поручения ещё нет в данных — загрузить
+const _rl=AGXW.reload;AGXW.reload=function(){const r=_rl&&_rl.apply(this,arguments);if(!pendOpen()&&typeof Agx37!=='undefined'&&Agx37.pendingOrder&&AGXW.load)AGXW.load(true);return r;};
 ROOT.addEventListener('keydown',e=>{if(e.key==='Escape'&&openId)close();});
+ROOT.addEventListener('change',e=>{if(e.target&&e.target.id==='zcOrdF'){files=files.concat(Array.from(e.target.files||[])).slice(0,5);const fl=$('#zcOrdFl');if(fl)fl.textContent=files.map(f=>f.name).join(', ');}});
 ROOT.addEventListener('click',async e=>{
  if(e.target.closest('[data-ordx]')||e.target.id==='zcOrd'){close();return;}
  const op=e.target.closest('[data-ordopen]');if(op&&!e.target.closest('[data-agc]')){e.preventDefault();AGXW.openOrder(op.dataset.ordopen);return;}
  if(!openId)return;
- if(e.target.closest('[data-ordchat]')){close();API.dm.open('ai.dir');return;}
  const ct=e.target.closest('[data-ordctl]');if(ct){if(API.demo){toast('Демо-режим: только с сервером');return;}
   try{await API.rpc('ai_order_control_set',{oid:openId,turn_on:ct.dataset.ordctl==='1'});toast(ct.dataset.ordctl==='1'?'Поручение на контроле — первая проверка через пару минут':'Контроль снят');}catch(err){toast(String((err&&err.message)||err));}
   if(AGXW.load)await AGXW.load(true);paintOrd();return;}
+ const rv=e.target.closest('[data-ordrv]');if(rv){if(API.demo){toast('Демо-режим: только с сервером');return;}const k=rv.dataset.ordrv,oid=openId;
+  if(k==='ret'){const f=$('#zcOrdB .zc-ordp-rvf');if(f){f.hidden=false;const ta=f.querySelector('textarea');ta&&ta.focus();}return;}
+  let note=null;if(k==='send'){const ta=$('#zcOrdB .zc-ordp-rvf textarea');note=(ta&&ta.value||'').trim();if(!note){toast('Напишите замечание: что не так');return;}}
+  try{await API.rpc('ai_order_review',{oid,accept:k==='ok',note});toast(k==='ok'?'Принято — поручение закрыто':'Вернул Александру с замечанием');}catch(err){toast(String((err&&err.message)||err).replace(/^.*?ERROR:\s*/,''));}
+  if(AGXW.load)await AGXW.load(true);paintOrd();loadThr(oid,true);return;}
+ if(e.target.closest('[data-ordsay]')){if(sending)return;if(API.demo){toast('Демо-режим: только с сервером');return;}
+  const ta=$('#zcOrdIn'),oid=openId;let txt=(ta&&ta.value||'').trim();if(!txt&&!files.length){toast('Напишите сообщение');return;}
+  sending=true;paintOrd();
+  try{const fl=[];for(const f of files){const m=await API.upload(f);fl.push({id:m.id,name:m.name||f.name,type:m.type||f.type,size:m.size||f.size});}
+   if(!txt)txt='Файл: '+fl.map(f=>f.name).join(', ');
+   await API.rpc('ai_order_say',{oid,txt,fl:fl.length?fl:null});files=[];if(ta)ta.value='';toast('Отправлено — Александр ответит здесь же');}
+  catch(err){toast(String((err&&err.message)||err).replace(/^.*?ERROR:\s*/,''));}
+  sending=false;paintOrd();loadThr(oid,true);setTimeout(()=>{if(openId===oid)loadThr(oid,true);},20000);return;}
  if(e.target.closest('[data-ordck]')){if(busy)return;if(API.demo){toast('Демо-режим: только с сервером');return;}busy=true;paintOrd();
   try{const r=await API.invoke('ai-director',{action:'ctl_check',order:openId});toast(`Проверено: ${(CK[r.st]||[r.st])[0]}`);}catch(err){toast(String((err&&err.message)||err));}
-  busy=false;if(AGXW.load)await AGXW.load(true);paintOrd();}});
+  busy=false;if(AGXW.load)await AGXW.load(true);paintOrd();loadThr(openId,true);}});
 (function(){const st=document.createElement('style');st.textContent=`#agx .zc-ordp{position:fixed;inset:0;z-index:60;background:rgba(15,20,30,.45);display:flex;justify-content:flex-end}
-#agx .zc-ordp[hidden]{display:none}#agx .zc-ordp-in{position:relative;width:min(560px,100%);height:100%;overflow:auto;background:var(--paper,#fff);padding:22px 22px 40px;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
+#agx .zc-ordp[hidden]{display:none}#agx .zc-ordp-in{position:relative;width:min(600px,100%);height:100%;overflow:auto;background:var(--paper,#fff);padding:22px 22px 40px;box-shadow:-8px 0 30px rgba(0,0,0,.2)}
 #agx .zc-ordp-x{position:absolute;top:10px;right:12px;border:0;background:transparent;font-size:24px;cursor:pointer;color:inherit}
 #agx .zc-ordp-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-right:30px}#agx .zc-ordp-h h2{margin:0;font-size:20px}
 #agx .zc-ordp-sub{font-size:12px;opacity:.7;margin-top:2px}#agx .zc-ordp-txt{margin:10px 0 14px;line-height:1.5;white-space:pre-line}
 #agx .zc-ordp-c{padding:12px 14px;border-radius:12px;background:rgba(127,127,127,.07);margin-bottom:14px;line-height:1.5}#agx .zc-ordp-lc{margin-top:8px;padding-top:8px;border-top:1px solid rgba(127,127,127,.2)}
+#agx .zc-ordp-rv{padding:12px 14px;border-radius:12px;background:rgba(217,119,6,.10);border:1px solid rgba(217,119,6,.35);margin-bottom:14px;line-height:1.5}#agx .zc-ordp-rvt{white-space:pre-line;margin:4px 0 6px}
+#agx .zc-ordp-rvf{display:flex;flex-direction:column;gap:6px;margin-top:8px}#agx .zc-ordp-rvf[hidden]{display:none}
+#agx .zc-thr{display:flex;flex-direction:column;gap:8px;max-height:46vh;overflow:auto;padding:4px 2px 8px}
+#agx .zc-tm{max-width:88%;padding:8px 11px;border-radius:12px;background:rgba(127,127,127,.09);line-height:1.45;font-size:13.5px}
+#agx .zc-tm.mp{align-self:flex-end;background:rgba(37,99,235,.12)}#agx .zc-tm.staff{background:rgba(5,150,105,.11)}
+#agx .zc-tm.sys{align-self:center;background:transparent;font-size:12px;opacity:.7;text-align:center;max-width:100%}#agx .zc-tm.sys time{margin-left:6px}
+#agx .zc-tm-h{display:flex;gap:8px;justify-content:space-between;font-size:12px}#agx .zc-tm-h time{opacity:.6}#agx .zc-tm-t{white-space:pre-line;margin-top:2px}#agx .zc-tm-f{font-size:12px;opacity:.8;margin-top:4px}
+#agx .zc-cmp{display:flex;flex-direction:column;gap:6px;margin:6px 0 16px}#agx .zc-cmp textarea,#agx .zc-ordp-rvf textarea{width:100%;box-sizing:border-box;font:inherit;padding:8px 10px;border:1px solid var(--line,#E5E7EB);border-radius:10px;background:var(--paper,#fff);color:inherit}
+#agx .zc-cmp-b{display:flex;align-items:center;gap:8px}#agx .zc-cmp-b .btn.primary{margin-left:auto}#agx .zc-cmp-f{font-size:12px;opacity:.75;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #agx .zc-steps{list-style:none;margin:6px 0 14px;padding:0;display:flex;flex-direction:column;gap:8px}#agx .zc-step{padding:10px 12px;border:1px solid rgba(127,127,127,.2);border-radius:10px;line-height:1.45}
 #agx .zc-step-h{display:flex;align-items:center;gap:8px;justify-content:space-between}#agx .zc-step-t{white-space:pre-line;margin-top:2px}#agx .zc-step-m{font-size:12.5px;opacity:.75;margin-top:2px}
-#agx .zc-step-b{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}#agx .zc-note{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(127,127,127,.12);font-size:13px;line-height:1.45}
-#agx .zc-note time{min-width:84px;opacity:.65;font-size:12px}@media(max-width:600px){#agx .zc-ordp-in{padding:18px 14px 30px}}`;document.head.appendChild(st);})();
+#agx .zc-step-b{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}#agx .zc-hist{margin-top:6px}#agx .zc-hist summary{cursor:pointer;font-weight:600;font-size:13px;opacity:.8;padding:6px 0}
+#agx .zc-note{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(127,127,127,.12);font-size:13px;line-height:1.45}
+#agx .zc-note time{min-width:84px;opacity:.65;font-size:12px}@media(max-width:600px){#agx .zc-ordp-in{padding:18px 14px 30px}#agx .zc-tm{max-width:100%}}`;document.head.appendChild(st);})();
 })();
 /* ── parts/ideas.part.js ── */
 /* ===== Руководитель отдела: решения в отчёте и идеи для фирмы (решения владельца 27.10.2026, этап 3 плана развития) =====
@@ -21295,6 +21392,27 @@ audit=async function(what,ref){ref=Audit43.refOf(what,ref);
   const e={id:"au"+Date.now().toString(36)+rnd17(4),at:ymdhmL(new Date()),by:Auth.user?Auth.user.login:"—",what:String(what),p:prev?prev.h:""};e.h=Audit17.hashOf(e);if(ref)e.ref=ref;
   S.audit.entries=[e,...(S.audit.entries||[])].slice(0,1500);
   if(S.db){const w=db=>db.doc("auditLog/"+e.id).set(e);try{await w(S.db);}catch(err){SaveQ17.fail(w,err);}}};
+
+/* ═══════════════════════════ версия 2.6 · ОШ-0059 — ПОСЛЕ ВЫХОДА СТРАНИЦА ПЕРЕЗАГРУЖАЕТСЯ (решение владельца 29.10.2026) ═══════════════════════════
+   Сообщение Сотрудник (29.10): в «Помощь → Мои сообщения» видны сообщения об ошибках других людей.
+   Проверка в облаке: сервер отдаёт Сотрудник только его 4 сообщения, чужих — 0. Сообщение отправлено с компьютера УП:
+   УП вышел и вошёл под Сотрудник в том же окне. Портал при выходе отключался от сервера, но не очищал то, что держал в памяти окна
+   (список сообщений об ошибках и другие загруженные разделы), — следующий вошедший видел данные прежнего.
+   Теперь в режиме сервера после выхода страница полностью перезагружается: в памяти не остаётся ничего от прежнего пользователя.
+   Набранные черновики чата сохраняются до выхода (после выхода сохранить их уже нельзя — нет пользователя). */
+{const _logout44=Auth.logout;
+  Auth.logout=function(){
+    try{if(typeof ChatDr30!=="undefined"){ChatDr30.grab();ChatDr30.save();}}catch(e){}
+    const srv=typeof SB19!=="undefined"&&SB19.on;
+    const r=_logout44.apply(this,arguments);
+    if(srv&&!Auth._out44){Auth._out44=true;
+      /* выход на сервере (SB19.outP) — дождаться, иначе после перезагрузки сессия могла бы восстановиться; не дольше 3 с */
+      const done=Promise.race([Promise.resolve(SB19.outP),new Promise(res=>setTimeout(res,3000))]);
+      done.catch(()=>{}).then(()=>{try{location.reload();}catch(e){}});}
+    return r;};}
+window.UZ21=Object.assign(window.UZ21||{},{
+  "Версия 2.6: после выхода страница перезагружается":"2.6-versiya: chiqqandan keyin sahifa qayta yuklanadi",
+  "После «Выйти» портал полностью перезагружает страницу: на этом компьютере не остаётся ничего от прежнего пользователя — следующий вошедший видит только своё (ОШ-0059).":"«Chiqish»dan keyin portal sahifani toʻliq qayta yuklaydi: bu kompyuterda oldingi foydalanuvchidan hech narsa qolmaydi — keyingi kirgan kishi faqat oʻzinikini koʻradi (ОШ-0059)."});
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
