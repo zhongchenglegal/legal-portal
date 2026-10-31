@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="218ceadb9eca";
+const ZC_BUILD="81ae0ba53578";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="2.7";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="2.8";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12122,6 +12122,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v28drf",d:"2026-10-31",t:"Версия 2.8: черновики Александра — только для управляющего партнёра||2.8版：亚历山大起草草稿——仅限管理合伙人",b:["Попросите Александра в «Чатах»: «подготовь ответ клиенту по делу №…», «напиши письмо в суд…», «переделай черновик №…». Черновик придёт карточкой «Черновик №…». Клиенту — на его языке, с переводом для вас; чего нет в данных — в [квадратных скобках].||在“聊天”中请亚历山大：“为案件№…起草给客户的回复”、“写一封致法院的信……”、“修改草稿№…”。草稿以“草稿№…”卡片发送。给客户的草稿使用客户的语言，并附您用的译文；数据中没有的内容用[方括号]标出。","Под черновиком: «Копировать», «Править», «Вставить в обсуждение с клиентом» (открывается дело на вкладке «Переписка», текст уже в поле — «Отправить» нажимаете вы) и «Не нужен».||草稿下方：“复制”、“编辑”、“插入到与客户的沟通”（打开案件的“往来沟通”标签，文本已在输入框中——由您点击“发送”）和“不需要”。","Утренний обход: если клиент написал в деле и больше суток ждёт ответа, Александр сам готовит черновик ответа. Сам он клиентам не пишет; черновики видите только вы.||早间巡查：如客户在案件中留言并已等待回复超过一天，亚历山大会自动起草回复草稿。他本人不会给客户发消息；草稿仅您可见。"]},
 {id:"v27agx",d:"2026-10-29",t:"Версия 2.7: новый вид раздела «ИИ-агенты»||2.7版：“AI员工”栏目新外观",b:["Первая страница раздела — только живой офис. Таблички с должностью под столами видны всегда, подпись над головой — при наведении; Александр Волков теперь ходит и делает короткие перерывы.||栏目首页只保留实时办公室。桌下的职位牌始终可见，鼠标悬停时头顶显示名称；亚历山大·沃尔科夫现在会走动并短暂休息。","Наведите на сотрудника — быстрая карточка: что делает сейчас, «Поручить», «Написать», «Позвонить», «Профиль». Клик по Волкову сразу открывает его профиль.||悬停在员工上会出现快捷卡片：当前在做什么、“布置任务”、“发消息”、“打电话”、“资料”。点击沃尔科夫直接打开其资料。","Значок «Ждёт вашего решения» над офисом открывает карточки решений и «Разрешить всё». «Поручения» и «Подтверждения» объединены во вкладку «Работа» с фильтрами.||办公室上方的“等待您决定”标记可打开决定卡片和“全部批准”。“任务”和“确认”合并为带筛选的“工作”标签页。","Профиль агента разложен по вкладкам «Обзор», «Поручения», «Отчёты», «Чат», «Настройки», «Журнал» — всё, что было, на месте. Отчёты — во вкладке профиля, без отдельного чата.||员工资料按“概览”“任务”“报告”“聊天”“设置”“日志”分为标签页，原有内容全部保留。报告位于资料标签页中，不再有单独的聊天。"]},
 {id:"v26out",d:"2026-10-29",t:"Версия 2.6: после выхода страница перезагружается||2.6版：退出后页面重新加载",b:["После «Выйти» портал полностью перезагружает страницу: на этом компьютере не остаётся ничего от прежнего пользователя — следующий вошедший видит только своё (ОШ-0059).||点击“退出”后门户完全重新加载页面：本电脑上不再保留上一位用户的任何数据，下一位登录者只看到自己的内容（ОШ-0059）。"]},
 {id:"v25osh",d:"2026-10-28",t:"Версия 2.5: сопровождение — абонплата в месяц; решения агента в чате; чаты без автооткрытия||2.5版：法律顾问按月收费；聊天中的智能体决定；聊天不再自动打开",b:["«Регистрация договора» сопровождения: абонплата в месяц, срок договора в месяцах и дата начала; сопровождение только абонентское — порядок оплаты всегда «ежемесячно».||法律顾问“登记合同”：每月顾问费、合同期限（月）和开始日期；法律顾问仅按月收费——付款方式始终为“按月”。","«Изменить дело» у сопровождения: без «Оплаты», «Суда», «№ дела в суде» и «Стадии»; срок договора показан строкой и меняется продлением; после подписания абонплату меняет УП.||法律顾问“修改案件”：不再显示“付款方式”“法院”“法院案号”和“阶段”；合同期限以文字显示，通过续约修改；签署后月费由管理合伙人修改。","Чат с ИИ-агентом: у пунктов, решённых в «ИИ-агенты → Подтверждения», вместо кнопок «Разрешить / Вернуть / Отклонить» — принятое решение.||与智能体的聊天：已在“智能体 → 确认”中处理的事项，不再显示“允许 / 退回 / 拒绝”按钮，而显示已作出的决定。","«Чаты» открываются без выбранной переписки — выберите чат слева; повторный клик по открытому чату закрывает переписку.||“聊天”打开时不再自动选择对话——请在左侧选择；再次点击已打开的聊天即可关闭对话。"]},
@@ -15157,6 +15158,44 @@ document.addEventListener("click",e=>{const t=e.target;if(!t||!t.closest)return;
 const _rowCl39=AiActs38.row.bind(AiActs38);AiActs38.row=function(c){let h=_rowCl39(c);if(!c||!c.client||!c.client.name)return h;
   const i=h.indexOf("</div>");return h.slice(0,i+6)+`<div class="aa38s ac39">${T1("Клиент||客户")}: <b>${esc(c.client.name)}</b>${c.client.new?` <small>(${T1("новый||新客户")})</small>`:""}</div>`+h.slice(i+6);};
 (function(){const st=document.createElement("style");st.textContent=`.ac39{margin-top:4px}`;document.head.appendChild(st);})();
+
+/* версия 2.8 · Руководитель отдела ИИ-агентов — черновики только для УП (решение владельца 29.10.2026, п. 4 рекомендаций: «пока только для меня»).
+   Под сообщением Александра «Черновик №…» (extra aiDraft) — «Копировать», «Править», «Вставить в обсуждение с клиентом» (ответ клиенту по делу)
+   и «Не нужен». Черновик никуда не уходит сам: «Вставить» только кладёт текст в поле «Обсуждение с клиентом» карточки дела (CMsg.drafts),
+   «Отправить» УП нажимает сам. Текст и отметки — на сервере, только у этого УП: ai_draft_get / ai_draft_set, миграция 20261029001200_ai_drafts. */
+const AiDraft41={
+  st:{},
+  srv(){return typeof SB19!=="undefined"&&SB19.T&&typeof SB19.T.rpc==="function"&&typeof B26!=="undefined"&&B26.srv&&B26.srv();},
+  err(e){toast(String((e&&e.message)||e).replace(/^.*?ERROR:\s*/,""));},
+  block(m){const id=Number(m.aiDraft),st=this.st[id];
+    let h=`<div class="ad41">`;
+    if(st)h+=`<span class="ad41s">${esc(st)}</span>`;
+    h+=`<button type="button" class="btn sm" data-adcopy="${id}">${T1("Копировать||复制")}</button><button type="button" class="btn sm" data-adedit="${id}">${T1("Править||编辑")}</button>`;
+    if(m.aiDraftKind==="client"&&m.aiDraftMatter)h+=`<button type="button" class="btn sm pri" data-adput="${id}">${T1("Вставить в обсуждение с клиентом||插入到与客户的沟通")}</button>`;
+    if(!st)h+=`<button type="button" class="btn sm" data-addrop="${id}">${T1("Не нужен||不需要")}</button>`;
+    return h+`</div>`;},
+  async get(id){if(!this.srv()){toast(T1("Черновик — только при подключении к серверу||仅在连接服务器时可用"));return null;}
+    try{return await SB19.T.rpc("ai_draft_get",{id});}catch(e){this.err(e);return null;}},
+  async set(id,status,txt){try{return await SB19.T.rpc("ai_draft_set",{id,status,txt:txt==null?null:txt});}catch(e){this.err(e);return null;}},
+  async copy(id){const d=await this.get(id);if(!d)return;
+    try{await navigator.clipboard.writeText(d.text);}catch(e){toast(T1("Не удалось скопировать — откройте «Править» и скопируйте текст оттуда||复制失败"));return;}
+    if(d.status!=="used")await this.set(id,"used",null);this.st[id]=T1("Скопирован||已复制");toast(this.st[id]);Router.render();},
+  async edit(id){const d=await this.get(id);if(!d)return;
+    const v=await Dlg.ask({title:T1("Черновик №||草稿 №")+id+(d.subject?" · "+d.subject:""),wide:true,
+      text:d.text_ru?T1("Перевод для вас||供您参考的译文")+":\n"+d.text_ru:"",fields:[{k:"t",label:T1("Текст||文本"),type:"textarea",value:d.text,required:true}]});
+    if(!v)return;const r=await this.set(id,d.status==="dropped"?"new":d.status,v.t);if(!r)return;this.st[id]=T1("Исправлен||已修改");toast(T1("Черновик сохранён||草稿已保存"));Router.render();},
+  async put(id){const d=await this.get(id);if(!d)return;if(!d.matter||!S.matters[d.matter]){toast(T1("Дело не найдено||未找到案件"));return;}
+    const key=((U()||{}).login||"")+"|"+d.matter;CMsg.drafts[key]={text:d.text,files:[],vis:true};
+    if(typeof Card22!=="undefined"&&Card22.tab)Card22.tab[d.matter]=1;/* сразу вкладка «Переписка» — там поле сообщения клиенту */
+    await this.set(id,"used",null);this.st[id]=T1("Вставлен в обсуждение — отправьте сами||已插入，请您自行发送");toast(this.st[id]);Router.go("matter",d.matter);},
+  async drop(id){const r=await this.set(id,"dropped",null);if(!r)return;this.st[id]=T1("Не нужен||不需要");Router.render();}
+};
+const _bubAd41=Chat22.bubble;Chat22.bubble=function(m,mine,peerRead,last){const h=_bubAd41.apply(this,arguments);
+  if(!m||mine||m.deleted||m.by!=="ai.dir"||!(Number(m.aiDraft)>0))return h;
+  return h.replace('<span class="mt22">',AiDraft41.block(m)+'<span class="mt22">');};
+document.addEventListener("click",e=>{const t=e.target;if(!t||!t.closest)return;
+  for(const [a,fn] of [["adcopy","copy"],["adedit","edit"],["adput","put"],["addrop","drop"]]){const b=t.closest("[data-"+a+"]");if(b){e.preventDefault();AiDraft41[fn](+b.dataset[a]);return;}}},true);
+(function(){const st=document.createElement("style");st.textContent=`.ad41{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.ad41s{font-size:12.5px;opacity:.8;align-self:center;width:100%}`;document.head.appendChild(st);})();
 
 /* версия 2.0 · Руководитель отдела ИИ-агентов — деньги и договоры (решения владельца 27.10.2026, этап 4 плана развития).
    В карточке действия в «Чатах» — сумма и кто её внёс; сумма от 100 000 000 сум — после «Разрешить» кнопка «Подтверждаю сумму …»
@@ -21592,6 +21631,29 @@ window.UZ21=Object.assign(window.UZ21||{},{
   "Наведите на сотрудника — быстрая карточка: что делает сейчас, «Поручить», «Написать», «Позвонить», «Профиль». Клик по Волкову сразу открывает его профиль.":"Xodimga sichqonchani olib boring — tezkor kartochka: hozir nima qilyapti, «Topshiriq berish», «Yozish», «Qo‘ng‘iroq qilish», «Profil». Volkovni bossangiz, darhol uning profili ochiladi.",
   "Значок «Ждёт вашего решения» над офисом открывает карточки решений и «Разрешить всё». «Поручения» и «Подтверждения» объединены во вкладку «Работа» с фильтрами.":"Ofis ustidagi «Qaroringizni kutmoqda» belgisi qaror kartochkalarini va «Hammasiga ruxsat berish»ni ochadi. «Topshiriqlar» va «Tasdiqlashlar» filtrlari bor «Ish» yorlig‘iga birlashtirildi.",
   "Профиль агента разложен по вкладкам «Обзор», «Поручения», «Отчёты», «Чат», «Настройки», «Журнал» — всё, что было, на месте. Отчёты — во вкладке профиля, без отдельного чата.":"Agent profili «Umumiy», «Topshiriqlar», «Hisobotlar», «Chat», «Sozlamalar», «Jurnal» yorliqlariga ajratildi — avvalgi hamma narsa joyida. Hisobotlar — profil yorlig‘ida, alohida chatsiz."
+});
+
+/* ═══════════════════════════ версия 2.8 · черновики Александра — только для УП (решение владельца 29.10.2026) ═══════════════════════════
+   Сам раздел — sections/agents (копия из «версии 2.0», правило ИИ-67, aidraft.js). Здесь — только узбекский текст «Что нового» v28drf и кнопок черновика. */
+window.UZ21=Object.assign(window.UZ21||{},{
+  "Версия 2.8: черновики Александра — только для управляющего партнёра":"2.8-versiya: Aleksandr qoralamalari — faqat boshqaruvchi hamkor uchun",
+  "Попросите Александра в «Чатах»: «подготовь ответ клиенту по делу №…», «напиши письмо в суд…», «переделай черновик №…». Черновик придёт карточкой «Черновик №…». Клиенту — на его языке, с переводом для вас; чего нет в данных — в [квадратных скобках].":"«Chatlar»da Aleksandrdan so‘rang: «№… ish bo‘yicha mijozga javob tayyorla», «sudga xat yoz…», «№… qoralamani qayta yoz». Qoralama «Qoralama №…» kartochkasi bilan keladi. Mijozga — uning tilida, siz uchun tarjimasi bilan; ma’lumotlarda yo‘q narsa — [kvadrat qavslarda].",
+  "Под черновиком: «Копировать», «Править», «Вставить в обсуждение с клиентом» (открывается дело на вкладке «Переписка», текст уже в поле — «Отправить» нажимаете вы) и «Не нужен».":"Qoralama ostida: «Nusxalash», «Tahrirlash», «Mijoz bilan muhokamaga qo‘yish» (ish «Yozishmalar» yorlig‘ida ochiladi, matn maydonda turadi — «Yuborish»ni o‘zingiz bosasiz) va «Kerak emas».",
+  "Утренний обход: если клиент написал в деле и больше суток ждёт ответа, Александр сам готовит черновик ответа. Сам он клиентам не пишет; черновики видите только вы.":"Ertalabki aylanish: mijoz ishda yozib, bir sutkadan ortiq javob kutayotgan bo‘lsa, Aleksandr o‘zi javob qoralamasini tayyorlaydi. U mijozlarga o‘zi yozmaydi; qoralamalarni faqat siz ko‘rasiz.",
+  "Копировать":"Nusxalash",
+  "Править":"Tahrirlash",
+  "Вставить в обсуждение с клиентом":"Mijoz bilan muhokamaga qo‘yish",
+  "Не нужен":"Kerak emas",
+  "Скопирован":"Nusxalandi",
+  "Исправлен":"Tahrirlandi",
+  "Черновик сохранён":"Qoralama saqlandi",
+  "Вставлен в обсуждение — отправьте сами":"Muhokamaga qo‘yildi — o‘zingiz yuboring",
+  "Черновик №":"Qoralama №",
+  "Перевод для вас":"Siz uchun tarjima",
+  "Текст":"Matn",
+  "Дело не найдено":"Ish topilmadi",
+  "Черновик — только при подключении к серверу":"Qoralama — faqat serverga ulanganda",
+  "Не удалось скопировать — откройте «Править» и скопируйте текст оттуда":"Nusxalab bo‘lmadi — «Tahrirlash»ni oching va matnni u yerdan nusxalang"
 });
 
 
