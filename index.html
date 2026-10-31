@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="81ae0ba53578";
+const ZC_BUILD="0fb4e57f0cf4";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="2.8";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="2.9";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12122,6 +12122,8 @@ const HELP21={
   ]
  },
  news:[
+{id:"v29tabs",d:"2026-10-31",t:"Версия 2.9: новые вкладки карточки дела||2.9版：案件卡片新标签页",b:["Вкладки «Ход дела … История» — на сапфировой подложке, у каждой свой значок; выбранная отмечена синей капсулой, которая плавно перетекает при переключении.||「案件进展…历史」标签页置于蓝宝石色底板上，每个标签都有图标；选中的标签以蓝色胶囊标记，切换时平滑移动。","Содержимое вкладки въезжает с той стороны, куда вы перешли; по вкладкам можно ходить стрелками ← →. На телефоне выбранная вкладка сама встаёт по центру.||标签内容从切换方向滑入；可用 ← → 键切换标签。手机上选中的标签自动居中。"]},
+{id:"v29osh",d:"2026-10-31",t:"Версия 2.9: вставка файла в задании сопровождения, «Ждёт вашего действия» в поручениях, возврат этапа||2.9版：法律顾问任务可粘贴文件；指令中的“等待您处理”；退回阶段",b:["Окно задания сопровождения: файл можно вставить из буфера (Ctrl+V) или перетащить мышью — как в других окнах с «Прикрепить файл» (ОШ-0057).||法律顾问任务窗口：可从剪贴板粘贴（Ctrl+V）或拖入文件——与其他带“附加文件”的窗口相同（ОШ-0057）。","«Поручения»: наверху окна — «Ждёт вашего действия»: новые поручения вам и отчёты на проверку по вашим поручениям; именно их считает цифра на иконке, подсказка у иконки это объясняет (ОШ-0054).||“指令”：窗口顶部显示“等待您处理”——交给您的新指令和您下达指令的待审核报告；图标上的数字正是统计这些，图标提示有说明（ОШ-0054）。","Карточка дела: большая кнопка следующего этапа справа вверху сначала спрашивает «Перевести дело на этап …?». Управляющий адвокат может вернуть дело на предыдущий этап — «↩ Вернуть этап» в шкале этапов, с причиной; ведущий получает уведомление (ОШ-0060).||案件卡片：右上角的下一阶段大按钮会先询问“将案件转到……阶段？”。管理律师可将案件退回上一阶段——阶段栏中的“↩ 退回阶段”，需填写原因；主办律师会收到通知（ОШ-0060）。"]},
 {id:"v28drf",d:"2026-10-31",t:"Версия 2.8: черновики Александра — только для управляющего партнёра||2.8版：亚历山大起草草稿——仅限管理合伙人",b:["Попросите Александра в «Чатах»: «подготовь ответ клиенту по делу №…», «напиши письмо в суд…», «переделай черновик №…». Черновик придёт карточкой «Черновик №…». Клиенту — на его языке, с переводом для вас; чего нет в данных — в [квадратных скобках].||在“聊天”中请亚历山大：“为案件№…起草给客户的回复”、“写一封致法院的信……”、“修改草稿№…”。草稿以“草稿№…”卡片发送。给客户的草稿使用客户的语言，并附您用的译文；数据中没有的内容用[方括号]标出。","Под черновиком: «Копировать», «Править», «Вставить в обсуждение с клиентом» (открывается дело на вкладке «Переписка», текст уже в поле — «Отправить» нажимаете вы) и «Не нужен».||草稿下方：“复制”、“编辑”、“插入到与客户的沟通”（打开案件的“往来沟通”标签，文本已在输入框中——由您点击“发送”）和“不需要”。","Утренний обход: если клиент написал в деле и больше суток ждёт ответа, Александр сам готовит черновик ответа. Сам он клиентам не пишет; черновики видите только вы.||早间巡查：如客户在案件中留言并已等待回复超过一天，亚历山大会自动起草回复草稿。他本人不会给客户发消息；草稿仅您可见。"]},
 {id:"v27agx",d:"2026-10-29",t:"Версия 2.7: новый вид раздела «ИИ-агенты»||2.7版：“AI员工”栏目新外观",b:["Первая страница раздела — только живой офис. Таблички с должностью под столами видны всегда, подпись над головой — при наведении; Александр Волков теперь ходит и делает короткие перерывы.||栏目首页只保留实时办公室。桌下的职位牌始终可见，鼠标悬停时头顶显示名称；亚历山大·沃尔科夫现在会走动并短暂休息。","Наведите на сотрудника — быстрая карточка: что делает сейчас, «Поручить», «Написать», «Позвонить», «Профиль». Клик по Волкову сразу открывает его профиль.||悬停在员工上会出现快捷卡片：当前在做什么、“布置任务”、“发消息”、“打电话”、“资料”。点击沃尔科夫直接打开其资料。","Значок «Ждёт вашего решения» над офисом открывает карточки решений и «Разрешить всё». «Поручения» и «Подтверждения» объединены во вкладку «Работа» с фильтрами.||办公室上方的“等待您决定”标记可打开决定卡片和“全部批准”。“任务”和“确认”合并为带筛选的“工作”标签页。","Профиль агента разложен по вкладкам «Обзор», «Поручения», «Отчёты», «Чат», «Настройки», «Журнал» — всё, что было, на месте. Отчёты — во вкладке профиля, без отдельного чата.||员工资料按“概览”“任务”“报告”“聊天”“设置”“日志”分为标签页，原有内容全部保留。报告位于资料标签页中，不再有单独的聊天。"]},
 {id:"v26out",d:"2026-10-29",t:"Версия 2.6: после выхода страница перезагружается||2.6版：退出后页面重新加载",b:["После «Выйти» портал полностью перезагружает страницу: на этом компьютере не остаётся ничего от прежнего пользователя — следующий вошедший видит только своё (ОШ-0059).||点击“退出”后门户完全重新加载页面：本电脑上不再保留上一位用户的任何数据，下一位登录者只看到自己的内容（ОШ-0059）。"]},
@@ -21655,6 +21657,194 @@ window.UZ21=Object.assign(window.UZ21||{},{
   "Черновик — только при подключении к серверу":"Qoralama — faqat serverga ulanganda",
   "Не удалось скопировать — откройте «Править» и скопируйте текст оттуда":"Nusxalab bo‘lmadi — «Tahrirlash»ni oching va matnni u yerdan nusxalang"
 });
+
+/* ═══════════════════════════ версия 2.9 · ОШ-0057, 0054, 0060 (решение владельца 31.10.2026: «Все по предложениям») ═══════════════════════════
+   ОШ-0057 (Сотрудник): в окне задания сопровождения файл нельзя вставить из буфера (Ctrl+V) или перетащить — общая вставка (v33_paste.js)
+     знала в окне только «Прикрепить файл» с [data-dfadd]. Теперь и «Прикрепить файл» задания сопровождения ([data-st3up]),
+     и любая кнопка с [data-paste-up].
+   ОШ-0054 (УП): цифра на «Поручениях» непонятна. Цифра — поручения со статусом «Новое», данные вам, и отчёты на проверку по поручениям,
+     которые дали вы. Теперь в окне наверху — блок «Ждёт вашего действия · N» с этими поручениями; у иконки — подсказка, что она считает.
+   ОШ-0060 (УП): перед переходом на следующий этап большой кнопкой справа вверху — вопрос «Перевести дело на этап …?».
+     УП может вернуть дело на предыдущий этап («↩ Вернуть этап» в шкале этапов) с обязательной причиной — это выполняет сервер
+     (public.matter_stage_back, миграция 20261031000100_v29_osh): права, запись в дело, история, журнал, уведомление ведущему. */
+
+/* ── ОШ-0057: вставка и перетаскивание файла в окне с любой кнопкой «Прикрепить файл» ── */
+if(typeof Paste33!=="undefined"){const _t47=Paste33.target.bind(Paste33);
+  Paste33.target=function(el){if(!(typeof B26!=="undefined"&&B26.isOpen())&&this.open("ovD")){
+      const b=document.querySelector("#mdD .dfiles [data-dfadd],#mdD [data-st3up],#mdD [data-paste-up]");if(b)return {k:"btn",b};}
+    return _t47(el);};}
+
+/* ── ОШ-0054: «Ждёт вашего действия» в окне «Поручения» ── */
+if(typeof Poruch21!=="undefined"){
+  Poruch21.need47=function(){const me=U();if(!me)return [];
+    return this.sort(this.all().filter(a=>(a.to===me.emp&&a.status==="new")||(a.from===me.login&&a.to!==me.emp&&a.status==="reported")));};
+  const _html47=Poruch21.html.bind(Poruch21);
+  Poruch21.html=function(){const h=_html47();const need=this.need47();if(!need.length)return h;
+    const me=U(),nNew=need.filter(a=>a.to===me.emp).length,nRep=need.length-nNew;
+    const why=[nNew?T1(UI.po47New).replace("{n}",nNew):"",nRep?T1(UI.po47Rep).replace("{n}",nRep):""].filter(Boolean).join(" · ");
+    const box=`<div class="po47"><h4 class="po21h">${T1(UI.po47Need)} · ${need.length}</h4><div class="po47w">${esc(why)}</div><div class="agl">${need.map(a=>this.card(a)).join("")}</div></div>`;
+    /* блок — сразу после строки «Мой руководитель», перед «Мне поручено» */
+    const i=h.indexOf(`<h4 class="po21h">`);return i<0?box+h:h.slice(0,i)+box+h.slice(i);};
+  const _badge47=Notif.badge.bind(Notif);
+  Notif.badge=function(){const r=_badge47.apply(this,arguments);try{const b=document.getElementById("po21Btn");if(b&&U()){const need=Poruch21.need47(),me=U();
+      const nNew=need.filter(a=>a.to===me.emp).length,nRep=need.length-nNew;
+      if(!b.dataset.t47)b.dataset.t47=b.title||"";b.title=(b.dataset.t47?b.dataset.t47+" — ":"")+T1(UI.po47Tip).replace("{a}",nNew).replace("{b}",nRep);}}catch(e){}return r;};
+}
+
+/* ── ОШ-0060: вопрос перед переходом этапа большой кнопкой; «Вернуть этап» у УП ── */
+const StBack47={
+  /* перехват клика большой кнопки справа вверху: её цель — кнопка перехода этапа вперёд */
+  ok:false,
+  async ask(btn,t){const to=t.dataset.stage;const m=Router.cur==="matter"?matter(Router.arg):null;if(!m)return true;
+    if(["archive","accepted"].includes(to))return true;   /* у приёмки и архива — свои окна */
+    if(to==="ready"&&typeof Gate21!=="undefined"&&Gate21.postpayWarn&&Gate21.postpayWarn(m))return true;   /* своё предупреждение об оплате */
+    return await Dlg.confirm(T1(UI.st47ConfT),T1(UI.st47Conf).replace("{st}",St21.label(to)));},
+  can(m){return !!m&&!isClient()&&typeof Svc21!=="undefined"&&Svc21.mp()&&typeof StSrv23!=="undefined"&&StSrv23.on()&&m.status!=="closed"&&m.pipeline==="contract"
+    &&m.stage!=="archive"&&St21.idx(m)>0;},
+  prev(m){const l=St21.list(m);return l[St21.idx(m)-1];},
+  async run(id){const m=matter(id);if(!this.can(m))return;const to=this.prev(m);
+    const v=await Dlg.ask({title:T1(UI.st47Back)+" · "+m.no,text:T1(UI.st47BackTx).replace("{a}",St21.label(m.stage)).replace("{b}",St21.label(to)),
+      fields:[{k:"why",label:T1(UI.st47Why),type:"textarea",required:true}]});if(!v)return;
+    const labels={from:St21.label(m.stage),to:St21.label(to),to_ru:withLang18("ru",()=>St21.label(to)),from_ru:withLang18("ru",()=>St21.label(m.stage)),st:L2(()=>stLabel(to,true,m))};
+    StSrv23.done(await StSrv23.call("matter_stage_back",{mid:m.id,note:v.why,given:StSrv23.given(m),labels}),m,T1(UI.st47Done).replace("{st}",St21.label(to)));}
+};
+document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.closest(".c22acts .btn.pri[data-c22target]");if(!b)return;
+  if(StBack47.ok){StBack47.ok=false;return;}
+  const vp=document.getElementById("viewPage");const t=vp&&vp.querySelector(b.dataset.c22target);
+  if(!t||!t.matches("[data-stage]")||t.dataset.ret==="1")return;
+  e.preventDefault();e.stopImmediatePropagation();
+  if(await StBack47.ask(b,t)){StBack47.ok=true;b.click();}},true);
+if(typeof Card22!=="undefined"){const _stg47=Card22.stages.bind(Card22);
+  Card22.stages=function(m,o){const card=_stg47(m,o);try{if(o&&o.contract&&StBack47.can(m)){const h=card.querySelector("h4");
+      const bb=this.btn("↩ "+T1(UI.st47Back),"more",{st47back:m.id});bb.title=T1(UI.st47BackTip);if(h)h.appendChild(bb);}}catch(x){}
+    return card;};}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-st47back]");if(!b)return;e.stopPropagation();StBack47.run(b.dataset.st47back);});
+
+Object.assign(UI,{
+  po47Need:"Ждёт вашего действия||等待您处理",po47New:"новые поручения вам: {n}||交给您的新指令：{n}",po47Rep:"отчёты на проверку: {n}||待审核报告：{n}",
+  po47Tip:"Ждёт вашего действия: новые поручения вам — {a}, отчёты на проверку — {b}||等待您处理：交给您的新指令 — {a}，待审核报告 — {b}",
+  st47ConfT:"Следующий этап||下一阶段",st47Conf:"Перевести дело на этап «{st}»?||将案件转到“{st}”阶段？",
+  st47Back:"Вернуть этап||退回阶段",st47BackTip:"Вернуть дело на предыдущий этап (например, если следующий этап нажали по ошибке)||将案件退回上一阶段（例如误点了下一阶段）",
+  st47BackTx:"Этап «{a}» → «{b}». Причина попадёт в историю дела, ведущий получит уведомление.||阶段“{a}”→“{b}”。原因将记入案件历史，主办律师会收到通知。",
+  st47Why:"Причина||原因",st47Done:"Дело возвращено на этап «{st}»||案件已退回到“{st}”阶段"});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{stBack47:"{no}: этап возвращён на «{st}» — {text}||{no}：阶段已退回到“{st}” — {text}"});
+window.UZ21=Object.assign(window.UZ21||{},{
+  "Ждёт вашего действия":"Sizning harakatingizni kutmoqda","новые поручения вам: {n}":"sizga yangi topshiriqlar: {n}","отчёты на проверку: {n}":"tekshirish uchun hisobotlar: {n}",
+  "Ждёт вашего действия: новые поручения вам — {a}, отчёты на проверку — {b}":"Sizning harakatingizni kutmoqda: sizga yangi topshiriqlar — {a}, tekshirish uchun hisobotlar — {b}",
+  "Следующий этап":"Keyingi bosqich","Перевести дело на этап «{st}»?":"Ishni «{st}» bosqichiga oʻtkazasizmi?",
+  "Вернуть этап":"Bosqichni qaytarish","Вернуть дело на предыдущий этап (например, если следующий этап нажали по ошибке)":"Ishni oldingi bosqichga qaytarish (masalan, keyingi bosqich xato bosilgan boʻlsa)",
+  "Этап «{a}» → «{b}». Причина попадёт в историю дела, ведущий получит уведомление.":"«{a}» bosqichi → «{b}». Sabab ish tarixiga yoziladi, yetakchi advokat xabar oladi.",
+  "Причина":"Sabab","Дело возвращено на этап «{st}»":"Ish «{st}» bosqichiga qaytarildi",
+  "Версия 2.9: вставка файла в задании сопровождения, «Ждёт вашего действия» в поручениях, возврат этапа":"2.9-versiya: kuzatuv topshirigʻiga fayl qoʻyish, topshiriqlarda «Sizning harakatingizni kutmoqda», bosqichni qaytarish",
+  "Окно задания сопровождения: файл можно вставить из буфера (Ctrl+V) или перетащить мышью — как в других окнах с «Прикрепить файл» (ОШ-0057).":"Kuzatuv topshirigʻi oynasi: faylni buferdan qoʻyish (Ctrl+V) yoki sichqoncha bilan sudrab tashlash mumkin — «Fayl biriktirish» bor boshqa oynalardagi kabi (ОШ-0057).",
+  "«Поручения»: наверху окна — «Ждёт вашего действия»: новые поручения вам и отчёты на проверку по вашим поручениям; именно их считает цифра на иконке, подсказка у иконки это объясняет (ОШ-0054).":"«Topshiriqlar»: oyna tepasida — «Sizning harakatingizni kutmoqda»: sizga yangi topshiriqlar va siz bergan topshiriqlar boʻyicha tekshirish uchun hisobotlar; belgidagi raqam aynan ularni sanaydi, belgi ustidagi izoh buni tushuntiradi (ОШ-0054).",
+  "Карточка дела: большая кнопка следующего этапа справа вверху сначала спрашивает «Перевести дело на этап …?». Управляющий адвокат может вернуть дело на предыдущий этап — «↩ Вернуть этап» в шкале этапов, с причиной; ведущий получает уведомление (ОШ-0060).":"Ish kartochkasi: oʻng yuqoridagi keyingi bosqich katta tugmasi avval «Ishni … bosqichiga oʻtkazasizmi?» deb soʻraydi. Boshqaruvchi advokat ishni oldingi bosqichga qaytarishi mumkin — bosqichlar shkalasida «↩ Bosqichni qaytarish», sabab bilan; yetakchi advokat xabar oladi (ОШ-0060)."});
+(()=>{const st=document.createElement("style");st.textContent=".po47{border:1px solid var(--line-2);border-left:3px solid var(--red);border-radius:10px;padding:8px 10px 2px;margin:8px 0 12px;background:var(--surface)}.po47 .po21h{margin-top:0}.po47w{font-size:12px;color:var(--ink-3);margin:-4px 0 6px}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ v48 · ВКЛАДКИ КАРТОЧКИ ДЕЛА — «КАПСУЛА» (решение владельца 31.10.2026) ═══════════════════════════
+   Макет design-card-tabs.html, вариант A: вкладки «Ход дела … История» заметнее и красивее.
+   • Панель вкладок — на сапфировой подложке (градиент, тонкая рамка), сами вкладки — в светлой «вставке».
+   • У каждой вкладки свой значок; под выбранной — синяя капсула, она перетекает к нажатой вкладке (пружинящее движение).
+   • Значок выбранной вкладки «подпрыгивает», от нажатия расходится волна, счётчик (переписка, действия клиента) мягко пульсирует.
+   • Содержимое вкладки въезжает с той стороны, куда перешли. Стрелки ←/→, Home/End — переход по вкладкам с клавиатуры.
+   • Телефон: вкладки листаются пальцем, выбранная встаёт по центру, края плавно затухают. Тёмная тема — свои цвета.
+   • Вкладки, их порядок, счётчики и переходы — прежние (Card22, v22_card.js); здесь только вид и движение. */
+const Tabs48={
+  ICO:['<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/>',
+    '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/>',
+    '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+    '<path d="M6 3h9l4 4v8"/><path d="M6 3v18h7"/><path d="M9 9h6M9 12h4"/><path d="M14 20c1.5-3 2.5-3 3.2-1.8.5.9 1.3.9 2.8-.7"/>',
+    '<rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><circle cx="16" cy="14.5" r="1.4"/>',
+    '<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 18.5"/>',
+    '<path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3 4v4h4"/><path d="M12 8v4l3 2"/>',
+    /* 7 — «Заседания и сроки» судебного дела (sections/court) */
+    '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9.5 15.5l2 2 3.5-4"/>'],
+  /* оформить панель вкладок после каждой отрисовки карточки */
+  enhance(vp){const tw=vp&&vp.querySelector(".c22tw"),tb=tw&&tw.querySelector(".c22tabs");if(!tb||tw.classList.contains("t48"))return;
+    tw.classList.add("t48");tb.setAttribute("role","tablist");
+    tb.querySelectorAll("[data-c22tab]").forEach(b=>{b.setAttribute("role","tab");
+      b.setAttribute("aria-selected",b.classList.contains("on")?"true":"false");b.tabIndex=b.classList.contains("on")?0:-1;
+      b.addEventListener("pointerdown",e=>this.ripple(b,e));});
+    this.icons(tb);tb.insertAdjacentHTML("afterbegin",'<span class="t48ind" aria-hidden="true"></span>');
+    tw.insertAdjacentHTML("beforeend",'<span class="t48e l" aria-hidden="true"></span><span class="t48e r" aria-hidden="true"></span>');
+    tb.addEventListener("scroll",()=>this.edges(tw),{passive:true});
+    tb.addEventListener("keydown",e=>{if(!["ArrowRight","ArrowLeft","Home","End"].includes(e.key))return;const bs=[...tb.querySelectorAll("[data-c22tab]")];
+      const cur=bs.findIndex(b=>b.classList.contains("on"));const n=e.key==="Home"?0:e.key==="End"?bs.length-1:(cur+(e.key==="ArrowRight"?1:-1)+bs.length)%bs.length;
+      e.preventDefault();bs[n].click();bs[n].focus();});
+    const go=()=>{this.center(tb,false);this.move(tw,false);this.edges(tw);};requestAnimationFrame(go);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(go);},
+  /* значки: по номеру вкладки (у сопровождения подписи свои, номера те же); подпись могут переписать — значок возвращается.
+     Значок дописывается в конец кнопки и показывается первым (order:-1): подпись остаётся первым узлом кнопки, как раньше */
+  icons(tb){tb.querySelectorAll("[data-c22tab]").forEach(b=>{if(!b.querySelector(".t48i"))b.insertAdjacentHTML("beforeend",`<svg class="t48i" viewBox="0 0 24 24" aria-hidden="true">${this.ICO[+b.dataset.c22tab]||this.ICO[0]}</svg>`);});},
+  /* капсула — под выбранной вкладкой */
+  move(tw,anim){const tb=tw&&tw.querySelector(".c22tabs"),ind=tb&&tb.querySelector(".t48ind"),b=tb&&tb.querySelector("[data-c22tab].on");if(!ind||!b)return;
+    if(!anim)ind.style.transition="none";ind.style.transform=`translateX(${b.offsetLeft}px)`;ind.style.width=b.offsetWidth+"px";ind.style.opacity="1";
+    if(!anim){void ind.offsetWidth;ind.style.transition="";}},
+  /* выбранная вкладка — в видимую часть полосы (телефон) */
+  center(tb,smooth){const b=tb.querySelector("[data-c22tab].on");if(!b||tb.scrollWidth<=tb.clientWidth)return;
+    tb.scrollTo({left:Math.max(0,b.offsetLeft-(tb.clientWidth-b.offsetWidth)/2),behavior:smooth&&!this.still()?"smooth":"auto"});},
+  edges(tw){const tb=tw.querySelector(".c22tabs"),m=tb.scrollWidth-tb.clientWidth;const l=tw.querySelector(".t48e.l"),r=tw.querySelector(".t48e.r");
+    if(l)l.classList.toggle("on",tb.scrollLeft>4);if(r)r.classList.toggle("on",m-tb.scrollLeft>4);},
+  ripple(b,e){if(this.still())return;const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.2,el=document.createElement("span");el.className="t48rip";
+    el.style.width=el.style.height=s+"px";el.style.left=(e.clientX-r.left-s/2)+"px";el.style.top=(e.clientY-r.top-s/2)+"px";b.appendChild(el);setTimeout(()=>el.remove(),650);},
+  still(){try{return matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){return false;}},
+  /* после переключения вкладки: капсула, значок, въезд содержимого, вкладка — в видимую часть */
+  after(vp,from,to){const tw=vp.querySelector(".c22tw.t48");if(!tw)return;const tb=tw.querySelector(".c22tabs");this.icons(tb);
+    tb.querySelectorAll("[data-c22tab]").forEach(b=>{const on=+b.dataset.c22tab===to;b.setAttribute("aria-selected",on?"true":"false");b.tabIndex=on?0:-1;});
+    this.move(tw,true);if(from===to||from==null)return;
+    const b=tb.querySelector(`[data-c22tab="${to}"]`);if(b){b.classList.remove("t48pop");void b.offsetWidth;b.classList.add("t48pop");
+      this.center(tb,true);}
+    const p=vp.querySelector(`.c22tab[data-c22pane="${to}"]`);if(p&&!this.still()){p.classList.remove("t48in-r","t48in-l");void p.offsetWidth;p.classList.add(to>from?"t48in-r":"t48in-l");
+      setTimeout(()=>p.classList.remove("t48in-r","t48in-l"),500);}}
+};
+{const _show48=Card22.show;Card22.show=function(vp,id,i){const from=this.tab[id];const r=_show48.apply(this,arguments);try{Tabs48.enhance(vp);Tabs48.after(vp,from,i);}catch(e){console.warn("tabs48",e);}return r;};}
+{const _pb48=Pages.bind;Pages.bind=function(vp){_pb48.apply(this,arguments);if(Router.cur==="matter"&&vp)try{Tabs48.enhance(vp);}catch(e){console.warn("tabs48",e);}};}
+if(typeof UZ21!=="undefined")Object.assign(UZ21,{
+  "Версия 2.9: новые вкладки карточки дела":"2.9-versiya: ish kartochkasining yangi yorliqlari",
+  "Вкладки «Ход дела … История» — на сапфировой подложке, у каждой свой значок; выбранная отмечена синей капсулой, которая плавно перетекает при переключении.":"«Ish jarayoni … Tarix» yorliqlari safir rangli taglikda, har birining oʻz belgisi bor; tanlangani koʻk kapsula bilan belgilanadi, almashtirganda u ravon siljiydi.",
+  "Содержимое вкладки въезжает с той стороны, куда вы перешли; по вкладкам можно ходить стрелками ← →. На телефоне выбранная вкладка сама встаёт по центру.":"Yorliq mazmuni siz oʻtgan tomondan kirib keladi; yorliqlar boʻylab ← → tugmalari bilan yurish mumkin. Telefonda tanlangan yorliq oʻzi markazga keladi."});
+window.addEventListener("resize",()=>{clearTimeout(Tabs48._rz);Tabs48._rz=setTimeout(()=>document.querySelectorAll(".c22tw.t48").forEach(tw=>{Tabs48.move(tw,false);Tabs48.edges(tw);}),120);});
+
+(()=>{const st=document.createElement("style");st.textContent=`
+.c22tw.t48{--t48bg:linear-gradient(180deg,#E2EBF8 0%,#C9D9EF 100%);--t48solid:#D5E2F3;--t48line:#B9CCE8;--t48track:rgba(255,255,255,.7);--t48trackl:rgba(47,100,176,.14);
+  --t48a:#2F64B0;--t48b:var(--pri);--t48glow:rgba(47,100,176,.35);--t48spring:cubic-bezier(.34,1.45,.5,1);--t48ease:cubic-bezier(.22,.8,.24,1)}
+:root[data-theme="dark"] .c22tw.t48{--t48bg:linear-gradient(180deg,#2A3750 0%,#212C40 100%);--t48solid:#253148;--t48line:#3A4B68;--t48track:rgba(0,0,0,.22);--t48trackl:rgba(127,162,218,.16);
+  --t48a:#7FA2DA;--t48b:#6782AC;--t48glow:rgba(127,162,218,.40)}
+.c22 .c22tw.t48{background:var(--t48bg);border:1px solid var(--t48line);border-radius:0 0 18px 18px;padding:10px 14px 12px;
+  box-shadow:0 18px 40px -22px rgba(30,36,48,.28),0 4px 10px -6px rgba(30,36,48,.10);overflow:hidden}
+:root[data-theme="dark"] .c22 .c22tw.t48{box-shadow:0 18px 40px -22px rgba(0,0,0,.6),0 4px 10px -6px rgba(0,0,0,.4)}
+.c22 .c22tw.t48 .c22tabs{position:relative;display:flex;gap:2px;padding:5px;margin:0;background:var(--t48track);border:1px solid var(--t48trackl);border-radius:14px;
+  box-shadow:inset 0 1px 3px rgba(30,60,110,.08);overflow-x:auto;scrollbar-width:none}
+.c22 .c22tw.t48 .c22tabs::-webkit-scrollbar{display:none}
+:root .c22 .c22tw.t48 .c22tabs button{flex:none;position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:9px 15px;margin:0;
+  background:transparent;color:var(--ink-2);font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;transition:color .3s;-webkit-tap-highlight-color:transparent;outline:none}
+:root .c22 .c22tw.t48 .c22tabs button:hover{color:var(--ink)}
+:root .c22 .c22tw.t48 .c22tabs button.on{color:#fff}
+:root .c22 .c22tw.t48 .c22tabs button:focus-visible{box-shadow:0 0 0 3px var(--t48glow)}
+.c22tw.t48 .t48i{order:-1;width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s var(--t48spring)}
+.c22tw.t48 button:hover .t48i{transform:translateY(-2px) rotate(-6deg) scale(1.08)}
+.c22tw.t48 button.t48pop .t48i{animation:t48pop .55s var(--t48spring)}
+@keyframes t48pop{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.c22tw.t48 .t48ind{position:absolute;z-index:1;top:5px;bottom:5px;left:0;width:0;opacity:0;border-radius:10px;pointer-events:none;
+  background:linear-gradient(135deg,var(--t48a),var(--t48b));box-shadow:0 8px 18px -8px var(--t48glow),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .55s var(--t48spring),width .55s var(--t48spring)}
+:root .c22 .c22tw.t48 .c22tabs button .nb{min-width:18px;height:18px;padding:0 5px;margin-left:0;border-radius:9px;font:700 10.5px/18px var(--font-num,inherit);text-align:center;
+  animation:t48pulse 2s ease-out infinite}
+:root .c22 .c22tw.t48 .c22tabs button.on .nb{background:#fff;color:var(--red);animation:none}
+@keyframes t48pulse{0%{box-shadow:0 0 0 0 rgba(214,54,43,.45)}70%{box-shadow:0 0 0 7px rgba(214,54,43,0)}100%{box-shadow:0 0 0 0 rgba(214,54,43,0)}}
+.c22tw.t48 .t48rip{position:absolute;border-radius:50%;pointer-events:none;background:var(--t48glow);transform:scale(0);animation:t48rip .6s var(--t48ease) forwards;z-index:0}
+@keyframes t48rip{to{transform:scale(1);opacity:0}}
+.c22tw.t48 .t48e{position:absolute;top:16px;bottom:18px;width:30px;z-index:5;pointer-events:none;opacity:0;transition:opacity .2s}
+.c22tw.t48 .t48e.l{left:20px;border-radius:14px 0 0 14px;background:linear-gradient(90deg,var(--t48solid),transparent)}
+.c22tw.t48 .t48e.r{right:20px;border-radius:0 14px 14px 0;background:linear-gradient(-90deg,var(--t48solid),transparent)}
+.c22tw.t48 .t48e.on{opacity:1}
+.c22tab.on.t48in-r{animation:t48inR .45s var(--t48ease,ease)}.c22tab.on.t48in-l{animation:t48inL .45s var(--t48ease,ease)}
+@keyframes t48inR{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes t48inL{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+@media(max-width:600px){:root .c22 .c22tw.t48{border-radius:0 0 14px 14px;padding:8px 8px 10px}
+  :root .c22 .c22tw.t48 .c22tabs button{padding:8px 12px;font-size:12.5px;gap:6px}.c22tw.t48 .t48i{width:16px;height:16px}
+  .c22tw.t48 .t48e{top:14px;bottom:16px}.c22tw.t48 .t48e.l{left:14px}.c22tw.t48 .t48e.r{right:14px}}
+@media (prefers-reduced-motion:reduce){.c22tw.t48 *,.c22tab.on{animation:none!important;transition:none!important}}
+`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
