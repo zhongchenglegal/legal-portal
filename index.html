@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="dbccc1b2122c";
+const ZC_BUILD="e711b5532b67";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="3.0";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="3.1";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12125,6 +12125,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v31docs",d:"2026-11-02",t:"Версия 3.1: документы дела и юрист в разовых услугах||3.1版：案件文件与法务参与单次服务",b:["Документы дела: файл или ссылку можно удалить кнопкой 🗑 (управляющий адвокат, ведущий, исполнитель; удаление — в «Истории» дела). Не удаляются файл, который виден клиенту, КП, договор и важный документ.||案件文件：可用 🗑 删除文件或链接（管理律师、主办律师、执行人；删除记入案件“历史”）。客户可见的文件、报价、合同和重要文件不可删除。","В «Прикрепить файл» можно выбрать сразу несколько файлов; перетаскивание и вставка через Ctrl+V тоже принимают несколько.||“附加文件”可同时选择多个文件；拖放和 Ctrl+V 粘贴同样支持多个文件。","В разовой услуге адвокатской фирмы юрист может быть исполнителем и участником команды. Вести такое дело по-прежнему может только адвокат.||在律所的单次服务中，法务可担任执行人和团队成员。主办此类案件的仍只能是律师。"]},
 {id:"v30pay",d:"2026-11-02",t:"Версия 3.0: работу можно начать и без оплаты||3.0版：未收到付款也可开始工作",b:["Неоплата больше не закрывает начало работы и задачи по делу. Ведущий и управляющий адвокат получают уведомление, в карточке дела видно, чего ждём по оплате. «Результат готов», выдача результата клиенту и архив — как раньше.||未付款不再阻止开始工作和案件任务。主办律师和管理律师会收到通知，案件卡片显示等待的款项。“成果已完成”、向客户交付成果和归档规则不变。"]},
 {id:"v29tabs",d:"2026-10-31",t:"Версия 2.9: новые вкладки карточки дела||2.9版：案件卡片新标签页",b:["Вкладки «Ход дела … История» — на сапфировой подложке, у каждой свой значок; выбранная отмечена синей капсулой, которая плавно перетекает при переключении.||「案件进展…历史」标签页置于蓝宝石色底板上，每个标签都有图标；选中的标签以蓝色胶囊标记，切换时平滑移动。","Содержимое вкладки въезжает с той стороны, куда вы перешли; по вкладкам можно ходить стрелками ← →. На телефоне выбранная вкладка сама встаёт по центру.||标签内容从切换方向滑入；可用 ← → 键切换标签。手机上选中的标签自动居中。"]},
 {id:"v29osh",d:"2026-10-31",t:"Версия 2.9: вставка файла в задании сопровождения, «Ждёт вашего действия» в поручениях, возврат этапа||2.9版：法律顾问任务可粘贴文件；指令中的“等待您处理”；退回阶段",b:["Окно задания сопровождения: файл можно вставить из буфера (Ctrl+V) или перетащить мышью — как в других окнах с «Прикрепить файл» (ОШ-0057).||法律顾问任务窗口：可从剪贴板粘贴（Ctrl+V）或拖入文件——与其他带“附加文件”的窗口相同（ОШ-0057）。","«Поручения»: наверху окна — «Ждёт вашего действия»: новые поручения вам и отчёты на проверку по вашим поручениям; именно их считает цифра на иконке, подсказка у иконки это объясняет (ОШ-0054).||“指令”：窗口顶部显示“等待您处理”——交给您的新指令和您下达指令的待审核报告；图标上的数字正是统计这些，图标提示有说明（ОШ-0054）。","Карточка дела: большая кнопка следующего этапа справа вверху сначала спрашивает «Перевести дело на этап …?». Управляющий адвокат может вернуть дело на предыдущий этап — «↩ Вернуть этап» в шкале этапов, с причиной; ведущий получает уведомление (ОШ-0060).||案件卡片：右上角的下一阶段大按钮会先询问“将案件转到……阶段？”。管理律师可将案件退回上一阶段——阶段栏中的“↩ 退回阶段”，需填写原因；主办律师会收到通知（ОШ-0060）。"]},
@@ -20723,9 +20724,9 @@ const Paste33={
 };
 /* Ctrl+V: только файлы и картинки; текст вставляется как обычно; чат обрабатывает сам */
 document.addEventListener("paste",e=>{if(e.defaultPrevented||!U()||(typeof isClient==="function"&&isClient()&&!document.getElementById("cmAttach")))return;
-  const it=[...((e.clipboardData||{}).items||[])].filter(x=>x.kind==="file");if(!it.length)return;
+  const cd=e.clipboardData||{},it=[...(cd.items||[])].filter(x=>x.kind==="file"),fl=[...(cd.files||[])];if(!it.length&&!fl.length)return;
   if(e.target.closest&&e.target.closest("#ch22thr,.ch22,.c22chat"))return;
-  e.preventDefault();Paste33.put(it.map(x=>x.getAsFile()),e.target);});
+  e.preventDefault();Paste33.put(fl.length>=it.length?fl:it.map(x=>x.getAsFile()),e.target);});
 /* перетаскивание файлов в открытое окно (окно, задача, форма ошибки) */
 const inOv33=el=>el&&el.closest&&el.closest("#ovD.open,#ovT.open,#ovB26.open");
 document.addEventListener("dragover",e=>{if(!inOv33(e.target)||![...((e.dataTransfer||{}).types||[])].includes("Files"))return;e.preventDefault();const md=e.target.closest(".md");if(md)md.classList.add("drop33");});
@@ -21863,6 +21864,56 @@ window.UZ21=Object.assign(window.UZ21||{},{
   "Версия 3.0: работу можно начать и без оплаты":"3.0-versiya: ishni toʻlovsiz ham boshlash mumkin",
   "Неоплата больше не закрывает начало работы и задачи по делу. Ведущий и управляющий адвокат получают уведомление, в карточке дела видно, чего ждём по оплате. «Результат готов», выдача результата клиенту и архив — как раньше.":"Toʻlov yoʻqligi endi ishni boshlash va ish boʻyicha vazifalarni toʻsmaydi. Yetakchi va boshqaruvchi advokat xabar oladi, ish kartochkasida qanday toʻlov kutilayotgani koʻrinadi. «Natija tayyor», natijani mijozga berish va arxiv — avvalgidek.",
   "Работу можно начать и без оплаты. Если условие оплаты не выполнено (100 % предоплата, предоплата N %, первый этап, первый месяц), ведущий и управляющий адвокат получают уведомление, а в карточке дела видно, чего ждём. Когда условие выполнено, ведущий получает уведомление. «Результат готов» по-прежнему открывается после полной оплаты.":"Ishni toʻlovsiz ham boshlash mumkin. Toʻlov sharti bajarilmagan boʻlsa (100 % oldindan toʻlov, N % oldindan toʻlov, birinchi bosqich, birinchi oy), yetakchi va boshqaruvchi advokat xabar oladi, ish kartochkasida nima kutilayotgani koʻrinadi. Shart bajarilganda yetakchi xabar oladi. «Natija tayyor» avvalgidek toʻliq toʻlovdan keyin ochiladi."});
+
+/* ═══════════════════════════ версия 3.1 · ОШ-0065, ОШ-0066 — ДОКУМЕНТЫ ДЕЛА: УДАЛЕНИЕ, НЕСКОЛЬКО ФАЙЛОВ, CTRL+V (решение владельца 02.11.2026) ═══════════════════════════
+   ОШ-0065 «возможность удаления неправильных документов»: у файла и ссылки в «Документах» — 🗑 с подтверждением. Кому и что можно — проверяет сервер
+   (public.matter_file_del, миграция 20261102000200_v31_osh): УП, ведущий, исполнители; не виден клиенту, не КП, не договор и не важный документ; в «Истории» дела.
+   ОШ-0066 «вставить документы через Ctrl+V, ставить несколько документов»: в окне выбора «Прикрепить файл» можно отметить несколько файлов; все файлы из
+   перетаскивания и Ctrl+V загружаются по очереди (следующий — после сохранения предыдущего), в открытую папку; подсказка говорит про Ctrl+V. */
+Object.assign(UI,{fd50Del:"Удалить файл||删除文件",fd50Q:"Удалить файл «{n}»?||删除文件“{n}”？",fd50T:"Файл будет удалён из дела. Восстановить его нельзя.||文件将从案件中删除，无法恢复。",
+  fd50Ok:"Файл удалён: {n}||文件已删除：{n}",fd50Up:"Загружено файлов: {n} из {k}||已上传文件：{n} / {k}",
+  c22Drop:"Перетащите файлы сюда, вставьте через Ctrl+V или нажмите «Прикрепить файл» — можно несколько сразу||将文件拖到此处、按 Ctrl+V 粘贴或点击“附加文件”——可同时选择多个"});
+window.UZ21=Object.assign(window.UZ21||{},{"Удалить файл":"Faylni oʻchirish","Удалить файл «{n}»?":"«{n}» fayli oʻchirilsinmi?","Файл будет удалён из дела. Восстановить его нельзя.":"Fayl ishdan oʻchiriladi. Uni tiklab boʻlmaydi.",
+  "Файл удалён: {n}":"Fayl oʻchirildi: {n}","Версия 3.1: документы дела и юрист в разовых услугах":"3.1-versiya: ish hujjatlari va bir martalik xizmatlarda yurist",
+  "Документы дела: файл или ссылку можно удалить кнопкой 🗑 (управляющий адвокат, ведущий, исполнитель; удаление — в «Истории» дела). Не удаляются файл, который виден клиенту, КП, договор и важный документ.":"Ish hujjatlari: fayl yoki havolani 🗑 tugmasi bilan oʻchirish mumkin (boshqaruvchi advokat, yetakchi, ijrochi; oʻchirish ish «Tarixi»ga yoziladi). Mijozga koʻrinadigan fayl, TK, shartnoma va muhim hujjat oʻchirilmaydi.",
+  "В «Прикрепить файл» можно выбрать сразу несколько файлов; перетаскивание и вставка через Ctrl+V тоже принимают несколько.":"«Fayl biriktirish»da bir nechta faylni birdan tanlash mumkin; tortib tashlash va Ctrl+V ham bir nechta faylni qabul qiladi.",
+  "В разовой услуге адвокатской фирмы юрист может быть исполнителем и участником команды. Вести такое дело по-прежнему может только адвокат.":"Advokatlik firmasining bir martalik xizmatida yurist ijrochi va jamoa aʼzosi boʻlishi mumkin. Bunday ishni avvalgidek faqat advokat olib boradi.","Загружено файлов: {n} из {k}":"Yuklangan fayllar: {n} / {k}",
+  "Перетащите файлы сюда, вставьте через Ctrl+V или нажмите «Прикрепить файл» — можно несколько сразу":"Fayllarni shu yerga torting, Ctrl+V bilan qoʻying yoki «Fayl biriktirish» tugmasini bosing — bir nechtasini birdan ham boʻladi"});
+const Docs50={
+  multi:false,
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T&&!!U();},
+  /* один файл — тем же путём, что «Прикрепить файл» (лимит, хранилище, права); ответ — когда дело сохранено */
+  one(mid,file,folder){return new Promise(res=>{const inp=document.getElementById("fileIn");if(!inp)return res(false);
+    let called=false,done=false;const fin=v=>{if(!done){done=true;res(v);}};
+    const orig=inp.click;inp.click=()=>{};inp.onchange=null;Card22._upFolder=folder;
+    try{Files.upload(async f=>{called=true;const m=matter(mid);if(!m)return fin(false);m.files=m.files||[];m.files.push(f);try{await saveDoc("matters",m);fin(true);}catch(e){fin(false);}});}finally{inp.click=orig;}
+    if(typeof inp.onchange!=="function")return fin(false);
+    const dt=new DataTransfer();dt.items.add(file);inp.files=dt.files;const r=inp.onchange();
+    /* сервер: ответ — после загрузки; без сервера файл читается отдельно. Обратного вызова нет — файл не прошёл (сообщение уже показано) */
+    if(r&&r.then)r.then(()=>{if(!called)fin(false);},()=>fin(false));else setTimeout(()=>{if(!called)fin(false);},15000);});},
+  async del(mid,i){const m=matter(mid),f=m&&(m.files||[])[i];if(!f)return;
+    if(!await Dlg.confirm(T1(UI.fd50Q).replace("{n}",f.name||""),T1(UI.fd50T),true))return;
+    if(this.srv()){try{await SB19.T.rpc("matter_file_del",{mid,fkey:f.id||f.url});}catch(e){toast(String((e&&e.message)||e));return;}
+      try{const r=await SB19.docGet("matters",mid);if(r&&r.exists)S.matters[mid]=Object.assign({},r.data(),{id:mid});}catch(e){}}
+    else{m.files.splice(i,1);m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.fd50Ok).replace("{n}",f.name||"")});await saveDoc("matters",m);}
+    toast(T1(UI.fd50Ok).replace("{n}",f.name||""));Router.render();}
+};
+Card22.dropFiles=async function(vp,files){const mid=Router.arg,list=[...(files||[])];if(Router.cur!=="matter"||!list.length||!vp.querySelector('[data-act="mUp"]'))return;
+  const folder=this.fold[mid]||"";let n=0;for(const f of list)if(await Docs50.one(mid,f,folder))n++;
+  Router.render();if(list.length>1)toast(T1(UI.fd50Up).replace("{n}",n).replace("{k}",list.length));};
+/* «Прикрепить файл» в «Документах»: в окне выбора можно отметить несколько; один файл идёт прежним путём, несколько — по очереди */
+document.addEventListener("click",e=>{if(Router.cur==="matter"&&e.target.closest&&e.target.closest('[data-act="mUp"]'))Docs50.multi=true;},true);
+{const _up50=Files.upload.bind(Files);Files.upload=function(cb){const inp=document.getElementById("fileIn");if(inp)inp.multiple=Docs50.multi;Docs50.multi=false;return _up50(cb);};}
+document.addEventListener("change",e=>{const inp=e.target;if(!inp||inp.id!=="fileIn"||!inp.multiple)return;const fs=[...inp.files];inp.multiple=false;if(fs.length<2)return;
+  e.stopPropagation();Card22.dropFiles(document,fs);},true);
+document.addEventListener("cancel",e=>{if(e.target&&e.target.id==="fileIn")e.target.multiple=false;},true);
+/* 🗑 у файла; КП удаляют в «Версиях КП» */
+{const _db50=Card22.docsBody.bind(Card22);Card22.docsBody=function(m){const w=_db50(m);if(!this.folderEd(m))return w;
+    w.querySelectorAll(".c22fr").forEach(r=>{const a=r.querySelector('[data-act="mFile"]'),f=a&&(m.files||[])[+a.dataset.i];if(!f||f.kind==="kp")return;
+      const b=this.btn("🗑","btn sm ghost c50del",{c50del:a.dataset.i});b.title=T1(UI.fd50Del);b.setAttribute("aria-label",T1(UI.fd50Del));r.appendChild(b);});return w;};
+  const _bd50=Card22.bindDocs.bind(Card22);Card22.bindDocs=function(vp,m){_bd50(vp,m);
+    vp.querySelectorAll("[data-c50del]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();Docs50.del(m.id,+b.dataset.c50del);});};}
+(()=>{const st=document.createElement("style");st.textContent=".c22fr .c50del{margin-left:auto;flex:none;padding:2px 8px}.c22fr .c22mv+.c50del{margin-left:6px}";document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
