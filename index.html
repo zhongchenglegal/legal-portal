@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="0fb4e57f0cf4";
+const ZC_BUILD="dbccc1b2122c";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="2.9";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="3.0";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -11590,8 +11590,10 @@ const Pay21={
     return `<div class="pend21"><div class="lbl9">${T1(UI.pay21Pend)} · ${pend.length}</div>${pend.map(p=>`<div class="reqrow"><span class="tm">${fmtD(p.date)}</span><span><b>${fmtN(p.amount)} ${esc(p.currency)}</b> · ${dispName(p.by)}${p.note?" · "+esc(p.note):""}${p.proof?` · <span class="chipf" data-pay21file="${esc(p.id)}">${esc(p.proof.name||"документ")}</span>`:""}</span>${fin?`<button class="btn sm pri" data-pay21ok="${esc(p.id)}">${T1(UI.pay21Confirm)}</button>`:`<span class="rt open">${T1(UI.pay21Pending)}</span>`}</div>`).join("")}</div>`;}
 };
 const Gate21={
-  start(m){if(!m||m.pipeline!=="contract"||m.payUnblock)return [];const out=[];const po=m.payOrder;
-    if(!PAYO21[po])return [T1(UI.g21NoPayOrder)];const x=Pay21.pct(m);
+  /* версия 3.0 (решение владельца 02.11.2026): неоплата не закрывает начало работы — только выбранный порядок оплаты; чего ждём по оплате — payWait, об этом уведомляет сервер */
+  start(m){if(!m||m.pipeline!=="contract"||m.payUnblock)return [];return PAYO21[m.payOrder]?[]:[T1(UI.g21NoPayOrder)];},
+  payWait(m){if(!m||m.pipeline!=="contract"||m.payUnblock)return [];const out=[];const po=m.payOrder;
+    if(!PAYO21[po])return [];const x=Pay21.pct(m);
     if(po==="full"&&m.paymentStatus!=="paid")out.push(T1(UI.g21Full).replace("{x}",x));
     if(po==="prepay"&&!(m.paymentStatus==="paid"||Pay21.thresholdMet(m)))out.push(T1(UI.g21Prepay).replace("{n}",+m.payPct21||0).replace("{x}",x));
     if(po==="stages"&&!(m.paymentStatus==="paid"||Pay21.thresholdMet(m)))out.push(T1(UI.g21Stages).replace("{s}",fmtN(m.payFirst21)+" "+Pay21.cur(m)).replace("{p}",fmtN(Pay21.paidC(m))+" "+Pay21.cur(m)));
@@ -11605,10 +11607,10 @@ const Gate21={
 /* блокировка «Результат готов»: при оплате после результата её нет; остальное — как раньше */
 const _pb21=payBlock11;payBlock11=function(m){if(!m)return null;if(m.payUnblock)return null;if(m.svc==="support")return _pb21(m);if(m.payOrder==="postpay")return null;return m.paymentStatus==="paid"?null:"full";};
 /* статус оплаты — после каждого поступления; выполненное условие — уведомление ведущему */
-const _syncPay21=Payment.syncMatter.bind(Payment);Payment.syncMatter=async function(p,sign){const m=p&&p.matterId&&S.matters[p.matterId];const wasBlocked=m?Gate21.start(m).length>0:false;
+const _syncPay21=Payment.syncMatter.bind(Payment);Payment.syncMatter=async function(p,sign){const m=p&&p.matterId&&S.matters[p.matterId];const wasBlocked=m?Gate21.payWait(m).length>0:false;
   const r=await _syncPay21(p,sign);if(!m)return r;if(sign>0)delete m.payManual21;
   if(Pay21.recompute(m)){await saveDoc("matters",m);}
-  if(wasBlocked&&!Gate21.start(m).length&&St21.before(m,"work")){const a=accByEmp(m.lead);if(a&&a.login!==(U()||{}).login)notify(a.login,"task",nt18("startOk21",{no:m.no}),m.id);}
+  if(wasBlocked&&!Gate21.payWait(m).length&&St21.before(m,"work")){const a=accByEmp(m.lead);if(a&&a.login!==(U()||{}).login)notify(a.login,"task",nt18("startOk21",{no:m.no}),m.id);}
   return r;};
 const _paySet21=Pay11.set.bind(Pay11);Pay11.set=async function(id){const m=matter(id);const was=m&&m.paymentStatus;await _paySet21(id);if(m&&m.paymentStatus!==was){m.payManual21={by:U().login,at:nowS()};await saveDoc("matters",m);}};
 /* непроверенные поступления в зарплату не идут */
@@ -11751,6 +11753,7 @@ const _svcCard21=svcCard11;svcCard11=function(m){let h=_svcCard21(m);try{St21.en
   if(!closed&&!MP&&lead&&m.contractSigned)btns.push(`<button class="btn sm ghost" data-act="askCost21">${T1(UI.st21AskCost)}</button>`);
   const A='<div class="actions" style="justify-content:flex-start;margin:10px 0 0">';if(btns.length){if(h.includes(A))h=h.replace(A,A+btns.join(""));else h=h.replace('<div class="ccgrid" style="margin-top:10px">',A+btns.join("")+'</div><div class="ccgrid" style="margin-top:10px">');}
   if(!closed&&m.pipeline==="contract"&&St21.before(m,"work")){const g=Gate21.start(m);if(g.length){w.push(`<div class="reqonly warn11 gate21">⛔ ${T1(UI.st21NotStarted)}: ${g.map(esc).join(" · ")}</div>`);const old=h.match(/<div class="reqonly warn11">⚠ [^<]*<\/div>/g)||[];old.forEach(x=>{if(x.includes(T1(UI.payBlock8)))h=h.replace(x,"");});}}
+  if(!closed&&m.pipeline==="contract"&&costVisible(m)){const pw=Gate21.payWait(m);if(pw.length)w.push(`<div class="reqonly warn11 gate21">⚠ ${T1(UI.payWarn)}: ${pw.map(esc).join(" · ")}</div>`);}
   if(!closed&&m.pipeline!=="contract"&&m.pipeline!=="lost"&&!MP&&lead){const need=[];if(!Pipe.ready(m))need.push(T1(UI.plNeedContract));if(!PAYO21[m.payOrder])need.push(T1(UI.st21NeedPayOrder));if(!(m.contract&&m.contract.file))need.push(T1(UI.st21NeedFile));if(need.length)w.push(`<div class="reqonly" style="margin-top:8px">${T1(UI.st21SignHint)}: ${need.join(" · ")}</div>`);}
   if(!closed&&m.contractCancel21&&!m.contractSigned)w.push(`<div class="reqonly warn11">${T1(UI.st21Unsign)}: ${esc(m.contractCancel21.reason)} · ${esc(accName(m.contractCancel21.by))}</div>`);
   if(w.length)h=h.replace('<div class="ccgrid" style="margin-top:10px">',w.join("")+'<div class="ccgrid" style="margin-top:10px">');}catch(e){console.warn("svc21",e);}return h;};
@@ -12043,7 +12046,7 @@ const HELP21={
    {id:"pay",t:"Поступления и начало работы||收款与开始工作",b:[
     "Поступление вносите сами: «+ Поступление» в карточке дела — сумма, дата, валюта и обязательно подтверждающий документ (платёжка или выписка). Поступление получает пометку «на проверке», управляющий адвокат подтверждает его.||收款由您自行录入：在案件卡片点击“+ 收款”，填写金额、日期、币种并必须附上付款凭证（付款单或对账单）。收款标记为“待核对”，由管理合伙人确认。",
     "Статус оплаты считается по поступлениям автоматически.||付款状态根据收款自动计算。",
-    "Работа не начинается, пока не выполнено условие оплаты: при 100 % предоплате — полная оплата, при предоплате N % — эта часть. В карточке красная плашка «Работа не начата» объясняет, чего ждём. Когда условие выполнено, вы получите уведомление «можно начинать работу».||未满足付款条件前不能开始工作：100%预付需全额到账，预付N%需该部分到账。案件卡片中红色提示“工作未开始”说明原因。条件满足后您会收到“可以开始工作”的通知。",
+    "Работу можно начать и без оплаты. Если условие оплаты не выполнено (100 % предоплата, предоплата N %, первый этап, первый месяц), ведущий и управляющий адвокат получают уведомление, а в карточке дела видно, чего ждём. Когда условие выполнено, ведущий получает уведомление. «Результат готов» по-прежнему открывается после полной оплаты.||未收到付款也可开始工作。若付款条件未满足（100%预付、预付N%、首阶段、首月），主办律师和管理律师会收到通知，案件卡片显示等待的款项。条件满足后主办律师会收到通知。“成果已完成”仍需全额付款后开启。",
     "При оплате после результата «Результат готов» можно поставить сразу, но без полной оплаты дело не закрыть и не отправить в архив, и оно не войдёт в расчёт зарплаты.||结果后付款时可直接标记“结果已完成”，但未全额付款的案件不能结案或归档，也不计入工资核算。",
     "Непроверенные поступления в зарплату не идут, пока управляющий адвокат их не подтвердит.||未经管理合伙人确认的收款不计入工资。"]},
    {id:"stages",t:"Стадии дела||案件阶段",b:[
@@ -12122,6 +12125,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v30pay",d:"2026-11-02",t:"Версия 3.0: работу можно начать и без оплаты||3.0版：未收到付款也可开始工作",b:["Неоплата больше не закрывает начало работы и задачи по делу. Ведущий и управляющий адвокат получают уведомление, в карточке дела видно, чего ждём по оплате. «Результат готов», выдача результата клиенту и архив — как раньше.||未付款不再阻止开始工作和案件任务。主办律师和管理律师会收到通知，案件卡片显示等待的款项。“成果已完成”、向客户交付成果和归档规则不变。"]},
 {id:"v29tabs",d:"2026-10-31",t:"Версия 2.9: новые вкладки карточки дела||2.9版：案件卡片新标签页",b:["Вкладки «Ход дела … История» — на сапфировой подложке, у каждой свой значок; выбранная отмечена синей капсулой, которая плавно перетекает при переключении.||「案件进展…历史」标签页置于蓝宝石色底板上，每个标签都有图标；选中的标签以蓝色胶囊标记，切换时平滑移动。","Содержимое вкладки въезжает с той стороны, куда вы перешли; по вкладкам можно ходить стрелками ← →. На телефоне выбранная вкладка сама встаёт по центру.||标签内容从切换方向滑入；可用 ← → 键切换标签。手机上选中的标签自动居中。"]},
 {id:"v29osh",d:"2026-10-31",t:"Версия 2.9: вставка файла в задании сопровождения, «Ждёт вашего действия» в поручениях, возврат этапа||2.9版：法律顾问任务可粘贴文件；指令中的“等待您处理”；退回阶段",b:["Окно задания сопровождения: файл можно вставить из буфера (Ctrl+V) или перетащить мышью — как в других окнах с «Прикрепить файл» (ОШ-0057).||法律顾问任务窗口：可从剪贴板粘贴（Ctrl+V）或拖入文件——与其他带“附加文件”的窗口相同（ОШ-0057）。","«Поручения»: наверху окна — «Ждёт вашего действия»: новые поручения вам и отчёты на проверку по вашим поручениям; именно их считает цифра на иконке, подсказка у иконки это объясняет (ОШ-0054).||“指令”：窗口顶部显示“等待您处理”——交给您的新指令和您下达指令的待审核报告；图标上的数字正是统计这些，图标提示有说明（ОШ-0054）。","Карточка дела: большая кнопка следующего этапа справа вверху сначала спрашивает «Перевести дело на этап …?». Управляющий адвокат может вернуть дело на предыдущий этап — «↩ Вернуть этап» в шкале этапов, с причиной; ведущий получает уведомление (ОШ-0060).||案件卡片：右上角的下一阶段大按钮会先询问“将案件转到……阶段？”。管理律师可将案件退回上一阶段——阶段栏中的“↩ 退回阶段”，需填写原因；主办律师会收到通知（ОШ-0060）。"]},
 {id:"v28drf",d:"2026-10-31",t:"Версия 2.8: черновики Александра — только для управляющего партнёра||2.8版：亚历山大起草草稿——仅限管理合伙人",b:["Попросите Александра в «Чатах»: «подготовь ответ клиенту по делу №…», «напиши письмо в суд…», «переделай черновик №…». Черновик придёт карточкой «Черновик №…». Клиенту — на его языке, с переводом для вас; чего нет в данных — в [квадратных скобках].||在“聊天”中请亚历山大：“为案件№…起草给客户的回复”、“写一封致法院的信……”、“修改草稿№…”。草稿以“草稿№…”卡片发送。给客户的草稿使用客户的语言，并附您用的译文；数据中没有的内容用[方括号]标出。","Под черновиком: «Копировать», «Править», «Вставить в обсуждение с клиентом» (открывается дело на вкладке «Переписка», текст уже в поле — «Отправить» нажимаете вы) и «Не нужен».||草稿下方：“复制”、“编辑”、“插入到与客户的沟通”（打开案件的“往来沟通”标签，文本已在输入框中——由您点击“发送”）和“不需要”。","Утренний обход: если клиент написал в деле и больше суток ждёт ответа, Александр сам готовит черновик ответа. Сам он клиентам не пишет; черновики видите только вы.||早间巡查：如客户在案件中留言并已等待回复超过一天，亚历山大会自动起草回复草稿。他本人不会给客户发消息；草稿仅您可见。"]},
@@ -13723,7 +13727,7 @@ if(typeof Pipe!=="undefined"){
     /* 2.1 (решение владельца 27.10.2026 «3. исправь», передано сессией ИИ-агентов): сам переходит в работу и суд, и сопровождение — как разовая услуга */
     if(!(pr22oneoff(m)||(m&&(m.svc==="court"||m.svc==="support")))||step!=="contract"||was==="contract"||m.pipeline!=="contract"||m.stage&&m.stage!=="received")return r;
     const l=St21.list(m);const to=l.includes("team")?"team":"work";
-    if(to==="work"&&typeof Gate21!=="undefined"&&Gate21.start(m).length)return r;   /* условия старта не выполнены — остаётся «Подготовка к работе» */
+    if(to==="work"&&typeof Gate21!=="undefined"&&(Gate21.start(m).length||Gate21.payWait(m).length))return r;   /* условия старта или оплаты не выполнены — остаётся «Подготовка к работе», начать можно кнопкой (3.0) */
     m.stage=to;m.stageHistory=m.stageHistory||[];m.stageHistory.push({stage:to,at:nowS(),by:U().emp,from:"received",auto:true});
     m.history=m.history||[];m.history.push({at:nowS(),by:U().emp,what:T1(UI.pr22Auto)});
     try{await saveDoc("matters",m);}catch(e){}Router.render();return r;};
@@ -21706,7 +21710,9 @@ const StBack47={
     const v=await Dlg.ask({title:T1(UI.st47Back)+" · "+m.no,text:T1(UI.st47BackTx).replace("{a}",St21.label(m.stage)).replace("{b}",St21.label(to)),
       fields:[{k:"why",label:T1(UI.st47Why),type:"textarea",required:true}]});if(!v)return;
     const labels={from:St21.label(m.stage),to:St21.label(to),to_ru:withLang18("ru",()=>St21.label(to)),from_ru:withLang18("ru",()=>St21.label(m.stage)),st:L2(()=>stLabel(to,true,m))};
-    StSrv23.done(await StSrv23.call("matter_stage_back",{mid:m.id,note:v.why,given:StSrv23.given(m),labels}),m,T1(UI.st47Done).replace("{st}",St21.label(to)));}
+    /* версия 3.0: прямой вызов, а не StSrv23.call — если функции нет в облаке, call отключал бы серверный путь для всех кнопок этапов */
+    let r;try{r={d:await SB19.T.rpc("matter_stage_back",{mid:m.id,note:v.why,given:StSrv23.given(m),labels})};}catch(e){r={err:StSrv23.msg(e)};}
+    StSrv23.done(r,m,T1(UI.st47Done).replace("{st}",St21.label(to)));}
 };
 document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.closest(".c22acts .btn.pri[data-c22target]");if(!b)return;
   if(StBack47.ok){StBack47.ok=false;return;}
@@ -21845,6 +21851,18 @@ window.addEventListener("resize",()=>{clearTimeout(Tabs48._rz);Tabs48._rz=setTim
   .c22tw.t48 .t48e{top:14px;bottom:16px}.c22tw.t48 .t48e.l{left:14px}.c22tw.t48 .t48e.r{right:14px}}
 @media (prefers-reduced-motion:reduce){.c22tw.t48 *,.c22tab.on{animation:none!important;transition:none!important}}
 `;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.0 · РАБОТА НАЧИНАЕТСЯ И БЕЗ ОПЛАТЫ (решение владельца 02.11.2026) ═══════════════════════════
+   Правило — на сервере (миграция 20261102000100_start_no_pay), запрет и плашка — в v21_svc.js. Здесь — шаблоны уведомлений и узбекский текст. */
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{
+  startUnpaid30:"{no}: работа начата, оплата не получена — {why}||{no}：已开始办理，尚未收到付款 — {why}",
+  payOk30:"По делу {no} условия оплаты выполнены||案件 {no} 的付款条件已满足"});
+window.UZ21=Object.assign(window.UZ21||{},{
+  "{no}: работа начата, оплата не получена — {why}":"{no}: ish boshlandi, toʻlov olinmagan — {why}",
+  "По делу {no} условия оплаты выполнены":"{no}-ish boʻyicha toʻlov shartlari bajarildi",
+  "Версия 3.0: работу можно начать и без оплаты":"3.0-versiya: ishni toʻlovsiz ham boshlash mumkin",
+  "Неоплата больше не закрывает начало работы и задачи по делу. Ведущий и управляющий адвокат получают уведомление, в карточке дела видно, чего ждём по оплате. «Результат готов», выдача результата клиенту и архив — как раньше.":"Toʻlov yoʻqligi endi ishni boshlash va ish boʻyicha vazifalarni toʻsmaydi. Yetakchi va boshqaruvchi advokat xabar oladi, ish kartochkasida qanday toʻlov kutilayotgani koʻrinadi. «Natija tayyor», natijani mijozga berish va arxiv — avvalgidek.",
+  "Работу можно начать и без оплаты. Если условие оплаты не выполнено (100 % предоплата, предоплата N %, первый этап, первый месяц), ведущий и управляющий адвокат получают уведомление, а в карточке дела видно, чего ждём. Когда условие выполнено, ведущий получает уведомление. «Результат готов» по-прежнему открывается после полной оплаты.":"Ishni toʻlovsiz ham boshlash mumkin. Toʻlov sharti bajarilmagan boʻlsa (100 % oldindan toʻlov, N % oldindan toʻlov, birinchi bosqich, birinchi oy), yetakchi va boshqaruvchi advokat xabar oladi, ish kartochkasida nima kutilayotgani koʻrinadi. Shart bajarilganda yetakchi xabar oladi. «Natija tayyor» avvalgidek toʻliq toʻlovdan keyin ochiladi."});
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
