@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="d63209a9326d";
+const ZC_BUILD="27d5a6d4698b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -18218,24 +18218,27 @@ const H36={
   pMon(box,s,g){if(!box)return;const mon=s.mon||(s.o&&this.monOf(s.o,s.c,g.start,g.today));if(!mon){box.innerHTML="";return;}
     const list=mon.list||[],cur=mon.cur||{},own=mon.own||{},part=mon.part||null;const show=(part?[Object.assign({part:1},part)]:[]).concat(list).slice(-6);
     const dm=d=>d?d.slice(8,10)+"."+d.slice(5,7):"";const since=d=>lang==="uz"?dm(d)+" dan boshlab":t36("с||自")+" "+dm(d);const partNote=part?`${this.mName(part.ym,true)} — ${since(part.from)}, ${t36("в среднее не входит||不计入平均")}`:"";
-    const panel=(k,title,cls)=>{const vals=show.map(x=>x[k]);const curV=+cur[k]||0;const curName=this.mName(cur.ym||g.today,true);
+    const H=50;
+    const panel=(k,title,cls)=>{const curV=+cur[k]||0;const curName=this.mName(cur.ym||g.today,true);const ownV=own&&own[k]!=null?+own[k]:null;
       const mkBars=(mx)=>show.map((x,i)=>`<div class="h36b1${i===show.length-1?" last":""}${x.part?" part":""}"${x.part?` title="${esc(partNote)}"`:""}><div class="col"><span style="height:${Math.round(x[k]/mx*H)}px"></span></div><em>${x[k]}</em><u>${this.mName(x.ym)}${x.part?"*":""}</u></div>`).join("");
-      const H=50;
-      if(!list.length){if(!part)return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div><div class="h36main"><small>${curName} ${t36("пока||至今")}</small><b>${curV}</b></div></div>`;
-        const mx=Math.max(1,+part[k]||0);return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div>
-        <div class="h36top"><div class="h36main"><small>${this.mName(part.ym,true)} ${since(part.from)}</small><b>${+part[k]||0}</b></div><div class="h36bars" title="${esc(t36("По месяцам||按月"))}">${mkBars(mx)}</div></div>
-        <div class="h36now"><div class="h36nl"><span>${curName} ${t36("пока||至今")}: <b>${curV}</b></span></div></div></div>`;}
-      const avg=+mon.avg[k],last=list[list.length-1],lastV=+last[k],ownV=own&&own[k]!=null?+own[k]:null,goal=ownV!=null?ownV:+mon.goal[k];
+      const btn=`<button type="button" class="h36goal" data-h36goal="${k}" title="${esc(t36("Своя цель вместо среднего||自定目标代替平均"))}">✎</button>`;
+      /* строка текущего месяца: с целью (своя или среднее) — «из N», полоса, отметка «сегодня», «ещё N»; без цели — только число и ✎ */
+      const nowRow=(goal)=>{if(goal==null)return `<div class="h36now"><div class="h36nl"><span>${curName} ${t36("пока||至今")}: <b>${curV}</b>${btn}</span></div></div>`;
+        const done=curV>=goal,pct=goal?Math.min(100,Math.round(curV/goal*100)):100,day=+cur.day||1,days=+cur.days||30,mark=Math.min(100,Math.round(day/days*100)),need=Math.ceil(goal*day/days);
+        const right=done?`<strong class="done">${t36("выполнено||已完成")}${curV>goal?", +"+(curV-goal)+" "+t36("сверх||超出"):""}</strong>`:`<strong>${t36("ещё||还差")} ${goal-curV}</strong>`;
+        const pace=done?"":curV>=need?`<small class="ok">${t36("по графику||按进度")}</small>`:`<small class="warn">${t36("к сегодняшнему дню нужно||今日应达")} ${need}</small>`;
+        return `<div class="h36now"><div class="h36nl"><span>${curName} ${t36("пока||至今")}: <b>${curV}</b> ${t36("из||/")} ${goal}${ownV!=null?` <em class="h36own">${t36("своя цель||自定目标")}</em>`:""}${btn}</span>${right}</div>
+        <div class="h36track"><span class="${done?"done":""}" style="width:${pct}%"></span><i class="h36today" style="left:${mark}%" title="${esc(t36("где надо быть сегодня||今日应达位置"))}"></i></div>${pace}</div>`;};
+      if(!list.length){/* полных месяцев нет: неполный первый месяц (если есть) и текущий; цель — только своя */
+        const main=part?`<div class="h36main"><small>${this.mName(part.ym,true)} ${since(part.from)}</small><b>${+part[k]||0}</b></div>`:`<div class="h36main"><small>${curName} ${t36("пока||至今")}</small><b>${curV}</b></div>`;
+        const bars=part?`<div class="h36bars" title="${esc(t36("По месяцам||按月"))}">${mkBars(Math.max(1,+part[k]||0))}</div>`:"";
+        return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div><div class="h36top">${main}${bars}</div>${nowRow(ownV)}</div>`;}
+      const avg=+mon.avg[k],last=list[list.length-1],lastV=+last[k],goal=ownV!=null?ownV:+mon.goal[k];
       const diff=Math.round((lastV-avg)*10)/10;const chip=diff>0?"↑ +"+this.n1(diff)+" "+t36("к среднему||高于平均"):diff<0?"↓ −"+this.n1(-diff)+" "+t36("к среднему||低于平均"):"→ "+t36("как среднее||与平均持平");
       const mx=Math.max(1,...show.map(x=>+x[k]||0));const bars=mkBars(mx);
-      const done=curV>=goal,pct=goal?Math.min(100,Math.round(curV/goal*100)):100,day=+cur.day||1,days=+cur.days||30,mark=Math.min(100,Math.round(day/days*100)),need=Math.ceil(goal*day/days);
-      const right=done?`<strong class="done">${t36("выполнено||已完成")}${curV>goal?", +"+(curV-goal)+" "+t36("сверх||超出"):""}</strong>`:`<strong>${t36("ещё||还差")} ${goal-curV}</strong>`;
-      const pace=done?"":curV>=need?`<small class="ok">${t36("по графику||按进度")}</small>`:`<small class="warn">${t36("к сегодняшнему дню нужно||今日应达")} ${need}</small>`;
       return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div>
         <div class="h36top"><div class="h36main"><small>${this.mName(last.ym,true)}</small><b>${lastV}</b><span class="h36chip">${chip}</span><span class="h36avg">${t36("в среднем||平均")} ${this.n1(avg)} ${t36("в месяц||每月")}</span></div>
-        <div class="h36bars" title="${esc(t36("По месяцам||按月"))}">${bars}<div class="h36avgl" style="bottom:${Math.round(avg/mx*H)+33}px"></div></div></div>
-        <div class="h36now"><div class="h36nl"><span>${curName} ${t36("пока||至今")}: <b>${curV}</b> ${t36("из||/")} ${goal}${ownV!=null?` <em class="h36own">${t36("своя цель||自定目标")}</em>`:""}<button type="button" class="h36goal" data-h36goal="${k}" title="${esc(t36("Своя цель вместо среднего||自定目标代替平均"))}">✎</button></span>${right}</div>
-        <div class="h36track"><span class="${done?"done":""}" style="width:${pct}%"></span><i class="h36today" style="left:${mark}%" title="${esc(t36("где надо быть сегодня||今日应达位置"))}"></i></div>${pace}</div></div>`;};
+        <div class="h36bars" title="${esc(t36("По месяцам||按月"))}">${bars}<div class="h36avgl" style="bottom:${Math.round(avg/mx*H)+33}px"></div></div></div>${nowRow(goal)}</div>`;};
     box.innerHTML=`<div class="h36two">${panel("o",t36("Открыто||开立"),"h36po")}${panel("c",t36("Закрыто||结案"),"h36pc")}</div>${list.length?"":`<div class="h36wait">${t36("Среднее появится после первого полного месяца||首个完整月份后将显示平均值")}</div>`}${part&&show[0]&&show[0].part?`<div class="h36wait h36pnote">* ${esc(partNote)}</div>`:""}`;
     box.querySelectorAll("[data-h36goal]").forEach(b=>b.onclick=()=>this.setGoal(b.dataset.h36goal,mon));},
   async setGoal(k,mon){const sv=this.st.sec,own=mon.own||{},curV=own[k]!=null?own[k]:"";
