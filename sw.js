@@ -2,7 +2,7 @@
    Делает две вещи: показывает push-уведомления, когда портал закрыт, и открывает нужное дело по нажатию.
    Данные портала в нём НЕ хранятся: страница каждый раз берётся с сайта, а при отсутствии сети показывается последняя
    загруженная (чтобы значок не открывал пустое окно). Версия скрипта ниже меняется, когда меняется этот файл. */
-const SW_VERSION = "3";
+const SW_VERSION = "4";
 const SHELL = "zc-shell-" + SW_VERSION;
 
 self.addEventListener("install", () => self.skipWaiting());
@@ -34,16 +34,28 @@ self.addEventListener("fetch", e => {
    прямо на место уведомления: переписку, дело, задачи, клиента. На iPhone кнопок нет — там открывает нажатие. */
 const ACT = url => url.includes("#/chats/") ? "Открыть сообщение · 打开消息" : url.includes("#/matter/") ? "Открыть дело · 打开案件"
   : url.includes("#/tasks") ? "Открыть задачи · 打开任务" : url.includes("#/client/") ? "Открыть клиента · 打开客户" : "Открыть портал · 打开门户";
+/* ОШ-0080 (версия 3.2, вариант б, решение владельца 04.11.2026): уведомление о сообщении сервер шлёт всегда; показ гасится
+   только когда у получателя открыт именно этот чат и окно портала видно и в фокусе. Страница сообщает сюда {type:"zc-view",
+   chat, visible}; сведения старше двух минут не считаются (скрипт мог перезапуститься — тогда уведомление показывается). */
+let view = null;
+self.addEventListener("message", e => { const d = e.data || {}; if (d.type === "zc-view") view = { chat: d.chat ? String(d.chat) : null, visible: !!d.visible, at: Date.now() }; });
+const chatOf = url => { const m = /#[/]chats[/]([^/?#]+)/.exec(String(url || "")); try { return m ? decodeURIComponent(m[1]) : null; } catch (_) { return m ? m[1] : null; } };
+const quiet = (url, v, clients, now) => { const k = chatOf(url); if (!k || !v || !v.visible || v.chat !== k || now - v.at > 120000) return false;
+  return (clients || []).some(c => c.visibilityState === "visible" && c.focused !== false); };
+self.chatOf52 = chatOf; self.quiet52 = quiet;
 self.addEventListener("push", e => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch (_) { d = { body: e.data ? e.data.text() : "" }; }
   const title = String(d.title || "ZHONG CHENG · 众诚").slice(0, 120);
-  e.waitUntil(self.registration.showNotification(title, {
+  e.waitUntil((async () => {
+    const all = await self.clients.matchAll({ type: "window", includeUncontrolled: true }).catch(() => []);
+    if (quiet(d.url, view, all, Date.now())) return;
+    await self.registration.showNotification(title, {
     body: String(d.body || "").slice(0, 400),
     icon: "icons/icon-192.png?v=2", badge: "icons/badge-96.png?v=2",
     tag: d.tag ? String(d.tag) : undefined, data: { url: typeof d.url === "string" ? d.url : "./" },
     requireInteraction: true, actions: [{ action: "open", title: ACT(typeof d.url === "string" ? d.url : "") }]
-  }));
+  }); })());
 });
 
 /* нажатие на уведомление или на кнопку «Открыть …»: открыть окно портала на нужной странице (или вывести уже открытое вперёд) */

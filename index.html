@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="e711b5532b67";
+const ZC_BUILD="f7074786921e";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10529,7 +10529,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="3.1";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="3.2";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -12125,6 +12125,7 @@ const HELP21={
   ]
  },
  news:[
+{id:"v32osh",d:"2026-11-05",t:"Версия 3.2: исправления по вашим сообщениям, новый вид блоков и «Рост фирмы»||3.2版：根据您的反馈修复、新版区块样式与“事务所增长”",b:["«История» дела открывается без ожидания: сервер больше не ищет дело по тексту записи; журнал по делу загружается при открытии вкладки, при обрыве связи — понятное сообщение и «Обновить».||案件“历史”即时打开：服务器不再按记录文本查找案件；日志在打开标签页时加载，断网时给出明确提示和“刷新”。","Скриншот оплаты открывается у управляющего партнёра и участников дела (раньше — «Нет доступа»); файлы показываются во встроенном окне с кнопками «Скачать» и «Открыть в новой вкладке»; при обрыве загрузки — «Повторить загрузку».||付款截图现在管理合伙人和案件参与人都能打开（之前显示“无权访问”）；文件在内置窗口中显示，带“下载”和“在新标签页打开”；上传中断时可“重新上传”。","Задачи ИИ об оплате закрываются сами, когда дело оплачено; метки «Сделано» больше нет; «Просроченных задач» у сотрудника считает только его задачи.||案件付款后，AI 的收款任务自动关闭；取消了“已完成”标签；员工的“逾期任务”只统计本人任务。","Календарь: событие можно удалить (кнопка «Удалить», с записью в «Истории» дела); в списке «Ответственный» всегда есть вы сами.||日历：可以删除事件（“删除”按钮，记入案件“历史”）；“负责人”列表中始终包含您本人。","Уведомление о сообщении приходит всегда, кроме случая, когда у вас открыт именно этот чат; в «Проверке уведомлений» — пошаговая инструкция для Windows и телефона.||消息通知总会送达，除非您正打开着该聊天；“通知检查”中提供 Windows 与手机的分步说明。","Новый вид блоков на всех страницах: сапфировая шапка со значком, мягкая тень по краям. Суммы в полях вводятся с разрядами (6 000 000). Логотип в боковой панели ведёт на главную.||所有页面区块采用新样式：带图标的蓝宝石色标题栏与柔和阴影。金额输入自动分组（6 000 000）。侧栏徽标返回首页。","Главная, «Рост фирмы»: открыто и закрыто всего, сравнение по месяцам со средним, текущий месяц с отметкой «где надо быть сегодня» и своя цель вместо среднего.||首页“事务所增长”：开立与结案总数、按月与平均值比较、本月进度及“今日应达”标记，可设自定目标代替平均值。"]},
 {id:"v31docs",d:"2026-11-02",t:"Версия 3.1: документы дела и юрист в разовых услугах||3.1版：案件文件与法务参与单次服务",b:["Документы дела: файл или ссылку можно удалить кнопкой 🗑 (управляющий адвокат, ведущий, исполнитель; удаление — в «Истории» дела). Не удаляются файл, который виден клиенту, КП, договор и важный документ.||案件文件：可用 🗑 删除文件或链接（管理律师、主办律师、执行人；删除记入案件“历史”）。客户可见的文件、报价、合同和重要文件不可删除。","В «Прикрепить файл» можно выбрать сразу несколько файлов; перетаскивание и вставка через Ctrl+V тоже принимают несколько.||“附加文件”可同时选择多个文件；拖放和 Ctrl+V 粘贴同样支持多个文件。","В разовой услуге адвокатской фирмы юрист может быть исполнителем и участником команды. Вести такое дело по-прежнему может только адвокат.||在律所的单次服务中，法务可担任执行人和团队成员。主办此类案件的仍只能是律师。"]},
 {id:"v30pay",d:"2026-11-02",t:"Версия 3.0: работу можно начать и без оплаты||3.0版：未收到付款也可开始工作",b:["Неоплата больше не закрывает начало работы и задачи по делу. Ведущий и управляющий адвокат получают уведомление, в карточке дела видно, чего ждём по оплате. «Результат готов», выдача результата клиенту и архив — как раньше.||未付款不再阻止开始工作和案件任务。主办律师和管理律师会收到通知，案件卡片显示等待的款项。“成果已完成”、向客户交付成果和归档规则不变。"]},
 {id:"v29tabs",d:"2026-10-31",t:"Версия 2.9: новые вкладки карточки дела||2.9版：案件卡片新标签页",b:["Вкладки «Ход дела … История» — на сапфировой подложке, у каждой свой значок; выбранная отмечена синей капсулой, которая плавно перетекает при переключении.||「案件进展…历史」标签页置于蓝宝石色底板上，每个标签都有图标；选中的标签以蓝色胶囊标记，切换时平滑移动。","Содержимое вкладки въезжает с той стороны, куда вы перешли; по вкладкам можно ходить стрелками ← →. На телефоне выбранная вкладка сама встаёт по центру.||标签内容从切换方向滑入；可用 ← → 键切换标签。手机上选中的标签自动居中。"]},
@@ -18120,11 +18121,13 @@ const H36={
   openDay(m){if(m.pipeline==="lost")return null;const h=(m.pipelineHistory||[]).find(x=>x.step==="contract");const v=m.contractSignedAt||(h&&h.at)||(m.pipeline==="contract"?m.opened:"");return v?String(v).slice(0,10):null;},
   closedDay(m){if(m.status!=="closed"||m.pipeline==="lost")return null;return String(m.archivedAt||(typeof closedDate==="function"&&closedDate(m))||m.closed||todayS()).slice(0,10);},
   createdDay(m){const h=(m.pipelineHistory||[])[0];return String((h&&h.at)||m.opened||"").slice(0,10)||null;},
-  calcG(){const ms=this.all();const td=todayS();const ods=ms.map(m=>this.openDay(m)).filter(Boolean).sort();const start=ods[0]||td;const days=[];for(let d=start;d<=td;d=addDays(d,1))days.push(d);
+  /* 05.11.2026 (вариант Б): как сервер — все дела, кроме отказов, с даты заведения; итог сходится с «Дел у ведущих» */
+  calcG(){const ms=this.all().filter(m=>m.pipeline!=="lost");const td=todayS();const odOf=m=>{const d=this.createdDay(m)||td;return d>td?td:d;};const cdOf=(m,od)=>{const d=this.closedDay(m);if(!d)return null;const x=d<od?od:d;return x>td?td:x;};const ods=ms.map(odOf).sort();const start=ods[0]||td;const days=[];for(let d=start;d<=td;d=addDays(d,1))days.push(d);
     const out={start,today:td};
-    ["all","oneoff","court","support"].forEach(sv=>{const mm=ms.filter(m=>sv==="all"||m.svc===sv).map(m=>({o:this.openDay(m),c:this.closedDay(m)})).filter(x=>x.o);
+    ["all","oneoff","court","support"].forEach(sv=>{const mm=ms.filter(m=>sv==="all"||m.svc===sv).map(m=>{const od=odOf(m);return {o:od,c:cdOf(m,od)};});
       const o=days.map(d=>mm.filter(x=>x.o<=d).length),c=days.map(d=>mm.filter(x=>x.c&&x.c<=d).length),n=days.length,at=(a,i)=>i>=0?a[i]:0;
-      out[sv]={o,c,k:{o30:o[n-1]-at(o,n-31),o30p:at(o,n-31)-at(o,n-61),c30:c[n-1]-at(c,n-31),c30p:at(c,n-31)-at(c,n-61),w:o[n-1]-c[n-1],wp:at(o,n-31)-at(c,n-31),
+      const monSec=this.monOf(o,c,start,td);if(monSec)monSec.own=this.ownGoal&&this.ownGoal[sv]||null;
+      out[sv]={o,c,mon:monSec,k:{o30:o[n-1]-at(o,n-31),o30p:at(o,n-31)-at(o,n-61),c30:c[n-1]-at(c,n-31),c30p:at(c,n-31)-at(c,n-61),w:o[n-1]-c[n-1],wp:at(o,n-31)-at(c,n-31),
         paused:ms.filter(m=>(sv==="all"||m.svc===sv)&&m.status!=="closed"&&m.pipeline==="contract"&&m.paused).length}};});
     return out;},
   calcL(){const ms=this.all(),td=todayS();const weeks=[7,6,5,4,3,2,1,0].map(k=>addDays(td,-7*k));
@@ -18174,8 +18177,9 @@ const H36={
   pGrow(){const bx=this.box("h36Grow");if(!bx)return;const g=this.get("g");if(!g){bx.innerHTML=`<div class="h36load">…</div>`;return;}
     const s=g[this.st.sec]||g.all,N=s.o.length,days=[];for(let i=0,d=g.start;i<N;i++,d=addDays(d,1))days.push(d);
     const k=s.k;const v=this.st.view&&this.st.view[1]<N?this.st.view:[0,N-1];const o=s.o.slice(v[0],v[1]+1),c=s.c.slice(v[0],v[1]+1),ds=days.slice(v[0],v[1]+1),n=ds.length;
-    bx.innerHTML=`<div class="h36kpi"><div><small><i style="background:var(--h36o)"></i>${t36("открыто за 30 дней||30天内开立")}</small><b>${k.o30} ${this.arrow(k.o30-k.o30p)}</b></div><div><small><i style="background:var(--h36cl)"></i>${t36("закрыто за 30 дней||30天内结案")}</small><b>${k.c30} ${this.arrow(k.c30-k.c30p)}</b></div><div><small>${t36("в работе сейчас||当前进行中")}</small><b>${k.w} ${this.arrow(k.w-k.wp)}</b></div></div>
-      <div class="h36strip" id="h36gs"></div><svg class="h36svg" id="h36g"></svg><div class="h36foot" id="h36gf"></div>`;
+    bx.innerHTML=`<div class="h36kpi"><div><small><i style="background:var(--h36o)"></i>${t36("открыто всего||共开立")}</small><b>${s.o[N-1]}</b></div><div><small><i style="background:var(--h36cl)"></i>${t36("закрыто всего||共结案")}</small><b>${s.c[N-1]}</b></div><div><small>${t36("открыто сейчас||当前未结")}</small><b>${k.w}</b></div></div>
+      <div class="h36mon" id="h36mon"></div><div class="h36strip" id="h36gs"></div><svg class="h36svg" id="h36g"></svg><div class="h36foot" id="h36gf"></div>`;
+    try{this.pMon(bx.querySelector("#h36mon"),s,g);}catch(e){console.warn("h36 mon",e);}
     const svg=bx.querySelector("#h36g"),W=Math.max(260,svg.clientWidth||bx.clientWidth),H=250,L=30,R=40,T=14,B=26,pw=W-L-R,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);svg.setAttribute("height",H);
     let mx=Math.max(4,...o);const raw=mx/4,pw10=Math.pow(10,Math.floor(Math.log10(raw))),step=[1,2,5,10].map(q=>q*pw10).find(q=>q>=raw);mx=Math.ceil(mx/step)*step;
     const cx=i=>L+(n>1?pw*i/(n-1):pw/2),y=val=>T+ph-val/mx*ph,co=this.css("--h36o"),cc=this.css("--h36cl");
@@ -18192,12 +18196,48 @@ const H36={
     const idx=e=>{const r=svg.getBoundingClientRect();return Math.max(0,Math.min(n-1,Math.round(((e.clientX-r.left)*W/r.width-L)/(pw/Math.max(1,n-1)))));};
     hit.onmousemove=e=>{const i=idx(e);cr.setAttribute("x1",cx(i));cr.setAttribute("x2",cx(i));cr.setAttribute("opacity",".45");const d=new Date(ds[i]+"T12:00:00");
       const ps=ds[i]===g.today&&k.paused?` · ${t36("на паузе||暂停")} ${k.paused}`:"";
-      strip.innerHTML=`<b>${esc(lang==="uz"?["Ya","Du","Se","Ch","Pa","Ju","Sh"][d.getDay()]+", "+d.getDate()+"-"+MONTHS_UZ_FULL[d.getMonth()].toLowerCase():d.toLocaleDateString(lang==="zh"?"zh-CN":"ru-RU",{weekday:"short",day:"numeric",month:"long"}))}</b><span><i style="background:${co}"></i>${t36("открыто всего||共开立")} <b>${o[i]}</b></span><span><i style="background:${cc}"></i>${t36("из них закрыто||其中结案")} <b>${c[i]}</b></span><span>${t36("в работе||进行中")} <b>${o[i]-c[i]}</b>${ps}</span>`;
+      strip.innerHTML=`<b>${esc(lang==="uz"?["Ya","Du","Se","Ch","Pa","Ju","Sh"][d.getDay()]+", "+d.getDate()+"-"+MONTHS_UZ_FULL[d.getMonth()].toLowerCase():d.toLocaleDateString(lang==="zh"?"zh-CN":"ru-RU",{weekday:"short",day:"numeric",month:"long"}))}</b><span><i style="background:${co}"></i>${t36("открыто всего||共开立")} <b>${o[i]}</b></span><span><i style="background:${cc}"></i>${t36("из них закрыто||其中结案")} <b>${c[i]}</b></span><span>${t36("открыто сейчас||当前未结")} <b>${o[i]-c[i]}</b>${ps}</span>`;
       if(drag!=null){const a=Math.min(drag,i),b=Math.max(drag,i);sel.setAttribute("x",cx(a));sel.setAttribute("width",cx(b)-cx(a));sel.setAttribute("opacity",".12");}};
     hit.onmouseleave=()=>{cr.setAttribute("opacity","0");strip.innerHTML="";};
     hit.onmousedown=e=>{e.preventDefault();drag=idx(e);};
     hit.onmouseup=e=>{if(drag==null)return;const i=idx(e),a=Math.min(drag,i),b=Math.max(drag,i);drag=null;sel.setAttribute("opacity","0");if(b-a>=3){this.st.view=[v[0]+a,v[0]+b];this.pGrow();}};
     const ft=bx.querySelector("#h36gf");if(v[0]>0||v[1]<N-1){ft.innerHTML=`<span>${this.fd(ds[0])} – ${this.fd(ds[n-1])}</span><button data-h36reset>${t36("Сначала||全部")}</button>`;ft.querySelector("[data-h36reset]").onclick=()=>{this.st.view=null;this.pGrow();};}},
+
+  /* ── «Рост фирмы», часть 2 (решение владельца 05.11.2026): месяцы, среднее, текущий месяц, своя цель ── */
+  monOf(o,c,start,td){const n=o.length;if(!n)return null;const ym=d=>d.slice(0,7);const first=d=>d.slice(0,8)+"01";const nextM=d=>{const x=new Date(d.slice(0,4),+d.slice(5,7),1);return ymdL(x);};
+    const idx=d=>Math.round((new Date(d+"T12:00:00")-new Date(start+"T12:00:00"))/864e5);const at=(a,i)=>i>=0?a[Math.min(i,n-1)]:0;
+    let mi=start.slice(8,10)==="01"?first(start):nextM(start);const mcur=first(td);const list=[];let so=0,sc=0;
+    while(mi<mcur){const i1=idx(mi),i2=idx(addDays(nextM(mi),-1));const mo=at(o,i2)-at(o,i1-1),mc=at(c,i2)-at(c,i1-1);list.push({ym:ym(mi),o:mo,c:mc});so+=mo;sc+=mc;mi=nextM(mi);}
+    const i1=idx(mcur<start?start:mcur);const cnt=list.length;const r1=v=>Math.round(v*10)/10;
+    const dim=new Date(+td.slice(0,4),+td.slice(5,7),0).getDate();
+    return {list,cur:{ym:ym(mcur),o:o[n-1]-at(o,i1-1),c:c[n-1]-at(c,i1-1),day:+td.slice(8,10),days:dim},avg:cnt?{o:r1(so/cnt),c:r1(sc/cnt)}:null,goal:cnt?{o:Math.ceil(so/cnt-1e-9),c:Math.ceil(sc/cnt-1e-9)}:null,own:this.ownGoal&&this.ownGoal[this.st.sec]||null};},
+  mName(ym,long){const i=+ym.slice(5,7)-1;if(lang==="uz")return long?MONTHS_UZ_FULL[i]:this.MONU[i];const l=long?t36(this.MONL[i]):t36(this.MON[i]);return l;},
+  MONL:["Январь||1月","Февраль||2月","Март||3月","Апрель||4月","Май||5月","Июнь||6月","Июль||7月","Август||8月","Сентябрь||9月","Октябрь||10月","Ноябрь||11月","Декабрь||12月"],
+  n1(v){return String(Math.round(v*10)/10).replace(".",lang==="zh"?".":",");},
+  pMon(box,s,g){if(!box)return;const mon=s.mon||(s.o&&this.monOf(s.o,s.c,g.start,g.today));if(!mon){box.innerHTML="";return;}
+    const list=mon.list||[],cur=mon.cur||{},own=mon.own||{};const show=list.slice(-6);
+    const panel=(k,title,cls)=>{const vals=show.map(x=>x[k]);const curV=+cur[k]||0;const curName=this.mName(cur.ym||g.today,true);
+      if(!list.length)return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div><div class="h36main"><small>${curName} ${t36("пока||至今")}</small><b>${curV}</b></div></div>`;
+      const avg=+mon.avg[k],last=list[list.length-1],lastV=+last[k],ownV=own&&own[k]!=null?+own[k]:null,goal=ownV!=null?ownV:+mon.goal[k];
+      const diff=Math.round((lastV-avg)*10)/10;const chip=diff>0?"↑ +"+this.n1(diff)+" "+t36("к среднему||高于平均"):diff<0?"↓ −"+this.n1(-diff)+" "+t36("к среднему||低于平均"):"→ "+t36("как среднее||与平均持平");
+      const mx=Math.max(1,...vals),H=50;const bars=show.map((x,i)=>`<div class="h36b1${i===show.length-1?" last":""}"><div class="col"><span style="height:${Math.round(x[k]/mx*H)}px"></span></div><em>${x[k]}</em><u>${this.mName(x.ym)}</u></div>`).join("");
+      const done=curV>=goal,pct=goal?Math.min(100,Math.round(curV/goal*100)):100,day=+cur.day||1,days=+cur.days||30,mark=Math.min(100,Math.round(day/days*100)),need=Math.ceil(goal*day/days);
+      const right=done?`<strong class="done">${t36("выполнено||已完成")}${curV>goal?", +"+(curV-goal)+" "+t36("сверх||超出"):""}</strong>`:`<strong>${t36("ещё||还差")} ${goal-curV}</strong>`;
+      const pace=done?"":curV>=need?`<small class="ok">${t36("по графику||按进度")}</small>`:`<small class="warn">${t36("к сегодняшнему дню нужно||今日应达")} ${need}</small>`;
+      return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div>
+        <div class="h36top"><div class="h36main"><small>${this.mName(last.ym,true)}</small><b>${lastV}</b><span class="h36chip">${chip}</span><span class="h36avg">${t36("в среднем||平均")} ${this.n1(avg)} ${t36("в месяц||每月")}</span></div>
+        <div class="h36bars" title="${esc(t36("По месяцам||按月"))}">${bars}<div class="h36avgl" style="bottom:${Math.round(avg/mx*H)+33}px"></div></div></div>
+        <div class="h36now"><div class="h36nl"><span>${curName} ${t36("пока||至今")}: <b>${curV}</b> ${t36("из||/")} ${goal}${ownV!=null?` <em class="h36own">${t36("своя цель||自定目标")}</em>`:""}<button type="button" class="h36goal" data-h36goal="${k}" title="${esc(t36("Своя цель вместо среднего||自定目标代替平均"))}">✎</button></span>${right}</div>
+        <div class="h36track"><span class="${done?"done":""}" style="width:${pct}%"></span><i class="h36today" style="left:${mark}%" title="${esc(t36("где надо быть сегодня||今日应达位置"))}"></i></div>${pace}</div></div>`;};
+    box.innerHTML=`<div class="h36two">${panel("o",t36("Открыто||开立"),"h36po")}${panel("c",t36("Закрыто||结案"),"h36pc")}</div>${list.length?"":`<div class="h36wait">${t36("Среднее появится после первого полного месяца||首个完整月份后将显示平均值")}</div>`}`;
+    box.querySelectorAll("[data-h36goal]").forEach(b=>b.onclick=()=>this.setGoal(b.dataset.h36goal,mon));},
+  async setGoal(k,mon){const sv=this.st.sec,own=mon.own||{},curV=own[k]!=null?own[k]:"";
+    const v=await Dlg.ask({title:t36("Своя цель вместо среднего||自定目标代替平均"),text:t36("Сколько дел в месяц считать целью для этого раздела. Пусто — снова среднее||本板块每月目标案件数。留空则恢复为平均值"),fields:[{k:"v",label:t36(k==="o"?"Открыть за месяц||每月开立":"Закрыть за месяц||每月结案"),type:"number",value:curV,min:0}]});if(v===null)return;
+    const num=String(v.v||"").trim()===""?null:Math.max(0,Math.round(+v.v||0));
+    if(this.srv()){try{await SB19.T.rpc("home_goal_set",{sv,kind:k,v:num});}catch(e){toast(typeof Acc20!=="undefined"&&Acc20.msg?Acc20.msg(e):String((e&&e.message)||e));return;}
+      this.c.g=null;await this.load("g");}
+    else{this.ownGoal=this.ownGoal||{};this.ownGoal[sv]=this.ownGoal[sv]||{};if(num==null)delete this.ownGoal[sv][k];else this.ownGoal[sv][k]=num;this.c.g=null;await this.load("g");}
+    this.pGrow();},
   /* ── «Нагрузка сотрудников» ── */
   pLoad(){const bx=this.box("h36Load");if(!bx)return;const L0=this.get("l");if(!L0){bx.innerHTML=`<div class="h36load">…</div>`;return;}
     const P=L0.people||[],n=P.length,work=this.css("--h36w"),pre=this.css("--h36p"),late=this.css("--h36late"),sel=this.st.adv;
@@ -18353,6 +18393,20 @@ if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{act38Miss:"{n} не зах�
 
 /* ═══ оформление ═══ */
 (function(){const st=document.createElement("style");st.textContent=`
+.h36two{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px;margin:2px 0 12px}.h36p{background:var(--surface-2,var(--panel,#F6F8FB));border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:10px;min-width:0;--c1:var(--h36o);--c2:color-mix(in srgb,var(--h36o) 35%,transparent)}.h36p.h36pc{--c1:var(--h36cl);--c2:color-mix(in srgb,var(--h36cl) 35%,transparent)}
+.h36pt{display:flex;align-items:center;gap:7px;font:600 12.5px var(--font-h,"Montserrat"),sans-serif}.h36pt i{width:10px;height:10px;border-radius:3px;background:var(--c1)}
+.h36top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 12px;align-items:flex-end;min-height:84px}.h36main{display:grid;gap:4px;min-width:0}.h36main small{font-size:11.5px;color:var(--ink-3)}.h36main b{font:700 30px/1 var(--font);font-variant-numeric:tabular-nums}
+.h36chip{justify-self:start;font:700 11.5px var(--font);border-radius:99px;padding:2px 8px;background:var(--surface);border:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}.h36avg{font-size:11.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.h36bars{position:relative;display:flex;align-items:flex-end;gap:6px;flex:none}.h36b1{width:24px;display:grid;justify-items:center;gap:3px}.h36b1 .col{width:100%;height:50px;display:flex;align-items:flex-end}.h36b1 .col span{display:block;width:100%;background:var(--c2);border-radius:4px 4px 0 0;min-height:2px}.h36b1.last .col span{background:var(--c1)}
+.h36b1 em{font:600 11px/13px var(--font);font-style:normal;font-variant-numeric:tabular-nums;color:var(--ink-2)}.h36b1.last em{color:var(--ink);font-weight:700}.h36b1 u{font-size:10px;line-height:12px;text-decoration:none;color:var(--ink-3)}.h36avgl{position:absolute;left:-3px;right:-3px;border-top:1.5px dashed var(--ink-2);opacity:.7;pointer-events:none}
+.h36now{display:grid;gap:5px;border-top:1px solid var(--line);padding-top:9px}.h36nl{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}.h36nl span{font-size:12px;color:var(--ink-2)}.h36nl span b{font:700 14px var(--font);color:var(--ink);font-variant-numeric:tabular-nums}
+.h36nl strong{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap}.h36nl strong.done{color:var(--h36ok,#2F7D5B)}.h36own{font-style:normal;font-size:11px;color:var(--ink-3)}
+.h36goal{border:0;background:transparent;color:var(--ink-3);cursor:pointer;font-size:12px;padding:0 4px;opacity:.6}.h36goal:hover{opacity:1;color:var(--h36o)}
+.h36track{position:relative;height:8px;border-radius:99px;background:var(--line);overflow:visible}.h36track span{display:block;height:100%;border-radius:99px;background:var(--c1)}.h36track span.done{background:var(--h36ok,#2F7D5B)}
+.h36track .h36today{position:absolute;top:-4px;width:2px;height:16px;margin-left:-1px;background:var(--ink);opacity:.55;border-radius:1px}
+.h36now small{font-size:11px;color:var(--ink-3)}.h36now small.ok{color:var(--h36ok,#2F7D5B)}.h36now small.warn{color:var(--h36late)}
+.h36wait{font-size:12px;color:var(--ink-3);margin:-6px 0 10px}
+
 .h36{--h36o:#2F64B0;--h36cl:#2B9470;--h36w:#3A5A8C;--h36p:#A9BBD6;--h36late:#C8655A;--h36ok:#3F8768;--h36lt:#E8B10C;--h36ms:#D6362B;display:grid;gap:16px}
 :root[data-theme="dark"] .h36{--h36o:#5B8DD6;--h36cl:#2FA078;--h36w:#6782AC;--h36p:#3C4A66;--h36late:#D07A6E;--h36ok:#62A98A}
 .h36r{display:grid;gap:16px;align-items:start}.h36r.r1{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}.h36r.r2{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}
@@ -18405,8 +18459,8 @@ if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{act38Miss:"{n} не зах�
 `;document.head.appendChild(st);})();
 
 /* узбекский */
-if(typeof UZ21!=="undefined")Object.assign(UZ21,{"Активность в платформе":"Platformadagi faollik","Нагрузка сотрудников":"Xodimlar yuklamasi","Дела по видам":"Turlar boʻyicha ishlar","Рост фирмы":"Firma oʻsishi","Моя активность в платформе":"Platformadagi faolligim",
-  "открыто за 30 дней":"30 kunda ochilgan","закрыто за 30 дней":"30 kunda yopilgan","в работе сейчас":"hozir ishda","дел у ведущих":"yetakchilardagi ishlar","в работе":"ishda","до начала":"boshlanishigacha","просрочено":"muddati oʻtgan","сотрудники":"xodimlar",
+if(typeof UZ21!=="undefined")Object.assign(UZ21,{"к среднему":"oʻrtachaga nisbatan","как среднее":"oʻrtacha bilan teng","в среднем":"oʻrtacha","в месяц":"oyiga","пока":"hozircha","из":"dan","выполнено":"bajarildi","сверх":"ortiq","ещё":"yana","по графику":"jadval boʻyicha","к сегодняшнему дню нужно":"bugungi kunga kerak","своя цель":"oʻz maqsadi","Своя цель вместо среднего":"Oʻrtacha oʻrniga oʻz maqsadi","Сколько дел в месяц считать целью для этого раздела. Пусто — снова среднее":"Bu boʻlim uchun oyiga nechta ish maqsad hisoblanadi. Boʻsh — yana oʻrtacha","Открыть за месяц":"Oyiga ochish","Закрыть за месяц":"Oyiga yopish","Среднее появится после первого полного месяца":"Oʻrtacha birinchi toʻliq oydan keyin paydo boʻladi","где надо быть сегодня":"bugun qayerda boʻlish kerak","По месяцам":"Oylar boʻyicha","Открыто":"Ochilgan","Закрыто":"Yopilgan","Активность в платформе":"Platformadagi faollik","Нагрузка сотрудников":"Xodimlar yuklamasi","Дела по видам":"Turlar boʻyicha ishlar","Рост фирмы":"Firma oʻsishi","Моя активность в платформе":"Platformadagi faolligim",
+  "открыто за 30 дней":"30 kunda ochilgan","закрыто за 30 дней":"30 kunda yopilgan","в работе сейчас":"hozir ishda","закрыто всего":"jami yopilgan","открыто сейчас":"hozir ochiq","дел у ведущих":"yetakchilardagi ishlar","в работе":"ishda","до начала":"boshlanishigacha","просрочено":"muddati oʻtgan","сотрудники":"xodimlar",
   "до начала хода дела":"ish jarayoni boshlanishigacha","Сотрудник":"Xodim","Последний вход":"Oxirgi kirish","Статус":"Holat","14 дней":"14 kun","Часов в раб. день":"Ish kunida soat","онлайн":"onlayn","сегодня":"bugun","вчера":"kecha",
   "вовремя":"oʻz vaqtida","опоздание":"kechikish","сегодня нет":"bugun yoʻq","ещё не заходил":"hali kirmagan","не заходил":"kirmagan","выходной":"dam olish kuni","Сначала":"Boshidan","Требует внимания":"Eʼtibor talab qiladi","План на день (N)":"Kun rejasi (N)","Всё в порядке":"Hammasi joyida",
   "Поступления по организациям":"Tashkilotlar boʻyicha tushumlar",
@@ -21914,6 +21968,387 @@ document.addEventListener("cancel",e=>{if(e.target&&e.target.id==="fileIn")e.tar
   const _bd50=Card22.bindDocs.bind(Card22);Card22.bindDocs=function(vp,m){_bd50(vp,m);
     vp.querySelectorAll("[data-c50del]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();Docs50.del(m.id,+b.dataset.c50del);});};}
 (()=>{const st=document.createElement("style");st.textContent=".c22fr .c50del{margin-left:auto;flex:none;padding:2px 8px}.c22fr .c22mv+.c50del{margin-left:6px}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.2 · этап 1 — ПОДГОТОВКА И РЕЕСТР (план 3.2, решения владельца 04.11.2026) ═══════════════════════════
+   ОШ-0035 (Сотрудник, профиль → «Положение, цели и функции»): это не ошибка — цели и функции берутся из позиции в «Структуре», которую
+   сотруднику назначает управляющий партнёр (учётная запись → «Позиция в «Структуре»»). Пока позиции нет, блоки пустые без объяснения.
+   Теперь в пустых «Целях» и «Функциях» — подсказка: сотруднику «Заполняет управляющий партнёр», УП — где это заполняется.
+   ОШ-0064 (перетаскивание файлов в «+ Создать заявку»): окно — обычное окно с полем «Файлы» («Прикрепить файл»), перетаскивание и Ctrl+V
+   в него работают с версии 2.9 (ОШ-0057) — проверено тестом tests/sbosh51.js; кода не потребовалось. */
+Object.assign(UI,{pf51Mp:"Заполняется при назначении сотруднику позиции в «Структуре» (учётная запись → «Позиция в «Структуре»»)||在员工账户中指定“架构职位”后自动填写",
+  pf51Emp:"Заполняет управляющий партнёр||由管理合伙人填写"});
+window.UZ21=Object.assign(window.UZ21||{},{"Заполняется при назначении сотруднику позиции в «Структуре» (учётная запись → «Позиция в «Структуре»»)":"Xodimga «Tuzilma»da lavozim belgilanganda toʻldiriladi (hisob → «Tuzilmadagi lavozim»)",
+  "Заполняет управляющий партнёр":"Boshqaruvchi hamkor toʻldiradi"});
+if(typeof Profile!=="undefined"&&Profile.work){const _pw51=Profile.work.bind(Profile);
+  Profile.work=function(p,d,u){let h=_pw51(p,d,u);if(!d||!isPerson(this.id))return h;
+    const mp=typeof Pre24!=="undefined"&&Pre24.mp?Pre24.mp():false;const hint=`<div class="pf51">${T1(mp?UI.pf51Mp:UI.pf51Emp)}</div>`;
+    if(!(d.goals||[]).length)h=h.split(`<h4 style="margin-top:14px">${T1(UI.hGoals)}</h4><ol class="ol"></ol>`).join(`<h4 style="margin-top:14px">${T1(UI.hGoals)}</h4>${hint}`);
+    if(!(d.funcs||[]).length)h=h.split(`<h4 style="margin-top:14px">${T1(UI.hFuncs)}</h4><ul class="list2"></ul>`).join(`<h4 style="margin-top:14px">${T1(UI.hFuncs)}</h4>${hint}`);
+    return h;};}
+(()=>{const st=document.createElement("style");st.textContent=".pf51{color:var(--ink-3);font-style:italic;font-size:12.5px;margin:4px 0 2px}";document.head.appendChild(st);})();
+
+/* версия 3.2 · этап 2 — журнал и скорость (план 3.2, решения владельца 04.11.2026):
+   • «История» в карточке дела: журнал по делу загружается при открытии вкладки, а не при каждом открытии карточки; при обрыве
+     связи или таймауте сервера — понятное сообщение и кнопка «Обновить» (сервер: миграция 20261104000100_v32_journal —
+     дело ищется по связи, а не по тексту; 59 таймаутов за неделю).
+   • «Журнал»: поиск по тексту без периода — за последние 90 дней, с подсказкой задать период.
+   • Опрос входящих звонков (rtc_pending) и отметка «в сети» (presence_ping): не идут при скрытой вкладке и без сети; после ошибки
+     пауза растёт (4 с → 8 → … → 2 мин); обрывы сети в журнал сбоев не пишутся (65 записей «Failed to fetch» за неделю).
+   • ОШ-0080 (вариант б): уведомление о сообщении отправляется всегда; push гасится только у получателя, у которого открыт именно
+     этот чат и окно портала видно (pwa/sw.js, версия 4; страница сообщает служебному скрипту, какой чат открыт).
+   • ОШ-0074: «Проверка уведомлений» — пошаговая инструкция для Windows/Chrome и телефона. */
+Object.assign(UI,{
+  jr52Lazy:"Загрузится при открытии вкладки «История»||打开“历史”标签时加载",
+  jr52Net:"Нет связи с сервером — журнал по делу не загружен||无法连接服务器——案件日志未加载",
+  jr52Slow:"Сервер не успел собрать журнал по делу — нажмите «Обновить»||服务器未能及时生成案件日志——请点击“刷新”",
+  jr52Err:"Журнал по делу не загружен: {e}||案件日志未加载：{e}",
+  jr52Reload:"Обновить||刷新",
+  jr52Q:"Поиск без периода — за последние 90 дней (с {d}). Чтобы искать раньше, укажите период||未指定期间的搜索仅限最近 90 天（自 {d}）。如需更早记录，请指定期间",
+  ps52Steps:"Если уведомление не появилось — настройте компьютер (Windows, Chrome):\n1. Пуск → Параметры → Система → Уведомления: включите «Уведомления», ниже в списке приложений найдите Google Chrome и включите его.\n2. Там же выключите «Не беспокоить» (в старых версиях — «Фокусировка») и проверьте, что он не включается по расписанию.\n3. В Chrome: ⋮ → Настройки → Конфиденциальность и безопасность → Настройки сайтов → Уведомления: legal.zhongcheng.uz должен быть в «Разрешено»; «Тихие уведомления» — выключены.\n4. Закройте Chrome полностью, откройте снова и нажмите «Проверить» ещё раз.\nТелефон: Android — Настройки → Приложения → Chrome (или значок портала) → Уведомления → включить; iPhone — портал должен быть добавлен на экран «Домой», затем Настройки → Уведомления → портал → разрешить.||如未看到通知，请设置电脑（Windows、Chrome）：\n1. 开始 → 设置 → 系统 → 通知：打开“通知”，在下方应用列表中找到 Google Chrome 并开启。\n2. 在同一页面关闭“勿扰”（旧版本为“专注助手”），并确认它不会按计划自动开启。\n3. Chrome：⋮ → 设置 → 隐私和安全 → 网站设置 → 通知：legal.zhongcheng.uz 应在“允许”中；关闭“静音通知”。\n4. 完全关闭 Chrome 后重新打开，再次点击“检查”。\n手机：Android — 设置 → 应用 → Chrome（或门户图标）→ 通知 → 开启；iPhone — 需先将门户添加到主屏幕，然后 设置 → 通知 → 门户 → 允许。"});
+window.UZ21=Object.assign(window.UZ21||{},{
+  "Загрузится при открытии вкладки «История»":"«Tarix» boʻlimi ochilganda yuklanadi",
+  "Нет связи с сервером — журнал по делу не загружен":"Server bilan aloqa yoʻq — ish jurnali yuklanmadi",
+  "Сервер не успел собрать журнал по делу — нажмите «Обновить»":"Server ish jurnalini yigʻib ulgurmadi — «Yangilash» tugmasini bosing",
+  "Журнал по делу не загружен: {e}":"Ish jurnali yuklanmadi: {e}","Обновить":"Yangilash",
+  "Поиск без периода — за последние 90 дней (с {d}). Чтобы искать раньше, укажите период":"Davrsiz qidiruv — oxirgi 90 kun ({d} dan). Oldingi yozuvlar uchun davrni koʻrsating",
+  "Если уведомление не появилось — настройте компьютер (Windows, Chrome):\n1. Пуск → Параметры → Система → Уведомления: включите «Уведомления», ниже в списке приложений найдите Google Chrome и включите его.\n2. Там же выключите «Не беспокоить» (в старых версиях — «Фокусировка») и проверьте, что он не включается по расписанию.\n3. В Chrome: ⋮ → Настройки → Конфиденциальность и безопасность → Настройки сайтов → Уведомления: legal.zhongcheng.uz должен быть в «Разрешено»; «Тихие уведомления» — выключены.\n4. Закройте Chrome полностью, откройте снова и нажмите «Проверить» ещё раз.\nТелефон: Android — Настройки → Приложения → Chrome (или значок портала) → Уведомления → включить; iPhone — портал должен быть добавлен на экран «Домой», затем Настройки → Уведомления → портал → разрешить.":
+  "Bildirishnoma chiqmasa — kompyuterni sozlang (Windows, Chrome):\n1. Пуск → Параметры → Система → Уведомления: «Уведомления»ni yoqing, pastdagi ilovalar roʻyxatida Google Chrome ni toping va yoqing.\n2. Shu yerda «Не беспокоить» (eski versiyalarda «Фокусировка») ni oʻchiring va u jadval boʻyicha yoqilmasligini tekshiring.\n3. Chrome: ⋮ → Настройки → Конфиденциальность и безопасность → Настройки сайтов → Уведомления: legal.zhongcheng.uz «Разрешено»da boʻlishi kerak; «Тихие уведомления» — oʻchiq.\n4. Chrome ni toʻliq yopib, qayta oching va «Tekshirish»ni yana bosing.\nTelefon: Android — Настройки → Приложения → Chrome (yoki portal belgisi) → Уведомления → yoqing; iPhone — portal «Домой» ekraniga qoʻshilgan boʻlishi kerak, soʻng Настройки → Уведомления → portal → ruxsat bering."});
+/* ── опрос сервера: тихий вызов (без записи в журнал сбоев), пауза при скрытой вкладке и без сети, растущая пауза после ошибки ── */
+const Poll52={base:4000,max:120000,
+  quiet(fn,args){const T=SB19.T;return (T._rpc26||T.rpc).call(T,fn,args);},
+  paused(){return document.visibilityState==="hidden"||navigator.onLine===false;},
+  next(d){return Math.min(this.max,Math.max(this.base,d*2));},
+  fail(fn,e){const m=String((e&&e.message)||e);if(typeof Net33!=="undefined"&&Net33.isNet(m))return false;
+    if(typeof B26!=="undefined"&&B26.fail)B26.fail("server","rpc "+fn+": "+m,"",B26.tech(m));return true;}};
+if(typeof Rtc38!=="undefined"){
+  Rtc38.listen=function(){if(this.subOff||!this.srv())return;const me=this.me(),self=this;
+    try{this.subOff=SB19.T.subscribe("rtc_calls","callee=eq."+me,ev=>{const r=ev.row;if(r&&r.status==="ringing")this.incoming(r);else if(r&&this.ring&&Number(r.id)===this.ring.id&&r.status!=="ringing")this.stopRing();});}catch(e){}
+    let delay=Poll52.base;
+    const tick=async()=>{if(!self.pollIn)return;
+      if(!self.srv()||Poll52.paused()){self.pollIn=setTimeout(tick,Poll52.base);return;}
+      try{const p=await Poll52.quiet("rtc_pending",{});(p||[]).forEach(r=>self.incoming(Object.assign({status:"ringing"},r)));
+        if(self.ring){const r=await SB19.T.one("rtc_calls","id",self.ring.id);if(!r||r.status!=="ringing")self.stopRing();}delay=Poll52.base;}
+      catch(e){Poll52.fail("rtc_pending",e);delay=Poll52.next(delay);}
+      self.delay52=delay;if(self.pollIn)self.pollIn=setTimeout(tick,delay);};
+    this.tick52=tick;this.delay52=delay;this.pollIn=setTimeout(tick,Poll52.base);};
+  /* вкладка снова видна или сеть вернулась — опрос сразу */
+  const wake=()=>{const r=Rtc38;if(!r.pollIn||!r.tick52||Poll52.paused())return;clearTimeout(r.pollIn);r.pollIn=setTimeout(r.tick52,300);};
+  document.addEventListener("visibilitychange",wake);window.addEventListener("online",wake);}
+if(typeof Pres22!=="undefined"){
+  Pres22.start=async function(){if(!U()||isClient()||!this.on()||this.timer)return;
+    const ping=async()=>{if(Poll52.paused()||!U())return;try{await Poll52.quiet("presence_ping");this.map[U().login]=Date.now();}
+      catch(e){if(/presence_ping|PGRST202|Could not find/i.test(String(e&&(e.message||e))))this.stop(true);else Poll52.fail("presence_ping",e);}};
+    const load=async()=>{if(Poll52.paused())return;try{const r=await SB19.T.select("presence");r.forEach(x=>{this.map[x.login]=Date.parse(x.at)||0;});this.paint();}catch(e){}};
+    await ping();await load();this.timer=setInterval(()=>{ping();load();},60000);
+    document.addEventListener("visibilitychange",this._vis=()=>{if(document.visibilityState==="visible")ping();});
+    try{this.unsub=SB19.T.subscribe("presence",null,ev=>{const r=ev.row||{};if(r.login){this.map[r.login]=Date.parse(r.at)||0;this.paint();}});}catch(e){}};}
+/* ── «История» в карточке дела: загрузка при открытии вкладки, понятная ошибка, «Обновить» ── */
+if(typeof Jr42!=="undefined"&&typeof Card22!=="undefined"){
+  Jr42.fillMatter=async function(box,mid,cached){if(!box||!mid)return;const H=`<h4>${T1("Журнал действий по делу||案件操作日志")}`;
+    const pane=box.closest("[data-c22pane]");const active=!pane||pane.classList.contains("on")||(this._tab52||{})[mid]===6;
+    if(!active){box.dataset.jr52="wait";box.innerHTML=`${H}</h4><div class="fhint">${T1(UI.jr52Lazy)}</div>`;return;}
+    if(box.dataset.jr52!=="ok")box.innerHTML=`${H}</h4><div class="fhint">${T1("Загрузка…||加载中…")}</div>`;box.dataset.jr52="load";
+    let rows=[];try{const r=await SB19.T.rpc("audit_view",{f:{mid,limit:20}});rows=(r&&r.rows)||[];}
+    catch(e){if(!document.body.contains(box))return;const m=String((e&&e.message)||e);
+      const msg=/statement timeout|canceling statement/i.test(m)?T1(UI.jr52Slow):typeof Net33!=="undefined"&&Net33.isNet(m)?T1(UI.jr52Net):T1(UI.jr52Err).replace("{e}",m.slice(0,160));
+      box.dataset.jr52="err";box.innerHTML=`${H}</h4><div class="fhint" style="color:var(--red)">${esc(msg)}</div><button type="button" class="btn sm" data-jr52re="1" style="margin-top:6px">${T1(UI.jr52Reload)}</button>`;
+      box.querySelector("[data-jr52re]").onclick=()=>Jr42.fillMatter(box,mid);return;}
+    if(!document.body.contains(box))return;box.dataset.jr52="ok";
+    box.innerHTML=`${H}<button type="button" class="btn sm ghost" data-jr42all="${esc(mid)}" style="margin-left:auto">${T1("Весь журнал по делу||该案件全部日志")} →</button></h4>${this.table(rows)}`;
+    const b=box.querySelector("[data-jr42all]");if(b)b.onclick=()=>{this.f={mid,login:"",from:"",to:"",kind:"",q:""};this._loaded=true;this.rows=[];this.next=null;Router.go("journal");this.load(false);};};
+  const _sh52=Card22.show.bind(Card22);Card22.show=function(vp,id,i){const r=_sh52.apply(this,arguments);Jr42._tab52=this.tab;
+    try{if(i===6&&vp){const b=vp.querySelector("#jr42m");if(b&&b.dataset.jr52!=="ok"&&b.dataset.jr52!=="load")Jr42.fillMatter(b,b.dataset.mid||id);}}catch(e){}return r;};
+  /* «Журнал»: поиск без периода — 90 дней, подсказка */
+  const _ld52=Jr42.load.bind(Jr42);Jr42.load=async function(more){const q=this.f||{};const noPeriod=!!String(q.q||"").trim()&&!q.from;
+    const T=SB19.T,raw=T.rpc;let qfrom=null;if(noPeriod)T.rpc=async function(fn,a){const r=await raw.call(T,fn,a);if(fn==="audit_view"&&r&&r.qfrom)qfrom=r.qfrom;return r;};
+    try{await _ld52(more);}finally{if(noPeriod)T.rpc=raw;}
+    this.qfrom52=qfrom;if(qfrom&&Router.cur==="journal"){const vp=document.getElementById("viewPage");const f=vp&&vp.querySelector(".jr42f");
+      if(f&&!f.querySelector(".jr52q")){const d=document.createElement("div");d.className="fhint jr52q";d.textContent=T1(UI.jr52Q).replace("{d}",fmtD(String(qfrom).slice(0,10)));f.appendChild(d);}}};}
+/* ── ОШ-0080: страница сообщает служебному скрипту (sw.js), какой чат открыт и видно ли окно ── */
+const View52={
+  chat(){try{return Router.cur==="chats"&&typeof Chat22!=="undefined"&&Chat22.peer?String(Chat22.peer):null;}catch(e){return null;}},
+  state(){return {type:"zc-view",chat:this.chat(),visible:document.visibilityState==="visible"&&(typeof document.hasFocus!=="function"||document.hasFocus()),at:Date.now()};},
+  send(){try{const sw=navigator.serviceWorker;const c=sw&&sw.controller;if(!c)return;c.postMessage(this.state());}catch(e){}}};
+document.addEventListener("visibilitychange",()=>View52.send());["focus","blur","hashchange"].forEach(ev=>window.addEventListener(ev,()=>View52.send()));
+setInterval(()=>View52.send(),20000);
+{const _rr52=Router.render.bind(Router);Router.render=function(){const r=_rr52.apply(this,arguments);try{View52.send();}catch(e){}return r;};}
+/* ── ОШ-0074: «Проверка уведомлений» — с пошаговой инструкцией ── */
+if(typeof Push28!=="undefined"){
+  Push28.test=async function(){const loc=await this.local();const lines=[];
+    lines.push(loc==="denied"?T1(UI.ps28Blocked):T1(UI.ps28Local));
+    let n=0;try{n=+(await SB19.T.rpc("push_test"))||0;}catch(e){toast(Acc20.msg(e));return;}
+    const st0=await this.status();if(st0&&!st0.devices){Dlg.ask({title:T1(UI.ps28Title),text:lines.concat([T1(UI.ps28NoDev),T1(UI.ps52Steps)]).join("\n\n"),fields:[],okText:"ОК||确定"});return;}
+    toast(T1(UI.ps28Wait));let last=null;
+    for(let i=0;i<12;i++){await new Promise(r=>setTimeout(r,5000));const st=await this.status();last=st&&(st.last||[]).find(x=>x.test);if(last&&last.status!=="pending"&&last.status!=="sending")break;}
+    if(!last||last.status==="pending"||last.status==="sending")lines.push(T1(UI.ps28Queue));
+    else if(last.status==="sent")lines.push(T1(UI.ps28Sent).replace("{n}",String((await this.status()||{}).devices||1)).replace("{t}",String(last.sentAt||"").slice(11,16)));
+    else lines.push(T1(UI.ps28Fail).replace("{e}",String(last.error||"—").slice(0,160)));
+    lines.push(T1(UI.ps52Steps));
+    Dlg.ask({title:T1(UI.ps28Title),text:lines.join("\n\n"),fields:[],okText:"ОК||确定",wide:true});};}
+(()=>{const st=document.createElement("style");st.textContent="#mdD .mr2{white-space:pre-line}.jr52q{margin-top:6px}";document.head.appendChild(st);})();
+
+/* версия 3.2 · этап 3 — задачи об оплате (план 3.2, решения владельца 04.11.2026):
+   • ОШ-0063: метки «Сделано» в наборе меток задачи больше нет — она дублировала колонку «Сделано» и путала (задача с меткой
+     лежала в «Новых» и считалась просроченной). Сервер (миграция 20261104000200_v32_pay) снял её со всех задач.
+   • ОШ-0063/0077/0058: задачи ИИ «получить оплату / оплата для архива» получают на сервере признак kind = "pay" и закрываются сами,
+     когда дело оплачено (запись в переписке задачи). Портал показывает такие задачи значком «оплата».
+   • ОШ-0076: «Требует внимания → Просроченных задач» у сотрудника без прав УП считает только его задачи и ведёт в «Задачи»
+     с отбором «Мои» (sc=me), а не «Вся фирма». */
+Object.assign(UI,{t53Pay:"оплата||付款",t53PayT:"Задача об оплате: закроется сама, когда дело будет оплачено||付款任务：案件付款后自动关闭"});
+window.UZ21=Object.assign(window.UZ21||{},{"оплата":"toʻlov","Задача об оплате: закроется сама, когда дело будет оплачено":"Toʻlov boʻyicha vazifa: ish toʻlangach oʻzi yopiladi"});
+/* ── метка «Сделано» — убрать из набора ── */
+if(typeof TAGS!=="undefined"&&Array.isArray(TAGS)){const i=TAGS.indexOf("Сделано");if(i>=0)TAGS.splice(i,1);}
+/* ── значок «оплата» у задачи с признаком pay (карточка на доске) ── */
+if(typeof Kanban!=="undefined"&&typeof Kanban.card==="function"){const _tc53=Kanban.card;Kanban.card=function(t){let h=_tc53.apply(this,arguments);
+    if(t&&t.kind==="pay"&&typeof h==="string"){const chip=`<span class="tg t53pay" title="${esc(T1(UI.t53PayT))}">${esc(T1(UI.t53Pay))}</span>`;
+      h=h.includes('<div class="kg">')?h.replace('<div class="kg">','<div class="kg">'+chip):h.replace(/<\/div>\s*$/,`<div class="kg">${chip}</div></div>`);}
+    return h;};}
+/* страница «Задачи» (v8, свои карточки): тот же значок */
+const Chip53={html(){return `<span class="tg t53pay" title="${esc(T1(UI.t53PayT))}">${esc(T1(UI.t53Pay))}</span>`;},
+  apply(html){if(typeof html!=="string"||!/data-id="/.test(html))return html;const pay=Object.values(S.tasks||{}).filter(t=>t&&t.kind==="pay");if(!pay.length)return html;
+    const tp=document.createElement("template");tp.innerHTML=html;let hit=false;
+    pay.forEach(t=>{tp.content.querySelectorAll(`.kc[data-id="${CSS.escape(t.id)}"]`).forEach(c=>{if(c.querySelector(".t53pay"))return;let kg=c.querySelector(".kg");
+      if(!kg){kg=document.createElement("div");kg.className="kg";const pr=c.querySelector(".pr");if(pr)pr.insertAdjacentElement("afterend",kg);else c.appendChild(kg);}
+      kg.insertAdjacentHTML("afterbegin",Chip53.html());hit=true;});});
+    return hit?tp.innerHTML:html;}};
+{const _pt53=Pages.tasks;Pages.tasks=function(){return Chip53.apply(_pt53.apply(this,arguments));};}
+/* ── ОШ-0076: счётчик просроченных задач — свои задачи и «Мои» для всех, кроме УП ── */
+const Att53={
+  mp(){return isFounder()||hasF("managing");},
+  mine(){const u=U();if(!u)return [];return openTasks().filter(t=>t.emp===u.emp&&isLate(t));},
+  fix(html){if(this.mp()||!U())return html;const box=document.createElement("div");box.innerHTML=html;
+    const it=box.querySelector('.it[data-go="tasks:p=late&sc=all"]');if(!it)return html;
+    const n=this.mine().length;if(!n){it.remove();const grid=box.querySelector("[style*='display:grid']");if(grid&&!grid.children.length){grid.remove();}}
+    else{it.dataset.go="tasks:p=late&sc=me";const b=it.querySelector("b");if(b)b.textContent=String(n);}
+    return box.innerHTML;}};
+if(typeof Dash!=="undefined"&&typeof Dash.attention==="function"){const _at53=Dash.attention.bind(Dash);Dash.attention=function(){return Att53.fix(_at53.apply(this,arguments));};}
+if(typeof Top36!=="undefined"&&Array.isArray(Top36.SER)&&!Top36.SER.includes("tasks:p=late&sc=me"))Top36.SER.push("tasks:p=late&sc=me");
+(()=>{const st=document.createElement("style");st.textContent=".tg.t53pay{background:#E6EEF9;color:#2F64B0;border-color:#BBD0EE}:root[data-theme=\"dark\"] .tg.t53pay{background:#253349;color:#9DBBE6;border-color:#3B4F70}";document.head.appendChild(st);})();
+
+/* версия 3.2 · этап 4 — файлы оплаты и договора (план 3.2, решения владельца 04.11.2026):
+   • ОШ-0071 «Нет доступа» на скриншот поступления: причина на сервере — право на файл не искало ссылку в поступлениях
+     (миграция 20261104000300_v32_files). Портал теперь различает: файла нет на сервере (загрузка оборвалась — попросить
+     прикрепить заново), нет права, не скачался (связь — «Повторить»).
+   • Загрузка на сервер: если описание или сам файл не записались (обрыв связи) — окно «Повторить загрузку» с тем же файлом;
+     ссылка на файл сохраняется только после удачной загрузки (как и раньше).
+   • ОШ-0072 «просмотр открылся пустым»: файл показывается через объектную ссылку (URL.createObjectURL), а не через data:-адрес,
+     который Chrome не открывает для больших PDF; в окне просмотра — имя файла, «Скачать», «Открыть в новой вкладке», ✕.
+   • ОШ-0070: скриншот поступления виден и после подтверждения — значок 📎 в строке «Поступления по делу» и в «Финансах». */
+Object.assign(UI,{fv54Dl:"Скачать||下载",fv54New:"Открыть в новой вкладке||在新标签页打开",fv54Close:"Закрыть||关闭",fv54Retry:"Повторить||重试",
+  fv54Missing:"Файла нет на сервере: при его загрузке оборвалась связь. Попросите того, кто прикреплял файл, прикрепить его заново||服务器上没有该文件：上传时连接中断。请让上传者重新附加文件",
+  fv54Denied:"Нет доступа к этому файлу||无权访问此文件",
+  fv54Net:"Не удалось скачать файл — проверьте связь и повторите||文件下载失败——请检查网络后重试",
+  up54Fail:"Файл «{n}» не загрузился на сервер: {e}||文件“{n}”未能上传到服务器：{e}",up54Again:"Повторить загрузку||重新上传",
+  fv54Proof:"Подтверждение оплаты||付款凭证"});
+window.UZ21=Object.assign(window.UZ21||{},{"Скачать":"Yuklab olish","Открыть в новой вкладке":"Yangi varaqda ochish","Закрыть":"Yopish","Повторить":"Qayta urinish",
+  "Файла нет на сервере: при его загрузке оборвалась связь. Попросите того, кто прикреплял файл, прикрепить его заново":"Fayl serverda yoʻq: yuklashda aloqa uzilgan. Faylni biriktirgan kishidan uni qayta biriktirishni soʻrang",
+  "Нет доступа к этому файлу":"Bu faylga ruxsat yoʻq","Не удалось скачать файл — проверьте связь и повторите":"Faylni yuklab boʻlmadi — aloqani tekshirib, qayta urinib koʻring",
+  "Файл «{n}» не загрузился на сервер: {e}":"«{n}» fayli serverga yuklanmadi: {e}","Повторить загрузку":"Qayta yuklash","Подтверждение оплаты":"Toʻlov tasdigʻi"});
+const FV54={
+  cache:new Map(),url:null,
+  srv(){return typeof SRV21==="function"&&SRV21()&&typeof FS20!=="undefined"&&FS20.on();},
+  isNet(e){return typeof Net33!=="undefined"&&Net33.isNet(e);},
+  dataBlob(dataUrl,type){const mt=/^data:([^;,]*)(;base64)?,/.exec(String(dataUrl||""));if(!mt)return null;const body=String(dataUrl).slice(mt[0].length);
+    let raw;try{raw=mt[2]?atob(body):decodeURIComponent(body);}catch(e){return null;}const u8=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)u8[i]=raw.charCodeAt(i);
+    return new Blob([u8],{type:mt[1]||type||"application/octet-stream"});},
+  keep(id,x){this.cache.set(id,x);if(this.cache.size>20)this.cache.delete(this.cache.keys().next().value);return x;},
+  /* содержимое файла: {blob,name,type} или {err: missing | denied | net} */
+  async fetchRec(f){const id=f.id;if(this.cache.has(id))return this.cache.get(id);
+    const mem=S.filesMem&&S.filesMem[id];if(mem&&mem.data){const b=this.dataBlob(mem.data,mem.type);if(b)return this.keep(id,{blob:b,name:mem.name||f.name,type:b.type});}
+    if(!S.db)return {err:"missing"};
+    if(!this.srv()){let s;try{s=await S.db.doc("files/"+id).get();}catch(e){return {err:this.isNet(e)?"net":"missing",msg:String((e&&e.message)||e)};}
+      if(s&&s.exists){const d=s.data();if(d&&d.data){const b=this.dataBlob(d.data,d.type);if(b)return this.keep(id,{blob:b,name:d.name||f.name,type:b.type});}}
+      return {err:await this.state(id)};}
+    let meta;try{meta=await SB19.T.one("files","id",id);}catch(e){return {err:this.isNet(e)?"net":"missing",msg:String((e&&e.message)||e)};}
+    if(!meta)return {err:await this.state(id)};
+    const d=meta.data||{};
+    if(d.data){const b=this.dataBlob(d.data,d.type);if(b)return this.keep(id,{blob:b,name:d.name||f.name,type:b.type});}
+    if(!d.path)return {err:"missing"};
+    let url;try{url=await SB19.T.signedUrl(d.path,60);}catch(e){return {err:this.isNet(e)?"net":"denied",msg:String((e&&e.message)||e)};}
+    try{const r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status);const b=await r.blob();const ty=d.type||b.type||"application/octet-stream";
+      return this.keep(id,{blob:b.type===ty?b:new Blob([b],{type:ty}),name:d.name||f.name,type:ty});}
+    catch(e){return {err:"net",msg:String((e&&e.message)||e)};}},
+  /* описания нет → не загружен; есть, но не выдано → нет права */
+  async state(id){try{const st=await SB19.T.rpc("file_state",{fid:id});return st==="denied"?"denied":st==="ok"?"net":"missing";}catch(e){return this.isNet(e)?"net":"missing";}},
+  dl(x){const u=URL.createObjectURL(x.blob);const a=document.createElement("a");a.href=u;a.download=x.name||"file";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>{try{URL.revokeObjectURL(u);}catch(e){}},60000);},
+  show(x){const v=document.getElementById("viewer");if(!v)return;this.drop();
+    const ty=String(x.type||"").toLowerCase(),okImg=ty.startsWith("image/")&&ty!=="image/svg+xml",okDoc=ty==="application/pdf"||ty==="text/plain";
+    if(!okImg&&!okDoc){this.dl(x);return;}
+    const u=this.url=URL.createObjectURL(x.blob);
+    v.innerHTML=`<div class="fv54"><div class="fv54h"><span class="fv54n" title="${esc(x.name||"")}">${esc(x.name||"")}</span><button type="button" class="btn sm" data-fv54dl="1">⬇ ${T1(UI.fv54Dl)}</button><a class="btn sm" href="${u}" target="_blank" rel="noopener">${T1(UI.fv54New)}</a><button type="button" class="btn sm ghost" data-fv54x="1" aria-label="${esc(T1(UI.fv54Close))}" title="${esc(T1(UI.fv54Close))}">✕</button></div><div class="fv54b">${okImg?`<img src="${u}" alt="${esc(x.name||"")}">`:`<iframe src="${u}" title="${esc(x.name||"")}"></iframe>`}</div></div>`;
+    v.classList.add("open");v.onclick=e=>{if(e.target===v)this.close();};
+    v.querySelector("[data-fv54dl]").onclick=()=>this.dl(x);v.querySelector("[data-fv54x]").onclick=()=>this.close();},
+  drop(){if(this.url){const u=this.url;this.url=null;setTimeout(()=>{try{URL.revokeObjectURL(u);}catch(e){}},1500);}},
+  close(){const v=document.getElementById("viewer");if(v){v.classList.remove("open");v.innerHTML="";}this.drop();},
+  fail(r,f){if(r.err==="net"){Dlg.ask({title:String((f&&f.name)||""),text:T1(UI.fv54Net)+(r.msg?"\n"+r.msg.slice(0,120):""),fields:[],okText:UI.fv54Retry}).then(v=>{if(v!==null)Files.open(f);});return;}
+    toast(T1(r.err==="denied"?UI.fv54Denied:UI.fv54Missing));}
+};
+{const _fo54=Files.open.bind(Files);Files.open=async function(f){if(!f)return;if(f.url)return _fo54(f);if(!f.id)return;
+    const r=await FV54.fetchRec(f);if(r.err){FV54.fail(r,f);return;}FV54.show(r);};}
+/* ── загрузка на сервер: обрыв связи → «Повторить загрузку» с тем же файлом (ссылка сохраняется только после удачной загрузки) ── */
+const Up54={
+  async retry(fn,name){for(;;){try{return await fn();}
+      catch(e){const msg=String((e&&e.message)||e);
+        if(typeof B26!=="undefined"&&B26.fail&&!FV54.isNet(msg))B26.fail("server","docSet files: "+msg,"",B26.tech(msg));
+        const again=await Dlg.ask({title:T1(UI.fsErr20),text:T1(UI.up54Fail).replace("{n}",String(name||"")).replace("{e}",msg.slice(0,120)),fields:[],okText:UI.up54Again});
+        if(again===null)throw e;}}}
+};
+if(typeof SB19!=="undefined"&&SB19.docSet){const _ds54=SB19.docSet.bind(SB19);SB19.docSet=function(name,id,obj){if(name!=="files"||!obj||obj.of)return _ds54(name,id,obj);
+    return Up54.retry(()=>_ds54(name,id,obj),obj.name);};
+  const _hook54=()=>{const T=SB19.T;if(!T||T._ub54||typeof T.uploadBlob!=="function")return;T._ub54=T.uploadBlob;T.uploadBlob=function(path,b,type){return Up54.retry(()=>T._ub54.call(T,path,b,type),b&&b.name);};};
+  _hook54();const _st54=SB19.start.bind(SB19);SB19.start=async function(){const r=await _st54.apply(this,arguments);try{_hook54();}catch(e){}return r;};}
+/* ── ОШ-0070: скриншот поступления в таблице поступлений (карточка дела, «Финансы») ── */
+if(typeof Payment!=="undefined"&&typeof Payment.table==="function"){const _pt54=Payment.table.bind(Payment);Payment.table=function(list,opts){let h=_pt54(list,opts);
+    try{if(!(list||[]).some(p=>p&&p.proof))return h;const key='<tr><td style="white-space:nowrap">';const parts=h.split(key);if(parts.length!==list.length+1)return h;
+      h=parts[0]+parts.slice(1).map((s,i)=>{const p=list[i];return key+(p&&p.proof?`<span class="chipf fv54p" data-fv54p="${esc(p.id)}" title="${esc(T1(UI.fv54Proof))}: ${esc(p.proof.name||"")}">📎</span> `:"")+s;}).join("");}
+    catch(e){}return h;};}
+document.addEventListener("click",e=>{const el=e.target.closest&&e.target.closest("[data-fv54p]");if(!el)return;e.stopPropagation();e.preventDefault();const p=S.payments&&S.payments[el.dataset.fv54p];if(p&&p.proof)Files.open(p.proof);},true);
+(()=>{const st=document.createElement("style");st.textContent=`
+.fv54{display:flex;flex-direction:column;width:min(980px,100%);height:100%;max-height:100%}
+.fv54h{display:flex;gap:8px;align-items:center;background:var(--surface);color:var(--ink);padding:8px 12px;border-radius:8px 8px 0 0;flex:none}
+.fv54n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:13px}
+.fv54b{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:0 0 8px 8px;overflow:auto}
+.viewer .fv54b iframe{width:100%;height:100%;border:0;border-radius:0;max-width:none}.viewer .fv54b img{max-width:100%;max-height:100%;border-radius:0}
+.fv54p{cursor:pointer}`;document.head.appendChild(st);})();
+
+/* версия 3.2 · этап 5 — календарь (план 3.2, решения владельца 04.11.2026):
+   • ОШ-0061 «УП не может назначить ответственным себя»: список «Ответственный» события пропускал людей без типа в структуре
+     (так у УП), и по умолчанию выбирался первый в списке. Теперь в списке всегда есть текущий пользователь и управляющие партнёры.
+   • ОШ-0078/0079 «нельзя удалить событие»: в окне события — кнопка «Удалить» с подтверждением; удаляет сервер (public.event_del,
+     миграция 20261104000400_v32_events): УП, ответственный или ведущий дела; заседание суда из карточки дела — только в инстанции;
+     при деле — запись в «Истории», всегда — в журнале действий. Без сервера (демо) — как раньше, локально. */
+Object.assign(UI,{ev55Del:"Удалить||删除",ev55Ask:"Удалить событие «{t}» ({d})? Отменить это нельзя||删除事件“{t}”（{d}）？此操作无法撤销",
+  ev55Done:"Событие удалено||事件已删除"});
+window.UZ21=Object.assign(window.UZ21||{},{"Удалить":"Oʻchirish","Удалить событие «{t}» ({d})? Отменить это нельзя":"«{t}» ({d}) tadbiri oʻchirilsinmi? Buni bekor qilib boʻlmaydi","Событие удалено":"Tadbir oʻchirildi"});
+const Ev55={
+  srv(){return typeof SRV21==="function"&&SRV21()&&!!SB19.T;},
+  mpEmps(){try{return (typeof mgmtLogins10==="function"?mgmtLogins10():[]).map(l=>(S.accounts[l]||{}).emp).filter(Boolean);}catch(e){return [];}},
+  /* ОШ-0061: в списке всегда текущий пользователь и УП */
+  fields(f){const me=(U()||{}).emp;const x=(f||[]).find(y=>y&&y.k==="emp");if(!x||!Array.isArray(x.options))return f;
+    const have=new Set(x.options.map(o=>o[0]));[me,...this.mpEmps()].filter(e=>e&&!have.has(e)&&ALL[e]).forEach(e=>{x.options.push([e,dispName(e)+(typeof roleOf25==="function"&&roleOf25(e)?" — "+roleOf25(e):"")]);have.add(e);});
+    if(x.value&&!have.has(x.value)&&ALL[x.value])x.options.push([x.value,dispName(x.value)]);return f;},
+  can(e){const u=U()||{};if(!u.emp||isClient())return false;const mm=e.matterId?matter(e.matterId):null;const mp=isFounder()||hasF("managing");
+    return mp||e.emp===u.emp||(!!mm&&typeof matterView==="function"&&matterView(mm)==="full");},
+  async del(e){if(!e)return false;const t=T1(UI.ev55Ask).replace("{t}",e.title||"").replace("{d}",fmtD(e.date||""));
+    if(!(await Dlg.confirm(T1(UI.ev55Del),t,true)))return false;
+    if(this.srv()){let r;try{r=await SB19.T.rpc("event_del",{eid:e.id});}catch(err){toast(typeof Acc20!=="undefined"&&Acc20.msg?Acc20.msg(err):String((err&&err.message)||err));return false;}
+      delete S.events[e.id];if(r&&r.mid){try{const row=await SB19.docGet("matters",r.mid);if(row&&row.exists)S.matters[r.mid]=Object.assign({},row.data(),{id:r.mid});}catch(x){}}}
+    else{delete S.events[e.id];try{await S.db.doc("events/"+e.id).delete();}catch(x){}
+      const mm=e.matterId&&matter(e.matterId);if(mm){mm.history=mm.history||[];mm.history.push({at:nowS(),by:(U()||{}).emp,what:`Событие удалено: ${evLabel(e.type)}: ${e.title} — ${fmtD(e.date)}`});await saveDoc("matters",mm);}
+      if(typeof audit==="function")audit(`${mm?mm.no+": ":""}событие удалено — ${e.title}`,mm?mm.id:null);}
+    toast(T1(UI.ev55Done));Router.render();return true;}
+};
+if(typeof Ev!=="undefined"){
+  const _ef55=Ev.fields.bind(Ev);Ev.fields=function(e){return Ev55.fields(_ef55(e));};
+  /* кнопка «Удалить» в окне события: добавляется в открытое окно; нажатие закрывает окно и спрашивает подтверждение */
+  const _eo55=Ev.open.bind(Ev);Ev.open=async function(id){const e=S.events[id];if(!e||!Ev55.can(e)||(e.court24))return _eo55(id);
+    const tm=setTimeout(()=>{const md=document.getElementById("mdD"),ov=document.getElementById("ovD");if(!md||!ov||!ov.classList.contains("open"))return;const acts=md.querySelector(".actions");if(!acts||acts.querySelector("[data-ev55del]"))return;
+      const b=document.createElement("button");b.type="button";b.className="btn ghost red";b.dataset.ev55del=id;b.style.marginRight="auto";b.textContent=T1(UI.ev55Del);acts.prepend(b);
+      b.onclick=()=>{const no=document.getElementById("dlgNo");if(no)no.click();setTimeout(()=>Ev55.del(S.events[id]),60);};},80);
+    try{return await _eo55(id);}finally{clearTimeout(tm);}};}
+(()=>{const st=document.createElement("style");st.textContent="#mdD .actions [data-ev55del]{color:var(--red);border-color:var(--red)}";document.head.appendChild(st);})();
+
+/* версия 3.2 · этап 6 — мелкие улучшения (план 3.2, решения владельца 04.11.2026):
+   • ОШ-0073: суммы при вводе делятся на разряды (6 000 000) — только в поле окна; сохраняется, как и раньше, число.
+     Поле суммы узнаётся по ключу (amount, sum, fee, cost, paid, price, salary, base, bonus, penalty, total, advance, budget, transit)
+     или по подписи («сумма», «стоимость», «оплата», «цена», «гонорар», «пеня», «зарплата», «аванс», «бюджет»); курс, проценты,
+     дни, часы, количество, доли — не трогаются. Проверки полей (check) и вызывающий код получают число без пробелов.
+   • ОШ-0075: нажатие на логотип ZHONG CHENG LEGAL в боковой панели открывает главную. */
+const Sum56={
+  KEYS:new Set(["amount","sum","fee","cost","paid","price","salary","base","bonus","penalty","total","advance","budget","transit","cash","prepay","debt","fine","wage"]),
+  RE:/сумм|стоим|оплат|цена|гонорар|пен[яи]\b|зарплат|оклад|аванс|бюджет|поступлен|выплат|премия|штраф/i,
+  NOT:/курс|%|процент|дн(и|ей)\b|час|кол-во|количеств|дол[яи]\b|ставк|срок|номер|год|мес/i,
+  is(x){if(!x||x.type!=="number"||!x.k)return false;const l=String(x.label||"").replace(/\|\|.*$/,"");if(this.NOT.test(l))return false;return this.KEYS.has(String(x.k).toLowerCase())||this.RE.test(l);},
+  /* «6 000 000,5» → 6000000.5 (строкой, чтобы вызывающий код по-прежнему делал +v) */
+  norm(s){s=String(s==null?"":s).replace(/\s| | /g,"").replace(",",".");if(!s)return "";const n=Number(s);return isFinite(n)?String(n):s;},
+  fmt(s){s=String(s==null?"":s);const neg=s.trim().startsWith("-");let d=s.replace(/[^\d.,]/g,"");const m=d.match(/^(\d*)([.,](\d*))?/);if(!m)return "";
+    const ip=(m[1]||"").replace(/^0+(?=\d)/,""),fp=m[2]!=null?m[2].replace(".",","):"";const grp=ip.replace(/\B(?=(\d{3})+(?!\d))/g," ");return (neg?"-":"")+grp+(fp?fp.slice(0,1)+fp.slice(1,3):"");},
+  bind(el){if(!el||el._s56)return;el._s56=1;el.type="text";el.inputMode="decimal";el.autocomplete="off";el.classList.add("s56");el.setAttribute("data-s56","1");
+    if(el.value!=="")el.value=this.fmt(el.value);
+    el.addEventListener("input",()=>{const p=el.selectionStart,before=el.value.length;const v=this.fmt(el.value);if(v===el.value)return;el.value=v;try{const d=v.length-before;el.setSelectionRange(Math.max(0,p+d),Math.max(0,p+d));}catch(e){}});
+    el.addEventListener("paste",e=>{const t=(e.clipboardData||window.clipboardData).getData("text");if(/\d/.test(t)){e.preventDefault();el.value=this.fmt(t);el.dispatchEvent(new Event("input",{bubbles:true}));}});}
+};
+if(typeof Dlg!=="undefined"&&typeof Dlg.ask==="function"){const _ask56=Dlg.ask.bind(Dlg);Dlg.ask=function(o){o=o||{};const sums=(o.fields||[]).filter(x=>Sum56.is(x));if(!sums.length)return _ask56(o);
+    const ks=sums.map(x=>x.k);const norm=v=>{if(v&&typeof v==="object")ks.forEach(k=>{if(k in v)v[k]=Sum56.norm(v[k]);});return v;};
+    const fields=(o.fields||[]).map(x=>{if(!Sum56.is(x))return x;const y=Object.assign({},x,{type:"text",placeholder:x.placeholder||"0",_s56:true});if(typeof x.check==="function")y.check=v=>x.check(norm(Object.assign({},v)));return y;});
+    const o2=Object.assign({},o,{fields});
+    setTimeout(()=>{const md=document.getElementById("mdD");if(!md)return;ks.forEach(k=>Sum56.bind(md.querySelector("#dlg_"+CSS.escape(k))));},0);
+    return _ask56(o2).then(norm);};}
+/* «Что нового» 3.2 — узбекский */
+window.UZ21=Object.assign(window.UZ21||{},{"Версия 3.2: исправления по вашим сообщениям, новый вид блоков и «Рост фирмы»":"3.2-versiya: xabarlaringiz boʻyicha tuzatishlar, bloklarning yangi koʻrinishi va «Firma oʻsishi»","«История» дела открывается без ожидания: сервер больше не ищет дело по тексту записи; журнал по делу загружается при открытии вкладки, при обрыве связи — понятное сообщение и «Обновить».":"Ish «Tarix»i kutmasdan ochiladi: server endi ishni yozuv matni boʻyicha qidirmaydi; jurnal boʻlim ochilganda yuklanadi, aloqa uzilsa — tushunarli xabar va «Yangilash».","Скриншот оплаты открывается у управляющего партнёра и участников дела (раньше — «Нет доступа»); файлы показываются во встроенном окне с кнопками «Скачать» и «Открыть в новой вкладке»; при обрыве загрузки — «Повторить загрузку».":"Toʻlov skrinshoti boshqaruvchi hamkor va ish ishtirokchilarida ochiladi (avval — «Ruxsat yoʻq»); fayllar oʻrnatilgan oynada «Yuklab olish» va «Yangi varaqda ochish» tugmalari bilan koʻrsatiladi; yuklash uzilsa — «Qayta yuklash».","Задачи ИИ об оплате закрываются сами, когда дело оплачено; метки «Сделано» больше нет; «Просроченных задач» у сотрудника считает только его задачи.":"Toʻlov boʻyicha AI vazifalari ish toʻlangach oʻzi yopiladi; «Bajarildi» belgisi olib tashlandi; xodimdagi «Muddati oʻtgan vazifalar» faqat uning vazifalarini sanaydi.","Календарь: событие можно удалить (кнопка «Удалить», с записью в «Истории» дела); в списке «Ответственный» всегда есть вы сами.":"Taqvim: tadbirni oʻchirish mumkin («Oʻchirish» tugmasi, ish «Tarix»iga yoziladi); «Masʼul» roʻyxatida doim oʻzingiz bor.","Уведомление о сообщении приходит всегда, кроме случая, когда у вас открыт именно этот чат; в «Проверке уведомлений» — пошаговая инструкция для Windows и телефона.":"Xabar haqida bildirishnoma doim keladi, faqat aynan shu chat ochiq boʻlsa — yoʻq; «Bildirishnomalarni tekshirish»da Windows va telefon uchun bosqichma-bosqich yoʻriqnoma.","Новый вид блоков на всех страницах: сапфировая шапка со значком, мягкая тень по краям. Суммы в полях вводятся с разрядами (6 000 000). Логотип в боковой панели ведёт на главную.":"Barcha sahifalarda bloklarning yangi koʻrinishi: belgili sapfir sarlavha va chetlarida yumshoq soya. Summalar maydonlarda xonalarga boʻlinib kiritiladi (6 000 000). Yon paneldagi logotip bosh sahifaga olib boradi.","Главная, «Рост фирмы»: открыто и закрыто всего, сравнение по месяцам со средним, текущий месяц с отметкой «где надо быть сегодня» и своя цель вместо среднего.":"Bosh sahifa, «Firma oʻsishi»: jami ochilgan va yopilgan, oylar boʻyicha oʻrtacha bilan taqqoslash, joriy oy «bugun qayerda boʻlish kerak» belgisi bilan va oʻrtacha oʻrniga oʻz maqsadi."});
+/* ── ОШ-0075: логотип в боковой панели ведёт на главную ── */
+document.addEventListener("click",e=>{const lg=e.target.closest&&e.target.closest(".sb21 .lg21,.sb21 .lg21m");if(!lg||!U())return;if(e.target.closest("button,a"))return;e.preventDefault();Router.go("home");},true);
+(()=>{const st=document.createElement("style");st.textContent="input.s56{font-variant-numeric:tabular-nums;text-align:left}.sb21 .lg21,.sb21 .lg21m{cursor:pointer}";document.head.appendChild(st);})();
+
+/* ═══════════════════════════ v51 · БЛОКИ НА ВСЕХ СТРАНИЦАХ (решение владельца 04.11.2026) ═══════════════════════════
+   Макет design-card-blocks.html: «блоки заметнее, чтобы можно было отличить блоки».
+   • Блок с заголовком — цветная шапка и значок в цветном квадрате; цвет у всех блоков один — сапфировый (решение владельца 04.11.2026).
+   • Фон страницы не меняется. Блок не сливается с фоном: по краям — мягкое затемнение со всех сторон.
+   • Плитки, строки списков, колонки доски, отдельные таблицы — то же затемнение; шапка таблицы — сапфировая.
+   • Раздел «ИИ-агенты» (офис) и оргструктура «Структура» — со своим видом, их не меняем. Окна поверх страницы тоже не трогаем.
+   • Только вид: данные, кнопки и переходы — прежние. */
+const Blocks51={
+  skip(){return Router.cur==="agents"||Router.cur==="chart";},
+  title(h){const c=h.cloneNode(true);c.querySelectorAll("button,a,select,input,svg,.i35,.h36i").forEach(x=>x.remove());return c.textContent.trim();},
+  icon(h,t,card){if(h.querySelector(":scope>.i35,:scope>.h36i"))return;let name="doc";
+    try{if(typeof D35!=="undefined"){const p=D35.pick(card,t);if(p&&p[0]&&p[0]!=="dot")name=p[0];}h.prepend(D35.el("span","i35",D35.ico(name)));}catch(e){}},
+  paint(root){if(!root||this.skip())return;
+    root.querySelectorAll(".card:not([data-b51])").forEach(card=>{if(card.closest(".agx,.ov"))return;
+      const h=card.querySelector(":scope>h4:first-child")||card.querySelector(":scope>.h36h");
+      if(!h){card.dataset.b51="";card.classList.add("b51p");return;}
+      const inner=h.matches(".h36h")?h.querySelector("h4"):h;const t=this.title(inner||h);
+      card.dataset.b51="1";card.classList.add("b51",h.matches(".h36h")?"b51h":"b51c");
+      if(!h.matches(".h36h"))this.icon(h,t,card);});
+    /* таблица вне блока: затемнение — у её прокручиваемой обёртки, иначе у самой таблицы */
+    root.querySelectorAll("table.tbl:not([data-b51t])").forEach(tb=>{tb.dataset.b51t="1";if(tb.closest(".card"))return;
+      const p=tb.parentElement;const scroll=p&&p.id!=="viewPage"&&getComputedStyle(p).overflowX!=="visible";(scroll?p:tb).classList.add("b51t");tb.classList.add("b51th");});},
+  queue(){if(this._q)return;this._q=requestAnimationFrame(()=>{this._q=0;try{this.paint(document.getElementById("viewPage"));}catch(e){console.warn("blocks51",e);}});}
+};
+{const _pb51=Pages.bind;Pages.bind=function(vp){const r=_pb51.apply(this,arguments);Blocks51.queue();return r;};}
+(()=>{const start=()=>{const vp=document.getElementById("viewPage");if(!vp||Blocks51._mo)return;Blocks51._mo=new MutationObserver(()=>Blocks51.queue());Blocks51._mo.observe(vp,{childList:true,subtree:true});Blocks51.queue();};
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();const _rw=typeof renderWho==="function"?renderWho:null;if(_rw){renderWho=function(){const r=_rw.apply(this,arguments);start();return r;};}})();
+
+(()=>{const st=document.createElement("style");st.textContent=`
+:root{--b51sh:0 0 0 1px rgba(28,42,68,.05),0 0 20px rgba(28,42,68,.14),0 10px 26px -8px rgba(28,42,68,.24);
+  --b51sh2:0 0 0 1px rgba(28,42,68,.07),0 0 28px rgba(28,42,68,.20),0 16px 34px -10px rgba(28,42,68,.32);
+  --b51shs:0 0 0 1px rgba(28,42,68,.05),0 0 12px rgba(28,42,68,.11),0 5px 14px -5px rgba(28,42,68,.18);
+  --c51:#2F64B0;--t51:#E6EEF9}
+:root[data-theme="dark"]{--b51sh:0 0 0 1px rgba(0,0,0,.35),0 0 22px rgba(0,0,0,.55),0 12px 28px -8px rgba(0,0,0,.7);
+  --b51sh2:0 0 0 1px rgba(0,0,0,.45),0 0 30px rgba(0,0,0,.7),0 18px 36px -10px rgba(0,0,0,.85);
+  --b51shs:0 0 0 1px rgba(0,0,0,.3),0 0 12px rgba(0,0,0,.45),0 5px 14px -5px rgba(0,0,0,.6);
+  --c51:#7FA2DA;--t51:#253349}
+/* ── блоки ── */
+:root #viewPage .card.b51,:root #viewPage .card.b51p{box-shadow:var(--b51sh);border-color:var(--line);border-radius:16px;transition:box-shadow .25s}
+:root #viewPage .card.b51:hover{box-shadow:var(--b51sh2)}
+:root #viewPage .card.b51{background:var(--surface)}
+:root #viewPage .card.b51c{padding:16px 20px}
+:root #viewPage .card.b51c>h4:first-child{display:flex;align-items:center;gap:12px;min-height:58px;margin:-16px -20px 16px;padding:12px 20px;background:var(--t51);border:0;border-bottom:1px solid color-mix(in srgb,var(--c51) 28%,transparent);border-radius:15px 15px 0 0;
+  font:700 15px var(--font-h,"Montserrat"),sans-serif;letter-spacing:0;text-transform:none;color:var(--ink)}
+:root #viewPage .card.b51c>h4:first-child::before,:root #viewPage .card.b51c>h4:first-child::after{display:none}
+/* свёрнутый блок («Что мешает») — только шапка */
+:root #viewPage .card.b51c.min{padding-bottom:0}
+:root #viewPage .card.b51c.min>h4:first-child{margin-bottom:0;border-bottom:0;border-radius:15px}
+:root #viewPage .card.b51h>.h36h{background:var(--t51);border-bottom:1px solid color-mix(in srgb,var(--c51) 28%,transparent);min-height:58px}
+:root #viewPage .card.b51 .i35,:root #viewPage .card.b51 .h36i{width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:10px;background:var(--c51);color:#fff}
+:root[data-theme="dark"] #viewPage .card.b51 .i35,:root[data-theme="dark"] #viewPage .card.b51 .h36i{color:#14181F}
+:root #viewPage .card.b51 .i35 svg,:root #viewPage .card.b51 .h36i svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+/* ── плитки, строки, колонки ── */
+:root #viewPage .tile,:root #viewPage .mtile,:root #viewPage .k25,:root #viewPage .kc,:root #viewPage .mt,:root #viewPage .crow,:root #viewPage .asg{box-shadow:var(--b51shs);transition:box-shadow .2s}
+:root #viewPage .tile:hover,:root #viewPage .mtile:hover,:root #viewPage .k25:hover,:root #viewPage .kc:hover,:root #viewPage .mt:hover,:root #viewPage .crow:hover,:root #viewPage .asg:hover{box-shadow:var(--b51sh)}
+:root #viewPage .pc{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--b51sh)}
+:root #viewPage .pc>.ph2{background:var(--t51);margin:-10px -10px 10px;padding:10px 12px;border-radius:15px 15px 0 0;border-bottom:1px solid color-mix(in srgb,var(--c51) 28%,transparent)}
+/* ── списки «Судебные дела» и «Сопровождение», календарь ── */
+:root #viewPage .tb25{border-radius:16px;box-shadow:var(--b51sh)}
+:root #viewPage .tr25.h{background:var(--t51);color:var(--ink);border-bottom:1px solid color-mix(in srgb,var(--c51) 28%,transparent)}
+:root #viewPage .wd{border-radius:14px;box-shadow:var(--b51sh);overflow:hidden}
+:root #viewPage .wd>.dh2{background:var(--t51);margin:0;border-bottom:1px solid color-mix(in srgb,var(--c51) 28%,transparent)}
+:root #viewPage .cal{border-radius:16px;box-shadow:var(--b51sh);overflow:hidden}
+/* ── таблицы вне блоков ── */
+:root #viewPage .b51t{background:var(--surface);border-radius:16px;box-shadow:var(--b51sh)}
+:root #viewPage table.b51t{border-collapse:separate;border-spacing:0;overflow:hidden}
+:root #viewPage table.b51th thead th{background:var(--t51);color:var(--ink);font-weight:700;border-bottom:1px solid color-mix(in srgb,var(--c51) 28%,transparent)}
+@media(max-width:600px){:root #viewPage .card.b51c{padding:12px 14px}:root #viewPage .card.b51c>h4:first-child{margin:-12px -14px 12px;padding:10px 14px;min-height:50px;font-size:14px}:root #viewPage .card.b51 .i35,:root #viewPage .card.b51 .h36i{width:30px;height:30px}}
+`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
