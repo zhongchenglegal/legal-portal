@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="f7074786921e";
+const ZC_BUILD="d63209a9326d";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -18209,18 +18209,25 @@ const H36={
     let mi=start.slice(8,10)==="01"?first(start):nextM(start);const mcur=first(td);const list=[];let so=0,sc=0;
     while(mi<mcur){const i1=idx(mi),i2=idx(addDays(nextM(mi),-1));const mo=at(o,i2)-at(o,i1-1),mc=at(c,i2)-at(c,i1-1);list.push({ym:ym(mi),o:mo,c:mc});so+=mo;sc+=mc;mi=nextM(mi);}
     const i1=idx(mcur<start?start:mcur);const cnt=list.length;const r1=v=>Math.round(v*10)/10;
+    let part=null;if(start.slice(8,10)!=="01"){const mf=nextM(start);if(mf<=mcur){const i2=idx(addDays(mf,-1));part={ym:ym(start),o:at(o,i2),c:at(c,i2),from:start};}}
     const dim=new Date(+td.slice(0,4),+td.slice(5,7),0).getDate();
-    return {list,cur:{ym:ym(mcur),o:o[n-1]-at(o,i1-1),c:c[n-1]-at(c,i1-1),day:+td.slice(8,10),days:dim},avg:cnt?{o:r1(so/cnt),c:r1(sc/cnt)}:null,goal:cnt?{o:Math.ceil(so/cnt-1e-9),c:Math.ceil(sc/cnt-1e-9)}:null,own:this.ownGoal&&this.ownGoal[this.st.sec]||null};},
+    return {list,cur:{ym:ym(mcur),o:o[n-1]-at(o,i1-1),c:c[n-1]-at(c,i1-1),day:+td.slice(8,10),days:dim},avg:cnt?{o:r1(so/cnt),c:r1(sc/cnt)}:null,goal:cnt?{o:Math.ceil(so/cnt-1e-9),c:Math.ceil(sc/cnt-1e-9)}:null,own:this.ownGoal&&this.ownGoal[this.st.sec]||null,part};},
   mName(ym,long){const i=+ym.slice(5,7)-1;if(lang==="uz")return long?MONTHS_UZ_FULL[i]:this.MONU[i];const l=long?t36(this.MONL[i]):t36(this.MON[i]);return l;},
   MONL:["Январь||1月","Февраль||2月","Март||3月","Апрель||4月","Май||5月","Июнь||6月","Июль||7月","Август||8月","Сентябрь||9月","Октябрь||10月","Ноябрь||11月","Декабрь||12月"],
   n1(v){return String(Math.round(v*10)/10).replace(".",lang==="zh"?".":",");},
   pMon(box,s,g){if(!box)return;const mon=s.mon||(s.o&&this.monOf(s.o,s.c,g.start,g.today));if(!mon){box.innerHTML="";return;}
-    const list=mon.list||[],cur=mon.cur||{},own=mon.own||{};const show=list.slice(-6);
+    const list=mon.list||[],cur=mon.cur||{},own=mon.own||{},part=mon.part||null;const show=(part?[Object.assign({part:1},part)]:[]).concat(list).slice(-6);
+    const dm=d=>d?d.slice(8,10)+"."+d.slice(5,7):"";const since=d=>lang==="uz"?dm(d)+" dan boshlab":t36("с||自")+" "+dm(d);const partNote=part?`${this.mName(part.ym,true)} — ${since(part.from)}, ${t36("в среднее не входит||不计入平均")}`:"";
     const panel=(k,title,cls)=>{const vals=show.map(x=>x[k]);const curV=+cur[k]||0;const curName=this.mName(cur.ym||g.today,true);
-      if(!list.length)return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div><div class="h36main"><small>${curName} ${t36("пока||至今")}</small><b>${curV}</b></div></div>`;
+      const mkBars=(mx)=>show.map((x,i)=>`<div class="h36b1${i===show.length-1?" last":""}${x.part?" part":""}"${x.part?` title="${esc(partNote)}"`:""}><div class="col"><span style="height:${Math.round(x[k]/mx*H)}px"></span></div><em>${x[k]}</em><u>${this.mName(x.ym)}${x.part?"*":""}</u></div>`).join("");
+      const H=50;
+      if(!list.length){if(!part)return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div><div class="h36main"><small>${curName} ${t36("пока||至今")}</small><b>${curV}</b></div></div>`;
+        const mx=Math.max(1,+part[k]||0);return `<div class="h36p ${cls}"><div class="h36pt"><i></i>${title}</div>
+        <div class="h36top"><div class="h36main"><small>${this.mName(part.ym,true)} ${since(part.from)}</small><b>${+part[k]||0}</b></div><div class="h36bars" title="${esc(t36("По месяцам||按月"))}">${mkBars(mx)}</div></div>
+        <div class="h36now"><div class="h36nl"><span>${curName} ${t36("пока||至今")}: <b>${curV}</b></span></div></div></div>`;}
       const avg=+mon.avg[k],last=list[list.length-1],lastV=+last[k],ownV=own&&own[k]!=null?+own[k]:null,goal=ownV!=null?ownV:+mon.goal[k];
       const diff=Math.round((lastV-avg)*10)/10;const chip=diff>0?"↑ +"+this.n1(diff)+" "+t36("к среднему||高于平均"):diff<0?"↓ −"+this.n1(-diff)+" "+t36("к среднему||低于平均"):"→ "+t36("как среднее||与平均持平");
-      const mx=Math.max(1,...vals),H=50;const bars=show.map((x,i)=>`<div class="h36b1${i===show.length-1?" last":""}"><div class="col"><span style="height:${Math.round(x[k]/mx*H)}px"></span></div><em>${x[k]}</em><u>${this.mName(x.ym)}</u></div>`).join("");
+      const mx=Math.max(1,...show.map(x=>+x[k]||0));const bars=mkBars(mx);
       const done=curV>=goal,pct=goal?Math.min(100,Math.round(curV/goal*100)):100,day=+cur.day||1,days=+cur.days||30,mark=Math.min(100,Math.round(day/days*100)),need=Math.ceil(goal*day/days);
       const right=done?`<strong class="done">${t36("выполнено||已完成")}${curV>goal?", +"+(curV-goal)+" "+t36("сверх||超出"):""}</strong>`:`<strong>${t36("ещё||还差")} ${goal-curV}</strong>`;
       const pace=done?"":curV>=need?`<small class="ok">${t36("по графику||按进度")}</small>`:`<small class="warn">${t36("к сегодняшнему дню нужно||今日应达")} ${need}</small>`;
@@ -18229,7 +18236,7 @@ const H36={
         <div class="h36bars" title="${esc(t36("По месяцам||按月"))}">${bars}<div class="h36avgl" style="bottom:${Math.round(avg/mx*H)+33}px"></div></div></div>
         <div class="h36now"><div class="h36nl"><span>${curName} ${t36("пока||至今")}: <b>${curV}</b> ${t36("из||/")} ${goal}${ownV!=null?` <em class="h36own">${t36("своя цель||自定目标")}</em>`:""}<button type="button" class="h36goal" data-h36goal="${k}" title="${esc(t36("Своя цель вместо среднего||自定目标代替平均"))}">✎</button></span>${right}</div>
         <div class="h36track"><span class="${done?"done":""}" style="width:${pct}%"></span><i class="h36today" style="left:${mark}%" title="${esc(t36("где надо быть сегодня||今日应达位置"))}"></i></div>${pace}</div></div>`;};
-    box.innerHTML=`<div class="h36two">${panel("o",t36("Открыто||开立"),"h36po")}${panel("c",t36("Закрыто||结案"),"h36pc")}</div>${list.length?"":`<div class="h36wait">${t36("Среднее появится после первого полного месяца||首个完整月份后将显示平均值")}</div>`}`;
+    box.innerHTML=`<div class="h36two">${panel("o",t36("Открыто||开立"),"h36po")}${panel("c",t36("Закрыто||结案"),"h36pc")}</div>${list.length?"":`<div class="h36wait">${t36("Среднее появится после первого полного месяца||首个完整月份后将显示平均值")}</div>`}${part&&show[0]&&show[0].part?`<div class="h36wait h36pnote">* ${esc(partNote)}</div>`:""}`;
     box.querySelectorAll("[data-h36goal]").forEach(b=>b.onclick=()=>this.setGoal(b.dataset.h36goal,mon));},
   async setGoal(k,mon){const sv=this.st.sec,own=mon.own||{},curV=own[k]!=null?own[k]:"";
     const v=await Dlg.ask({title:t36("Своя цель вместо среднего||自定目标代替平均"),text:t36("Сколько дел в месяц считать целью для этого раздела. Пусто — снова среднее||本板块每月目标案件数。留空则恢复为平均值"),fields:[{k:"v",label:t36(k==="o"?"Открыть за месяц||每月开立":"Закрыть за месяц||每月结案"),type:"number",value:curV,min:0}]});if(v===null)return;
@@ -18405,7 +18412,7 @@ if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{act38Miss:"{n} не зах�
 .h36track{position:relative;height:8px;border-radius:99px;background:var(--line);overflow:visible}.h36track span{display:block;height:100%;border-radius:99px;background:var(--c1)}.h36track span.done{background:var(--h36ok,#2F7D5B)}
 .h36track .h36today{position:absolute;top:-4px;width:2px;height:16px;margin-left:-1px;background:var(--ink);opacity:.55;border-radius:1px}
 .h36now small{font-size:11px;color:var(--ink-3)}.h36now small.ok{color:var(--h36ok,#2F7D5B)}.h36now small.warn{color:var(--h36late)}
-.h36wait{font-size:12px;color:var(--ink-3);margin:-6px 0 10px}
+.h36wait{font-size:12px;color:var(--ink-3);margin:-6px 0 10px}.h36b1.part .col span{opacity:.45}.h36b1.part em{color:var(--ink-3);font-weight:500}.h36pnote{margin-top:0}
 
 .h36{--h36o:#2F64B0;--h36cl:#2B9470;--h36w:#3A5A8C;--h36p:#A9BBD6;--h36late:#C8655A;--h36ok:#3F8768;--h36lt:#E8B10C;--h36ms:#D6362B;display:grid;gap:16px}
 :root[data-theme="dark"] .h36{--h36o:#5B8DD6;--h36cl:#2FA078;--h36w:#6782AC;--h36p:#3C4A66;--h36late:#D07A6E;--h36ok:#62A98A}
@@ -18459,7 +18466,7 @@ if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{act38Miss:"{n} не зах�
 `;document.head.appendChild(st);})();
 
 /* узбекский */
-if(typeof UZ21!=="undefined")Object.assign(UZ21,{"к среднему":"oʻrtachaga nisbatan","как среднее":"oʻrtacha bilan teng","в среднем":"oʻrtacha","в месяц":"oyiga","пока":"hozircha","из":"dan","выполнено":"bajarildi","сверх":"ortiq","ещё":"yana","по графику":"jadval boʻyicha","к сегодняшнему дню нужно":"bugungi kunga kerak","своя цель":"oʻz maqsadi","Своя цель вместо среднего":"Oʻrtacha oʻrniga oʻz maqsadi","Сколько дел в месяц считать целью для этого раздела. Пусто — снова среднее":"Bu boʻlim uchun oyiga nechta ish maqsad hisoblanadi. Boʻsh — yana oʻrtacha","Открыть за месяц":"Oyiga ochish","Закрыть за месяц":"Oyiga yopish","Среднее появится после первого полного месяца":"Oʻrtacha birinchi toʻliq oydan keyin paydo boʻladi","где надо быть сегодня":"bugun qayerda boʻlish kerak","По месяцам":"Oylar boʻyicha","Открыто":"Ochilgan","Закрыто":"Yopilgan","Активность в платформе":"Platformadagi faollik","Нагрузка сотрудников":"Xodimlar yuklamasi","Дела по видам":"Turlar boʻyicha ishlar","Рост фирмы":"Firma oʻsishi","Моя активность в платформе":"Platformadagi faolligim",
+if(typeof UZ21!=="undefined")Object.assign(UZ21,{"в среднее не входит":"oʻrtachaga kirmaydi","к среднему":"oʻrtachaga nisbatan","как среднее":"oʻrtacha bilan teng","в среднем":"oʻrtacha","в месяц":"oyiga","пока":"hozircha","из":"dan","выполнено":"bajarildi","сверх":"ortiq","ещё":"yana","по графику":"jadval boʻyicha","к сегодняшнему дню нужно":"bugungi kunga kerak","своя цель":"oʻz maqsadi","Своя цель вместо среднего":"Oʻrtacha oʻrniga oʻz maqsadi","Сколько дел в месяц считать целью для этого раздела. Пусто — снова среднее":"Bu boʻlim uchun oyiga nechta ish maqsad hisoblanadi. Boʻsh — yana oʻrtacha","Открыть за месяц":"Oyiga ochish","Закрыть за месяц":"Oyiga yopish","Среднее появится после первого полного месяца":"Oʻrtacha birinchi toʻliq oydan keyin paydo boʻladi","где надо быть сегодня":"bugun qayerda boʻlish kerak","По месяцам":"Oylar boʻyicha","Открыто":"Ochilgan","Закрыто":"Yopilgan","Активность в платформе":"Platformadagi faollik","Нагрузка сотрудников":"Xodimlar yuklamasi","Дела по видам":"Turlar boʻyicha ishlar","Рост фирмы":"Firma oʻsishi","Моя активность в платформе":"Platformadagi faolligim",
   "открыто за 30 дней":"30 kunda ochilgan","закрыто за 30 дней":"30 kunda yopilgan","в работе сейчас":"hozir ishda","закрыто всего":"jami yopilgan","открыто сейчас":"hozir ochiq","дел у ведущих":"yetakchilardagi ishlar","в работе":"ishda","до начала":"boshlanishigacha","просрочено":"muddati oʻtgan","сотрудники":"xodimlar",
   "до начала хода дела":"ish jarayoni boshlanishigacha","Сотрудник":"Xodim","Последний вход":"Oxirgi kirish","Статус":"Holat","14 дней":"14 kun","Часов в раб. день":"Ish kunida soat","онлайн":"onlayn","сегодня":"bugun","вчера":"kecha",
   "вовремя":"oʻz vaqtida","опоздание":"kechikish","сегодня нет":"bugun yoʻq","ещё не заходил":"hali kirmagan","не заходил":"kirmagan","выходной":"dam olish kuni","Сначала":"Boshidan","Требует внимания":"Eʼtibor talab qiladi","План на день (N)":"Kun rejasi (N)","Всё в порядке":"Hammasi joyida",
