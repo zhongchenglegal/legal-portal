@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="8fb2d3792ab6";
+const ZC_BUILD="c8e768b383cc";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -22381,6 +22381,33 @@ const Blocks51={
 :root #viewPage table.b51t{border-collapse:separate;border-spacing:0;overflow:hidden}
 :root #viewPage table.b51th thead th{background:var(--t51);color:var(--ink);font-weight:700;border-bottom:1px solid color-mix(in srgb,var(--c51) 28%,transparent)}
 @media(max-width:600px){:root #viewPage .card.b51c{padding:12px 14px}:root #viewPage .card.b51c>h4:first-child{margin:-12px -14px 12px;padding:10px 14px;min-height:50px;font-size:14px}:root #viewPage .card.b51 .i35,:root #viewPage .card.b51 .h36i{width:30px;height:30px}}
+`;document.head.appendChild(st);})();
+
+/* ═══════════ «Чаты» · окно без выбранного разговора (макет design-chat-empty.html, вариант C «Спокойный», решение владельца 06.11.2026) ═══════════
+   Было: пустая часть сжималась до узкой серой полосы по ширине надписи, по бокам оставалось белое.
+   Стало: фон с узором, как у переписки, на всю правую часть; по центру крупный значок с мягкой анимацией, надпись и строка «Разговор откроется здесь».
+   Только вид: класс .pick22 сохранён (на него опираются тесты), кнопок и новых функций нет. */
+Object.assign(UI,{ch58Sub:"Разговор откроется здесь||对话将在这里打开"});
+window.UZ21=Object.assign(window.UZ21||{},{"Разговор откроется здесь":"Suhbat shu yerda ochiladi"});
+{const _th58=Chat22.threadHtml;Chat22.threadHtml=function(){const h=_th58.apply(this,arguments);if(this.valid(this.peer))return h;
+  return `<div class="pick22 pk58"><span class="orb58">${ch22svg(CH22_ICO.chat)}</span><b>${T1(UI.ch22Pick)}</b><span>${T1(UI.ch58Sub)}</span></div>`;};}
+(()=>{const st=document.createElement("style");st.textContent=`
+:root .pick22.pk58{margin:0;flex:1;align-self:stretch;width:100%;height:auto;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px;
+  color:var(--ink-2);font-size:13.5px;background-color:var(--chbg22);
+  background-image:radial-gradient(color-mix(in srgb,var(--pri) 9%,transparent) 1.2px,transparent 1.3px),radial-gradient(color-mix(in srgb,var(--pri) 6%,transparent) 1px,transparent 1.1px);
+  background-size:26px 26px,13px 13px;background-position:0 0,6px 9px}
+:root .pick22.pk58>b{font:700 19px var(--font-h);color:var(--ink);margin-top:6px}
+:root .orb58{position:relative;width:104px;height:104px;border-radius:50%;display:grid;place-items:center;background:var(--pri);color:#fff;
+  box-shadow:0 10px 28px -6px color-mix(in srgb,var(--pri) 60%,transparent);animation:fl58 4s ease-in-out infinite}
+:root .orb58::before,:root .orb58::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--pri) 25%,transparent);animation:rg58 3.2s ease-out infinite}
+:root .orb58::after{animation-delay:1.6s}
+:root .pick22.pk58 .orb58 svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;opacity:1}
+:root .pick22.pk58>*{animation:up58 .45s cubic-bezier(.2,.8,.2,1) both}
+:root .pick22.pk58>.orb58{animation:up58 .45s cubic-bezier(.2,.8,.2,1) both,fl58 4s ease-in-out .45s infinite}
+@keyframes fl58{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes rg58{0%{transform:scale(.85);opacity:1}100%{transform:scale(1.35);opacity:0}}
+@keyframes up58{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){:root .orb58,:root .orb58::before,:root .orb58::after,:root .pick22.pk58>*{animation:none}}
 `;document.head.appendChild(st);})();
 
 
