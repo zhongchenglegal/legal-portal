@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="585a575291e5";
+const ZC_BUILD="67c5cd90667b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -20246,7 +20246,7 @@ Object.assign(UI,{dc63WordsFor:"Слова на {m}||{m} 词汇",dc63Of:"из||/
   dc63Queue:"Вся очередь||全部队列",dc63QEmpty:"Проверять нечего — все слова в словаре||无需审核——所有词已入词典",dc63AutoAt:"сами утвердятся {d}||将于 {d} 自动批准",dc63From:"предложил(а): {w}||推荐人：{w}",
   dc63Ru:"По-русски||俄文",dc63Uz:"По-узбекски||乌兹别克文",dc63Ex:"Пример||例句",dc63Topic:"Тема||主题",dc63Mine:"Мои слова||我的词",dc63MineEmpty:"Вы ещё не предлагали слов — «Предложить слово» в словаре||您尚未推荐词汇——在词典中点击“推荐词汇”",
   dc63StNew:"на проверке||待审核",dc63StOk:"утверждено||已批准",dc63StRej:"отклонено||已驳回",dc63StHid:"скрыто||已隐藏",dc63Kind:"Вид||类型",dc63KindW:"Слово||词",dc63KindP:"Фраза / клише||短语/套语",
-  dc63Mean:"Значение {n}||释义 {n}",dc63MonthH:"для слов общего словаря||通用词典的词",dc63Pos:"Пометка||标注",dc63Client:"Клиент (термины клиента)||客户（客户术语）",dc63NoClient:"— общий словарь —||—— 通用词典 ——",dc63Dup:"Уже есть: {w}||已存在：{w}",
+  dc63Mean:"Значение {n}||释义 {n}",dc63ZhH:"достаточно иероглифов — пиньинь, перевод, пример и тему заполнит ИИ, вы проверите||输入汉字即可——拼音、翻译、例句和主题由 AI 填写，您来核对",dc63RuH:"выделено в деле по-русски — ИИ подберёт китайское слово||在案件中选中的俄文——AI 将匹配中文词",dc63How:"Как заполнить||填写方式",dc63HowAi:"Заполнить с ИИ, потом проверить||由 AI 填写后核对",dc63HowSelf:"Заполню сам||自己填写",dc63Next:"Далее||下一步",dc63ZhNeed:"Введите слово по-китайски||请输入中文词",dc63AiWait:"ИИ заполняет слово…||AI 正在填写…",dc63AiFail:"ИИ не заполнил — заполните вручную||AI 未能填写——请手动填写",dc63AiCheck:"Заполнено ИИ — проверьте перед сохранением||由 AI 填写——保存前请核对",dc63AiMark:"перевод и пример заполнил ИИ||翻译和例句由 AI 填写",dc63FromMatter:"из дела {n}||来自案件 {n}",dc63ToCheck:"уйдёт на проверку управляющему адвокату||将提交管理律师审核",dc63ToDict:"В словарь||加入词典",dc63MonthH:"для слов общего словаря||通用词典的词",dc63Pos:"Пометка||标注",dc63Client:"Клиент (термины клиента)||客户（客户术语）",dc63NoClient:"— общий словарь —||—— 通用词典 ——",dc63Dup:"Уже есть: {w}||已存在：{w}",
   dc63SimQ:"Похожие (тот же перевод): {w}. Всё равно добавить?||相似词（相同译文）：{w}。仍要添加吗？",dc63Similar:"Похожее слово||相似词",dc63HistT:"История правок · {w}||修改历史 · {w}",dc63HistNone:"Правок нет||无修改",
   dc63NoVoice:"В этом браузере нет китайского голоса — откройте портал в Chrome||此浏览器没有中文语音——请在 Chrome 中打开门户",dc63Keys:"клавиши: A — утвердить · E — исправить · D — отклонить||快捷键：A 批准 · E 修改 · D 驳回",
   dc63Act:{add:"добавлено||已添加",edit:"правка||修改",approve:"утверждено||已批准",reject:"отклонено||已驳回",hide:"скрыто||已隐藏",restore:"возвращено||已恢复",status:"статус||状态"},
@@ -20293,7 +20293,7 @@ const Dc63={
       <div class="h"><div class="zh">${esc(w.zh)}${this.spk(w.zh)}</div><div class="py">${esc(w.pinyin||"")}</div></div>
       <div class="m">${this.means(w)}</div>
       <div class="ex">${w.exZh?`<div>${esc(w.exZh)}${this.spk(w.exZh)}</div><small>${esc(w.exRu||w.exUz||"")}</small>`:""}</div>
-      <div class="tp">${w.topic?`<span class="dc63tag">${esc(w.topic)}</span>`:""}${who?`<small>${who}</small>`:""}${w.status!=="ok"?this.stPill(w):""}</div>
+      <div class="tp">${w.topic?`<span class="dc63tag">${esc(w.topic)}</span>`:""}${who?`<small>${who}</small>`:""}${w.srcMatter?`<small>${esc(T1(UI.dc63FromMatter).replace("{n}",this.mNo(w.srcMatter)))}</small>`:""}${w.status!=="ok"?this.stPill(w):""}</div>
       ${mp?`<div class="a">${w.status==="hidden"?`<button type="button" class="btn sm" data-lr58a="unhide" data-id="${esc(w.id)}">${T1(UI.dc63Unhide)}</button>`
         :`<button type="button" class="btn sm" data-lr58a="edit" data-id="${esc(w.id)}">${T1(UI.dc63Edit)}</button><button type="button" class="btn sm ghost" data-lr58a="hide" data-id="${esc(w.id)}">${T1(UI.dc63Hide)}</button>`}<button type="button" class="btn sm ghost" data-lr58a="hist" data-id="${esc(w.id)}">${T1(UI.dc63Hist)}</button></div>`:""}</div>`;},
   listHtml(mp){const r=this.list(mp);
@@ -20333,7 +20333,7 @@ const Dc63={
     return `<div class="dc63check"><div class="dc63card" data-dc63card="${esc(w.id)}"><div class="dc63ch"><span>${i+1} ${T1(UI.dc63Of)} ${P.length} · ${this.num(w)}</span><span>${src}</span></div>
         <div class="dc63big">${esc(w.zh)}<span>${esc(w.pinyin||"")}</span>${this.spk(w.zh)}</div>
         ${(w.meanings||[]).length>1?row(UI.dc63Ru,this.means(w)):row(UI.dc63Ru,esc(w.ru||"—"))+row(UI.dc63Uz,esc(w.uz||"—"))}
-        ${w.exZh?row(UI.dc63Ex,`${esc(w.exZh)}${this.spk(w.exZh)}<br><small>${esc(w.exRu||w.exUz||"")}</small>`):""}${w.topic?row(UI.dc63Topic,`<span class="dc63tag">${esc(w.topic)}</span>`):""}${w.clientId?row(UI.dc63Terms,esc(this.clName(w.clientId))):""}
+        ${w.exZh?row(UI.dc63Ex,`${esc(w.exZh)}${this.spk(w.exZh)}<br><small>${esc(w.exRu||w.exUz||"")}</small>`):""}${w.topic?row(UI.dc63Topic,`<span class="dc63tag">${esc(w.topic)}</span>`):""}${w.clientId?row(UI.dc63Terms,esc(this.clName(w.clientId))):""}${w.srcMatter?`<div class="fhint">${esc(T1(UI.dc63FromMatter).replace("{n}",this.mNo(w.srcMatter)))}</div>`:""}${w.aiFill?`<div class="dc63aim">✦ ${T1(UI.dc63AiMark)}</div>`:""}
         <div class="dc63btns"><button type="button" class="btn pri" data-lr58a="ok" data-id="${esc(w.id)}">✓ ${T1(UI.dc63Approve)} <kbd>A</kbd></button><button type="button" class="btn" data-lr58a="fix" data-id="${esc(w.id)}">${T1(UI.dc63Fix)} <kbd>E</kbd></button><button type="button" class="btn dc63rej" data-lr58a="reject" data-id="${esc(w.id)}">${T1(UI.dc63Reject)} <kbd>D</kbd></button></div>
         <div class="fhint">${T1(UI.dc63Keys)}</div></div>
       <div class="dc63q"><h4>${T1(UI.dc63Queue)} · ${P.length}</h4><div class="dc63qb">${ag?`<button type="button" class="btn sm pri" data-lr58a="okagent">✓ ${T1(UI.dc63OkAgent)} · ${ag}</button>`:""}<button type="button" class="btn sm" data-lr58a="oksel"${nSel?"":" disabled"}>${T1(UI.dc63OkSel)}${nSel?" · "+nSel:""}</button></div>
@@ -20343,10 +20343,44 @@ const Dc63={
   mineHtml(){const me=this.me();const L=(Lr58.words||[]).filter(w=>w.addedBy===me).sort((a,b)=>(b.no||0)-(a.no||0));
     if(!L.length)return `<div class="empty2">${T1(UI.dc63MineEmpty)}</div>`;
     return `<div class="dc63list">${L.map(w=>`<div class="dc63r mine" data-lr58w="${esc(w.id)}"><div class="n">${this.num(w)}<small>${this.dm(this.day(w.createdAt))}</small></div><div class="h"><div class="zh">${esc(w.zh)}${this.spk(w.zh)}</div><div class="py">${esc(w.pinyin||"")}</div></div><div class="m">${this.means(w)}</div>
-      <div class="tp">${this.stPill(w)}${w.status==="rejected"&&w.note?`<small>${esc(w.note)}</small>`:""}</div><div class="a">${w.status==="new"?`<button type="button" class="btn sm" data-lr58a="edit" data-id="${esc(w.id)}">${T1(UI.dc63Edit)}</button><button type="button" class="btn sm ghost" data-lr58a="del" data-id="${esc(w.id)}">${T1(UI.lr58Del)}</button>`:""}</div></div>`).join("")}</div>`;},
+      <div class="tp">${this.stPill(w)}${w.status==="rejected"&&w.note?`<small>${esc(w.note)}</small>`:""}${w.srcMatter?`<small>${esc(T1(UI.dc63FromMatter).replace("{n}",this.mNo(w.srcMatter)))}</small>`:""}</div><div class="a">${w.status==="new"?`<button type="button" class="btn sm" data-lr58a="edit" data-id="${esc(w.id)}">${T1(UI.dc63Edit)}</button><button type="button" class="btn sm ghost" data-lr58a="del" data-id="${esc(w.id)}">${T1(UI.lr58Del)}</button>`:""}</div></div>`).join("")}</div>`;},
+  /* ── этап Б: номер дела, добавление с ИИ ── */
+  mNo(id){const m=id&&S.matters&&S.matters[id];return m&&m.no?m.no:id||"";},
+  /* добавить слово: шаг 1 — иероглифы (или выделенный в деле текст), шаг 2 — ИИ заполняет, человек проверяет и сохраняет */
+  async addFlow(pre){pre=pre||{};const mp=Lr58.mp();
+    if(!Lr58.info){try{Lr58.info=await Lr58.rpc("tr_dict_info",{});}catch(e){}}
+    const f=[];if(mp)f.push({k:"kind",label:T1(UI.dc63Kind),type:"select",value:pre.kind||this.v.kind||"word",options:[["word",T1(UI.dc63KindW)],["phrase",T1(UI.dc63KindP)]]});
+    f.push({k:"zh",label:T1(UI.lr58Zh),value:pre.zh||"",hint:T1(UI.dc63ZhH)});
+    if(pre.ru)f.push({k:"ru",label:T1(UI.lr58Ru),value:pre.ru,hint:T1(UI.dc63RuH)});
+    f.push({k:"how",label:T1(UI.dc63How),type:"select",value:"ai",options:[["ai",T1(UI.dc63HowAi)],["self",T1(UI.dc63HowSelf)]]});
+    if(pre.srcMatter)f.push({k:"srch",type:"html",html:`<div class="fhint">${esc(T1(UI.dc63FromMatter).replace("{n}",this.mNo(pre.srcMatter)))}${mp?"":" · "+T1(UI.dc63ToCheck)}</div>`});
+    const v=await Dlg.ask({title:T1(mp?UI.lr58Add:UI.lr58Propose).replace("+ ",""),fields:f,okText:UI.dc63Next});if(!v)return false;
+    const zh=String(v.zh||"").trim(),ru=String(v.ru||"").trim(),kind=mp?(v.kind||"word"):"word";
+    if(!zh&&!ru){toast(T1(UI.dc63ZhNeed));return false;}
+    let w={zh,kind,meanings:ru?[{ru,uz:"",pos:""}]:[]};let ai=false;
+    if(v.how==="ai"){toast(T1(UI.dc63AiWait));
+      try{const r=await SB19.T.invoke("ai-director",{action:"tr_fill",zh,ru,kind});
+        if(r&&r.dup){toast(T1(UI.dc63Dup).replace("{w}",(r.dup.kind==="phrase"?"Ф-":"№ ")+r.dup.no+" "+r.dup.zh+" ("+T1(r.dup.status==="ok"?UI.dc63StOk:UI.dc63StNew)+")"));return false;}
+        if(r&&r.word){w=Object.assign({kind},r.word);ai=true;}}
+      catch(e){toast(T1(UI.dc63AiFail)+": "+String((e&&e.message)||e));}}
+    const o=await this.dlg(w,mp,{ai,src:pre.srcMatter});if(!o)return false;
+    if(ai)o.aiFill=true;if(pre.srcMatter)o.srcMatter=pre.srcMatter;
+    await Lr58.rpc("tr_word_add",{w:o});toast(T1(mp?UI.lr58Saved:UI.lr58Proposed));return true;},
+  /* «В словарь» из дела: выделенный в карточке дела текст — китайские иероглифы в «по-китайски», иначе — в «по-русски» */
+  selBtn(){let b=this._btn;if(!b){b=this._btn=document.createElement("button");b.type="button";b.className="dc63selbtn";b.hidden=true;b.textContent="＋ "+T1(UI.dc63ToDict);
+      b.addEventListener("mousedown",e=>e.preventDefault());b.addEventListener("click",()=>{const t=b.dataset.t||"",mid=b.dataset.m||"";b.hidden=true;const cjk=t.match(/[㐀-鿿豈-﫿]+/);
+        try{window.getSelection().removeAllRanges();}catch(e){}this.addFlow(cjk?{zh:cjk[0],srcMatter:mid}:{ru:t,srcMatter:mid}).then(ok=>{if(ok)Lr58.load();}).catch(e=>toast(String((e&&e.message)||e)));});document.body.appendChild(b);}
+    const hide=()=>{b.hidden=true;};
+    if(Router.cur!=="matter"||!Router.arg||!(Lr58.mp()||Lr58.tr())||!Lr58.srv())return hide();
+    const s=window.getSelection();const t=s?String(s).trim():"";if(!t||t.length>60||!s.rangeCount)return hide();
+    const n=s.anchorNode;const el=n&&(n.nodeType===1?n:n.parentElement);if(!el||!el.closest("#viewPage")||el.closest("input,textarea,select,[contenteditable],button"))return hide();
+    const r=s.getRangeAt(0).getBoundingClientRect();if(!r||(!r.width&&!r.height))return hide();
+    b.style.top=Math.max(8,r.top-38)+"px";b.style.left=Math.max(8,Math.min(window.innerWidth-170,r.left))+"px";b.dataset.t=t;b.dataset.m=Router.arg;b.hidden=false;},
   /* ── окно слова ── */
-  async dlg(w,mp){const M=(w&&w.meanings&&w.meanings.length?w.meanings:[{ru:(w&&w.ru)||"",uz:(w&&w.uz)||"",pos:""}]).slice(0,3);while(M.length<3)M.push({ru:"",uz:"",pos:""});
+  async dlg(w,mp,opt){opt=opt||{};const M=(w&&w.meanings&&w.meanings.length?w.meanings:[{ru:(w&&w.ru)||"",uz:(w&&w.uz)||"",pos:""}]).slice(0,3);while(M.length<3)M.push({ru:"",uz:"",pos:""});
     const cl=(Lr58.info||{}).clients||[];const f=[];
+    if(opt.ai)f.push({k:"aih",type:"html",html:`<div class="dc63aih">✦ ${T1(UI.dc63AiCheck)}</div>`});
+    if(opt.src)f.push({k:"srch",type:"html",html:`<div class="fhint">${esc(T1(UI.dc63FromMatter).replace("{n}",this.mNo(opt.src)))}</div>`});
     if(mp)f.push({k:"kind",label:T1(UI.dc63Kind),type:"select",value:(w&&w.kind)||this.v.kind||"word",options:[["word",T1(UI.dc63KindW)],["phrase",T1(UI.dc63KindP)]]});
     f.push({k:"zh",label:T1(UI.lr58Zh),value:(w&&w.zh)||"",required:true},{k:"pinyin",label:T1(UI.lr58Py),value:(w&&w.pinyin)||""});
     M.forEach((m,i)=>f.push({type:"section",label:T1(UI.dc63Mean).replace("{n}",i+1)},{k:"ru"+i,label:T1(UI.lr58Ru),value:m.ru||""},{k:"uz"+i,label:T1(UI.lr58Uz),value:m.uz||""},{k:"pos"+i,label:T1(UI.dc63Pos),type:"select",value:m.pos||"",options:this.POS.map(p=>[p,p||"—"])}));
@@ -20355,12 +20389,13 @@ const Dc63={
     if(mp){const cur=(Lr58.info&&Lr58.info.month)||new Date().toISOString().slice(0,7);const nx=k=>{const [y,m]=cur.split("-").map(Number);const d=new Date(y,m-1+k,1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");};const ms=[...new Set([cur,nx(1),nx(2)].concat(this.months()).concat(w&&w.month?[w.month]:[]))].filter(Boolean).sort();
       f.push({k:"month",label:T1(UI.lr58Month)+" — "+T1(UI.dc63MonthH),type:"select",value:(w&&w.month)||(this.useMonth()&&this.v.month)||cur,options:ms.map(m=>[m,this.mon(m,true)])});}
     if(cl.length||(w&&w.clientId))f.push({k:"clientId",label:T1(UI.dc63Client),type:"select",value:(w&&w.clientId)||(this.v.scope==="client"?this.v.client:""),options:[["",T1(UI.dc63NoClient)]].concat(cl.map(x=>[x.id,String(x.name).split("||")[0]]))});
-    const v=await Dlg.ask({title:T1(UI.lr58WordWin)+(w?" · "+this.num(w)+" "+w.zh:""),wide:true,fields:f});if(!v)return null;
+    const isNew=!w||!w.id;
+    const v=await Dlg.ask({title:T1(UI.lr58WordWin)+(!isNew?" · "+this.num(w)+" "+w.zh:""),wide:true,fields:f});if(!v)return null;
     const o={zh:String(v.zh||"").trim(),pinyin:String(v.pinyin||"").trim(),exZh:String(v.exZh||"").trim(),exRu:String(v.exRu||"").trim(),exUz:String(v.exUz||"").trim(),topic:String(v.topic||"").trim()};
     o.meanings=[0,1,2].map(i=>({ru:String(v["ru"+i]||"").trim(),uz:String(v["uz"+i]||"").trim(),pos:String(v["pos"+i]||"")})).filter(x=>x.ru||x.uz);
     if(mp){o.kind=v.kind||"word";if(v.month)o.month=v.month;}if("clientId" in v)o.clientId=v.clientId||"";
     /* повторы и похожие — до сохранения */
-    const ck=await Lr58.rpc("tr_word_check",{w:Object.assign({kind:o.kind||"word"},o),except_id:w?w.id:null});
+    const ck=await Lr58.rpc("tr_word_check",{w:Object.assign({kind:o.kind||"word"},o),except_id:isNew?null:w.id});
     if(ck&&ck.dup){toast(T1(UI.dc63Dup).replace("{w}",(ck.dup.kind==="phrase"?"Ф-":"№ ")+ck.dup.no+" "+ck.dup.zh+" ("+T1(ck.dup.status==="ok"?UI.dc63StOk:UI.dc63StNew)+")"));return null;}
     if(ck&&ck.similar&&ck.similar.length&&!(await Dlg.confirm(T1(UI.dc63Similar),T1(UI.dc63SimQ).replace("{w}",ck.similar.map(x=>"№ "+x.no+" "+x.zh+" — "+x.ru).join("; ")))))return null;
     return o;},
@@ -20374,7 +20409,7 @@ const Dc63={
     root.querySelectorAll("#dc63box [data-dc63say]").forEach(b=>b.onclick=e=>{e.stopPropagation();this.say(b.dataset.dc63say);});}
 };
 /* ── данные: строка словаря с новыми полями; сводка tr_dict_info ── */
-{const _row63=Lr58.row;Lr58.row=function(r){return Object.assign(_row63(r),{no:r.no,kind:r.kind||"word",meanings:Array.isArray(r.meanings)?r.meanings:[],clientId:r.client_id||"",note:r.note||"",createdAt:r.created_at||""});};}
+{const _row63=Lr58.row;Lr58.row=function(r){return Object.assign(_row63(r),{no:r.no,kind:r.kind||"word",meanings:Array.isArray(r.meanings)?r.meanings:[],clientId:r.client_id||"",note:r.note||"",createdAt:r.created_at||"",aiFill:!!r.ai_fill,srcMatter:r.src_matter||""});};}
 {const _ld63=Lr58.load;Lr58.load=async function(){if(this.srv()){try{this.info=await this.rpc("tr_dict_info",{});}catch(e){}}return _ld63.apply(this,arguments);};}
 /* ── УП: «Отдел перевода» ── */
 Lr58.pageMp=function(){if(!this.mp())return `<div class="card"><div class="fhint">${T1(UI.noAccess17||"Нет доступа||无权限")}</div></div>`;
@@ -20408,7 +20443,7 @@ Lr58.page=function(){if(!this.tr())return `<div class="card"><div class="fhint">
 /* ── действия ── */
 {const _act63=Lr58.act;Lr58.act=async function(a,id){const w=id?(this.words||[]).find(x=>x.id===id):null;
   try{
-    if(a==="propose"||a==="add"){const o=await Dc63.dlg(null,this.mp());if(!o)return;await this.rpc("tr_word_add",{w:o});toast(T1(this.mp()?UI.lr58Saved:UI.lr58Proposed));}
+    if(a==="propose"||a==="add"){if(!(await Dc63.addFlow({})))return;}
     else if(a==="edit"&&w){const o=await Dc63.dlg(w,this.mp());if(!o)return;await this.rpc("tr_word_set",{wid:id,patch:o});toast(T1(UI.lr58Saved));}
     else if(a==="fix"&&w){const o=await Dc63.dlg(w,true);if(!o)return;await this.rpc("tr_word_set",{wid:id,patch:Object.assign(o,{status:"ok"})});toast(T1(UI.lr58Saved));Dc63.cur=null;}
     else if(a==="ok"&&w){await this.rpc("tr_word_set",{wid:id,patch:{status:"ok"}});toast(T1(UI.dc63StOk));if(Dc63.cur===id)Dc63.cur=null;}
@@ -20432,6 +20467,8 @@ Lr58.page=function(){if(!this.tr())return `<div class="card"><div class="fhint">
   root.querySelectorAll("[data-dc63sel]").forEach(c=>c.onchange=()=>{D.sel[c.dataset.dc63sel]=c.checked;this.paint();});
   root.querySelectorAll("[data-dc63say]").forEach(b=>b.onclick=e=>{e.stopPropagation();D.say(b.dataset.dc63say);});
   D.bindList(vp);};}
+document.addEventListener("selectionchange",()=>{clearTimeout(Dc63._st);Dc63._st=setTimeout(()=>{try{Dc63.selBtn();}catch(e){}},220);});
+{const _goDc63=Router.go.bind(Router);Router.go=function(){if(Dc63._btn)Dc63._btn.hidden=true;return _goDc63.apply(this,arguments);};}
 /* клавиши в «Проверке»: A — утвердить, E — исправить, D — отклонить (и в русской раскладке: Ф, У, В) */
 document.addEventListener("keydown",e=>{if(Router.cur!=="trdept"||Lr58.tab!=="pending"||!Lr58.mp()||e.ctrlKey||e.metaKey||e.altKey)return;
   if(e.target&&e.target.closest&&e.target.closest("input,textarea,select,[contenteditable]"))return;const ov=document.getElementById("ovD");if(ov&&ov.classList.contains("open"))return;
@@ -20467,6 +20504,8 @@ document.addEventListener("keydown",e=>{if(Router.cur!=="trdept"||Lr58.tab!=="pe
 #lr58 .dc63q h4{margin:0 0 8px}#lr58 .dc63qb{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}#lr58 .dc63ql{display:grid;max-height:440px;overflow:auto;border:1px solid var(--line);border-radius:12px}
 #lr58 .dc63qi{display:grid;grid-template-columns:auto 70px 1fr;gap:8px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}#lr58 .dc63qi:last-child{border-bottom:0}#lr58 .dc63qi.on{background:var(--line-2,#eef2f8)}
 #lr58 .dc63qi b{font-size:16px}#lr58 .dc63qi small{display:block;color:var(--ink-3);font-size:11px}
+.dc63selbtn{position:fixed;z-index:9000;padding:6px 12px;border-radius:999px;border:0;background:var(--blue,#2F64B0);color:#fff;font:600 12.5px var(--font,sans-serif);box-shadow:0 6px 18px rgba(20,40,80,.25);cursor:pointer}
+.dc63aih{background:color-mix(in srgb,var(--blue,#2F64B0) 10%,transparent);color:var(--blue,#2F64B0);border-radius:8px;padding:7px 10px;font-size:13px;font-weight:600}#lr58 .dc63aim{font-size:12px;color:var(--blue,#2F64B0)}
 .dc63hist{display:grid;gap:8px;font-size:13px;max-height:60vh;overflow:auto}.dc63hist small{display:block;color:var(--ink-3);margin-left:10px}.dc63hist .dc63st{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;background:#eef2f8}
 @media(max-width:860px){#lr58 .dc63r{grid-template-columns:54px 1fr 1fr;}#lr58 .dc63r .ex,#lr58 .dc63r .tp{grid-column:2/-1}#lr58 .dc63r .a{grid-column:1/-1;justify-content:flex-start}#lr58 .dc63check{grid-template-columns:1fr}}`;document.head.appendChild(st);})();
 
