@@ -6780,7 +6780,7 @@ const chartMembers9=u=>mode==="now"?u.members.filter(m=>!m.vac&&!isDemoM(m)):u.m
 const unplacedNow9=key=>{if(mode!=="now"||(key!=="legal"&&key!=="llc")||typeof Staff21==="undefined")return [];
   return [...new Set(Staff21.added||[])].map(id=>ALL[id]).filter(m=>m&&!m.vac&&!m.members&&!isDemoM(m)&&!UNITS.some(u=>u.members.includes(m))&&(key==="llc"?m.ent==="ooo":m.ent!=="ooo"));};
 const roleNow9=m=>{if(mode!=="now")return m.role;const a=typeof accByEmp==="function"?accByEmp(m.id):null;if(!a)return m.role;
-  return typeof Adv21!=="undefined"&&Adv21.kind(a)==="mp"?"Управляющий адвокат||管理律师":typeof Adv21!=="undefined"&&Adv21.kind(a)==="lawyer"?"Юрист||法务":"Адвокат||律师";};
+  return typeof Adv21!=="undefined"&&Adv21.kind(a)==="mp"?"Управляющий адвокат||管理律师":typeof Adv21!=="undefined"&&Adv21.kind(a)==="lawyer"?"Юрист||法务":typeof Adv21!=="undefined"&&Adv21.kind(a)==="translator"?"Переводчик||翻译":"Адвокат||律师";};   /* 07.11.2026: переводчик (версия 3.3) */
 const isAs9=m=>m.type==="jur"&&/помощник|assistant|助理/i.test(T1(m.name)+" "+T1(m.role));
 const plRu=(n,f)=>{const a=Math.abs(n)%100,b=a%10;return f[a>10&&a<20?2:b===1?0:b>1&&b<5?1:2];};
 const cntLbl=(n,kind)=>lang==="zh"?(kind==="pos"?`${n} 个岗位`:`${n} 人`):lang==="uz"?`${n} ${kind==="pos"?"lavozim":"kishi"}`:`${n} ${kind==="pos"?plRu(n,["позиция","позиции","позиций"]):"чел."}`;
@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="ab616e5ca252";
+const ZC_BUILD="3784fe15ba7b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -20095,7 +20095,7 @@ Object.assign(UI,{nLearn58:"Обучение||学习",nTrDept58:"Отдел пе
   lr58Propose:"+ Предложить слово||+ 推荐词汇",lr58Add:"+ Слово||+ 词汇",lr58Mine:"Мои предложения||我推荐的",lr58New:"на утверждении||待审核",lr58ByTr:"добавлено переводчиком||由翻译添加",lr58ByAg:"предложено Аминой Ли||由李阿米娜推荐",
   lr58Zh:"По-китайски||中文",lr58Py:"Пиньинь||拼音",lr58Ru:"По-русски||俄文",lr58Uz:"По-узбекски||乌兹别克文",lr58ExZh:"Пример по-китайски||中文例句",lr58ExRu:"Пример по-русски||俄文例句",lr58ExUz:"Пример по-узбекски||乌兹别克文例句",
   lr58Topic:"Тема||主题",lr58Month:"Месяц||月份",lr58WordWin:"Слово||词汇",lr58Approve:"Утвердить||批准",lr58Edit:"Изменить||编辑",lr58Del:"Удалить||删除",lr58DelQ:"Удалить слово «{w}»?||删除词汇“{w}”？",
-  lr58Saved:"Сохранено||已保存",lr58Proposed:"Слово предложено — его утвердит управляющий адвокат||已推荐——待管理律师批准",lr58Pending:"На утверждении||待审核",
+  lr58Saved:"Сохранено||已保存",lr58OkAll:"Утвердить все||全部批准",lr58OkAllH:"сначала удалите лишние слова — остальные утвердятся разом||请先删除不需要的词——其余将一次性批准",lr58OkAllQ:"Утвердить все слова на утверждении ({n})?||批准全部待批准词汇（{n}）？",lr58OkAllDone:"Утверждено слов: {n}||已批准词汇：{n}",lr58Proposed:"Слово предложено — его утвердит управляющий адвокат||已推荐——待管理律师批准",lr58Pending:"На утверждении||待审核",
   lr58Translators:"Переводчики||翻译人员",lr58Who:"Переводчик||翻译",lr58ColToday:"Сегодня||今天",lr58ColWeek:"Неделя||本周",lr58ColMonth:"Месяц||本月",lr58ColTotal:"Всего||累计",lr58ColLast:"Последняя активность||最近活动",lr58ColDays:"Дней за 30||30天内活跃",
   lr58NoTr:"Переводчиков пока нет — создайте учётку с ролью «Переводчик»||暂无翻译——请创建“翻译”角色的账号",lr58NeedSrv:"Словарь работает только с сервером||词典仅在服务器模式下可用",
   lr58Norm:"норма {n}||目标 {n}",lr58Status:"Статус||状态",lr58Ok:"утверждено||已批准",lr58Empty:"Слов нет||暂无词汇",lr58Of:"из||/"});
@@ -20166,7 +20166,7 @@ const Lr58={
     let body="";
     if(this.tab==="tests"&&this.testsBodyMp)body=this.testsBodyMp();
     else if(this.tab==="tr")body=rows.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColMonth)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone} <small>/ ${st.norm.week}</small></td><td>${r.monthLearned} <small>/ ${r.monthTotal}</small></td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.lr58NoTr)}</div>`;
-    else if(this.tab==="pending")body=this.dictTable(pend,true);
+    else if(this.tab==="pending")body=(pend.length?`<div class="lr58bar"><button type="button" class="btn sm pri" data-lr58a="okall">✓ ${T1(UI.lr58OkAll)} (${pend.length})</button><span class="fhint" style="margin:0">${T1(UI.lr58OkAllH)}</span></div>`:"")+this.dictTable(pend,true);   /* 07.11.2026: «Утвердить все» */
     else{const months=[...new Set(this.words.map(w=>w.month).concat([st.month]))].sort().reverse();
       body=`<div class="lr58bar"><select class="inp" data-lr58m>${months.map(m=>`<option value="${m}"${m===this.month?" selected":""}>${m}</option>`).join("")}</select><input type="search" class="inp" data-lr58q placeholder="${esc(T1(UI.lr58Search))}" value="${esc(this.q)}"><button type="button" class="btn sm pri" data-lr58a="add">${T1(UI.lr58Add)}</button></div>${this.dictTable(this.filt(this.words.filter(w=>w.month===this.month).sort((a,b)=>a.seq-b.seq)),true)}`;}
     return `<div id="lr58">${tiles}<div class="card">${tabs}${body}</div></div>`;},
@@ -20180,6 +20180,7 @@ const Lr58={
     try{
       if(a==="propose"||a==="add"){const o=await this.wordDlg(null,this.mp());if(!o)return;await this.rpc("tr_word_add",{w:o});toast(T1(this.mp()?UI.lr58Saved:UI.lr58Proposed));}
       else if(a==="edit"&&w){const o=await this.wordDlg(w,this.mp());if(!o)return;await this.rpc("tr_word_set",{wid:id,patch:o});toast(T1(UI.lr58Saved));}
+      else if(a==="okall"){const ids=this.words.filter(x=>x.status!=="ok").map(x=>x.id);if(!ids.length)return;if(!(await Dlg.confirm(T1(UI.lr58OkAll),T1(UI.lr58OkAllQ).replace("{n}",ids.length))))return;const r=await this.rpc("tr_words_approve",{ids});toast(T1(UI.lr58OkAllDone).replace("{n}",(r&&r.approved)||0));}
       else if(a==="ok"&&w){await this.rpc("tr_word_set",{wid:id,patch:{status:"ok"}});toast(T1(UI.lr58Saved));}
       else if(a==="del"&&w){if(!(await Dlg.confirm(T1(UI.lr58Del),T1(UI.lr58DelQ).replace("{w}",w.zh),true)))return;await this.rpc("tr_word_del",{wid:id});}
       else return;
@@ -20228,7 +20229,10 @@ Object.assign(Router.extra,{learn:()=>Lr58.page(),trdept:()=>Lr58.pageMp()});
    tr_test_status / tr_test_start / tr_test_answer / tr_test_finish / tr_test_grade / tr_test_retake / tr_test_plan / tr_text_set / tr_tests_list).
    Окна, вопросы, таймер и баллы считает сервер; здесь — вкладка «Тесты» в «Обучении» (переводчик) и в «Отделе перевода» (УП),
    экран прохождения (маршрут trtest): слова — выбор из 4 вариантов, фразы и тексты — поле для перевода, таймер по сроку с сервера. */
-Object.assign(UI,{tt59Tab:"Тесты||测试",tt59Week:"Недельный тест||周测",tt59Month:"Месячный тест||月测",tt59Before:"откроется {d}||将于 {d} 开放",tt59Ready:"открыт до {d}||开放至 {d}",
+Object.assign(UI,{tt59PWeek:"Тренировочный (как недельный)||练习测试（周测形式）",tt59PMonth:"Тренировочный (как месячный)||练习测试（月测形式）",tt59Assigned:"назначен, ещё не начат||已安排，尚未开始",tt59PFrom:"назначен {d} — можно начать в любое время||{d} 安排——可随时开始",
+  tt59PRulesW:"Как недельный: слова за последние 7 дней (выбор из 4) и фразы, 40 минут. На зарплату не влияет — для самопроверки.||与周测相同：最近 7 天的词汇（四选一）和短句，40 分钟。不影响工资——用于自测。",tt59PRulesM:"Как месячный: слова месяца, тексты и аудирование, 90 минут. На зарплату не влияет — для самопроверки.||与月测相同：本月词汇、文本和听力，90 分钟。不影响工资——用于自测。",
+  tt59PAssign:"Назначить тренировочный тест||安排练习测试",tt59PAll:"Всем переводчикам||全部翻译",tt59PFmt:"Вид||形式",tt59PHint:"Можно в любое время. На зарплату не влияет — зачётные тесты, как раньше, каждую субботу и раз в месяц.||可随时安排。不影响工资——计分测试仍为每周六和每月一次。",tt59PDone:"Назначено: {n}||已安排：{n}",tt59PCancel:"отменить||取消",
+  tt59Tab:"Тесты||测试",tt59Week:"Недельный тест||周测",tt59Month:"Месячный тест||月测",tt59Before:"откроется {d}||将于 {d} 开放",tt59Ready:"открыт до {d}||开放至 {d}",
   tt59Start:"Начать тест||开始测试",tt59Cont:"Продолжить||继续",tt59Retake:"Пересдать||补考",tt59RetakeOpen:"пересдача разрешена — до {d}||已批准补考——截至 {d}",
   tt59Open:"идёт — до {d}||进行中——截至 {d}",tt59Done:"сдан, ждёт оценки фраз||已完成，待评分",tt59Graded:"сдан||已完成",tt59Missed:"пропущен — 0 %||缺考——0%",
   tt59MissedHint:"пересдача в воскресенье — с одобрения управляющего адвоката||补考在周日——需管理律师批准",tt59None:"день месячного теста ещё не назначен||月测日期尚未确定",
@@ -20244,6 +20248,7 @@ Object.assign(UI,{tt59Tab:"Тесты||测试",tt59Week:"Недельный те
   tt59Saved:"Сохранено||已保存",tt59Oral:"Устный экзамен (звонок с Аминой Ли)||口试（与李阿米娜通话）",tt59OralDone:"устный экзамен: {s} / 10||口试：{s}/10",tt59OralHint:"после письменной части — позвоните Амине Ли: она прочитает фразы по-китайски, вы переводите вслух; оценка придёт в «Чатах»||完成笔试后——请致电李阿米娜：她会用中文朗读短句，您口头翻译；成绩将在“聊天”中发送",
   tt59Listen:"▶ Прослушать||▶ 播放",tt59ListenH:"Аудирование: текст читается голосом, на экране его нет — напишите перевод||听力：文本以语音播放，屏幕上不显示——请写出译文",tt59NoVoice:"В этом браузере нет китайского голоса — откройте портал в Chrome||此浏览器没有中文语音——请使用 Chrome",
   tt59Prop:"Амина Ли предлагает день месячного теста {m}: {d}||李阿米娜建议 {m} 月测日期：{d}",tt59PropOk:"Утвердить||批准",tt59PropNo:"Отклонить||拒绝",tt59NoTests:"Тестов ещё не было||暂无测试",tt59Who:"Переводчик||翻译",tt59Status:"Статус||状态",tt59Now:"сейчас по серверу: {d}||服务器时间：{d}"});
+if(typeof NTPL18!=="undefined")NTPL18.trPractice62="Вам назначен тренировочный тест — на зарплату не влияет. Откройте «Обучение» → «Тесты»||已为您安排练习测试——不影响工资。请打开“学习” → “测试”";
 if(typeof NTPL18!=="undefined")NTPL18.trRetake59="Разрешена пересдача недельного теста {per} — в воскресенье||已批准周测 {per} 补考——周日进行";
 window.UZ21=Object.assign(window.UZ21||{},{"Тесты":"Testlar","Недельный тест":"Haftalik test","Месячный тест":"Oylik test","откроется {d}":"{d} da ochiladi","открыт до {d}":"{d} gacha ochiq","Начать тест":"Testni boshlash","Продолжить":"Davom etish","Пересдать":"Qayta topshirish",
   "пересдача разрешена — до {d}":"qayta topshirishga ruxsat — {d} gacha","идёт — до {d}":"davom etmoqda — {d} gacha","сдан, ждёт оценки фраз":"topshirildi, iboralar baholanishini kutmoqda","сдан":"topshirildi","пропущен — 0 %":"oʻtkazib yuborildi — 0 %",
@@ -20261,10 +20266,11 @@ const Tt59={
   async loadExtra(){if(Lr58.tr()){this.st=await Lr58.rpc("tr_test_status",{});this.sync(this.st&&this.st.now);}else if(Lr58.mp()){this.list=await Lr58.rpc("tr_tests_list",{e:null});this.sync(this.list&&this.list.now);
       try{this.props=(await SB19.T.select("tr_plan_prop")||[]).filter(p=>p.status==="new");}catch(e){this.props=[];}}},
   fmt(d){return d?fmtDT(d):"—";},
-  stLabel(x){const m={open:UI.tt59Open,done:UI.tt59Done,graded:UI.tt59Graded,missed:UI.tt59Missed};return T1(m[x.status]||x.status);},
+  kl(k){return T1(k==="week"?UI.tt59Week:k==="month"?UI.tt59Month:k==="pweek"?UI.tt59PWeek:UI.tt59PMonth);},
+  stLabel(x){const m={assigned:UI.tt59Assigned,open:UI.tt59Open,done:UI.tt59Done,graded:UI.tt59Graded,missed:UI.tt59Missed};return T1(m[x.status]||x.status);},
   pct(x){return x.pct==null?"—":String(x.pct).replace(".",",")+" %";},
   /* ── переводчик: вкладка «Тесты» ── */
-  badge(){const s=this.st;if(!s)return 0;return (s.week.state==="ready"||s.week.state==="retake"||s.week.state==="open"||s.month.state==="ready")?1:0;},
+  badge(){const s=this.st;if(!s)return 0;return ((s.week.state==="ready"||s.week.state==="retake"||s.week.state==="open"||s.month.state==="ready")?1:0)+(s.practice||[]).length;},
   body(){const s=this.st;if(!s)return `<div class="fhint">${T1(UI.loading||"Загрузка…||加载中…")}</div>`;const w=s.week,m=s.month;
     const btn=(kind,label)=>`<button type="button" class="btn pri" data-tt59start="${kind}">${T1(label)}</button>`;
     let wl="",wb="";
@@ -20279,16 +20285,18 @@ const Tt59={
     if(m.test&&m.test.status!=="open"&&m.test.status!=="missed"){if(m.test.oral!=null)ml+=" · "+T1(UI.tt59OralDone).replace("{s}",String(m.test.oral).replace(".",","));
       else mb+=`<button type="button" class="btn" data-tt59oral="${esc(m.test.id)}" style="margin-left:8px">📞 ${T1(UI.tt59Oral)}</button><div class="fhint">${T1(UI.tt59OralHint)}</div>`;}
     const hist=(s.history||[]);
-    return `<div class="tt59cards"><div class="tt59c"><h4>${T1(UI.tt59Week)} · ${esc(w.week)}</h4><div class="tt59s">${esc(wl)}</div><div class="fhint">${T1(UI.tt59Rules)}</div>${wb}</div>
+    const pr=(s.practice||[]).map(t=>`<div class="tt59c tt59pr"><h4>${this.kl(t.kind)}</h4><div class="tt59s">${t.status==="open"?esc(T1(UI.tt59Open).replace("{d}",this.fmt(t.deadline))):esc(T1(UI.tt59PFrom).replace("{d}",t.period))}</div><div class="fhint">${T1(t.kind==="pweek"?UI.tt59PRulesW:UI.tt59PRulesM)}</div><button type="button" class="btn pri" data-tt59pstart="${esc(t.id)}">${T1(t.status==="open"?UI.tt59Cont:UI.tt59Start)}</button></div>`).join("");
+    return (pr?`<div class="tt59cards">${pr}</div>`:"")+`<div class="tt59cards"><div class="tt59c"><h4>${T1(UI.tt59Week)} · ${esc(w.week)}</h4><div class="tt59s">${esc(wl)}</div><div class="fhint">${T1(UI.tt59Rules)}</div>${wb}</div>
       <div class="tt59c"><h4>${T1(UI.tt59Month)} · ${esc(m.month)}</h4><div class="tt59s">${esc(ml)}</div><div class="fhint">${T1(UI.tt59RulesM)}</div>${mb}</div></div>
-      <h4>${T1(UI.tt59Hist)}</h4>${hist.length?`<table class="tbl tt59t"><thead><tr><th>${T1(UI.tt59Period)}</th><th></th><th>${T1(UI.tt59Status)}</th><th>${T1(UI.tt59Words)}</th><th>${T1(UI.tt59Phrases)}</th><th>${T1(UI.tt59Score)}</th></tr></thead><tbody>${hist.map(x=>`<tr data-tt59open="${esc(x.id)}"><td>${x.kind==="week"?T1(UI.tt59Week):T1(UI.tt59Month)} ${esc(x.period)}</td><td><small>${x.attempt>1?T1(UI.tt59Attempt).replace("{n}",x.attempt):""}</small></td><td>${this.stLabel(x)}</td><td>${x.autoScore==null?"—":x.autoScore+" / "+x.maxAuto}</td><td>${x.maxManual?(x.manualScore==null?"…":x.manualScore)+" / "+x.maxManual:"—"}</td><td><b>${this.pct(x)}</b></td></tr>`).join("")}</tbody></table>`:`<div class="empty2">${T1(UI.tt59NoTests)}</div>`}`;},
+      <h4>${T1(UI.tt59Hist)}</h4>${hist.length?`<table class="tbl tt59t"><thead><tr><th>${T1(UI.tt59Period)}</th><th></th><th>${T1(UI.tt59Status)}</th><th>${T1(UI.tt59Words)}</th><th>${T1(UI.tt59Phrases)}</th><th>${T1(UI.tt59Score)}</th></tr></thead><tbody>${hist.map(x=>`<tr data-tt59open="${esc(x.id)}"><td>${Tt59.kl(x.kind)} ${esc(x.period)}</td><td><small>${x.attempt>1?T1(UI.tt59Attempt).replace("{n}",x.attempt):""}</small></td><td>${this.stLabel(x)}</td><td>${x.autoScore==null?"—":x.autoScore+" / "+x.maxAuto}</td><td>${x.maxManual?(x.manualScore==null?"…":x.manualScore)+" / "+x.maxManual:"—"}</td><td><b>${this.pct(x)}</b></td></tr>`).join("")}</tbody></table>`:`<div class="empty2">${T1(UI.tt59NoTests)}</div>`}`;},
+  async startP(tid){try{const r=await Lr58.rpc("tr_practice_start",{tid});this.sync(r.now);this.cur=r;Router.go("trtest",r.test.id);}catch(e){toast(String((e&&e.message)||e));}},
   async start(kind){try{const r=await Lr58.rpc("tr_test_start",{kind});this.sync(r.now);this.cur=r;Router.go("trtest",r.test.id);}catch(e){toast(String((e&&e.message)||e));}},
   /* ── экран прохождения ── */
   page(){const c=this.cur;if(!c||!c.test||c.test.id!==Router.arg)return `<div class="card"><div class="fhint">${T1(UI.loading||"Загрузка…||加载中…")}</div><button type="button" class="btn sm ghost" data-tt59back>${T1(UI.tt59Back)}</button></div>`;
     const t=c.test,qs=c.questions||[],a=c.answers||{};
     if(t.status!=="open")return this.result(c);
     const n=qs.filter(q=>a[q.id]!=null&&a[q.id]!=="").length;
-    return `<div id="tt59"><div class="card tt59head"><div><b>${t.kind==="week"?T1(UI.tt59Week):T1(UI.tt59Month)} · ${esc(t.period)}</b>${t.attempt>1?` <small>${T1(UI.tt59Attempt).replace("{n}",t.attempt)}</small>`:""}<br><small>${T1(UI.tt59Answered).replace("{a}",n).replace("{n}",qs.length)}</small></div>
+    return `<div id="tt59"><div class="card tt59head"><div><b>${Tt59.kl(t.kind)} · ${esc(t.period)}</b>${t.attempt>1?` <small>${T1(UI.tt59Attempt).replace("{n}",t.attempt)}</small>`:""}<br><small>${T1(UI.tt59Answered).replace("{a}",n).replace("{n}",qs.length)}</small></div>
       <div class="tt59timer" data-tt59timer data-deadline="${esc(t.deadline||"")}">${this.left(t.deadline)}</div><button type="button" class="btn pri" data-tt59finish>${T1(UI.tt59Finish)}</button></div>
       <div class="card">${qs.map((q,i)=>this.q(q,i,a[q.id])).join("")}</div></div>`;},
   left(d){if(!d)return "";const ms=new Date(d.length===16?d+":00":d).getTime()-this.now();const m=Math.max(0,Math.ceil(ms/60000));return T1(UI.tt59Left).replace("{m}",m);},
@@ -20297,7 +20305,7 @@ const Tt59={
     if(q.type==="w")return `<div class="tt59q" data-q="${esc(q.id)}">${head}<div class="tt59opts">${(q.opts||[]).map(o=>`<button type="button" class="btn sm${ans===o?" pri":" ghost"}" data-tt59opt="${esc(q.id)}" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div></div>`;
     return `<div class="tt59q" data-q="${esc(q.id)}">${head}<textarea class="inp tt59ta" data-tt59ta="${esc(q.id)}" rows="${q.type==="t"?5:2}" placeholder="${esc(T1(UI.tt59WriteHere))}">${esc(ans||"")}</textarea><small class="h">${T1(UI.tt59Pts).replace("{m}",q.max||2)}</small></div>`;},
   result(c){const t=c.test,qs=c.questions||[],a=c.answers||{},k=c.key||{},sc=c.scores||{};
-    return `<div id="tt59"><div class="card tt59head"><div><b>${T1(UI.tt59Res)}: ${t.kind==="week"?T1(UI.tt59Week):T1(UI.tt59Month)} · ${esc(t.period)}</b><br><small>${this.stLabel(t)} · ${T1(UI.tt59Words)} ${t.autoScore==null?"—":t.autoScore+" / "+t.maxAuto}${t.maxManual?` · ${T1(UI.tt59Phrases)} ${t.manualScore==null?"…":t.manualScore} / ${t.maxManual}`:""} · <b>${this.pct(t)}</b></small></div><button type="button" class="btn sm ghost" data-tt59back>${T1(UI.tt59Back)}</button></div>
+    return `<div id="tt59"><div class="card tt59head"><div><b>${T1(UI.tt59Res)}: ${Tt59.kl(t.kind)} · ${esc(t.period)}</b><br><small>${this.stLabel(t)} · ${T1(UI.tt59Words)} ${t.autoScore==null?"—":t.autoScore+" / "+t.maxAuto}${t.maxManual?` · ${T1(UI.tt59Phrases)} ${t.manualScore==null?"…":t.manualScore} / ${t.maxManual}`:""} · <b>${this.pct(t)}</b></small></div><button type="button" class="btn sm ghost" data-tt59back>${T1(UI.tt59Back)}</button></div>
       <div class="card">${qs.map((q,i)=>{const v=a[q.id];if(q.type==="w"){const ok=v!=null&&v!==""&&v===k[q.id];return `<div class="tt59q ${ok?"ok":"bad"}"><div class="tt59qh"><span class="n">${i+1}</span><span class="p">${esc(q.prompt)}</span><small class="h">${v?esc(v)+" — "+T1(ok?UI.tt59Right:UI.tt59Wrong):T1(UI.tt59Empty)}${!ok&&k[q.id]?" · "+esc(T1(UI.tt59Key).replace("{k}",k[q.id])):""}</small></div></div>`;}
         return `<div class="tt59q"><div class="tt59qh"><span class="n">${i+1}</span><span class="p">${q.type==="l"?"🎧 ":q.type==="o"?"📞 ":""}${esc(q.prompt)}</span><small class="h">${sc[q.id]!=null?sc[q.id]+" / "+(q.max||2):"…"}</small></div><div class="tt59ans"><small>${T1(UI.tt59Your)}:</small> ${esc(v||"—")}${k[q.id]?`<br><small>${T1(UI.tt59Expected)}:</small> ${esc(k[q.id])}`:""}</div></div>`;}).join("")}</div></div>`;},
   async open(id){try{const l=await Lr58.rpc("tr_tests_list",{e:null});const r=(l.rows||[]).find(x=>x.id===id);if(!r)return;this.cur={test:r,questions:(r.detail||{}).questions||[],answers:(r.detail||{}).answers||{},scores:(r.detail||{}).scores||{},key:(r.detail||{}).key||{}};Router.go("trtest",id);}catch(e){toast(String((e&&e.message)||e));}},
@@ -20327,8 +20335,8 @@ const Tt59={
   bodyMp(){const l=this.list;if(!l)return `<div class="fhint">${T1(UI.loading||"Загрузка…||加载中…")}</div>`;const rows=l.rows||[],plan=l.plan||[],texts=l.texts||[];
     const mon=(Lr58.stats&&Lr58.stats.month)||"";const pm=plan.find(p=>p.month===mon);
     const props=(this.props||[]).map(p=>`<div class="tt59prop">${esc(T1(UI.tt59Prop).replace("{m}",p.month).replace("{d}",this.fmt(String(p.at).slice(0,16))))}${p.note?` <small>(${esc(p.note)})</small>`:""} <button type="button" class="btn sm pri" data-tt59prop="1" data-mon="${esc(p.month)}">${T1(UI.tt59PropOk)}</button><button type="button" class="btn sm ghost" data-tt59prop="0" data-mon="${esc(p.month)}">${T1(UI.tt59PropNo)}</button></div>`).join("");
-    return `<div class="lr58bar"><button type="button" class="btn sm pri" data-tt59a="plan">${T1(UI.tt59Plan)}</button><span class="fhint">${pm?esc(T1(UI.tt59Planned).replace("{m}",pm.month).replace("{d}",this.fmt(pm.at))):esc(T1(UI.tt59None))} · ${esc(T1(UI.tt59Now).replace("{d}",this.fmt(l.now)))}</span></div>${props}
-      ${rows.length?`<div style="overflow-x:auto"><table class="tbl tt59t"><thead><tr><th>${T1(UI.tt59Who)}</th><th>${T1(UI.tt59Period)}</th><th>${T1(UI.tt59Status)}</th><th>${T1(UI.tt59Words)}</th><th>${T1(UI.tt59Phrases)}</th><th>${T1(UI.tt59Score)}</th><th></th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${esc(x.name||x.emp)}</b></td><td>${x.kind==="week"?T1(UI.tt59Week):T1(UI.tt59Month)} ${esc(x.period)}${x.attempt>1?` <small>${T1(UI.tt59Attempt).replace("{n}",x.attempt)}</small>`:""}</td><td>${this.stLabel(x)}${x.retakeAllowed?`<br><small>${T1(UI.tt59Allowed)}</small>`:""}</td><td>${x.autoScore==null?"—":x.autoScore+" / "+x.maxAuto}</td><td>${x.maxManual?(x.manualScore==null?"…":x.manualScore)+" / "+x.maxManual:"—"}</td><td><b>${this.pct(x)}</b></td><td class="lr58acts">${x.status!=="open"?`<button type="button" class="btn sm ghost" data-tt59a="view" data-id="${esc(x.id)}">👁</button>`:""}${x.status==="done"?`<button type="button" class="btn sm" data-tt59a="grade" data-id="${esc(x.id)}">${T1(UI.tt59Grade)}</button>`:""}${x.kind==="week"&&x.attempt===1&&x.status!=="open"&&!x.retakeAllowed?`<button type="button" class="btn sm ghost" data-tt59a="retake" data-id="${esc(x.id)}">${T1(UI.tt59Allow)}</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.tt59NoTests)}</div>`}
+    return `<div class="lr58bar"><button type="button" class="btn sm pri" data-tt59a="plan">${T1(UI.tt59Plan)}</button><button type="button" class="btn sm" data-tt59a="practice">${T1(UI.tt59PAssign)}</button><span class="fhint">${pm?esc(T1(UI.tt59Planned).replace("{m}",pm.month).replace("{d}",this.fmt(pm.at))):esc(T1(UI.tt59None))} · ${esc(T1(UI.tt59Now).replace("{d}",this.fmt(l.now)))}</span></div>${props}
+      ${rows.length?`<div style="overflow-x:auto"><table class="tbl tt59t"><thead><tr><th>${T1(UI.tt59Who)}</th><th>${T1(UI.tt59Period)}</th><th>${T1(UI.tt59Status)}</th><th>${T1(UI.tt59Words)}</th><th>${T1(UI.tt59Phrases)}</th><th>${T1(UI.tt59Score)}</th><th></th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${esc(x.name||x.emp)}</b></td><td>${Tt59.kl(x.kind)} ${esc(x.period)}${x.attempt>1?` <small>${T1(UI.tt59Attempt).replace("{n}",x.attempt)}</small>`:""}</td><td>${this.stLabel(x)}${x.status==="assigned"?` <button type="button" class="btn sm ghost" data-tt59a="pcancel" data-id="${esc(x.id)}">${T1(UI.tt59PCancel)}</button>`:""}${x.retakeAllowed?`<br><small>${T1(UI.tt59Allowed)}</small>`:""}</td><td>${x.autoScore==null?"—":x.autoScore+" / "+x.maxAuto}</td><td>${x.maxManual?(x.manualScore==null?"…":x.manualScore)+" / "+x.maxManual:"—"}</td><td><b>${this.pct(x)}</b></td><td class="lr58acts">${x.status!=="open"?`<button type="button" class="btn sm ghost" data-tt59a="view" data-id="${esc(x.id)}">👁</button>`:""}${x.status==="done"?`<button type="button" class="btn sm" data-tt59a="grade" data-id="${esc(x.id)}">${T1(UI.tt59Grade)}</button>`:""}${x.kind==="week"&&x.attempt===1&&x.status!=="open"&&!x.retakeAllowed?`<button type="button" class="btn sm ghost" data-tt59a="retake" data-id="${esc(x.id)}">${T1(UI.tt59Allow)}</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.tt59NoTests)}</div>`}
       <h4>${T1(UI.tt59Texts)} <button type="button" class="btn sm" data-tt59a="text" style="margin-left:auto">${T1(UI.tt59TextAdd)}</button></h4>
       ${texts.length?`<div class="lr58list">${texts.map(t=>`<div class="lr58w"><div class="zh" style="font-size:15px">${esc(t.title||"")}<small>${esc(t.month)}</small></div><div class="tr"><div>${esc(t.zh)}</div><div class="uz">${esc(t.ru||t.uz||"")}</div></div><button type="button" class="btn sm ghost" data-tt59a="textdel" data-id="${esc(t.id)}">🗑</button></div>`).join("")}</div>`:`<div class="fhint">—</div>`}`;},
   async actMp(a,id){const l=this.list||{};const row=(l.rows||[]).find(x=>x.id===id);
@@ -20337,6 +20345,9 @@ const Tt59={
         await Lr58.rpc("tr_test_plan",{mon:String(v.m||"").trim(),at_ts:String(v.at||"").trim()});toast(T1(UI.tt59Saved));}
       else if(a==="text"){const v=await Dlg.ask({title:T1(UI.tt59Texts),wide:true,fields:[{k:"month",label:T1(UI.lr58Month),value:(Lr58.stats&&Lr58.stats.month)||"",hint:"ГГГГ-ММ"},{k:"title",label:T1(UI.tt59TextTitle)},{k:"zh",label:T1(UI.tt59TextZh),type:"textarea",required:true},{k:"ru",label:T1(UI.tt59TextRu),type:"textarea"},{k:"uz",label:T1(UI.tt59TextUz),type:"textarea"}]});if(!v)return;
         await Lr58.rpc("tr_text_set",{t:{month:v.month,title:v.title,zh:v.zh,ru:v.ru,uz:v.uz}});toast(T1(UI.tt59Saved));}
+      else if(a==="practice"){const tr=((Lr58.stats&&Lr58.stats.rows)||[]);const v=await Dlg.ask({title:T1(UI.tt59PAssign),fields:[{k:"who",label:T1(UI.tt59Who),type:"select",value:"",options:[["",T1(UI.tt59PAll)]].concat(tr.map(r=>[r.emp,r.name]))},{k:"fmt",label:T1(UI.tt59PFmt),type:"select",value:"week",options:[["week",T1(UI.tt59PWeek)],["month",T1(UI.tt59PMonth)]]},{k:"h",type:"html",html:`<div class="fhint">${T1(UI.tt59PHint)}</div>`}]});if(!v)return;
+        const r=await Lr58.rpc("tr_practice_assign",{e:v.who||null,fmt:v.fmt||"week"});toast(T1(UI.tt59PDone).replace("{n}",(r&&r.assigned)||0));}
+      else if(a==="pcancel"){await Lr58.rpc("tr_practice_cancel",{tid:id});toast(T1(UI.tt59Saved));}
       else if(a==="textdel"){await Lr58.rpc("tr_text_set",{t:{id,del:"1"}});}
       else if(a==="retake"&&row){await Lr58.rpc("tr_test_retake",{tid:id,allow:true});toast(T1(UI.tt59Allowed));}
       else if(a==="view"&&row){this.cur={test:row,questions:(row.detail||{}).questions||[],answers:(row.detail||{}).answers||{},scores:(row.detail||{}).scores||{},key:(row.detail||{}).key||{}};Router.go("trtest",id);return;}
@@ -20347,6 +20358,7 @@ const Tt59={
     }catch(e){toast(String((e&&e.message)||e));return;}
     await Lr58.load();},
   bindExtra(root){root.querySelectorAll("[data-tt59start]").forEach(b=>b.onclick=()=>this.start(b.dataset.tt59start));
+    root.querySelectorAll("[data-tt59pstart]").forEach(b=>b.onclick=()=>this.startP(b.dataset.tt59pstart));
     root.querySelectorAll("[data-tt59oral]").forEach(b=>b.onclick=()=>this.oral(b.dataset.tt59oral));
     root.querySelectorAll("[data-tt59prop]").forEach(b=>b.onclick=async()=>{try{await Lr58.rpc("tr_plan_approve",{mon:b.dataset.mon,ok:b.dataset.tt59prop==="1"});toast(T1(UI.tt59Saved));await Lr58.load();}catch(e){toast(String((e&&e.message)||e));}});
     root.querySelectorAll("[data-tt59open]").forEach(tr=>tr.onclick=()=>this.open(tr.dataset.tt59open));
