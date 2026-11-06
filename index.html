@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="3784fe15ba7b";
+const ZC_BUILD="5f7dffb04937";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -23028,6 +23028,41 @@ if(typeof Card22!=="undefined"){
     const w=r.firstElementChild;return w?w.outerHTML:out;};
 }
 (function(){const st=document.createElement("style");st.textContent=`.mtl .mt .tr57f{display:block;color:var(--ink-3);font-size:11px;margin-top:2px}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.3 · ЗАДАЧА В «СДЕЛАНО» НЕ ИСЧЕЗАЕТ (сообщение владельца 07.11.2026) ═══════════════════════════
+   Переводчик Дилшодбек: задачу перевёл в «Сделано» — она сразу пропала. Доска была открыта плиткой «Открытые задачи»
+   (показатель p=open: только несделанные), сделанная задача выпадала из отбора. У переводчика в меню не было «Задач»,
+   поэтому доска открывалась только так.
+   • задача, которая была на доске показателя, остаётся на ней до ухода со страницы (сделанная — в колонке «Сделано»), с подсказкой;
+   • показатель «Все задачи» (p=all) — все задачи, включая «Сделано»;
+   • переводчику — пункт «Задачи» в меню: его задачи, все колонки (поручения — по-прежнему значком в шапке).
+   Сохранение задачи — сервер (миграция 20261107000100_task_pay_fix), здесь только вид. */
+Object.assign(UI,{t59All:"Все задачи||全部任务",
+  t59Kept:"Задача больше не подходит под показатель (например, сделана) — она остаётся здесь до ухода со страницы||任务已不符合该指标（例如已完成）——离开页面前仍显示在此"});
+window.UZ21=Object.assign(window.UZ21||{},{"Все задачи":"Barcha vazifalar",
+  "Задача больше не подходит под показатель (например, сделана) — она остаётся здесь до ухода со страницы":"Vazifa endi koʻrsatkichga mos emas (masalan, bajarilgan) — sahifadan chiqquningizcha shu yerda qoladi"});
+if(typeof Pre17!=="undefined"){
+  Pre17.tPred.all=()=>true;
+  const _tl59=Pre17.tLabel.bind(Pre17);Pre17.tLabel=function(p){return p==="all"?UI.t59All:_tl59(p);};
+  /* задачи, показанные на доске этого показателя, — до ухода со страницы */
+  const Keep59={key:null,ids:new Set()};
+  const _go59=Router.go.bind(Router);Router.go=function(){Keep59.key=null;Keep59.ids=new Set();return _go59.apply(this,arguments);};
+  const tr59=()=>typeof Tr57!=="undefined"&&Tr57.on();
+  const _pt59=Pages.tasks;
+  Pages.tasks=function(arg){
+    const p=Pre17.parse(arg),pred=p.p&&Pre17.tPred[p.p];
+    if(!pred){if(tr59()&&!isClient())return Pages.tasks.call(this,"p=all&sc=me");return _pt59.apply(this,arguments);}
+    if(p.p==="all")return _pt59.apply(this,arguments);
+    const k=String(arg);if(Keep59.key!==k){Keep59.key=k;Keep59.ids=new Set();}
+    (Pre17.tScope[p.sc]||Pre17.tScope.me)().filter(pred).forEach(t=>Keep59.ids.add(t.id));
+    let kept=0;Pre17.tPred[p.p]=t=>{if(pred(t))return true;if(Keep59.ids.has(t.id)){kept++;return true;}return false;};
+    let html;try{html=_pt59.apply(this,arguments);}finally{Pre17.tPred[p.p]=pred;}
+    const hint=`<div class="fhint" data-t59kept="1" style="margin:6px 0 10px">${esc(T1(UI.t59Kept))}</div>`;   /* без «$1»: сборка вставляет файл через String.replace */
+    return kept?html.replace(/<div class="pre17">[\s\S]*?<\/button><\/div>/,m=>m+hint):html;};
+  /* меню переводчика: «Задачи» после «Календаря» */
+  const _nav59=navFor;navFor=function(){const g=_nav59.apply(this,arguments);if(!tr59())return g;
+    return g.map(([t,items])=>{if(items.some(it=>it&&it[0]==="tasks"))return [t,items];const i=items.findIndex(it=>it&&it[0]==="cal");const it2=items.slice();it2.splice(i>=0?i+1:it2.length,0,["tasks",UI.nTasks,"tasks"]);return [t,it2];});};
+}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
