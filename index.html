@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="71b49fbadb5d";
+const ZC_BUILD="8fb2d3792ab6";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -22291,6 +22291,27 @@ window.UZ21=Object.assign(window.UZ21||{},{"Версия 3.2: исправлен
 /* ── ОШ-0075: логотип в боковой панели ведёт на главную ── */
 document.addEventListener("click",e=>{const lg=e.target.closest&&e.target.closest(".sb21 .lg21,.sb21 .lg21m");if(!lg||!U())return;if(e.target.closest("button,a"))return;e.preventDefault();Router.go("home");},true);
 (()=>{const st=document.createElement("style");st.textContent="input.s56{font-variant-numeric:tabular-nums;text-align:left}.sb21 .lg21,.sb21 .lg21m{cursor:pointer}";document.head.appendChild(st);})();
+
+/* версия 3.2 · дело №70 (решение владельца 06.11.2026 «Скрыть поле»):
+   адвокат зарегистрировал договор и в окне выбрал «Второго исполнителя» — сервер отклонил создание дела целиком
+   («Людей в команду дела добавляет только управляющий адвокат», zc.guard_adv_team), дело осталось только в его окне.
+   Правило сервера не меняется. Портал у всех, кроме УП:
+     • в окне нового дела (в том числе «Регистрация договора») нет «Исполнители и доли», «Второй исполнитель», «Доля ведущего» и «Команда» —
+       исполнителей и команду добавляет УП в карточке дела;
+     • в «Редактировать дело» во «Втором исполнителе» и «Команде» — только люди, которые уже есть в деле (сервер это разрешает). */
+const Exec57={
+  HIDE:["exec2","share1","team"],
+  mp(){return typeof Pre24!=="undefined"&&Pre24.mp?Pre24.mp():(isFounder()||hasF("managing"));},
+  on(){const u=U();return !!u&&!(typeof isClient==="function"&&isClient())&&!this.mp();},
+  /* люди, которые уже есть в деле: команда и исполнители */
+  inMatter(m){return [...((m&&m.team)||[]),...((m&&m.executors)||[]).map(x=>x&&x.emp)].filter(Boolean);}
+};
+{const _f57=Matter.fields;Matter.fields=function(m){const f=_f57.apply(this,arguments);if(!Exec57.on())return f;
+  const isNew=!(m&&m.id&&S.matters[m.id]);
+  if(isNew){const sec=T1(UI.mExec);return f.filter(x=>!(x&&(Exec57.HIDE.includes(x.k)||(x.type==="section"&&String(x.label||"").startsWith(sec)))));}
+  const me=U().emp,had=Exec57.inMatter(S.matters[m.id]);
+  f.forEach(x=>{if(x&&Exec57.HIDE.includes(x.k)&&Array.isArray(x.options))x.options=x.options.filter(o=>!o[0]||o[0]===me||had.includes(o[0]));});
+  return f;};}
 
 /* ═══════════════════════════ v51 · БЛОКИ НА ВСЕХ СТРАНИЦАХ (решение владельца 04.11.2026) ═══════════════════════════
    Макет design-card-blocks.html: «блоки заметнее, чтобы можно было отличить блоки».
