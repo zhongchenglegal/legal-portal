@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="f87acfc03c3c";
+const ZC_BUILD="ab616e5ca252";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -16463,16 +16463,16 @@ let busy=false,itFrom='office';
 const _pick=pick;pick=function(id){if(id==='qa'){AGXW.openIt('office');return;}return _pick.apply(this,arguments);};
 const _oa=AGXW.openAgent;AGXW.openAgent=function(id,from){if(id==='qa'){AGXW.openIt(from);return;}return _oa.apply(this,arguments);};
 /* состояние в офисе — по данным (как у Руководителя отдела): на месте; печатает, пока идёт проверка.
-   Перерывы (решение владельца 26.10.2026): свободный Даниил раз в 3–5 минут уходит к кофемашине или на диван на ~30 секунд;
+   Перерывы (решение владельца 26.10.2026): свободный Даниил раз в 1–2 минуты (чаще — 07.11.2026) уходит к кофемашине или на диван на ~30 секунд;
    при проверке сразу возвращается за стол; в «Журнал» не пишется; «Тихий режим» перерывы выключает. */
-const BREAK_FIRST=[90,60],BREAK_EVERY=[180,120];   // секунды офиса: первый перерыв — через 1,5–2,5 мин, дальше — раз в 3–5 мин
+const BREAK_FIRST=[30,30],BREAK_EVERY=[60,60];   // секунды офиса: первый перерыв — через 30–60 с, дальше — раз в 1–2 мин
 let nextBreak=simTime+BREAK_FIRST[0]+Math.random()*BREAK_FIRST[1];
 const onBreak=a=>a.restUntil>simTime;
 const endBreak=a=>{a.restUntil=0;a.zone='seat:'+a.id;};
 const _ur2=updateRoutines;updateRoutines=function(){_ur2();const a=BY.qa;if(!a)return;
  if(a.restUntil&&simTime>=a.restUntil)endBreak(a);
  if(busy||!a.on||a.manualPause||a.restUntil||a.route.length||a.at!=='seat:qa'||ROOT.classList.contains('zc-quiet')||simTime<nextBreak)return;
- a.zone=Math.random()<.6?'coffee':'sofa:'+Math.floor(Math.random()*SOFA.length);a.restUntil=simTime+52+Math.random()*10;
+ {const used=new Set(AG.filter(x=>x!==a&&x.restUntil>simTime).map(x=>x.zone));const free=['coffee',...SOFA.map((_,i)=>'sofa:'+i)].filter(z=>!used.has(z));a.zone=free.includes('coffee')&&Math.random()<.6?'coffee':(free.filter(z=>z!=='coffee')[Math.floor(Math.random()*free.filter(z=>z!=='coffee').length)]||'sofa:0');}a.restUntil=simTime+52+Math.random()*10;
  nextBreak=a.restUntil+BREAK_EVERY[0]+Math.random()*BREAK_EVERY[1];};
 const _gs2=getState;getState=function(a){if(a.id!=='qa')return _gs2(a);return busy?'task':onBreak(a)?'rest':'work';};
 const _act2=activity;activity=function(a){if(a.id!=='qa')return _act2(a);return busy?'Проверяет исправления по поручению УП':onBreak(a)?'Короткий перерыв · на связи':'На связи · проверка — по поручению УП';};
@@ -16520,13 +16520,13 @@ const TR={login:'ai.tr',name:'Амина Ли',role:'Контролёр отде
 let busy=false,trFrom='office',reports=null,stats=null;
 const _pick=pick;pick=function(id){if(id==='ana'){AGXW.openTr('office');return;}return _pick.apply(this,arguments);};
 const _oa=AGXW.openAgent;AGXW.openAgent=function(id,from){if(id==='ana'){AGXW.openTr(from);return;}return _oa.apply(this,arguments);};
-/* перерывы — как у Даниила: свободная Амина раз в 3–5 минут уходит к кофемашине или на диван на ~30 секунд */
-const BREAK_FIRST=[120,60],BREAK_EVERY=[180,120];let nextBreak=simTime+BREAK_FIRST[0]+Math.random()*BREAK_FIRST[1];
+/* перерывы — как у Даниила: свободная Амина раз в 1–2 минуты (чаще — 07.11.2026) уходит к кофемашине или на диван на ~30 секунд */
+const BREAK_FIRST=[45,15],BREAK_EVERY=[60,60];let nextBreak=simTime+BREAK_FIRST[0]+Math.random()*BREAK_FIRST[1];
 const onBreak=a=>a.restUntil>simTime;const endBreak=a=>{a.restUntil=0;a.zone='seat:'+a.id;};
 const _ur3=updateRoutines;updateRoutines=function(){_ur3();const a=BY.ana;if(!a)return;
  if(a.restUntil&&simTime>=a.restUntil)endBreak(a);
  if(busy||!a.on||a.manualPause||a.restUntil||a.route.length||a.at!=='seat:ana'||ROOT.classList.contains('zc-quiet')||simTime<nextBreak)return;
- a.zone=Math.random()<.6?'coffee':'sofa:'+Math.floor(Math.random()*SOFA.length);a.restUntil=simTime+52+Math.random()*10;
+ {const used=new Set(AG.filter(x=>x!==a&&x.restUntil>simTime).map(x=>x.zone));const free=['coffee',...SOFA.map((_,i)=>'sofa:'+i)].filter(z=>!used.has(z));a.zone=free.includes('coffee')&&Math.random()<.6?'coffee':(free.filter(z=>z!=='coffee')[Math.floor(Math.random()*free.filter(z=>z!=='coffee').length)]||'sofa:0');}a.restUntil=simTime+52+Math.random()*10;
  nextBreak=a.restUntil+BREAK_EVERY[0]+Math.random()*BREAK_EVERY[1];};
 const _gs3=getState;getState=function(a){if(a.id!=='ana')return _gs3(a);return busy?'task':onBreak(a)?'rest':'work';};
 const _act3=activity;activity=function(a){if(a.id!=='ana')return _act3(a);return busy?'Подбирает слова на месяц':onBreak(a)?'Короткий перерыв · на связи':'На связи · словарь и тесты переводчиков';};
@@ -16811,7 +16811,7 @@ new MutationObserver(fix).observe(ROOT,{childList:true,subtree:true});
    Профессия — табличка под столом, видна всегда; при наведении на сотрудника (или его табличку) над головой — подпись с должностью и именем.
    Клик по Волкову, его подписи или столу — сразу его профиль (как у Даниила). Волков ходит по своему листу движений
    (ai-office/dir-walk.webp, кадры — tools/source/dir-motion.json): когда свободен (нет поручения в работе и решений,
-   которые ждут УП), раз в 3–5 минут уходит к кофемашине или на диван на ~30 секунд; «Тихий режим» перерывы выключает. */
+   которые ждут УП), раз в 1–2 минуты (чаще — решение владельца 07.11.2026) уходит к кофемашине или на диван на ~30 секунд; «Тихий режим» перерывы выключает. */
 (function(){
 const ROLE={dir:'Руководитель отдела',qa:'ИТ-специалист',ana:'Контролёр отдела перевода'};
 const wrap=$('#sceneWrap'),svgEl=$('#sv'),tags={};AGXW.headPos={};
@@ -16838,15 +16838,14 @@ wrap.addEventListener('pointerleave',()=>showTag(null));
 const _pk=pick;pick=function(id){if(id==='dir'&&BY.dir){AGXW.openAgent('dir','office');return;}return _pk.apply(this,arguments);};
 /* Волков ходит на перерыв, когда свободен */
 const D=BY.dir;if(!D)return;
-let nextBreak=simTime+60+Math.random()*60;
+let nextBreak=simTime+15+Math.random()*25;   // первый перерыв — через 15–40 с офиса
 const busy=a=>!!(a.q||activeOrder(a));
 const endBreak=a=>{a.restUntil=0;a.zone='seat:'+a.id;};
 const _ur=updateRoutines;updateRoutines=function(){_ur();
  if(D.restUntil&&(simTime>=D.restUntil||busy(D)))endBreak(D);
  if(busy(D)||!D.on||D.manualPause||D.restUntil||D.route.length||D.at!=='seat:dir'||ROOT.classList.contains('zc-quiet')||simTime<nextBreak)return;
- const coffeeTaken=AG.some(x=>x!==D&&x.restUntil>simTime&&x.zone==='coffee');
- D.zone=!coffeeTaken&&Math.random()<.6?'coffee':'sofa:'+Math.floor(Math.random()*SOFA.length);D.restUntil=simTime+55+Math.random()*10;
- nextBreak=D.restUntil+180+Math.random()*120;};
+ {const used=new Set(AG.filter(x=>x!==D&&x.restUntil>simTime).map(x=>x.zone));const free=['coffee',...SOFA.map((_,i)=>'sofa:'+i)].filter(z=>!used.has(z));D.zone=free.includes('coffee')&&Math.random()<.6?'coffee':(free.filter(z=>z!=='coffee')[Math.floor(Math.random()*free.filter(z=>z!=='coffee').length)]||'sofa:0');}D.restUntil=simTime+55+Math.random()*10;
+ nextBreak=D.restUntil+60+Math.random()*60;};   // дальше — раз в 1–2 мин после возвращения
 const onBreak=a=>a.id==='dir'&&a.restUntil>simTime&&!busy(a);
 const _gs=getState;getState=function(a){return onBreak(a)?'rest':_gs(a);};
 const _act=activity;activity=function(a){return onBreak(a)?'Короткий перерыв · на связи':_act(a);};
@@ -22479,7 +22478,9 @@ if(typeof Rtc38!=="undefined"){
   const wake=()=>{const r=Rtc38;if(!r.pollIn||!r.tick52||Poll52.paused())return;clearTimeout(r.pollIn);r.pollIn=setTimeout(r.tick52,300);};
   document.addEventListener("visibilitychange",wake);window.addEventListener("online",wake);}
 if(typeof Pres22!=="undefined"){
-  Pres22.start=async function(){if(!U()||isClient()||!this.on()||this.timer)return;
+  /* 06.11.2026: учёт времени (Act38, sections/home/act.js) включался из прежнего Pres22.start — здесь включаем его сами, иначе act_ping не вызывается */
+  Pres22.start=async function(){if(typeof Act38!=="undefined")try{Act38.start();}catch(e){}
+    if(!U()||isClient()||!this.on()||this.timer)return;
     const ping=async()=>{if(Poll52.paused()||!U())return;try{await Poll52.quiet("presence_ping");this.map[U().login]=Date.now();}
       catch(e){if(/presence_ping|PGRST202|Could not find/i.test(String(e&&(e.message||e))))this.stop(true);else Poll52.fail("presence_ping",e);}};
     const load=async()=>{if(Poll52.paused())return;try{const r=await SB19.T.select("presence");r.forEach(x=>{this.map[x.login]=Date.parse(x.at)||0;});this.paint();}catch(e){}};
@@ -22724,6 +22725,27 @@ window.UZ21=Object.assign(window.UZ21||{},{"Версия 3.2: исправлен
 document.addEventListener("click",e=>{const lg=e.target.closest&&e.target.closest(".sb21 .lg21,.sb21 .lg21m");if(!lg||!U())return;if(e.target.closest("button,a"))return;e.preventDefault();Router.go("home");},true);
 (()=>{const st=document.createElement("style");st.textContent="input.s56{font-variant-numeric:tabular-nums;text-align:left}.sb21 .lg21,.sb21 .lg21m{cursor:pointer}";document.head.appendChild(st);})();
 
+/* версия 3.2 · дело №70 (решение владельца 06.11.2026 «Скрыть поле»):
+   адвокат зарегистрировал договор и в окне выбрал «Второго исполнителя» — сервер отклонил создание дела целиком
+   («Людей в команду дела добавляет только управляющий адвокат», zc.guard_adv_team), дело осталось только в его окне.
+   Правило сервера не меняется. Портал у всех, кроме УП:
+     • в окне нового дела (в том числе «Регистрация договора») нет «Исполнители и доли», «Второй исполнитель», «Доля ведущего» и «Команда» —
+       исполнителей и команду добавляет УП в карточке дела;
+     • в «Редактировать дело» во «Втором исполнителе» и «Команде» — только люди, которые уже есть в деле (сервер это разрешает). */
+const Exec57={
+  HIDE:["exec2","share1","team"],
+  mp(){return typeof Pre24!=="undefined"&&Pre24.mp?Pre24.mp():(isFounder()||hasF("managing"));},
+  on(){const u=U();return !!u&&!(typeof isClient==="function"&&isClient())&&!this.mp();},
+  /* люди, которые уже есть в деле: команда и исполнители */
+  inMatter(m){return [...((m&&m.team)||[]),...((m&&m.executors)||[]).map(x=>x&&x.emp)].filter(Boolean);}
+};
+{const _f57=Matter.fields;Matter.fields=function(m){const f=_f57.apply(this,arguments);if(!Exec57.on())return f;
+  const isNew=!(m&&m.id&&S.matters[m.id]);
+  if(isNew){const sec=T1(UI.mExec);return f.filter(x=>!(x&&(Exec57.HIDE.includes(x.k)||(x.type==="section"&&String(x.label||"").startsWith(sec)))));}
+  const me=U().emp,had=Exec57.inMatter(S.matters[m.id]);
+  f.forEach(x=>{if(x&&Exec57.HIDE.includes(x.k)&&Array.isArray(x.options))x.options=x.options.filter(o=>!o[0]||o[0]===me||had.includes(o[0]));});
+  return f;};}
+
 /* ═══════════════════════════ v51 · БЛОКИ НА ВСЕХ СТРАНИЦАХ (решение владельца 04.11.2026) ═══════════════════════════
    Макет design-card-blocks.html: «блоки заметнее, чтобы можно было отличить блоки».
    • Блок с заголовком — цветная шапка и значок в цветном квадрате; цвет у всех блоков один — сапфировый (решение владельца 04.11.2026).
@@ -22792,6 +22814,33 @@ const Blocks51={
 :root #viewPage table.b51t{border-collapse:separate;border-spacing:0;overflow:hidden}
 :root #viewPage table.b51th thead th{background:var(--t51);color:var(--ink);font-weight:700;border-bottom:1px solid color-mix(in srgb,var(--c51) 28%,transparent)}
 @media(max-width:600px){:root #viewPage .card.b51c{padding:12px 14px}:root #viewPage .card.b51c>h4:first-child{margin:-12px -14px 12px;padding:10px 14px;min-height:50px;font-size:14px}:root #viewPage .card.b51 .i35,:root #viewPage .card.b51 .h36i{width:30px;height:30px}}
+`;document.head.appendChild(st);})();
+
+/* ═══════════ «Чаты» · окно без выбранного разговора (макет design-chat-empty.html, вариант C «Спокойный», решение владельца 06.11.2026) ═══════════
+   Было: пустая часть сжималась до узкой серой полосы по ширине надписи, по бокам оставалось белое.
+   Стало: фон с узором, как у переписки, на всю правую часть; по центру крупный значок с мягкой анимацией, надпись и строка «Разговор откроется здесь».
+   Только вид: класс .pick22 сохранён (на него опираются тесты), кнопок и новых функций нет. */
+Object.assign(UI,{ch58Sub:"Разговор откроется здесь||对话将在这里打开"});
+window.UZ21=Object.assign(window.UZ21||{},{"Разговор откроется здесь":"Suhbat shu yerda ochiladi"});
+{const _th58=Chat22.threadHtml;Chat22.threadHtml=function(){const h=_th58.apply(this,arguments);if(this.valid(this.peer))return h;
+  return `<div class="pick22 pk58"><span class="orb58">${ch22svg(CH22_ICO.chat)}</span><b>${T1(UI.ch22Pick)}</b><span>${T1(UI.ch58Sub)}</span></div>`;};}
+(()=>{const st=document.createElement("style");st.textContent=`
+:root .pick22.pk58{margin:0;flex:1;align-self:stretch;width:100%;height:auto;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px;
+  color:var(--ink-2);font-size:13.5px;background-color:var(--chbg22);
+  background-image:radial-gradient(color-mix(in srgb,var(--pri) 9%,transparent) 1.2px,transparent 1.3px),radial-gradient(color-mix(in srgb,var(--pri) 6%,transparent) 1px,transparent 1.1px);
+  background-size:26px 26px,13px 13px;background-position:0 0,6px 9px}
+:root .pick22.pk58>b{font:700 19px var(--font-h);color:var(--ink);margin-top:6px}
+:root .orb58{position:relative;width:104px;height:104px;border-radius:50%;display:grid;place-items:center;background:var(--pri);color:#fff;
+  box-shadow:0 10px 28px -6px color-mix(in srgb,var(--pri) 60%,transparent);animation:fl58 4s ease-in-out infinite}
+:root .orb58::before,:root .orb58::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--pri) 25%,transparent);animation:rg58 3.2s ease-out infinite}
+:root .orb58::after{animation-delay:1.6s}
+:root .pick22.pk58 .orb58 svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;opacity:1}
+:root .pick22.pk58>*{animation:up58 .45s cubic-bezier(.2,.8,.2,1) both}
+:root .pick22.pk58>.orb58{animation:up58 .45s cubic-bezier(.2,.8,.2,1) both,fl58 4s ease-in-out .45s infinite}
+@keyframes fl58{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes rg58{0%{transform:scale(.85);opacity:1}100%{transform:scale(1.35);opacity:0}}
+@keyframes up58{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){:root .orb58,:root .orb58::before,:root .orb58::after,:root .pick22.pk58>*{animation:none}}
 `;document.head.appendChild(st);})();
 
 /* ═══════════════════════════ версия 3.3 · РОЛЬ «ПЕРЕВОДЧИК» (решения владельца 05–06.11.2026, этап 1) ═══════════════════════════
