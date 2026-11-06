@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="27d5a6d4698b";
+const ZC_BUILD="71b49fbadb5d";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -22045,7 +22045,9 @@ if(typeof Rtc38!=="undefined"){
   const wake=()=>{const r=Rtc38;if(!r.pollIn||!r.tick52||Poll52.paused())return;clearTimeout(r.pollIn);r.pollIn=setTimeout(r.tick52,300);};
   document.addEventListener("visibilitychange",wake);window.addEventListener("online",wake);}
 if(typeof Pres22!=="undefined"){
-  Pres22.start=async function(){if(!U()||isClient()||!this.on()||this.timer)return;
+  /* 06.11.2026: учёт времени (Act38, sections/home/act.js) включался из прежнего Pres22.start — здесь включаем его сами, иначе act_ping не вызывается */
+  Pres22.start=async function(){if(typeof Act38!=="undefined")try{Act38.start();}catch(e){}
+    if(!U()||isClient()||!this.on()||this.timer)return;
     const ping=async()=>{if(Poll52.paused()||!U())return;try{await Poll52.quiet("presence_ping");this.map[U().login]=Date.now();}
       catch(e){if(/presence_ping|PGRST202|Could not find/i.test(String(e&&(e.message||e))))this.stop(true);else Poll52.fail("presence_ping",e);}};
     const load=async()=>{if(Poll52.paused())return;try{const r=await SB19.T.select("presence");r.forEach(x=>{this.map[x.login]=Date.parse(x.at)||0;});this.paint();}catch(e){}};
