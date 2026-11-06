@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="67c5cd90667b";
+const ZC_BUILD="c90f678f1a90";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -20118,7 +20118,7 @@ const Lr58={
   /* ── загрузка: слова дня (переводчик), словарь (все), успеваемость ── */
   async load(){if(!this.srv()){this.err=T1(UI.lr58NeedSrv);return;}this.err="";
     try{const jobs=[SB19.T.select("tr_words").then(r=>{this.words=(r||[]).map(this.row);}),this.rpc("tr_stats",{e:null}).then(r=>{this.stats=r;})];
-      if(this.tr())jobs.push(this.rpc("tr_today",{d:null}).then(r=>{this.today=r;}));if(this.loadExtra)jobs.push(this.loadExtra());await Promise.all(jobs);}
+      if(this.lr?this.lr():this.tr())jobs.push(this.rpc("tr_today",{d:null}).then(r=>{this.today=r;}));if(this.loadExtra)jobs.push(this.loadExtra());await Promise.all(jobs);}
     catch(e){this.err=String((e&&e.message)||e);}
     this.paint();},
   row(r){return {id:r.id,zh:r.zh,pinyin:r.pinyin||"",ru:r.ru||"",uz:r.uz||"",exZh:r.ex_zh||"",exRu:r.ex_ru||"",exUz:r.ex_uz||"",topic:r.topic||"",month:r.month,seq:r.seq,status:r.status,addedBy:r.added_by,addedRole:r.added_role,audio:r.audio||""};},
@@ -20246,7 +20246,7 @@ Object.assign(UI,{dc63WordsFor:"Слова на {m}||{m} 词汇",dc63Of:"из||/
   dc63Queue:"Вся очередь||全部队列",dc63QEmpty:"Проверять нечего — все слова в словаре||无需审核——所有词已入词典",dc63AutoAt:"сами утвердятся {d}||将于 {d} 自动批准",dc63From:"предложил(а): {w}||推荐人：{w}",
   dc63Ru:"По-русски||俄文",dc63Uz:"По-узбекски||乌兹别克文",dc63Ex:"Пример||例句",dc63Topic:"Тема||主题",dc63Mine:"Мои слова||我的词",dc63MineEmpty:"Вы ещё не предлагали слов — «Предложить слово» в словаре||您尚未推荐词汇——在词典中点击“推荐词汇”",
   dc63StNew:"на проверке||待审核",dc63StOk:"утверждено||已批准",dc63StRej:"отклонено||已驳回",dc63StHid:"скрыто||已隐藏",dc63Kind:"Вид||类型",dc63KindW:"Слово||词",dc63KindP:"Фраза / клише||短语/套语",
-  dc63Mean:"Значение {n}||释义 {n}",dc63ZhH:"достаточно иероглифов — пиньинь, перевод, пример и тему заполнит ИИ, вы проверите||输入汉字即可——拼音、翻译、例句和主题由 AI 填写，您来核对",dc63RuH:"выделено в деле по-русски — ИИ подберёт китайское слово||在案件中选中的俄文——AI 将匹配中文词",dc63How:"Как заполнить||填写方式",dc63HowAi:"Заполнить с ИИ, потом проверить||由 AI 填写后核对",dc63HowSelf:"Заполню сам||自己填写",dc63Next:"Далее||下一步",dc63ZhNeed:"Введите слово по-китайски||请输入中文词",dc63AiWait:"ИИ заполняет слово…||AI 正在填写…",dc63AiFail:"ИИ не заполнил — заполните вручную||AI 未能填写——请手动填写",dc63AiCheck:"Заполнено ИИ — проверьте перед сохранением||由 AI 填写——保存前请核对",dc63AiMark:"перевод и пример заполнил ИИ||翻译和例句由 AI 填写",dc63FromMatter:"из дела {n}||来自案件 {n}",dc63ToCheck:"уйдёт на проверку управляющему адвокату||将提交管理律师审核",dc63ToDict:"В словарь||加入词典",dc63MonthH:"для слов общего словаря||通用词典的词",dc63Pos:"Пометка||标注",dc63Client:"Клиент (термины клиента)||客户（客户术语）",dc63NoClient:"— общий словарь —||—— 通用词典 ——",dc63Dup:"Уже есть: {w}||已存在：{w}",
+  dc63Mean:"Значение {n}||释义 {n}",dc63Weekend:"Сегодня выходной — новых слов нет (норма — 20 слов в рабочий день). Повторите выученное во вкладке «Повтор»||今天休息——没有新词（目标为每个工作日 20 个）。请在“复习”中复习",dc63NoMore:"Новых слов пока нет — все слова словаря уже выданы||暂无新词——词典中的词已全部发放",dc63ZhH:"достаточно иероглифов — пиньинь, перевод, пример и тему заполнит ИИ, вы проверите||输入汉字即可——拼音、翻译、例句和主题由 AI 填写，您来核对",dc63RuH:"выделено в деле по-русски — ИИ подберёт китайское слово||在案件中选中的俄文——AI 将匹配中文词",dc63How:"Как заполнить||填写方式",dc63HowAi:"Заполнить с ИИ, потом проверить||由 AI 填写后核对",dc63HowSelf:"Заполню сам||自己填写",dc63Next:"Далее||下一步",dc63ZhNeed:"Введите слово по-китайски||请输入中文词",dc63AiWait:"ИИ заполняет слово…||AI 正在填写…",dc63AiFail:"ИИ не заполнил — заполните вручную||AI 未能填写——请手动填写",dc63AiCheck:"Заполнено ИИ — проверьте перед сохранением||由 AI 填写——保存前请核对",dc63AiMark:"перевод и пример заполнил ИИ||翻译和例句由 AI 填写",dc63FromMatter:"из дела {n}||来自案件 {n}",dc63ToCheck:"уйдёт на проверку управляющему адвокату||将提交管理律师审核",dc63ToDict:"В словарь||加入词典",dc63MonthH:"для слов общего словаря||通用词典的词",dc63Pos:"Пометка||标注",dc63Client:"Клиент (термины клиента)||客户（客户术语）",dc63NoClient:"— общий словарь —||—— 通用词典 ——",dc63Dup:"Уже есть: {w}||已存在：{w}",
   dc63SimQ:"Похожие (тот же перевод): {w}. Всё равно добавить?||相似词（相同译文）：{w}。仍要添加吗？",dc63Similar:"Похожее слово||相似词",dc63HistT:"История правок · {w}||修改历史 · {w}",dc63HistNone:"Правок нет||无修改",
   dc63NoVoice:"В этом браузере нет китайского голоса — откройте портал в Chrome||此浏览器没有中文语音——请在 Chrome 中打开门户",dc63Keys:"клавиши: A — утвердить · E — исправить · D — отклонить||快捷键：A 批准 · E 修改 · D 驳回",
   dc63Act:{add:"добавлено||已添加",edit:"правка||修改",approve:"утверждено||已批准",reject:"отклонено||已驳回",hide:"скрыто||已隐藏",restore:"возвращено||已恢复",status:"статус||状态"},
@@ -20420,21 +20420,21 @@ Lr58.pageMp=function(){if(!this.mp())return `<div class="card"><div class="fhint
   const tabs=this.tabs([["dict",UI.lr58Dict],["pending",UI.dc63Check,P.length],["tr",UI.lr58Translators],...(this.testsBodyMp?[["tests",UI.tt59Tab,this.testsBadgeMp?this.testsBadgeMp():0]]:[])]);
   let body="";
   if(this.tab==="tests"&&this.testsBodyMp)body=this.testsBodyMp();
-  else if(this.tab==="tr")body=rows.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColMonth)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone} <small>/ ${st.norm.week}</small></td><td>${r.monthLearned} <small>/ ${r.monthTotal}</small></td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.lr58NoTr)}</div>`;
+  else if(this.tab==="tr")body=(rows.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColMonth)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone} <small>/ ${st.norm.week}</small></td><td>${r.monthLearned} <small>/ ${r.monthTotal}</small></td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.lr58NoTr)}</div>`)+(Dc63.learnersHtml?Dc63.learnersHtml():"");
   else if(this.tab==="pending")body=Dc63.checkHtml();
   else body=Dc63.dictHtml(true);
   return `<div id="lr58">${Dc63.tilesMp()}<div class="card">${tabs}${body}</div></div>`;};
 /* ── переводчик: «Обучение» — словарь в новом виде и «Мои слова» ── */
-Lr58.page=function(){if(!this.tr())return `<div class="card"><div class="fhint">${T1(UI.noAccess17||"Нет доступа||无权限")}</div></div>`;
+Lr58.page=function(){if(!this.lr())return `<div class="card"><div class="fhint">${T1(UI.noAccess17||"Нет доступа||无权限")}</div></div>`;
   if(this.err)return `<div class="card"><div class="fhint" style="color:var(--red)">${esc(this.err)}</div></div>`;
   if(!this.today||!this.words)return `<div class="card"><div class="fhint">${T1(UI.loading||"Загрузка…||加载中…")}</div></div>`;
   const t=this.today,nw=t.new||[],rep=t.repeat||[],pn=this.pending(nw),pr=this.pending(rep),doneN=nw.length-pn.length;const me=Dc63.me();
   const minePend=(this.words||[]).filter(w=>w.addedBy===me&&w.status==="new").length;
   const tiles=`<div class="tiles">${this.tile(`${doneN} <small>${T1(UI.lr58Of)} ${nw.length}</small>`,UI.lr58TodayT,pn.length?"blue":"green","today")}${this.tile(pr.length,UI.lr58RepeatT,pr.length?"amber":"","repeat")}${this.tile(`${t.monthLearned} <small>${T1(UI.lr58Of)} ${t.monthTotal}</small>`,UI.lr58MonthT,"","learned")}${this.tile(t.learnedTotal,UI.lr58TotalT,"","learned")}</div>`;
-  const tabs=this.tabs([["today",UI.lr58Today,pn.length],["repeat",UI.lr58Repeat,pr.length],["dict",UI.lr58Dict],["learned",UI.lr58Learned,(t.learned||[]).length],["mine",UI.dc63Mine,minePend],...(this.testsBody?[["tests",UI.tt59Tab,this.testsBadge?this.testsBadge():0]]:[])]);
+  const tabs=this.tabs([["today",UI.lr58Today,pn.length],["repeat",UI.lr58Repeat,pr.length],["dict",UI.lr58Dict],["learned",UI.lr58Learned,(t.learned||[]).length],...(this.tr()?[["mine",UI.dc63Mine,minePend]]:[]),...(this.tr()&&this.testsBody?[["tests",UI.tt59Tab,this.testsBadge?this.testsBadge():0]]:[])]);
   let body="";
-  if(this.tab==="tests"&&this.testsBody)body=this.testsBody();
-  else if(this.tab==="today")body=nw.length?this.study(pn,"today"):`<div class="empty2">${T1(UI.lr58NoWords)}</div>`;
+  if(this.tab==="tests"&&this.testsBody&&this.tr())body=this.testsBody();
+  else if(this.tab==="today")body=nw.length?this.study(pn,"today"):`<div class="empty2">${T1(t.workday===false&&!t.learner?UI.dc63Weekend:t.learner?UI.dc63NoMore:UI.lr58NoWords)}</div>`;
   else if(this.tab==="repeat")body=rep.length?this.study(pr,"repeat"):`<div class="empty2">${T1(UI.lr58RepNone)}</div>`;
   else if(this.tab==="dict")body=Dc63.dictHtml(false);
   else if(this.tab==="mine")body=Dc63.mineHtml();
@@ -20508,6 +20508,67 @@ document.addEventListener("keydown",e=>{if(Router.cur!=="trdept"||Lr58.tab!=="pe
 .dc63aih{background:color-mix(in srgb,var(--blue,#2F64B0) 10%,transparent);color:var(--blue,#2F64B0);border-radius:8px;padding:7px 10px;font-size:13px;font-weight:600}#lr58 .dc63aim{font-size:12px;color:var(--blue,#2F64B0)}
 .dc63hist{display:grid;gap:8px;font-size:13px;max-height:60vh;overflow:auto}.dc63hist small{display:block;color:var(--ink-3);margin-left:10px}.dc63hist .dc63st{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;background:#eef2f8}
 @media(max-width:860px){#lr58 .dc63r{grid-template-columns:54px 1fr 1fr;}#lr58 .dc63r .ex,#lr58 .dc63r .tp{grid-column:2/-1}#lr58 .dc63r .a{grid-column:1/-1;justify-content:flex-start}#lr58 .dc63check{grid-template-columns:1fr}}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.3 · ОТДЕЛ ПЕРЕВОДА, ЭТАП В — ОБУЧЕНИЕ ДЛЯ ВСЕХ (решения владельца 07.11.2026, макет design-translate.html) ═══════════════════════════
+   Правила — sections/translate/ПРАВИЛА.md (ОП-61 … ОП-66), сервер — миграция 20261107000500_tr_learn_all.sql (tr_learn_get / tr_learn_set, tr_today с нормой
+   по рабочим дням и своей целью, tr_answer, tr_stats.learners, tr_word_of_day). Здесь только вид, грузится после learn_dict.js:
+   • «Мой профиль» (клик по своему имени вверху) → карточка «Учить китайский»: включить / выключить, цель на день 5, 10 или 20 слов;
+     у переводчика — «включено всегда · норма 20 слов в рабочий день (Пн–Пт)»;
+   • у тех, кто учит (не переводчиков), в меню «Работа» — «Учить китайский» (раздел «Обучение»: слова дня, повтор, словарь, выученные — без тестов и премии);
+   • на главной у тех, кто учит, — карточка «Слово дня» (иероглиф, пиньинь, 🔊, перевод, пример; «Учить слова»);
+   • УП: «Отдел перевода» → «Переводчики» — ниже таблица «Учат китайский» (остальные сотрудники: цель, сегодня, неделя, выучено, активность). */
+Object.assign(UI,{lo65Learn:"Учить китайский||学中文",lo65Card:"Учить китайский||学习中文",lo65On:"Включить||开启",lo65Off:"Выключить||关闭",lo65Goal:"Цель на день||每日目标",lo65Words:"слов||个词",
+  lo65Hint:"Для себя: слова дня из словаря фирмы, повтор и выученные — без норм, тестов и премии. Раздел — «Учить китайский» в меню.||自学：公司词典的每日词汇、复习和已掌握——无指标、测试和奖金。入口——菜单中的“学中文”。",
+  lo65TrAlways:"У переводчика включено всегда · норма — 20 слов в рабочий день (Пн–Пт); в выходные — только повтор||翻译始终开启 · 目标——每个工作日 20 个词（周一至周五）；周末仅复习",
+  lo65IsOn:"включено · {n} слов в день||已开启 · 每天 {n} 个词",lo65IsOff:"выключено||已关闭",lo65Saved:"Сохранено||已保存",lo65Wod:"Слово дня||每日一词",lo65Go:"Учить слова||学习词汇",
+  lo65Learners:"Учат китайский||学中文的员工",lo65LearnersH:"сотрудники, включившие «Учить китайский» в профиле, — для себя, без норм||在个人资料中开启“学中文”的员工——自学，无指标",lo65Goal2:"Цель||目标"});
+window.UZ21=Object.assign(window.UZ21||{},{"Учить китайский":"Xitoy tilini oʻrganish","Включить":"Yoqish","Выключить":"Oʻchirish","Цель на день":"Kunlik maqsad","Слово дня":"Kun soʻzi","Учить слова":"Soʻz oʻrganish","Учат китайский":"Xitoy tilini oʻrganayotganlar"});
+/* кто учит: переводчик — всегда; остальные — если включили в профиле (состояние — с сервера после входа) */
+Lr58.learn=null;
+Lr58.lr=function(){return this.tr()||!!(this.learn&&this.learn.on);};
+Lr58.loadLearn=async function(){if(!this.srv()||!U()||isClient()){this.learn=null;return null;}try{this.learn=await this.rpc("tr_learn_get",{});}catch(e){this.learn=null;}return this.learn;};
+if(typeof SB19!=="undefined"){const _st65=SB19.start.bind(SB19);SB19.start=async function(){const r=await _st65.apply(this,arguments);
+  setTimeout(async()=>{const was=Lr58.lr();await Lr58.loadLearn();Lo65.wod=null;Lo65.wodLoad();if(Lr58.lr()!==was){try{renderSide();Router.render();}catch(e){}}},0);return r;};
+  const _rs65=SB19.reset.bind(SB19);SB19.reset=function(){Lr58.learn=null;Lo65.wod=null;return _rs65.apply(this,arguments);};}
+const Lo65={wod:null,wodBusy:false,
+  async wodLoad(){if(this.wodBusy||!Lr58.lr())return;this.wodBusy=true;try{this.wod=await Lr58.rpc("tr_word_of_day",{})||false;}catch(e){this.wod=false;}this.wodBusy=false;if(Router.cur==="home")Router.render();},
+  wodHtml(){const w=this.wod;if(!w)return "";const M=(w.meanings||[]).filter(x=>x&&(x.ru||x.uz));const tr=M.length>1?M.map(x=>esc(x.ru||x.uz)).join("; "):esc(w.ru||w.uz||"");
+    return `<div class="card lo65wod"><div class="lo65l"><span>${T1(UI.lo65Wod)}</span><div class="zh">${esc(w.zh)}${Dc63.spk(w.zh)}</div><div class="py">${esc(w.pinyin||"")}</div></div>
+      <div class="lo65r"><div class="tr">${tr}</div>${w.uz&&M.length<2?`<small>${esc(w.uz)}</small>`:""}${w.exZh?`<div class="ex">${esc(w.exZh)}${Dc63.spk(w.exZh)}<small>${esc(w.exRu||w.exUz||"")}</small></div>`:""}
+      <button type="button" class="btn sm" data-lo65go="1">${T1(UI.lo65Go)} →</button></div></div>`;},
+  learnersHtml(){const L=((Lr58.stats||{}).learners)||[];if(!L.length)return "";
+    return `<h4 style="margin-top:16px">${T1(UI.lo65Learners)} · ${L.length}</h4><div class="fhint">${T1(UI.lo65LearnersH)}</div><div style="overflow-x:auto"><table class="tbl lo65t"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lo65Goal2)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${L.map(r=>`<tr><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.goal}</td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone}</td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`;},
+  /* карточка в «Моём профиле» */
+  card(){const s=Lr58.learn;if(!s)return "";
+    if(s.translator)return `<div class="card lo65p"><h4>${T1(UI.lo65Card)}</h4><div class="fhint">${T1(UI.lo65TrAlways)}</div></div>`;
+    return `<div class="card lo65p"><h4>${T1(UI.lo65Card)} <span class="dc63st ${s.on?"ok":""}">${esc(s.on?T1(UI.lo65IsOn).replace("{n}",s.goal):T1(UI.lo65IsOff))}</span></h4><div class="fhint">${T1(UI.lo65Hint)}</div>
+      <div class="lo65row"><span>${T1(UI.lo65Goal)}</span><div class="dc63seg">${[5,10,20].map(n=>`<button type="button" class="${s.goal===n?"on":""}" data-lo65goal="${n}">${n} ${T1(UI.lo65Words)}</button>`).join("")}</div>
+      <button type="button" class="btn sm ${s.on?"":"pri"}" data-lo65on="${s.on?"0":"1"}">${T1(s.on?UI.lo65Off:UI.lo65On)}</button></div></div>`;},
+  async set(on,goal){try{Lr58.learn=await Lr58.rpc("tr_learn_set",{turn_on:on,goal:goal==null?null:goal});toast(T1(UI.lo65Saved));this.wod=null;this.wodLoad();try{renderSide();}catch(e){}try{Profile.rerender();}catch(e){}}catch(e){toast(String((e&&e.message)||e));}}
+};
+Object.assign(Dc63,{learnersHtml:()=>Lo65.learnersHtml()});
+/* «Мой профиль» → «Личное»: карточка «Учить китайский» (только своя карточка, только сотрудник, только с сервером) */
+{const _pp65=Profile.personal;Profile.personal=function(p){const h=_pp65.apply(this,arguments);const u=U();if(!u||isClient()||this.id!==u.emp||!Lr58.srv())return h;
+  if(!Lr58.learn){Lr58.loadLearn().then(()=>{try{Profile.rerender();}catch(e){}});return h;}return Lo65.card()+h;};}
+document.addEventListener("click",e=>{const g=e.target.closest("[data-lo65goal]"),o=e.target.closest("[data-lo65on]"),go=e.target.closest("[data-lo65go]");
+  if(g){e.preventDefault();const s=Lr58.learn||{};Lo65.set(s.on===false?true:true,+g.dataset.lo65goal);}
+  else if(o){e.preventDefault();const s=Lr58.learn||{};Lo65.set(o.dataset.lo65on==="1",o.dataset.lo65on==="1"?(s.goal||10):null);}
+  else if(go){e.preventDefault();Lr58.tab="today";Router.go("learn");}});
+/* меню: тем, кто учит (кроме переводчиков — у них «Обучение» уже есть), — «Учить китайский» после «Календаря» */
+{const _nav65=navFor;navFor=function(){const g=_nav65.apply(this,arguments);if(!U()||isClient()||!g.length||Lr58.tr()||!Lr58.lr())return g;
+  const w=g[0][1];if(Array.isArray(w)&&!w.some(x=>x&&x[0]==="learn")){const j=w.findIndex(it=>it&&it[0]==="cal");w.splice(j>=0?j+1:w.length,0,["learn",UI.lo65Learn,"intern"]);}return g;};}
+if(typeof Route17!=="undefined"){const _nk65=Route17.navKeys.bind(Route17);Route17.navKeys=function(){const s=_nk65();if(Lr58.lr())s.add("learn");return s;};}
+/* главная: «Слово дня» сверху */
+{const _hh65=Home.html;Home.html=function(){const h=_hh65.apply(this,arguments);if(!U()||isClient()||!Lr58.lr())return h;if(Lo65.wod===null){Lo65.wodLoad();return h;}return Lo65.wodHtml()+h;};}
+(function(){const st=document.createElement("style");st.textContent=`
+.lo65wod{display:grid;grid-template-columns:minmax(160px,auto) 1fr;gap:18px;align-items:center;margin-bottom:14px}.lo65wod .lo65l span{font-size:12px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em}
+.lo65wod .zh{font-size:40px;font-weight:600;line-height:1.1;display:flex;align-items:center;gap:6px}.lo65wod .py{color:var(--ink-3)}.lo65wod .tr{font-size:17px;font-weight:600}.lo65wod small{display:block;color:var(--ink-3)}
+.lo65wod .ex{margin:6px 0 8px;font-size:13.5px}.lo65wod .dc63say,.lo65p .dc63say{border:0;background:transparent;cursor:pointer;font-size:14px;opacity:.7}
+.lo65p{margin-bottom:12px}.lo65p h4{display:flex;align-items:center;gap:8px}.lo65row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+.lo65p .dc63seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}.lo65p .dc63seg button{border:0;background:transparent;padding:6px 12px;font:600 12.5px var(--font);color:var(--ink-2);cursor:pointer}.lo65p .dc63seg button.on{background:var(--blue,#2F64B0);color:#fff}
+.lo65p .dc63st{font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--line-2,#eef2f8);color:var(--ink-2)}.lo65p .dc63st.ok{background:color-mix(in srgb,#3F8768 16%,transparent);color:#2D6B51}
+@media(max-width:700px){.lo65wod{grid-template-columns:1fr}}`;document.head.appendChild(st);})();
+document.addEventListener("click",e=>{const b=e.target.closest(".lo65wod [data-dc63say]");if(b){e.preventDefault();e.stopPropagation();Dc63.say(b.dataset.dc63say);}},true);
 
 /* ═══════════════════════════ версия 3.3 · ОТДЕЛ ПЕРЕВОДА, ЭТАП 3 — ТЕСТЫ (решения владельца 06.11.2026) ═══════════════════════════
    Правила — sections/translate/ПРАВИЛА.md (ОП-13 … ОП-22), сервер — миграция 20261106000300_tr_tests.sql (tr_tests, tr_texts, tr_plan;
