@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="5f7dffb04937";
+const ZC_BUILD="585a575291e5";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -20223,6 +20223,252 @@ Object.assign(Router.extra,{learn:()=>Lr58.page(),trdept:()=>Lr58.pageMp()});
 #lr58 .lr58w .zh{font-size:22px;font-weight:600;min-width:120px}#lr58 .lr58w .zh small{display:block;font-size:12px;font-weight:400;color:var(--ink-3)}
 #lr58 .lr58acts{white-space:nowrap}#lr58 .lr58acts .btn{margin-left:4px}#lr58 .pill.warn{background:var(--warn-soft,#fff3d6);color:var(--ink)}
 @media(max-width:700px){#lr58 .lr58zh{font-size:36px}}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.3 · ОТДЕЛ ПЕРЕВОДА, ЭТАП А — СЛОВАРЬ И ПРОВЕРКА (решения владельца 07.11.2026, макет design-translate.html) ═══════════════════════════
+   Правила — sections/translate/ПРАВИЛА.md (ОП-44 … ОП-55), сервер — миграция 20261107000300_tr_dict2.sql (сквозной № и Ф-№, значения, термины клиента,
+   повторы, «Скрыть», история правок, автоутверждение слов Амины Ли через 24 ч, сводка tr_dict_info). Здесь только вид, грузится после learn.js:
+   • плитки УП: «Слова на <месяц> N из нормы» с полосой и предупреждением о запасе, «На проверке» (ведёт в очередь), «Переводчики»;
+   • словарь: «Общий словарь / Термины клиента», «Слова / Фразы и клише», месяц словами, день, «кто добавил», поиск, темы со счётчиками,
+     компактные строки: № и дата, иероглиф с пиньинем под ним, 🔊 (голос браузера zh-CN), значения с пометками, пример с 🔊, тема;
+     пометка «добавил» — только у исключений (переводчик, УП); неутверждённые слова — только во вкладке «Проверка»;
+   • «Проверка»: карточка по одному слову — «Утвердить» (A) / «Исправить» (E) / «Отклонить» (D), «Утвердить все от Амины Ли», утверждение отмеченных;
+   • «Скрыть» вместо «Удалить» (и «Скрытые» → «Вернуть»), «История» правок слова;
+   • переводчик: тот же словарь только для чтения, «Предложить слово», вкладка «Мои слова» (на проверке / утверждено / отклонено);
+   • окно слова: вид (слово / клише), до трёх значений с пометкой, пример, тема, клиент; перед сохранением — проверка повторов и похожих. */
+Object.assign(UI,{dc63WordsFor:"Слова на {m}||{m} 词汇",dc63Of:"из||/",dc63NormH:"20 слов в рабочий день (Пн–Пт) · {d} рабочих дней = {n}||每个工作日 20 个（周一至周五）· {d} 个工作日 = {n}",
+  dc63Stock:"⚠ запас на {d}: утверждено {h} из {n}||⚠ {d} 的储备：已批准 {h}/{n}",dc63StockAg:" — слова Амины утвердятся сами через 24 ч|| —— 李阿米娜的词将在 24 小时后自动批准",
+  dc63Check:"Проверка||审核",dc63OnCheck:"На проверке||待审核",dc63WordsN:"слов||个词",dc63AutoH:"слова Амины Ли утверждаются сами через 24 ч · ближайшее — {d}||李阿米娜的词 24 小时后自动批准 · 最近一次——{d}",
+  dc63Trs:"Переводчики||翻译",dc63TodayAct:"сегодня занимались {a} из {n}||今天学习 {a}/{n}",dc63Common:"Общий словарь||通用词典",dc63Terms:"Термины клиента||客户术语",dc63Words:"Слова||词汇",dc63Phrases:"Фразы и клише||短语与套语",
+  dc63AllDays:"Все дни||全部日期",dc63AllWho:"Кто добавил: все||添加人：全部",dc63WhoAg:"Амина Ли||李阿米娜",dc63WhoTr:"Переводчики||翻译",dc63WhoMp:"Управляющий адвокат||管理律师",dc63AllTopics:"Все темы||全部主题",
+  dc63Shown:"Показано {a} из {b} · по номеру||显示 {a}/{b} · 按编号",dc63By:"добавил:||添加人：",dc63Mp:"УП||管理律师",dc63Edit:"Править||编辑",dc63Hide:"Скрыть||隐藏",dc63Unhide:"Вернуть||恢复",dc63Hist:"История||历史",
+  dc63Hidden:"Скрытые||已隐藏",dc63HideQ:"Скрыть «{w}»? Слово уйдёт из словаря и занятий; история и результаты тестов сохранятся.||隐藏“{w}”？该词将从词典和学习中移除；历史和测试结果保留。",
+  dc63Approve:"Утвердить||批准",dc63Fix:"Исправить||修改",dc63Reject:"Отклонить||驳回",dc63RejectWhy:"Причина (необязательно)||原因（可选）",dc63OkAgent:"Утвердить все от Амины Ли||批准李阿米娜的全部",dc63OkSel:"Утвердить отмеченные||批准所选",
+  dc63Queue:"Вся очередь||全部队列",dc63QEmpty:"Проверять нечего — все слова в словаре||无需审核——所有词已入词典",dc63AutoAt:"сами утвердятся {d}||将于 {d} 自动批准",dc63From:"предложил(а): {w}||推荐人：{w}",
+  dc63Ru:"По-русски||俄文",dc63Uz:"По-узбекски||乌兹别克文",dc63Ex:"Пример||例句",dc63Topic:"Тема||主题",dc63Mine:"Мои слова||我的词",dc63MineEmpty:"Вы ещё не предлагали слов — «Предложить слово» в словаре||您尚未推荐词汇——在词典中点击“推荐词汇”",
+  dc63StNew:"на проверке||待审核",dc63StOk:"утверждено||已批准",dc63StRej:"отклонено||已驳回",dc63StHid:"скрыто||已隐藏",dc63Kind:"Вид||类型",dc63KindW:"Слово||词",dc63KindP:"Фраза / клише||短语/套语",
+  dc63Mean:"Значение {n}||释义 {n}",dc63MonthH:"для слов общего словаря||通用词典的词",dc63Pos:"Пометка||标注",dc63Client:"Клиент (термины клиента)||客户（客户术语）",dc63NoClient:"— общий словарь —||—— 通用词典 ——",dc63Dup:"Уже есть: {w}||已存在：{w}",
+  dc63SimQ:"Похожие (тот же перевод): {w}. Всё равно добавить?||相似词（相同译文）：{w}。仍要添加吗？",dc63Similar:"Похожее слово||相似词",dc63HistT:"История правок · {w}||修改历史 · {w}",dc63HistNone:"Правок нет||无修改",
+  dc63NoVoice:"В этом браузере нет китайского голоса — откройте портал в Chrome||此浏览器没有中文语音——请在 Chrome 中打开门户",dc63Keys:"клавиши: A — утвердить · E — исправить · D — отклонить||快捷键：A 批准 · E 修改 · D 驳回",
+  dc63Act:{add:"добавлено||已添加",edit:"правка||修改",approve:"утверждено||已批准",reject:"отклонено||已驳回",hide:"скрыто||已隐藏",restore:"возвращено||已恢复",status:"статус||状态"},
+  dc63Fld:{zh:"по-китайски||中文",pinyin:"пиньинь||拼音",ru:"по-русски||俄文",uz:"по-узбекски||乌兹别克文",ex_zh:"пример||例句",ex_ru:"пример по-русски||俄文例句",ex_uz:"пример по-узбекски||乌兹别克文例句",topic:"тема||主题",month:"месяц||月份",meanings:"значения||释义",status:"статус||状态",kind:"вид||类型",client_id:"клиент||客户",note:"причина||原因"}});
+window.UZ21=Object.assign(window.UZ21||{},{"Слова на {m}":"{m} soʻzlari","Проверка":"Tekshiruv","На проверке":"Tekshiruvda","слов":"soʻz","Общий словарь":"Umumiy lugʻat","Термины клиента":"Mijoz atamalari","Слова":"Soʻzlar",
+  "Фразы и клише":"Iboralar va klishelar","Все дни":"Barcha kunlar","Все темы":"Barcha mavzular","Править":"Tahrirlash","Скрыть":"Yashirish","Вернуть":"Qaytarish","История":"Tarix","Скрытые":"Yashirilganlar",
+  "Утвердить":"Tasdiqlash","Исправить":"Tuzatish","Отклонить":"Rad etish","Утвердить все от Амины Ли":"Amina Li soʻzlarini tasdiqlash","Утвердить отмеченные":"Belgilanganlarni tasdiqlash","Вся очередь":"Butun navbat",
+  "Мои слова":"Mening soʻzlarim","на проверке":"tekshiruvda","утверждено":"tasdiqlangan","отклонено":"rad etilgan","скрыто":"yashirilgan"});
+const Dc63={
+  v:{scope:"common",client:"",kind:"word",month:null,day:"",who:"",topic:"",hidden:false},cur:null,sel:{},
+  RU:["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"],
+  UZ:["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"],
+  POS:["","сущ.","глагол","прил.","нареч.","юр.","разг."],
+  mon(m,cap){if(!m)return "";const [y,mo]=m.split("-");if(lang==="zh")return `${y}年${+mo}月`;const n=(lang==="uz"?this.UZ:this.RU)[+mo-1]||m;return cap?n.charAt(0).toUpperCase()+n.slice(1)+" "+y:n;},
+  /* дата добавления по Ташкенту: из базы приходит время с часовым поясом */
+  day(iso){if(!iso)return "";try{return new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Tashkent",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(iso));}catch(e){return String(iso).slice(0,10);}},
+  dm(d){return d?d.slice(8,10)+"."+d.slice(5,7):"";},
+  at24(iso){try{const t=new Date(new Date(iso).getTime()+864e5);return new Intl.DateTimeFormat("ru-RU",{timeZone:"Asia/Tashkent",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(t).replace(",","");}catch(e){return "";}},
+  num(w){return (w.kind==="phrase"?"Ф-":"№ ")+(w.no||"—");},
+  say(t){if(!t)return;try{if(!window.speechSynthesis)throw 0;const u=new SpeechSynthesisUtterance(t);u.lang="zh-CN";const v=speechSynthesis.getVoices().find(x=>/^zh/i.test(x.lang));if(v)u.voice=v;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){toast(T1(UI.dc63NoVoice));}},
+  spk(t){return t?`<button type="button" class="dc63say" data-dc63say="${esc(t)}" title="🔊">🔊</button>`:"";},
+  me(){return (U()||{}).emp;},
+  /* имя сотрудника — из учётки (у новых сотрудников в оргсхеме может не быть имени) */
+  nm(e){if(!e)return "";const a=typeof accByEmp==="function"?accByEmp(e):null;if(a&&a.name)return String(a.name).split("||")[0];const r=((Lr58.stats||{}).rows||[]).find(x=>x.emp===e);if(r&&r.name)return r.name;return typeof dispName==="function"?dispName(e):e;},
+  who(w){if(w.addedRole==="translator")return T1(UI.dc63By)+" "+esc(Dc63.nm(w.addedBy));if(w.addedRole==="mp")return T1(UI.dc63By)+" "+T1(UI.dc63Mp);return "";},
+  stPill(w){const m={new:["warn",UI.dc63StNew],ok:["ok",UI.dc63StOk],rejected:["bad",UI.dc63StRej],hidden:["",UI.dc63StHid]}[w.status]||["",w.status];return `<span class="dc63st ${m[0]}">${T1(m[1])}</span>`;},
+  means(w){const M=(w.meanings||[]).filter(x=>x&&(x.ru||x.uz));
+    if(M.length>1)return `<ol class="dc63ms">${M.map(x=>`<li><span>${esc(x.ru||"")}</span>${x.pos?` <i>${esc(x.pos)}</i>`:""}${x.uz?`<small>${esc(x.uz)}</small>`:""}</li>`).join("")}</ol>`;
+    return `<div>${esc(w.ru||"—")}</div>${w.uz?`<small>${esc(w.uz)}</small>`:""}`;},
+  /* ── отбор ── */
+  base(mp){const v=this.v;return (Lr58.words||[]).filter(w=>(v.hidden&&mp?w.status==="hidden":w.status==="ok")&&w.kind===v.kind&&(v.scope==="client"?w.clientId===v.client:!w.clientId));},
+  months(){const s=new Set((Lr58.words||[]).filter(w=>w.status==="ok"&&w.kind==="word"&&!w.clientId&&w.month).map(w=>w.month));const cur=(Lr58.info&&Lr58.info.month)||(Lr58.stats&&Lr58.stats.month);if(cur)s.add(cur);return [...s].sort().reverse();},
+  useMonth(){return this.v.kind==="word"&&this.v.scope==="common"&&!this.v.hidden;},
+  list(mp){const v=this.v;let L=this.base(mp);if(this.useMonth()){if(!v.month)v.month=this.months()[0]||null;L=L.filter(w=>w.month===v.month);}
+    const all=L.length;if(v.day)L=L.filter(w=>this.day(w.createdAt)===v.day);
+    if(v.who)L=L.filter(w=>v.who==="agent"?w.addedRole==="agent":v.who==="translator"?w.addedRole==="translator":w.addedRole==="mp");
+    const q=(Lr58.q||"").trim().toLowerCase();if(q)L=L.filter(w=>[w.zh,w.pinyin,w.ru,w.uz,w.topic,w.exZh,w.exRu].some(x=>String(x||"").toLowerCase().includes(q)));
+    const topics={};L.forEach(w=>{const t=w.topic||"—";topics[t]=(topics[t]||0)+1;});const pre=L.length;
+    if(v.topic)L=L.filter(w=>(w.topic||"—")===v.topic);
+    return {L:L.sort((a,b)=>(a.no||0)-(b.no||0)),all,pre,topics};},
+  /* ── строки словаря ── */
+  rowHtml(w,mp){const who=this.who(w);
+    return `<div class="dc63r" data-lr58w="${esc(w.id)}"><div class="n">${this.num(w)}<small>${this.dm(this.day(w.createdAt))}</small></div>
+      <div class="h"><div class="zh">${esc(w.zh)}${this.spk(w.zh)}</div><div class="py">${esc(w.pinyin||"")}</div></div>
+      <div class="m">${this.means(w)}</div>
+      <div class="ex">${w.exZh?`<div>${esc(w.exZh)}${this.spk(w.exZh)}</div><small>${esc(w.exRu||w.exUz||"")}</small>`:""}</div>
+      <div class="tp">${w.topic?`<span class="dc63tag">${esc(w.topic)}</span>`:""}${who?`<small>${who}</small>`:""}${w.status!=="ok"?this.stPill(w):""}</div>
+      ${mp?`<div class="a">${w.status==="hidden"?`<button type="button" class="btn sm" data-lr58a="unhide" data-id="${esc(w.id)}">${T1(UI.dc63Unhide)}</button>`
+        :`<button type="button" class="btn sm" data-lr58a="edit" data-id="${esc(w.id)}">${T1(UI.dc63Edit)}</button><button type="button" class="btn sm ghost" data-lr58a="hide" data-id="${esc(w.id)}">${T1(UI.dc63Hide)}</button>`}<button type="button" class="btn sm ghost" data-lr58a="hist" data-id="${esc(w.id)}">${T1(UI.dc63Hist)}</button></div>`:""}</div>`;},
+  listHtml(mp){const r=this.list(mp);
+    return `<div class="dc63top"><div class="dc63chips">${[["",UI.dc63AllTopics,r.pre]].concat(Object.keys(r.topics).sort().map(t=>[t,t,r.topics[t]])).map(([k,l,n])=>`<button type="button" class="dc63chip${this.v.topic===k?" on":""}" data-dc63topic="${esc(k)}">${esc(k?l:T1(l))}<b>${n}</b></button>`).join("")}</div>
+      <div class="fhint dc63shown">${T1(UI.dc63Shown).replace("{a}",r.L.length).replace("{b}",r.all)}</div></div>
+      <div class="dc63list">${r.L.length?r.L.map(w=>this.rowHtml(w,mp)).join(""):`<div class="empty2">${T1(UI.lr58Empty)}</div>`}</div>`;},
+  bar(mp){const v=this.v,inf=Lr58.info||{},cl=inf.clients||[],c=inf.counts||{};
+    const days=[...new Set((this.useMonth()?this.base(mp).filter(w=>w.month===v.month):this.base(mp)).map(w=>this.day(w.createdAt)).filter(Boolean))].sort();
+    const nKind=k=>(Lr58.words||[]).filter(w=>w.status==="ok"&&w.kind===k&&(v.scope==="client"?w.clientId===v.client:!w.clientId)).length;
+    const nHid=(Lr58.words||[]).filter(w=>w.status==="hidden").length;
+    return `<div class="dc63bar">
+      <select class="inp sm" data-dc63f="scope"><option value="common"${v.scope==="common"?" selected":""}>${T1(UI.dc63Common)}</option>${cl.map(x=>`<option value="c:${esc(x.id)}"${v.scope==="client"&&v.client===x.id?" selected":""}>${T1(UI.dc63Terms)} · ${esc(String(x.name).split("||")[0])} (${x.n})</option>`).join("")}</select>
+      <div class="dc63seg"><button type="button" class="${v.kind==="word"?"on":""}" data-dc63kind="word">${T1(UI.dc63Words)} · ${nKind("word")}</button><button type="button" class="${v.kind==="phrase"?"on":""}" data-dc63kind="phrase">${T1(UI.dc63Phrases)} · ${nKind("phrase")}</button></div>
+      ${this.useMonth()?`<select class="inp sm" data-dc63f="month">${this.months().map(m=>`<option value="${m}"${m===v.month?" selected":""}>${esc(this.mon(m,true))}</option>`).join("")}</select>`:""}
+      <select class="inp sm" data-dc63f="day"><option value="">${T1(UI.dc63AllDays)}</option>${days.map(d=>`<option value="${d}"${d===v.day?" selected":""}>${this.dm(d)}</option>`).join("")}</select>
+      ${mp?`<select class="inp sm" data-dc63f="who"><option value="">${T1(UI.dc63AllWho)}</option>${[["agent",UI.dc63WhoAg],["translator",UI.dc63WhoTr],["mp",UI.dc63WhoMp]].map(([k,l])=>`<option value="${k}"${v.who===k?" selected":""}>${T1(l)}</option>`).join("")}</select>`:""}
+      <input type="search" class="inp dc63q" data-lr58q placeholder="${esc(T1(UI.lr58Search))}" value="${esc(Lr58.q||"")}">
+      ${mp&&nHid?`<button type="button" class="btn sm ghost${v.hidden?" on":""}" data-dc63hidden="1">${T1(UI.dc63Hidden)} · ${nHid}</button>`:""}
+      <button type="button" class="btn sm pri" data-lr58a="${mp?"add":"propose"}">${T1(mp?UI.lr58Add:UI.lr58Propose)}</button></div>`;},
+  dictHtml(mp){return this.bar(mp)+`<div id="dc63box">${this.listHtml(mp)}</div>`;},
+  /* ── плитки УП ── */
+  tilesMp(){const inf=Lr58.info||{},st=Lr58.stats||{},rows=st.rows||[];const ap=inf.approved||0,norm=inf.norm||400,pct=Math.min(100,Math.round(ap/Math.max(1,norm)*100));const sk=inf.stock||{};
+    const warn=sk.need&&sk.have<sk.need?`<div class="dc63warn">${esc(T1(UI.dc63Stock).replace("{d}",this.wd(sk.day)).replace("{h}",sk.have).replace("{n}",sk.need))}${sk.pendingAgent?esc(T1(UI.dc63StockAg)):""}</div>`:"";
+    const act=rows.filter(r=>r.todayDone>0).length;
+    return `<div class="dc63tiles">
+      <div class="dc63tile" data-lr58tab="dict"><i class="ic">📘</i><div><span>${esc(T1(UI.dc63WordsFor).replace("{m}",this.mon(inf.month||st.month)))}</span><b>${ap} <small>${T1(UI.dc63Of)} ${norm}</small></b><div class="dc63prog"><i style="width:${pct}%"></i></div><small>${esc(T1(UI.dc63NormH).replace("{d}",inf.workdays||20).replace("{n}",norm))}</small>${warn}</div></div>
+      <div class="dc63tile go" data-lr58tab="pending"><i class="ic">✅</i><div><span>${T1(UI.dc63OnCheck)}</span><b>${inf.pending||0} <small>${T1(UI.dc63WordsN)}</small></b>${inf.pendingAgent?`<small>${esc(T1(UI.dc63AutoH).replace("{d}",this.dt(inf.autoNext)))}</small>`:""}</div><em>›</em></div>
+      <div class="dc63tile" data-lr58tab="tr"><i class="ic">👥</i><div><span>${T1(UI.dc63Trs)}</span><b>${rows.length}</b>${rows.length?`<small>${esc(T1(UI.dc63TodayAct).replace("{a}",act).replace("{n}",rows.length))}</small>`:""}</div></div></div>`;},
+  wd(d){if(!d)return "";const n=["вс","пн","вт","ср","чт","пт","сб"][new Date(d+"T12:00:00").getDay()];return (lang==="zh"?"":n+" ")+this.dm(d);},
+  dt(s){return s?this.dm(s.slice(0,10))+" "+s.slice(11,16):"";},
+  /* ── «Проверка»: карточка по одному слову и вся очередь ── */
+  pend(){return (Lr58.words||[]).filter(w=>w.status==="new").sort((a,b)=>(a.no||0)-(b.no||0));},
+  checkHtml(){const P=this.pend();if(!P.length)return `<div class="empty2">✓ ${T1(UI.dc63QEmpty)}</div>`;
+    let w=P.find(x=>x.id===this.cur)||P[0];this.cur=w.id;const i=P.indexOf(w);const ag=P.filter(x=>x.addedRole==="agent").length;const nSel=P.filter(x=>this.sel[x.id]).length;
+    const src=w.addedRole==="agent"?`${T1(UI.dc63WhoAg)} · ${esc(T1(UI.dc63AutoAt).replace("{d}",this.at24(w.createdAt)))}`:esc(T1(UI.dc63From).replace("{w}",w.addedRole==="translator"&&w.addedBy?Dc63.nm(w.addedBy):T1(UI.dc63Mp)));
+    const row=(l,v)=>`<div class="dc63kv"><span>${T1(l)}</span><div>${v}</div></div>`;
+    return `<div class="dc63check"><div class="dc63card" data-dc63card="${esc(w.id)}"><div class="dc63ch"><span>${i+1} ${T1(UI.dc63Of)} ${P.length} · ${this.num(w)}</span><span>${src}</span></div>
+        <div class="dc63big">${esc(w.zh)}<span>${esc(w.pinyin||"")}</span>${this.spk(w.zh)}</div>
+        ${(w.meanings||[]).length>1?row(UI.dc63Ru,this.means(w)):row(UI.dc63Ru,esc(w.ru||"—"))+row(UI.dc63Uz,esc(w.uz||"—"))}
+        ${w.exZh?row(UI.dc63Ex,`${esc(w.exZh)}${this.spk(w.exZh)}<br><small>${esc(w.exRu||w.exUz||"")}</small>`):""}${w.topic?row(UI.dc63Topic,`<span class="dc63tag">${esc(w.topic)}</span>`):""}${w.clientId?row(UI.dc63Terms,esc(this.clName(w.clientId))):""}
+        <div class="dc63btns"><button type="button" class="btn pri" data-lr58a="ok" data-id="${esc(w.id)}">✓ ${T1(UI.dc63Approve)} <kbd>A</kbd></button><button type="button" class="btn" data-lr58a="fix" data-id="${esc(w.id)}">${T1(UI.dc63Fix)} <kbd>E</kbd></button><button type="button" class="btn dc63rej" data-lr58a="reject" data-id="${esc(w.id)}">${T1(UI.dc63Reject)} <kbd>D</kbd></button></div>
+        <div class="fhint">${T1(UI.dc63Keys)}</div></div>
+      <div class="dc63q"><h4>${T1(UI.dc63Queue)} · ${P.length}</h4><div class="dc63qb">${ag?`<button type="button" class="btn sm pri" data-lr58a="okagent">✓ ${T1(UI.dc63OkAgent)} · ${ag}</button>`:""}<button type="button" class="btn sm" data-lr58a="oksel"${nSel?"":" disabled"}>${T1(UI.dc63OkSel)}${nSel?" · "+nSel:""}</button></div>
+        <div class="dc63ql">${P.map(x=>`<label class="dc63qi${x.id===w.id?" on":""}" data-dc63pick="${esc(x.id)}"><input type="checkbox" data-dc63sel="${esc(x.id)}"${this.sel[x.id]?" checked":""}><b>${esc(x.zh)}</b><span>${esc(x.ru||x.uz||"")}<small>${x.addedRole==="agent"?T1(UI.dc63WhoAg):x.addedRole==="translator"&&x.addedBy?esc(Dc63.nm(x.addedBy)):T1(UI.dc63Mp)}</small></span></label>`).join("")}</div></div></div>`;},
+  clName(id){const c=((Lr58.info||{}).clients||[]).find(x=>x.id===id);return c?String(c.name).split("||")[0]:id;},
+  /* ── «Мои слова» переводчика ── */
+  mineHtml(){const me=this.me();const L=(Lr58.words||[]).filter(w=>w.addedBy===me).sort((a,b)=>(b.no||0)-(a.no||0));
+    if(!L.length)return `<div class="empty2">${T1(UI.dc63MineEmpty)}</div>`;
+    return `<div class="dc63list">${L.map(w=>`<div class="dc63r mine" data-lr58w="${esc(w.id)}"><div class="n">${this.num(w)}<small>${this.dm(this.day(w.createdAt))}</small></div><div class="h"><div class="zh">${esc(w.zh)}${this.spk(w.zh)}</div><div class="py">${esc(w.pinyin||"")}</div></div><div class="m">${this.means(w)}</div>
+      <div class="tp">${this.stPill(w)}${w.status==="rejected"&&w.note?`<small>${esc(w.note)}</small>`:""}</div><div class="a">${w.status==="new"?`<button type="button" class="btn sm" data-lr58a="edit" data-id="${esc(w.id)}">${T1(UI.dc63Edit)}</button><button type="button" class="btn sm ghost" data-lr58a="del" data-id="${esc(w.id)}">${T1(UI.lr58Del)}</button>`:""}</div></div>`).join("")}</div>`;},
+  /* ── окно слова ── */
+  async dlg(w,mp){const M=(w&&w.meanings&&w.meanings.length?w.meanings:[{ru:(w&&w.ru)||"",uz:(w&&w.uz)||"",pos:""}]).slice(0,3);while(M.length<3)M.push({ru:"",uz:"",pos:""});
+    const cl=(Lr58.info||{}).clients||[];const f=[];
+    if(mp)f.push({k:"kind",label:T1(UI.dc63Kind),type:"select",value:(w&&w.kind)||this.v.kind||"word",options:[["word",T1(UI.dc63KindW)],["phrase",T1(UI.dc63KindP)]]});
+    f.push({k:"zh",label:T1(UI.lr58Zh),value:(w&&w.zh)||"",required:true},{k:"pinyin",label:T1(UI.lr58Py),value:(w&&w.pinyin)||""});
+    M.forEach((m,i)=>f.push({type:"section",label:T1(UI.dc63Mean).replace("{n}",i+1)},{k:"ru"+i,label:T1(UI.lr58Ru),value:m.ru||""},{k:"uz"+i,label:T1(UI.lr58Uz),value:m.uz||""},{k:"pos"+i,label:T1(UI.dc63Pos),type:"select",value:m.pos||"",options:this.POS.map(p=>[p,p||"—"])}));
+    f.push({type:"section",label:T1(UI.dc63Ex)},{k:"exZh",label:T1(UI.lr58ExZh),value:(w&&w.exZh)||""},{k:"exRu",label:T1(UI.lr58ExRu),value:(w&&w.exRu)||""},{k:"exUz",label:T1(UI.lr58ExUz),value:(w&&w.exUz)||""},{k:"topic",label:T1(UI.lr58Topic),value:(w&&w.topic)||(this.v.topic||"")});
+    /* месяц — только у УП и только для слов общего словаря (фразы и термины клиента — без месяца): текущий, следующие два и те, где уже есть слова */
+    if(mp){const cur=(Lr58.info&&Lr58.info.month)||new Date().toISOString().slice(0,7);const nx=k=>{const [y,m]=cur.split("-").map(Number);const d=new Date(y,m-1+k,1);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");};const ms=[...new Set([cur,nx(1),nx(2)].concat(this.months()).concat(w&&w.month?[w.month]:[]))].filter(Boolean).sort();
+      f.push({k:"month",label:T1(UI.lr58Month)+" — "+T1(UI.dc63MonthH),type:"select",value:(w&&w.month)||(this.useMonth()&&this.v.month)||cur,options:ms.map(m=>[m,this.mon(m,true)])});}
+    if(cl.length||(w&&w.clientId))f.push({k:"clientId",label:T1(UI.dc63Client),type:"select",value:(w&&w.clientId)||(this.v.scope==="client"?this.v.client:""),options:[["",T1(UI.dc63NoClient)]].concat(cl.map(x=>[x.id,String(x.name).split("||")[0]]))});
+    const v=await Dlg.ask({title:T1(UI.lr58WordWin)+(w?" · "+this.num(w)+" "+w.zh:""),wide:true,fields:f});if(!v)return null;
+    const o={zh:String(v.zh||"").trim(),pinyin:String(v.pinyin||"").trim(),exZh:String(v.exZh||"").trim(),exRu:String(v.exRu||"").trim(),exUz:String(v.exUz||"").trim(),topic:String(v.topic||"").trim()};
+    o.meanings=[0,1,2].map(i=>({ru:String(v["ru"+i]||"").trim(),uz:String(v["uz"+i]||"").trim(),pos:String(v["pos"+i]||"")})).filter(x=>x.ru||x.uz);
+    if(mp){o.kind=v.kind||"word";if(v.month)o.month=v.month;}if("clientId" in v)o.clientId=v.clientId||"";
+    /* повторы и похожие — до сохранения */
+    const ck=await Lr58.rpc("tr_word_check",{w:Object.assign({kind:o.kind||"word"},o),except_id:w?w.id:null});
+    if(ck&&ck.dup){toast(T1(UI.dc63Dup).replace("{w}",(ck.dup.kind==="phrase"?"Ф-":"№ ")+ck.dup.no+" "+ck.dup.zh+" ("+T1(ck.dup.status==="ok"?UI.dc63StOk:UI.dc63StNew)+")"));return null;}
+    if(ck&&ck.similar&&ck.similar.length&&!(await Dlg.confirm(T1(UI.dc63Similar),T1(UI.dc63SimQ).replace("{w}",ck.similar.map(x=>"№ "+x.no+" "+x.zh+" — "+x.ru).join("; ")))))return null;
+    return o;},
+  async hist(w){const H=await Lr58.rpc("tr_word_history",{wid:w.id})||[];const fv=x=>x==null||x===""?"—":typeof x==="object"?(Array.isArray(x)?x.map(m=>m.ru||m.uz).join("; "):JSON.stringify(x)):String(x);
+    const html=H.length?`<div class="dc63hist">${H.map(h=>`<div><b>${esc(fmtDT(h.at))}</b> · ${esc(h.name||h.by||"")} · <span class="dc63st ${h.action==="approve"||h.action==="restore"?"ok":h.action==="reject"?"bad":""}">${T1((UI.dc63Act||{})[h.action]||h.action)}</span>${Object.keys(h.changes||{}).filter(k=>!(h.action==="add"&&k==="status")&&!(k==="status"&&h.action!=="status")).map(k=>`<small>${T1((UI.dc63Fld||{})[k]||k)}: ${esc(fv(h.changes[k][0]))} → ${esc(fv(h.changes[k][1]))}</small>`).join("")}</div>`).join("")}</div>`:`<div class="fhint">${T1(UI.dc63HistNone)}</div>`;
+    await Dlg.ask({title:T1(UI.dc63HistT).replace("{w}",this.num(w)+" "+w.zh),wide:true,fields:[{k:"h",type:"html",html}],okText:"OK||确定"});},
+  repaintList(vp){const box=vp&&vp.querySelector("#dc63box");if(!box)return Lr58.paint();box.innerHTML=this.listHtml(Lr58.mp()&&Router.cur==="trdept");this.bindList(vp);},
+  bindList(vp){const root=vp&&vp.querySelector("#lr58");if(!root)return;
+    root.querySelectorAll("[data-dc63topic]").forEach(b=>b.onclick=()=>{this.v.topic=b.dataset.dc63topic;this.repaintList(vp);});
+    root.querySelectorAll("#dc63box [data-lr58a]").forEach(b=>b.onclick=()=>Lr58.act(b.dataset.lr58a,b.dataset.id));
+    root.querySelectorAll("#dc63box [data-dc63say]").forEach(b=>b.onclick=e=>{e.stopPropagation();this.say(b.dataset.dc63say);});}
+};
+/* ── данные: строка словаря с новыми полями; сводка tr_dict_info ── */
+{const _row63=Lr58.row;Lr58.row=function(r){return Object.assign(_row63(r),{no:r.no,kind:r.kind||"word",meanings:Array.isArray(r.meanings)?r.meanings:[],clientId:r.client_id||"",note:r.note||"",createdAt:r.created_at||""});};}
+{const _ld63=Lr58.load;Lr58.load=async function(){if(this.srv()){try{this.info=await this.rpc("tr_dict_info",{});}catch(e){}}return _ld63.apply(this,arguments);};}
+/* ── УП: «Отдел перевода» ── */
+Lr58.pageMp=function(){if(!this.mp())return `<div class="card"><div class="fhint">${T1(UI.noAccess17||"Нет доступа||无权限")}</div></div>`;
+  if(this.err)return `<div class="card"><div class="fhint" style="color:var(--red)">${esc(this.err)}</div></div>`;
+  if(!this.words||!this.stats)return `<div class="card"><div class="fhint">${T1(UI.loading||"Загрузка…||加载中…")}</div></div>`;
+  const st=this.stats,rows=st.rows||[];if(["today","repeat","learned","mine"].includes(this.tab))this.tab="dict";
+  const P=Dc63.pend();
+  const tabs=this.tabs([["dict",UI.lr58Dict],["pending",UI.dc63Check,P.length],["tr",UI.lr58Translators],...(this.testsBodyMp?[["tests",UI.tt59Tab,this.testsBadgeMp?this.testsBadgeMp():0]]:[])]);
+  let body="";
+  if(this.tab==="tests"&&this.testsBodyMp)body=this.testsBodyMp();
+  else if(this.tab==="tr")body=rows.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColMonth)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone} <small>/ ${st.norm.week}</small></td><td>${r.monthLearned} <small>/ ${r.monthTotal}</small></td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.lr58NoTr)}</div>`;
+  else if(this.tab==="pending")body=Dc63.checkHtml();
+  else body=Dc63.dictHtml(true);
+  return `<div id="lr58">${Dc63.tilesMp()}<div class="card">${tabs}${body}</div></div>`;};
+/* ── переводчик: «Обучение» — словарь в новом виде и «Мои слова» ── */
+Lr58.page=function(){if(!this.tr())return `<div class="card"><div class="fhint">${T1(UI.noAccess17||"Нет доступа||无权限")}</div></div>`;
+  if(this.err)return `<div class="card"><div class="fhint" style="color:var(--red)">${esc(this.err)}</div></div>`;
+  if(!this.today||!this.words)return `<div class="card"><div class="fhint">${T1(UI.loading||"Загрузка…||加载中…")}</div></div>`;
+  const t=this.today,nw=t.new||[],rep=t.repeat||[],pn=this.pending(nw),pr=this.pending(rep),doneN=nw.length-pn.length;const me=Dc63.me();
+  const minePend=(this.words||[]).filter(w=>w.addedBy===me&&w.status==="new").length;
+  const tiles=`<div class="tiles">${this.tile(`${doneN} <small>${T1(UI.lr58Of)} ${nw.length}</small>`,UI.lr58TodayT,pn.length?"blue":"green","today")}${this.tile(pr.length,UI.lr58RepeatT,pr.length?"amber":"","repeat")}${this.tile(`${t.monthLearned} <small>${T1(UI.lr58Of)} ${t.monthTotal}</small>`,UI.lr58MonthT,"","learned")}${this.tile(t.learnedTotal,UI.lr58TotalT,"","learned")}</div>`;
+  const tabs=this.tabs([["today",UI.lr58Today,pn.length],["repeat",UI.lr58Repeat,pr.length],["dict",UI.lr58Dict],["learned",UI.lr58Learned,(t.learned||[]).length],["mine",UI.dc63Mine,minePend],...(this.testsBody?[["tests",UI.tt59Tab,this.testsBadge?this.testsBadge():0]]:[])]);
+  let body="";
+  if(this.tab==="tests"&&this.testsBody)body=this.testsBody();
+  else if(this.tab==="today")body=nw.length?this.study(pn,"today"):`<div class="empty2">${T1(UI.lr58NoWords)}</div>`;
+  else if(this.tab==="repeat")body=rep.length?this.study(pr,"repeat"):`<div class="empty2">${T1(UI.lr58RepNone)}</div>`;
+  else if(this.tab==="dict")body=Dc63.dictHtml(false);
+  else if(this.tab==="mine")body=Dc63.mineHtml();
+  else body=(t.learned||[]).length?`<div class="lr58list">${t.learned.map(w=>this.wordLine(w)).join("")}</div>`:`<div class="empty2">${T1(UI.lr58Empty)}</div>`;
+  return `<div id="lr58">${tiles}<div class="card">${tabs}${body}</div></div>`;};
+/* ── действия ── */
+{const _act63=Lr58.act;Lr58.act=async function(a,id){const w=id?(this.words||[]).find(x=>x.id===id):null;
+  try{
+    if(a==="propose"||a==="add"){const o=await Dc63.dlg(null,this.mp());if(!o)return;await this.rpc("tr_word_add",{w:o});toast(T1(this.mp()?UI.lr58Saved:UI.lr58Proposed));}
+    else if(a==="edit"&&w){const o=await Dc63.dlg(w,this.mp());if(!o)return;await this.rpc("tr_word_set",{wid:id,patch:o});toast(T1(UI.lr58Saved));}
+    else if(a==="fix"&&w){const o=await Dc63.dlg(w,true);if(!o)return;await this.rpc("tr_word_set",{wid:id,patch:Object.assign(o,{status:"ok"})});toast(T1(UI.lr58Saved));Dc63.cur=null;}
+    else if(a==="ok"&&w){await this.rpc("tr_word_set",{wid:id,patch:{status:"ok"}});toast(T1(UI.dc63StOk));if(Dc63.cur===id)Dc63.cur=null;}
+    else if(a==="reject"&&w){const v=await Dlg.ask({title:T1(UI.dc63Reject)+" · "+w.zh,fields:[{k:"n",label:T1(UI.dc63RejectWhy),value:""}]});if(!v)return;await this.rpc("tr_word_reject",{wid:id,note:String(v.n||"").trim()||null});if(Dc63.cur===id)Dc63.cur=null;}
+    else if(a==="okagent"||a==="oksel"){const ids=Dc63.pend().filter(x=>a==="okagent"?x.addedRole==="agent":Dc63.sel[x.id]).map(x=>x.id);if(!ids.length)return;
+      if(!(await Dlg.confirm(T1(a==="okagent"?UI.dc63OkAgent:UI.dc63OkSel),T1(UI.lr58OkAllQ).replace("{n}",ids.length))))return;const r=await this.rpc("tr_words_approve",{ids});Dc63.sel={};Dc63.cur=null;toast(T1(UI.lr58OkAllDone).replace("{n}",(r&&r.approved)||0));}
+    else if(a==="hide"&&w){if(!(await Dlg.confirm(T1(UI.dc63Hide),T1(UI.dc63HideQ).replace("{w}",w.zh))))return;await this.rpc("tr_word_hide",{wid:id,hide:true});}
+    else if(a==="unhide"&&w){await this.rpc("tr_word_hide",{wid:id,hide:false});}
+    else if(a==="hist"&&w){await Dc63.hist(w);return;}
+    else if(a==="del"&&w&&!this.mp()){if(!(await Dlg.confirm(T1(UI.lr58Del),T1(UI.lr58DelQ).replace("{w}",w.zh),true)))return;await this.rpc("tr_word_del",{wid:id});}
+    else return _act63.apply(this,arguments);
+  }catch(e){toast(String((e&&e.message)||e));return;}
+  await this.load();};}
+/* ── привязка: фильтры, поиск, темы, очередь, озвучка ── */
+{const _bind63=Lr58.bind;Lr58.bind=function(vp){_bind63.apply(this,arguments);const root=vp&&vp.querySelector("#lr58");if(!root)return;const D=Dc63;
+  root.querySelectorAll("[data-dc63f]").forEach(s=>s.onchange=()=>{const k=s.dataset.dc63f;if(k==="scope"){if(s.value.startsWith("c:")){D.v.scope="client";D.v.client=s.value.slice(2);}else{D.v.scope="common";D.v.client="";}D.v.day="";D.v.topic="";}else{D.v[k]=s.value;if(k==="month"){D.v.day="";D.v.topic="";}}this.paint();});
+  root.querySelectorAll("[data-dc63kind]").forEach(b=>b.onclick=()=>{D.v.kind=b.dataset.dc63kind;D.v.day="";D.v.topic="";this.paint();});
+  root.querySelectorAll("[data-dc63hidden]").forEach(b=>b.onclick=()=>{D.v.hidden=!D.v.hidden;D.v.topic="";this.paint();});
+  const q=root.querySelector(".dc63q[data-lr58q]");if(q)q.oninput=()=>{this.q=q.value;D.repaintList(vp);};
+  root.querySelectorAll("[data-dc63pick]").forEach(l=>l.onclick=e=>{if(e.target.closest("input"))return;e.preventDefault();D.cur=l.dataset.dc63pick;this.paint();});
+  root.querySelectorAll("[data-dc63sel]").forEach(c=>c.onchange=()=>{D.sel[c.dataset.dc63sel]=c.checked;this.paint();});
+  root.querySelectorAll("[data-dc63say]").forEach(b=>b.onclick=e=>{e.stopPropagation();D.say(b.dataset.dc63say);});
+  D.bindList(vp);};}
+/* клавиши в «Проверке»: A — утвердить, E — исправить, D — отклонить (и в русской раскладке: Ф, У, В) */
+document.addEventListener("keydown",e=>{if(Router.cur!=="trdept"||Lr58.tab!=="pending"||!Lr58.mp()||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.target&&e.target.closest&&e.target.closest("input,textarea,select,[contenteditable]"))return;const ov=document.getElementById("ovD");if(ov&&ov.classList.contains("open"))return;
+  const k=(e.key||"").toLowerCase();const a=k==="a"||k==="ф"?"ok":k==="e"||k==="у"?"fix":k==="d"||k==="в"?"reject":null;if(!a||!Dc63.cur)return;e.preventDefault();Lr58.act(a,Dc63.cur);});
+(function(){const st=document.createElement("style");st.textContent=`
+#lr58 .dc63tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:14px}
+#lr58 .dc63tile{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--card,var(--bg-2,#fff));cursor:pointer;position:relative}
+#lr58 .dc63tile .ic{font-style:normal;font-size:18px;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--surface2,var(--line-2,#eef2f8));flex:none}
+#lr58 .dc63tile>div{display:grid;gap:3px;min-width:0;flex:1}#lr58 .dc63tile span{font-size:12.5px;color:var(--ink-2)}#lr58 .dc63tile b{font:700 22px/1.15 var(--font-num,var(--font));color:var(--ink)}#lr58 .dc63tile b small{font-size:13px;font-weight:600;color:var(--ink-3)}
+#lr58 .dc63tile>div>small{font-size:11.5px;color:var(--ink-3);line-height:1.35}#lr58 .dc63tile em{font-style:normal;font-size:22px;color:var(--ink-3);align-self:center}
+#lr58 .dc63prog{height:6px;border-radius:4px;background:var(--line-2,#e7ebf2);overflow:hidden}#lr58 .dc63prog i{display:block;height:100%;background:var(--blue,#2F64B0);border-radius:4px}
+#lr58 .dc63warn{font-size:11.5px;line-height:1.35;color:#9A6200;background:color-mix(in srgb,#E8B10C 14%,transparent);border-radius:8px;padding:5px 8px;margin-top:3px}
+#lr58 .dc63bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}#lr58 .dc63bar .inp.sm{width:auto;min-width:0;padding:6px 10px;font-size:13px}#lr58 .dc63bar .dc63q{flex:1;min-width:180px}
+#lr58 .dc63seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}#lr58 .dc63seg button{border:0;background:transparent;padding:6px 12px;font:600 12.5px var(--font);color:var(--ink-2);cursor:pointer}#lr58 .dc63seg button.on{background:var(--blue,#2F64B0);color:#fff}
+#lr58 .btn.on{background:var(--line-2)}#lr58 .dc63top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}#lr58 .dc63chips{display:flex;flex-wrap:wrap;gap:6px}
+#lr58 .dc63chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer;color:var(--ink-2)}#lr58 .dc63chip b{margin-left:6px;font-weight:700;color:var(--ink-3)}#lr58 .dc63chip.on{background:var(--blue,#2F64B0);border-color:transparent;color:#fff}#lr58 .dc63chip.on b{color:#fff}
+#lr58 .dc63shown{margin:0}#lr58 .dc63list{display:grid;border-top:1px solid var(--line)}
+#lr58 .dc63r{display:grid;grid-template-columns:62px minmax(110px,150px) minmax(140px,1.2fr) minmax(160px,1.4fr) minmax(110px,.8fr) auto;gap:12px;align-items:start;padding:9px 4px;border-bottom:1px solid var(--line)}
+#lr58 .dc63r.mine{grid-template-columns:62px minmax(110px,150px) minmax(140px,1.4fr) minmax(120px,1fr) auto}
+#lr58 .dc63r .n{font-size:12px;font-weight:700;color:var(--ink-2)}#lr58 .dc63r .n small{display:block;font-weight:400;color:var(--ink-3)}
+#lr58 .dc63r .zh{font-size:20px;font-weight:600;line-height:1.2;display:flex;align-items:center;gap:4px}#lr58 .dc63r .py{font-size:12px;color:var(--ink-3)}
+#lr58 .dc63r .m,#lr58 .dc63r .ex{font-size:13px;line-height:1.4;min-width:0}#lr58 .dc63r small{display:block;color:var(--ink-3);font-size:12px}
+#lr58 .dc63ms{margin:0;padding-left:16px}#lr58 .dc63ms li i{font-size:11px;color:var(--blue,#2F64B0);font-style:normal;border:1px solid currentColor;border-radius:5px;padding:0 4px;margin-left:4px}
+#lr58 .dc63r .tp{display:grid;gap:3px;justify-items:start}#lr58 .dc63tag{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:999px;background:var(--line-2,#eef2f8);color:var(--ink-2)}
+#lr58 .dc63r .a{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+#lr58 .dc63say{border:0;background:transparent;cursor:pointer;font-size:13px;padding:0 2px;opacity:.7}#lr58 .dc63say:hover{opacity:1}
+#lr58 .dc63st{display:inline-block;font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--line-2,#eef2f8);color:var(--ink-2)}#lr58 .dc63st.ok{background:color-mix(in srgb,#3F8768 16%,transparent);color:#2D6B51}#lr58 .dc63st.warn{background:color-mix(in srgb,#E8B10C 18%,transparent);color:#8A5A00}#lr58 .dc63st.bad{background:color-mix(in srgb,#D6362B 14%,transparent);color:#B42B22}
+#lr58 .dc63check{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}
+#lr58 .dc63card{border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:9px}#lr58 .dc63ch{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+#lr58 .dc63big{font-size:40px;font-weight:600;line-height:1.1;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}#lr58 .dc63big span{font-size:16px;font-weight:400;color:var(--ink-3)}
+#lr58 .dc63kv{display:grid;grid-template-columns:110px 1fr;gap:10px;font-size:13.5px}#lr58 .dc63kv>span{color:var(--ink-3)}#lr58 .dc63kv small{color:var(--ink-3)}
+#lr58 .dc63btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}#lr58 .dc63btns kbd{font:600 10.5px var(--font);border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-left:4px;opacity:.7}#lr58 .btn.dc63rej{color:var(--red);border-color:color-mix(in srgb,var(--red) 40%,var(--line))}
+#lr58 .dc63q h4{margin:0 0 8px}#lr58 .dc63qb{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}#lr58 .dc63ql{display:grid;max-height:440px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+#lr58 .dc63qi{display:grid;grid-template-columns:auto 70px 1fr;gap:8px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}#lr58 .dc63qi:last-child{border-bottom:0}#lr58 .dc63qi.on{background:var(--line-2,#eef2f8)}
+#lr58 .dc63qi b{font-size:16px}#lr58 .dc63qi small{display:block;color:var(--ink-3);font-size:11px}
+.dc63hist{display:grid;gap:8px;font-size:13px;max-height:60vh;overflow:auto}.dc63hist small{display:block;color:var(--ink-3);margin-left:10px}.dc63hist .dc63st{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;background:#eef2f8}
+@media(max-width:860px){#lr58 .dc63r{grid-template-columns:54px 1fr 1fr;}#lr58 .dc63r .ex,#lr58 .dc63r .tp{grid-column:2/-1}#lr58 .dc63r .a{grid-column:1/-1;justify-content:flex-start}#lr58 .dc63check{grid-template-columns:1fr}}`;document.head.appendChild(st);})();
 
 /* ═══════════════════════════ версия 3.3 · ОТДЕЛ ПЕРЕВОДА, ЭТАП 3 — ТЕСТЫ (решения владельца 06.11.2026) ═══════════════════════════
    Правила — sections/translate/ПРАВИЛА.md (ОП-13 … ОП-22), сервер — миграция 20261106000300_tr_tests.sql (tr_tests, tr_texts, tr_plan;
