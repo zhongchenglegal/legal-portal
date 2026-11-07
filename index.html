@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="55b1744c6574";
+const ZC_BUILD="89f3a72bd351";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -20420,7 +20420,7 @@ Lr58.pageMp=function(){if(!this.mp())return `<div class="card"><div class="fhint
   const tabs=this.tabs([["dict",UI.lr58Dict],["pending",UI.dc63Check,P.length],["tr",UI.lr58Translators],...(this.testsBodyMp?[["tests",UI.tt59Tab,this.testsBadgeMp?this.testsBadgeMp():0]]:[])]);
   let body="";
   if(this.tab==="tests"&&this.testsBodyMp)body=this.testsBodyMp();
-  else if(this.tab==="tr")body=(rows.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColMonth)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${rows.map(r=>`<tr data-tg66prog="${esc(r.emp)}" style="cursor:pointer"><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone} <small>/ ${st.norm.week}</small></td><td>${r.monthLearned} <small>/ ${r.monthTotal}</small></td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.lr58NoTr)}</div>`)+(Dc63.learnersHtml?Dc63.learnersHtml():"");
+  else if(this.tab==="tr")body=(this.trCards&&rows.length?this.trCards(rows,st):rows.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColMonth)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${rows.map(r=>`<tr data-tg66prog="${esc(r.emp)}" style="cursor:pointer"><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone} <small>/ ${st.norm.week}</small></td><td>${r.monthLearned} <small>/ ${r.monthTotal}</small></td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.lr58NoTr)}</div>`)+(Dc63.learnersHtml?Dc63.learnersHtml():"");
   else if(this.tab==="pending")body=Dc63.checkHtml();
   else body=Dc63.dictHtml(true);
   return `<div id="lr58">${Dc63.tilesMp()}<div class="card">${tabs}${body}</div></div>`;};
@@ -20733,14 +20733,58 @@ Tg66.mpOpen=async function(emp){let p;try{p=await Lr58.rpc("tr_progress",{e:emp}
 .tg66dlg .dc63tile>div{display:grid;gap:2px}.tg66dlg .dc63tile span{font-size:12px;color:var(--ink-3)}.tg66dlg .dc63tile b{font-size:20px}.tg66dlg .dc63tile .ic{font-style:normal}.tg66dlg .dc63prog{height:6px;border-radius:4px;background:#e7ebf2;overflow:hidden}.tg66dlg .dc63prog i{display:block;height:100%;background:#2F64B0}
 @media(max-width:760px){#lr58 .tg66grid{grid-template-columns:1fr}#lr58 .tg66zh{font-size:38px}#lr58 .tg66tp>div{grid-template-columns:110px 1fr 80px}}`;document.head.appendChild(st);})();
 
+/* ═══════════════════════════ версия 3.3 · ОТДЕЛ ПЕРЕВОДА, ЭТАП Д — СВОДКА НЕДЕЛИ И КАРТОЧКИ ПЕРЕВОДЧИКОВ (решения владельца 07.11.2026, макет design-translate.html) ═══════════════════════════
+   Правила — sections/translate/ПРАВИЛА.md (ОП-75 … ОП-79), сервер — миграция 20261107000700_tr_cards.sql (tr_week_summary, поля карточек в tr_stats,
+   недельный тест по zc.tr_week_ids, пробный тест с настройками). Здесь только вид, грузится после learn_train.js:
+   • «Отдел перевода» (УП): под плитками — «Неделя ДД.ММ–ДД.ММ»: изучено новых слов, утверждено (вручную / сами через 24 ч), тест субботы,
+     слабое место, точность Амины Ли, совет Амины Ли из её последнего отчёта;
+   • «Переводчики»: карточки — кольцо прогресса (слова месяца к норме), неделя к норме, серия, последний недельный тест, пометка «отстаёт»;
+     щелчок — прогресс и ошибки (окно из этапа Г). */
+Object.assign(UI,{wk67Week:"Неделя {a}–{b}||本周 {a}–{b}",wk67By:"собирает Амина Ли · обновлено {d}||李阿米娜汇总 · 更新于 {d}",wk67New:"Изучено новых слов||新学词汇",wk67NewH:"выдано переводчикам с понедельника||周一以来发给翻译的词",
+  wk67Ap:"Утверждено слов||已批准词汇",wk67ApH:"вручную {m} · сами через 24 ч — {a}||手动 {m} · 24 小时自动 — {a}",wk67Sat:"Тест субботы||周六测试",wk67SatAll:"все {n} утверждённых слов||全部 {n} 个已批准词汇",wk67SatWeek:"слова недели, до {n}||本周词汇，最多 {n}",
+  wk67Weak:"Слабое место||薄弱点",wk67WeakH:"{p} % ошибок у переводчиков за 7 дней||近 7 天翻译错误的 {p}%",wk67WeakNone:"ошибок нет||无错误",wk67Acc:"Точность Амины Ли||李阿米娜准确率",wk67AccH:"из {n} слов: исправлено {e}, отклонено {r}||共 {n} 个词：修改 {e}，驳回 {r}",
+  wk67AccNone:"ещё нет решений по её словам||尚未处理她的词",wk67Advice:"Совет Амины Ли||李阿米娜建议",wk67Behind:"отстаёт||落后",wk67OnTrack:"в норме||正常",wk67WeekN:"неделя: {a} / {b} к норме||本周：{a}/{b}",wk67Streak:"серия {n} дн.||连续 {n} 天",
+  wk67Test:"тест: {p}||测试：{p}",wk67TestMiss:"пропущен||缺考",wk67NoTest:"тестов ещё не было||尚无测试",wk67Month:"слов за месяц {a} из {b}||本月 {a}/{b} 个词",wk67Open:"Прогресс и ошибки →||进度与错误 →"});
+window.UZ21=Object.assign(window.UZ21||{},{"Изучено новых слов":"Oʻrganilgan yangi soʻzlar","Утверждено слов":"Tasdiqlangan soʻzlar","Тест субботы":"Shanba testi","Слабое место":"Zaif joy","Точность Амины Ли":"Amina Li aniqligi","Совет Амины Ли":"Amina Li maslahati","отстаёт":"orqada","в норме":"me'yorda"});
+const Wk67={
+  html(){const w=Lr58.week;if(!w)return "";const E=UI.tg66E||{};const tile=(l,v,h)=>`<div class="wk67t"><span>${T1(l)}</span><b>${v}</b>${h?`<small>${h}</small>`:""}</div>`;
+    const am=w.amina||{},wk=w.weak,sat=w.satTest||{};
+    return `<div class="card wk67"><div class="wk67h"><b>📊 ${esc(T1(UI.wk67Week).replace("{a}",Dc63.dm(w.from)).replace("{b}",Dc63.dm(w.to)))}</b><small>${esc(T1(UI.wk67By).replace("{d}",fmtDT(w.now)))}</small></div>
+      <div class="wk67g">${tile(UI.wk67New,w.newWords,T1(UI.wk67NewH))}${tile(UI.wk67Ap,w.approved,esc(T1(UI.wk67ApH).replace("{m}",w.approved-w.approvedAuto).replace("{a}",w.approvedAuto)))}
+        ${tile(UI.wk67Sat,esc(Wk67.satT(sat.opens)),esc(T1(sat.all?UI.wk67SatAll:UI.wk67SatWeek).replace("{n}",sat.words||0)))}
+        ${tile(UI.wk67Weak,wk?esc(T1(E[wk.type]||wk.type)):"—",wk?esc(T1(UI.wk67WeakH).replace("{p}",wk.pct)):T1(UI.wk67WeakNone))}
+        ${tile(UI.wk67Acc,am.pct==null?"—":am.pct+" %",am.decided?esc(T1(UI.wk67AccH).replace("{n}",am.decided).replace("{e}",am.edited).replace("{r}",am.rejected)):T1(UI.wk67AccNone))}</div>
+      ${w.advice?`<div class="wk67adv">✦ <b>${T1(UI.wk67Advice)}</b> <small>${esc(Dc63.dm(w.advice.date))}</small>: ${esc(w.advice.text)}</div>`:""}</div>`;},
+  /* время открытия теста субботы — по Ташкенту */
+  satT(iso){if(!iso)return "—";try{const d=new Date(iso);const ds=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Tashkent",year:"numeric",month:"2-digit",day:"2-digit"}).format(d);const t=new Intl.DateTimeFormat("ru-RU",{timeZone:"Asia/Tashkent",hour:"2-digit",minute:"2-digit"}).format(d);return Dc63.wd(ds)+" "+t;}catch(e){return "—";}},
+  ring(pct){const r=26,c=2*Math.PI*r,v=Math.max(0,Math.min(100,pct));return `<svg viewBox="0 0 64 64" class="wk67ring"><circle cx="32" cy="32" r="${r}" class="bg"/><circle cx="32" cy="32" r="${r}" class="fg" stroke-dasharray="${(c*v/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle">${Math.round(v)}%</text></svg>`;},
+  cards(rows,st){const norm=(st.norm&&st.norm.month)||400;
+    return `<div class="wk67cards">${rows.map(r=>{const lt=r.lastTest;const test=!lt?T1(UI.wk67NoTest):lt.status==="missed"?T1(UI.wk67TestMiss):lt.pct==null?"…":String(lt.pct).replace(".",",")+" %";
+      return `<div class="wk67c${r.behind?" bad":""}" data-tg66prog="${esc(r.emp)}">${this.ring((r.monthDone||0)/norm*100)}<div class="wk67ci"><b>${esc(r.name)}</b><span class="dc63st ${r.behind?"bad":"ok"}">${T1(r.behind?UI.wk67Behind:UI.wk67OnTrack)}</span>
+        <small>${esc(T1(UI.wk67Month).replace("{a}",r.monthDone||0).replace("{b}",norm))}</small><small>${esc(T1(UI.wk67WeekN).replace("{a}",r.weekNow||0).replace("{b}",100))}${r.weekExpected?` · ${r.weekExpected}`:""}</small>
+        <small>🔥 ${esc(T1(UI.wk67Streak).replace("{n}",r.streak||0))} · ${esc(T1(UI.wk67Test).replace("{p}",test))}${lt?` <i>${esc(lt.period)}</i>`:""}</small><em>${T1(UI.wk67Open)}</em></div></div>`;}).join("")}</div>`;}
+};
+Lr58.trCards=(rows,st)=>Wk67.cards(rows,st);
+{const _tm67=Dc63.tilesMp.bind(Dc63);Dc63.tilesMp=function(){return _tm67()+Wk67.html();};}
+{const _ld67=Lr58.load;Lr58.load=async function(){if(this.srv()&&this.mp()){try{this.week=await this.rpc("tr_week_summary",{});}catch(e){this.week=null;}}return _ld67.apply(this,arguments);};}
+(function(){const st=document.createElement("style");st.textContent=`
+#lr58 .wk67{margin-bottom:14px;padding:14px 16px}#lr58 .wk67h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline;margin-bottom:10px}#lr58 .wk67h small{color:var(--ink-3)}
+#lr58 .wk67g{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}#lr58 .wk67t{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:3px}
+#lr58 .wk67t span{font-size:12px;color:var(--ink-3)}#lr58 .wk67t b{font:700 20px/1.15 var(--font-num,var(--font))}#lr58 .wk67t small{font-size:11.5px;color:var(--ink-3);line-height:1.35}
+#lr58 .wk67adv{margin-top:10px;padding:9px 12px;border-radius:10px;background:color-mix(in srgb,var(--blue,#2F64B0) 8%,transparent);font-size:13px;line-height:1.45}#lr58 .wk67adv small{color:var(--ink-3)}
+#lr58 .wk67cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}#lr58 .wk67c{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+#lr58 .wk67c.bad{border-color:color-mix(in srgb,var(--red) 45%,var(--line))}#lr58 .wk67c:hover{background:var(--line-2,#f3f5f9)}#lr58 .wk67ci{display:grid;gap:3px;min-width:0}#lr58 .wk67ci b{font-size:15px}#lr58 .wk67ci .dc63st{justify-self:start}
+#lr58 .wk67ci small{font-size:12px;color:var(--ink-2)}#lr58 .wk67ci i{font-style:normal;color:var(--ink-3)}#lr58 .wk67ci em{font-style:normal;font-size:12px;color:var(--blue,#2F64B0)}
+#lr58 .wk67ring{width:64px;height:64px;flex:none}#lr58 .wk67ring .bg{fill:none;stroke:var(--line-2,#e7ebf2);stroke-width:7}#lr58 .wk67ring .fg{fill:none;stroke:var(--blue,#2F64B0);stroke-width:7;stroke-linecap:round}#lr58 .wk67ring text{font:700 13px var(--font);fill:var(--ink)}`;document.head.appendChild(st);})();
+
 /* ═══════════════════════════ версия 3.3 · ОТДЕЛ ПЕРЕВОДА, ЭТАП 3 — ТЕСТЫ (решения владельца 06.11.2026) ═══════════════════════════
    Правила — sections/translate/ПРАВИЛА.md (ОП-13 … ОП-22), сервер — миграция 20261106000300_tr_tests.sql (tr_tests, tr_texts, tr_plan;
    tr_test_status / tr_test_start / tr_test_answer / tr_test_finish / tr_test_grade / tr_test_retake / tr_test_plan / tr_text_set / tr_tests_list).
    Окна, вопросы, таймер и баллы считает сервер; здесь — вкладка «Тесты» в «Обучении» (переводчик) и в «Отделе перевода» (УП),
    экран прохождения (маршрут trtest): слова — выбор из 4 вариантов, фразы и тексты — поле для перевода, таймер по сроку с сервера. */
-Object.assign(UI,{tt59PWeek:"Тренировочный (как недельный)||练习测试（周测形式）",tt59PMonth:"Тренировочный (как месячный)||练习测试（月测形式）",tt59Assigned:"назначен, ещё не начат||已安排，尚未开始",tt59PFrom:"назначен {d} — можно начать в любое время||{d} 安排——可随时开始",
+Object.assign(UI,{tt59PWeek:"Пробный (как недельный)||模拟测试（周测形式）",tt59PMonth:"Пробный (как месячный)||模拟测试（月测形式）",tt59PCustom:"Пробный (свой набор)||模拟测试（自选）",tt59PWords:"Какие слова (для своего набора)||哪些词（自选）",tt59PWw:"слова недели||本周词汇",tt59PWm:"слова месяца||本月词汇",tt59PWa:"все слова словаря||词典全部词汇",tt59PWt:"по теме||按主题",tt59PWh:"трудные (2 и больше ошибок)||难词（错 2 次以上）",tt59PTopic:"Тема||主题",tt59PMin:"Сколько минут (5–180)||时长（5–180 分钟）",tt59PAt:"Когда открыть||何时开放",tt59PMinH:"пусто — 40 минут (как недельный и свой набор) или 90 (как месячный)||留空——40 分钟（周测形式及自选）或 90 分钟（月测形式）",tt59PAtH:"ГГГГ-ММ-ДДTЧЧ:ММ; пусто — сразу||YYYY-MM-DDTHH:MM；留空即立即开放",tt59PRulesC:"Свой набор: {w}, {m} минут. На зарплату не влияет — для самопроверки.||自选：{w}，{m} 分钟。不影响工资——用于自测。",tt59WAll:"в словаре меньше 100 утверждённых слов — тест по всем ({n})||词典已批准词汇少于 100 个——测试全部（{n}）",tt59Assigned:"назначен, ещё не начат||已安排，尚未开始",tt59PFrom:"назначен {d} — можно начать в любое время||{d} 安排——可随时开始",
   tt59PRulesW:"Как недельный: слова за последние 7 дней (выбор из 4) и фразы, 40 минут. На зарплату не влияет — для самопроверки.||与周测相同：最近 7 天的词汇（四选一）和短句，40 分钟。不影响工资——用于自测。",tt59PRulesM:"Как месячный: слова месяца, тексты и аудирование, 90 минут. На зарплату не влияет — для самопроверки.||与月测相同：本月词汇、文本和听力，90 分钟。不影响工资——用于自测。",
-  tt59PAssign:"Назначить тренировочный тест||安排练习测试",tt59PAll:"Всем переводчикам||全部翻译",tt59PFmt:"Вид||形式",tt59PHint:"Можно в любое время. На зарплату не влияет — зачётные тесты, как раньше, каждую субботу и раз в месяц.||可随时安排。不影响工资——计分测试仍为每周六和每月一次。",tt59PDone:"Назначено: {n}||已安排：{n}",tt59PCancel:"отменить||取消",
+  tt59PAssign:"Назначить пробный тест||安排模拟测试",tt59PAll:"Всем переводчикам||全部翻译",tt59PFmt:"Вид||形式",tt59PHint:"Можно в любое время. На зарплату не влияет — зачётные тесты, как раньше, каждую субботу и раз в месяц.||可随时安排。不影响工资——计分测试仍为每周六和每月一次。",tt59PDone:"Назначено: {n}||已安排：{n}",tt59PCancel:"отменить||取消",
   tt59Tab:"Тесты||测试",tt59Week:"Недельный тест||周测",tt59Month:"Месячный тест||月测",tt59Before:"откроется {d}||将于 {d} 开放",tt59Ready:"открыт до {d}||开放至 {d}",
   tt59Start:"Начать тест||开始测试",tt59Cont:"Продолжить||继续",tt59Retake:"Пересдать||补考",tt59RetakeOpen:"пересдача разрешена — до {d}||已批准补考——截至 {d}",
   tt59Open:"идёт — до {d}||进行中——截至 {d}",tt59Done:"сдан, ждёт оценки фраз||已完成，待评分",tt59Graded:"сдан||已完成",tt59Missed:"пропущен — 0 %||缺考——0%",
@@ -20757,7 +20801,7 @@ Object.assign(UI,{tt59PWeek:"Тренировочный (как недельны
   tt59Saved:"Сохранено||已保存",tt59Oral:"Устный экзамен (звонок с Аминой Ли)||口试（与李阿米娜通话）",tt59OralDone:"устный экзамен: {s} / 10||口试：{s}/10",tt59OralHint:"после письменной части — позвоните Амине Ли: она прочитает фразы по-китайски, вы переводите вслух; оценка придёт в «Чатах»||完成笔试后——请致电李阿米娜：她会用中文朗读短句，您口头翻译；成绩将在“聊天”中发送",
   tt59Listen:"▶ Прослушать||▶ 播放",tt59ListenH:"Аудирование: текст читается голосом, на экране его нет — напишите перевод||听力：文本以语音播放，屏幕上不显示——请写出译文",tt59NoVoice:"В этом браузере нет китайского голоса — откройте портал в Chrome||此浏览器没有中文语音——请使用 Chrome",
   tt59Prop:"Амина Ли предлагает день месячного теста {m}: {d}||李阿米娜建议 {m} 月测日期：{d}",tt59PropOk:"Утвердить||批准",tt59PropNo:"Отклонить||拒绝",tt59NoTests:"Тестов ещё не было||暂无测试",tt59Who:"Переводчик||翻译",tt59Status:"Статус||状态",tt59Now:"сейчас по серверу: {d}||服务器时间：{d}"});
-if(typeof NTPL18!=="undefined")NTPL18.trPractice62="Вам назначен тренировочный тест — на зарплату не влияет. Откройте «Обучение» → «Тесты»||已为您安排练习测试——不影响工资。请打开“学习” → “测试”";
+if(typeof NTPL18!=="undefined")NTPL18.trPractice62="Вам назначен пробный тест — на зарплату не влияет. Откройте «Обучение» → «Тесты»||已为您安排练习测试——不影响工资。请打开“学习” → “测试”";
 if(typeof NTPL18!=="undefined")NTPL18.trRetake59="Разрешена пересдача недельного теста {per} — в воскресенье||已批准周测 {per} 补考——周日进行";
 window.UZ21=Object.assign(window.UZ21||{},{"Тесты":"Testlar","Недельный тест":"Haftalik test","Месячный тест":"Oylik test","откроется {d}":"{d} da ochiladi","открыт до {d}":"{d} gacha ochiq","Начать тест":"Testni boshlash","Продолжить":"Davom etish","Пересдать":"Qayta topshirish",
   "пересдача разрешена — до {d}":"qayta topshirishga ruxsat — {d} gacha","идёт — до {d}":"davom etmoqda — {d} gacha","сдан, ждёт оценки фраз":"topshirildi, iboralar baholanishini kutmoqda","сдан":"topshirildi","пропущен — 0 %":"oʻtkazib yuborildi — 0 %",
@@ -20775,7 +20819,7 @@ const Tt59={
   async loadExtra(){if(Lr58.tr()){this.st=await Lr58.rpc("tr_test_status",{});this.sync(this.st&&this.st.now);}else if(Lr58.mp()){this.list=await Lr58.rpc("tr_tests_list",{e:null});this.sync(this.list&&this.list.now);
       try{this.props=(await SB19.T.select("tr_plan_prop")||[]).filter(p=>p.status==="new");}catch(e){this.props=[];}}},
   fmt(d){return d?fmtDT(d):"—";},
-  kl(k){return T1(k==="week"?UI.tt59Week:k==="month"?UI.tt59Month:k==="pweek"?UI.tt59PWeek:UI.tt59PMonth);},
+  kl(k){return T1(k==="week"?UI.tt59Week:k==="month"?UI.tt59Month:k==="pweek"?UI.tt59PWeek:k==="pcustom"?UI.tt59PCustom:UI.tt59PMonth);},
   stLabel(x){const m={assigned:UI.tt59Assigned,open:UI.tt59Open,done:UI.tt59Done,graded:UI.tt59Graded,missed:UI.tt59Missed};return T1(m[x.status]||x.status);},
   pct(x){return x.pct==null?"—":String(x.pct).replace(".",",")+" %";},
   /* ── переводчик: вкладка «Тесты» ── */
@@ -20794,8 +20838,10 @@ const Tt59={
     if(m.test&&m.test.status!=="open"&&m.test.status!=="missed"){if(m.test.oral!=null)ml+=" · "+T1(UI.tt59OralDone).replace("{s}",String(m.test.oral).replace(".",","));
       else mb+=`<button type="button" class="btn" data-tt59oral="${esc(m.test.id)}" style="margin-left:8px">📞 ${T1(UI.tt59Oral)}</button><div class="fhint">${T1(UI.tt59OralHint)}</div>`;}
     const hist=(s.history||[]);
-    const pr=(s.practice||[]).map(t=>`<div class="tt59c tt59pr"><h4>${this.kl(t.kind)}</h4><div class="tt59s">${t.status==="open"?esc(T1(UI.tt59Open).replace("{d}",this.fmt(t.deadline))):esc(T1(UI.tt59PFrom).replace("{d}",t.period))}</div><div class="fhint">${T1(t.kind==="pweek"?UI.tt59PRulesW:UI.tt59PRulesM)}</div><button type="button" class="btn pri" data-tt59pstart="${esc(t.id)}">${T1(t.status==="open"?UI.tt59Cont:UI.tt59Start)}</button></div>`).join("");
-    return (pr?`<div class="tt59cards">${pr}</div>`:"")+`<div class="tt59cards"><div class="tt59c"><h4>${T1(UI.tt59Week)} · ${esc(w.week)}</h4><div class="tt59s">${esc(wl)}</div><div class="fhint">${T1(UI.tt59Rules)}</div>${wb}</div>
+    const pr=(s.practice||[]).map(t=>{const later=t.status!=="open"&&t.opensAt&&s.now&&t.opensAt>s.now;const c=t.cfg||{};
+      const rule=t.kind==="pcustom"?T1(UI.tt59PRulesC).replace("{w}",T1({week:UI.tt59PWw,month:UI.tt59PWm,all:UI.tt59PWa,topic:UI.tt59PWt,hard:UI.tt59PWh}[c.words]||UI.tt59PWw)+(c.topic?" «"+c.topic+"»":"")).replace("{m}",c.minutes||40):T1(t.kind==="pweek"?UI.tt59PRulesW:UI.tt59PRulesM);
+      return `<div class="tt59c tt59pr"><h4>${this.kl(t.kind)}</h4><div class="tt59s">${t.status==="open"?esc(T1(UI.tt59Open).replace("{d}",this.fmt(t.deadline))):later?esc(T1(UI.tt59Before).replace("{d}",this.fmt(t.opensAt))):esc(T1(UI.tt59PFrom).replace("{d}",t.period))}</div><div class="fhint">${esc(rule)}</div><button type="button" class="btn pri" data-tt59pstart="${esc(t.id)}"${later?" disabled":""}>${T1(t.status==="open"?UI.tt59Cont:UI.tt59Start)}</button></div>`;}).join("");
+    return (pr?`<div class="tt59cards">${pr}</div>`:"")+`<div class="tt59cards"><div class="tt59c"><h4>${T1(UI.tt59Week)} · ${esc(w.week)}</h4><div class="tt59s">${esc(wl)}</div><div class="fhint">${T1(UI.tt59Rules)}</div>${w.words&&w.words<100?`<div class="fhint">${esc(T1(UI.tt59WAll).replace("{n}",w.words))}</div>`:""}${wb}</div>
       <div class="tt59c"><h4>${T1(UI.tt59Month)} · ${esc(m.month)}</h4><div class="tt59s">${esc(ml)}</div><div class="fhint">${T1(UI.tt59RulesM)}</div>${mb}</div></div>
       <h4>${T1(UI.tt59Hist)}</h4>${hist.length?`<table class="tbl tt59t"><thead><tr><th>${T1(UI.tt59Period)}</th><th></th><th>${T1(UI.tt59Status)}</th><th>${T1(UI.tt59Words)}</th><th>${T1(UI.tt59Phrases)}</th><th>${T1(UI.tt59Score)}</th></tr></thead><tbody>${hist.map(x=>`<tr data-tt59open="${esc(x.id)}"><td>${Tt59.kl(x.kind)} ${esc(x.period)}</td><td><small>${x.attempt>1?T1(UI.tt59Attempt).replace("{n}",x.attempt):""}</small></td><td>${this.stLabel(x)}</td><td>${x.autoScore==null?"—":x.autoScore+" / "+x.maxAuto}</td><td>${x.maxManual?(x.manualScore==null?"…":x.manualScore)+" / "+x.maxManual:"—"}</td><td><b>${this.pct(x)}</b></td></tr>`).join("")}</tbody></table>`:`<div class="empty2">${T1(UI.tt59NoTests)}</div>`}`;},
   async startP(tid){try{const r=await Lr58.rpc("tr_practice_start",{tid});this.sync(r.now);this.cur=r;Router.go("trtest",r.test.id);}catch(e){toast(String((e&&e.message)||e));}},
@@ -20854,8 +20900,16 @@ const Tt59={
         await Lr58.rpc("tr_test_plan",{mon:String(v.m||"").trim(),at_ts:String(v.at||"").trim()});toast(T1(UI.tt59Saved));}
       else if(a==="text"){const v=await Dlg.ask({title:T1(UI.tt59Texts),wide:true,fields:[{k:"month",label:T1(UI.lr58Month),value:(Lr58.stats&&Lr58.stats.month)||"",hint:"ГГГГ-ММ"},{k:"title",label:T1(UI.tt59TextTitle)},{k:"zh",label:T1(UI.tt59TextZh),type:"textarea",required:true},{k:"ru",label:T1(UI.tt59TextRu),type:"textarea"},{k:"uz",label:T1(UI.tt59TextUz),type:"textarea"}]});if(!v)return;
         await Lr58.rpc("tr_text_set",{t:{month:v.month,title:v.title,zh:v.zh,ru:v.ru,uz:v.uz}});toast(T1(UI.tt59Saved));}
-      else if(a==="practice"){const tr=((Lr58.stats&&Lr58.stats.rows)||[]);const v=await Dlg.ask({title:T1(UI.tt59PAssign),fields:[{k:"who",label:T1(UI.tt59Who),type:"select",value:"",options:[["",T1(UI.tt59PAll)]].concat(tr.map(r=>[r.emp,r.name]))},{k:"fmt",label:T1(UI.tt59PFmt),type:"select",value:"week",options:[["week",T1(UI.tt59PWeek)],["month",T1(UI.tt59PMonth)]]},{k:"h",type:"html",html:`<div class="fhint">${T1(UI.tt59PHint)}</div>`}]});if(!v)return;
-        const r=await Lr58.rpc("tr_practice_assign",{e:v.who||null,fmt:v.fmt||"week"});toast(T1(UI.tt59PDone).replace("{n}",(r&&r.assigned)||0));}
+      else if(a==="practice"){const tr=((Lr58.stats&&Lr58.stats.rows)||[]);const topics=[...new Set((Lr58.words||[]).filter(w=>w.status==="ok"&&!w.clientId&&w.topic).map(w=>w.topic))].sort();
+        /* этап Д (07.11.2026): кому, какие слова, сколько минут, когда */
+        const v=await Dlg.ask({title:T1(UI.tt59PAssign),fields:[{k:"who",label:T1(UI.tt59Who),type:"select",value:"",options:[["",T1(UI.tt59PAll)]].concat(tr.map(r=>[r.emp,r.name]))},
+          {k:"fmt",label:T1(UI.tt59PFmt),type:"select",value:"custom",options:[["custom",T1(UI.tt59PCustom)],["week",T1(UI.tt59PWeek)],["month",T1(UI.tt59PMonth)]]},
+          {k:"words",label:T1(UI.tt59PWords),type:"select",value:"week",options:[["week",T1(UI.tt59PWw)],["month",T1(UI.tt59PWm)],["all",T1(UI.tt59PWa)],["topic",T1(UI.tt59PWt)],["hard",T1(UI.tt59PWh)]]},
+          {k:"topic",label:T1(UI.tt59PTopic),type:"select",value:"",options:[["","—"]].concat(topics.map(t=>[t,t]))},
+          {k:"minutes",label:T1(UI.tt59PMin),type:"number",value:"",hint:T1(UI.tt59PMinH)},{k:"at",label:T1(UI.tt59PAt),value:"",hint:T1(UI.tt59PAtH)},
+          {k:"h",type:"html",html:`<div class="fhint">${T1(UI.tt59PHint)}</div>`}]});if(!v)return;
+        const opt={minutes:+v.minutes||null,at:String(v.at||"").trim()||null};if(v.fmt==="custom"){opt.words=v.words||"week";if(opt.words==="topic")opt.topic=v.topic||"";}
+        const r=await Lr58.rpc("tr_practice_assign",{e:v.who||null,fmt:v.fmt||"custom",opt});toast(T1(UI.tt59PDone).replace("{n}",(r&&r.assigned)||0));}
       else if(a==="pcancel"){await Lr58.rpc("tr_practice_cancel",{tid:id});toast(T1(UI.tt59Saved));}
       else if(a==="textdel"){await Lr58.rpc("tr_text_set",{t:{id,del:"1"}});}
       else if(a==="retake"&&row){await Lr58.rpc("tr_test_retake",{tid:id,allow:true});toast(T1(UI.tt59Allowed));}
