@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="c90f678f1a90";
+const ZC_BUILD="55b1744c6574";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -20420,7 +20420,7 @@ Lr58.pageMp=function(){if(!this.mp())return `<div class="card"><div class="fhint
   const tabs=this.tabs([["dict",UI.lr58Dict],["pending",UI.dc63Check,P.length],["tr",UI.lr58Translators],...(this.testsBodyMp?[["tests",UI.tt59Tab,this.testsBadgeMp?this.testsBadgeMp():0]]:[])]);
   let body="";
   if(this.tab==="tests"&&this.testsBodyMp)body=this.testsBodyMp();
-  else if(this.tab==="tr")body=(rows.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColMonth)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone} <small>/ ${st.norm.week}</small></td><td>${r.monthLearned} <small>/ ${r.monthTotal}</small></td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.lr58NoTr)}</div>`)+(Dc63.learnersHtml?Dc63.learnersHtml():"");
+  else if(this.tab==="tr")body=(rows.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColMonth)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${rows.map(r=>`<tr data-tg66prog="${esc(r.emp)}" style="cursor:pointer"><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone} <small>/ ${st.norm.week}</small></td><td>${r.monthLearned} <small>/ ${r.monthTotal}</small></td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty2">${T1(UI.lr58NoTr)}</div>`)+(Dc63.learnersHtml?Dc63.learnersHtml():"");
   else if(this.tab==="pending")body=Dc63.checkHtml();
   else body=Dc63.dictHtml(true);
   return `<div id="lr58">${Dc63.tilesMp()}<div class="card">${tabs}${body}</div></div>`;};
@@ -20431,13 +20431,14 @@ Lr58.page=function(){if(!this.lr())return `<div class="card"><div class="fhint">
   const t=this.today,nw=t.new||[],rep=t.repeat||[],pn=this.pending(nw),pr=this.pending(rep),doneN=nw.length-pn.length;const me=Dc63.me();
   const minePend=(this.words||[]).filter(w=>w.addedBy===me&&w.status==="new").length;
   const tiles=`<div class="tiles">${this.tile(`${doneN} <small>${T1(UI.lr58Of)} ${nw.length}</small>`,UI.lr58TodayT,pn.length?"blue":"green","today")}${this.tile(pr.length,UI.lr58RepeatT,pr.length?"amber":"","repeat")}${this.tile(`${t.monthLearned} <small>${T1(UI.lr58Of)} ${t.monthTotal}</small>`,UI.lr58MonthT,"","learned")}${this.tile(t.learnedTotal,UI.lr58TotalT,"","learned")}</div>`;
-  const tabs=this.tabs([["today",UI.lr58Today,pn.length],["repeat",UI.lr58Repeat,pr.length],["dict",UI.lr58Dict],["learned",UI.lr58Learned,(t.learned||[]).length],...(this.tr()?[["mine",UI.dc63Mine,minePend]]:[]),...(this.tr()&&this.testsBody?[["tests",UI.tt59Tab,this.testsBadge?this.testsBadge():0]]:[])]);
+  const tabs=this.tabs([["today",UI.lr58Today,pn.length],["repeat",UI.lr58Repeat,pr.length],["dict",UI.lr58Dict],["learned",UI.lr58Learned,(t.learned||[]).length],...(this.extraTabs?this.extraTabs():[]),...(this.tr()?[["mine",UI.dc63Mine,minePend]]:[]),...(this.tr()&&this.testsBody?[["tests",UI.tt59Tab,this.testsBadge?this.testsBadge():0]]:[])]);
   let body="";
   if(this.tab==="tests"&&this.testsBody&&this.tr())body=this.testsBody();
   else if(this.tab==="today")body=nw.length?this.study(pn,"today"):`<div class="empty2">${T1(t.workday===false&&!t.learner?UI.dc63Weekend:t.learner?UI.dc63NoMore:UI.lr58NoWords)}</div>`;
   else if(this.tab==="repeat")body=rep.length?this.study(pr,"repeat"):`<div class="empty2">${T1(UI.lr58RepNone)}</div>`;
   else if(this.tab==="dict")body=Dc63.dictHtml(false);
   else if(this.tab==="mine")body=Dc63.mineHtml();
+  else if(this.extraBody&&this.extraBody(this.tab)!=null)body=this.extraBody(this.tab);
   else body=(t.learned||[]).length?`<div class="lr58list">${t.learned.map(w=>this.wordLine(w)).join("")}</div>`:`<div class="empty2">${T1(UI.lr58Empty)}</div>`;
   return `<div id="lr58">${tiles}<div class="card">${tabs}${body}</div></div>`;};
 /* ── действия ── */
@@ -20537,7 +20538,7 @@ const Lo65={wod:null,wodBusy:false,
       <div class="lo65r"><div class="tr">${tr}</div>${w.uz&&M.length<2?`<small>${esc(w.uz)}</small>`:""}${w.exZh?`<div class="ex">${esc(w.exZh)}${Dc63.spk(w.exZh)}<small>${esc(w.exRu||w.exUz||"")}</small></div>`:""}
       <button type="button" class="btn sm" data-lo65go="1">${T1(UI.lo65Go)} →</button></div></div>`;},
   learnersHtml(){const L=((Lr58.stats||{}).learners)||[];if(!L.length)return "";
-    return `<h4 style="margin-top:16px">${T1(UI.lo65Learners)} · ${L.length}</h4><div class="fhint">${T1(UI.lo65LearnersH)}</div><div style="overflow-x:auto"><table class="tbl lo65t"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lo65Goal2)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${L.map(r=>`<tr><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.goal}</td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone}</td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`;},
+    return `<h4 style="margin-top:16px">${T1(UI.lo65Learners)} · ${L.length}</h4><div class="fhint">${T1(UI.lo65LearnersH)}</div><div style="overflow-x:auto"><table class="tbl lo65t"><thead><tr><th>${T1(UI.lr58Who)}</th><th>${T1(UI.lo65Goal2)}</th><th>${T1(UI.lr58ColToday)}</th><th>${T1(UI.lr58ColWeek)}</th><th>${T1(UI.lr58ColTotal)}</th><th>${T1(UI.lr58ColDays)}</th><th>${T1(UI.lr58ColLast)}</th></tr></thead><tbody>${L.map(r=>`<tr data-tg66prog="${esc(r.emp)}" style="cursor:pointer"><td><b>${esc(r.name)}</b><br><small>${esc(r.login)}</small></td><td>${r.goal}</td><td>${r.todayDone} / ${r.todayNew}</td><td>${r.weekDone}</td><td>${r.learnedTotal}</td><td>${r.daysActive}</td><td>${r.lastAt?esc(fmtDT(r.lastAt)):"—"}</td></tr>`).join("")}</tbody></table></div>`;},
   /* карточка в «Моём профиле» */
   card(){const s=Lr58.learn;if(!s)return "";
     if(s.translator)return `<div class="card lo65p"><h4>${T1(UI.lo65Card)}</h4><div class="fhint">${T1(UI.lo65TrAlways)}</div></div>`;
@@ -20569,6 +20570,168 @@ if(typeof Route17!=="undefined"){const _nk65=Route17.navKeys.bind(Route17);Route
 .lo65p .dc63st{font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--line-2,#eef2f8);color:var(--ink-2)}.lo65p .dc63st.ok{background:color-mix(in srgb,#3F8768 16%,transparent);color:#2D6B51}
 @media(max-width:700px){.lo65wod{grid-template-columns:1fr}}`;document.head.appendChild(st);})();
 document.addEventListener("click",e=>{const b=e.target.closest(".lo65wod [data-dc63say]");if(b){e.preventDefault();e.stopPropagation();Dc63.say(b.dataset.dc63say);}},true);
+
+/* ═══════════════════════════ версия 3.3 · ОТДЕЛ ПЕРЕВОДА, ЭТАП Г — ЗАНЯТИЯ (решения владельца 07.11.2026, макет design-translate.html) ═══════════════════════════
+   Правила — sections/translate/ПРАВИЛА.md (ОП-67 … ОП-74), сервер — миграция 20261107000600_tr_train.sql (tr_answer с режимом и видом ошибки, tr_srs —
+   интервальное повторение, tr_train — отбор слов, tr_progress — календарь, серия, «когда повторять», темы, ошибки). Здесь только вид, грузится после learn_open.js:
+   • вкладка «Занятие» в «Обучении»: что тренировать (на повтор, новые, все, за день, по теме, трудные, не выученные, слова недельного теста, из дела,
+     слабые места — подбирает Амина Ли, фразы), режим (карточка, выбор из 4, написать перевод, аудирование, русский → китайский, тоны), порядок, сколько;
+     занятие по одному слову, свайп на телефоне (вправо — «Знаю», влево — «Не знаю»), клавиши; итог с ошибками и «Ещё раз — ошибки»;
+   • вкладка «Прогресс»: серия дней, календарь занятий месяца, «Когда повторять», «По темам», «Мои ошибки» (значение, тон, похожие иероглифы);
+   • УП: в «Отделе перевода» → «Переводчики» (и «Учат китайский») щелчок по строке открывает прогресс и ошибки сотрудника. */
+Object.assign(UI,{tg66Train:"Занятие||练习",tg66Prog:"Прогресс||进度",tg66What:"Что тренировать||练习内容",tg66Mode:"Режим||模式",tg66Order:"Порядок||顺序",tg66Count:"Сколько слов||数量",
+  tg66ByNo:"По номеру||按编号",tg66Mix:"Вперемешку||随机",tg66Start:"Начать занятие||开始练习",tg66Day:"День||日期",tg66Topic:"Тема||主题",tg66Matter:"Дело||案件",tg66None:"Слов для этого занятия нет||没有可练习的词",
+  tg66S:{due:"На повтор||待复习",new:"Новые (заранее)||新词（提前）",all:"Все||全部",day:"За день||按日期",topic:"По теме||按主题",hard:"Трудные||难词",unlearned:"Не выученные||未掌握",week:"Слова недельного теста||周测词汇",matter:"Из дела||来自案件",weak:"Слабые места — Амина Ли||薄弱点——李阿米娜",phrases:"Фразы и клише||短语与套语"},
+  tg66M:{card:"Карточка||卡片",choice:"Выбор из 4||四选一",write:"Написать перевод||写出翻译",listen:"Аудирование||听力",ruzh:"Русский → китайский||俄 → 中",tone:"Тоны||声调"},
+  tg66Show:"Показать перевод||显示翻译",tg66Know:"Знаю||认识",tg66Dont:"Не знаю||不认识",tg66Next:"Дальше||下一个",tg66Check:"Проверить||检查",tg66Typed:"Ваш перевод…||您的翻译…",tg66Right:"Верно||正确",tg66Wrong:"Неверно||错误",
+  tg66Correct:"правильно: {w}||正确答案：{w}",tg66Override:"Я ответил верно||我答对了",tg66Listen:"▶ Прослушать ещё||▶ 再听一遍",tg66ToneQ:"Какой тон у выделенного слога?||标出的音节是第几声？",tg66Finish:"Закончить||结束",
+  tg66Done:"Занятие окончено||练习结束",tg66Res:"верно {a} из {b}||正确 {a}/{b}",tg66Again:"Ещё раз — ошибки||再练错题",tg66New:"Новое занятие||新的练习",tg66Swipe:"на телефоне: вправо — «Знаю», влево — «Не знаю»||手机上：右滑“认识”，左滑“不认识”",
+  tg66Keys:"клавиши: пробел — показать, → знаю, ← не знаю, 1–4 — вариант||快捷键：空格显示，→ 认识，← 不认识，1–4 选项",tg66Streak:"Серия||连续",tg66Days:"дн.||天",tg66DueT:"Когда повторять||复习计划",tg66DueToday:"сегодня||今天",
+  tg66DueTom:"завтра||明天",tg66DueWeek:"на неделе||本周",tg66DueLater:"позже||以后",tg66Repeat:"Повторить||复习",tg66Topics:"По темам||按主题",tg66Errs:"Мои ошибки||我的错误",tg66ErrsMp:"Ошибки||错误",
+  tg66E:{meaning:"значение||词义",tone:"тон||声调",similar:"похожие иероглифы||形近字"},tg66ErrH:"за 30 дней · ответов: {n}||近 30 天 · 答题：{n}",tg66Weak:"Тренировать слабые места||练习薄弱点",tg66Cal:"{m} · занятия||{m} · 练习",
+  tg66NoTone:"У этих слов нет пиньиня с тонами — выберите другой режим||这些词没有带声调的拼音——请选择其他模式",tg66ProgOf:"Прогресс · {n}||进度 · {n}",tg66Learned:"выучено||已掌握"});
+window.UZ21=Object.assign(window.UZ21||{},{"Занятие":"Mashgʻulot","Прогресс":"Natija","Что тренировать":"Nimani mashq qilish","Режим":"Rejim","Начать занятие":"Mashgʻulotni boshlash","Знаю":"Bilaman","Не знаю":"Bilmayman","Дальше":"Keyingi","Проверить":"Tekshirish","Мои ошибки":"Mening xatolarim","Когда повторять":"Qachon takrorlash","По темам":"Mavzular boʻyicha"});
+const Tg66={
+  st:{view:"setup",sel:"due",mode:"card",order:"no",limit:20,day:"",topic:"",matter:""},words:[],i:0,res:[],cur:null,prog:null,progBusy:false,
+  TM:{"ā":1,"á":2,"ǎ":3,"à":4,"ē":1,"é":2,"ě":3,"è":4,"ī":1,"í":2,"ǐ":3,"ì":4,"ō":1,"ó":2,"ǒ":3,"ò":4,"ū":1,"ú":2,"ǔ":3,"ù":4,"ǖ":1,"ǘ":2,"ǚ":3,"ǜ":4},
+  BASE:{"ā":"a","á":"a","ǎ":"a","à":"a","ē":"e","é":"e","ě":"e","è":"e","ī":"i","í":"i","ǐ":"i","ì":"i","ō":"o","ó":"o","ǒ":"o","ò":"o","ū":"u","ú":"u","ǔ":"u","ù":"u","ǖ":"ü","ǘ":"ü","ǚ":"ü","ǜ":"ü"},
+  han(c){const n=c.codePointAt(0);return (n>=0x3400&&n<=0x9fff)||(n>=0xf900&&n<=0xfaff);},
+  /* тон: у каждого иероглифа слова свой слог с отметкой тона — берём один слог */
+  toneQ(w){const hz=Array.from(w.zh||"").filter(c=>this.han(c));const py=Array.from(w.pinyin||"");const marks=[];py.forEach((c,i)=>{if(this.TM[c])marks.push({i,t:this.TM[c]});});
+    if(!hz.length||marks.length!==hz.length)return null;const k=(w.no||0)%hz.length;const m=marks[k];const shown=py.map((c,i)=>i===m.i?this.BASE[c]:c).join("");return {k,tone:m.t,ch:hz[k],shown,hz};},
+  norm(s){return Array.from(String(s||"").toLowerCase()).map(c=>c.toLowerCase()!==c.toUpperCase()?c:" ").join("").split(" ").filter(Boolean).join(" ");},
+  okWrite(w,typed){const t=this.norm(typed);if(!t)return false;const M=(w.meanings&&w.meanings.length?w.meanings:[{ru:w.ru,uz:w.uz}]);const vs=[];M.forEach(m=>{[m.ru,m.uz].forEach(x=>String(x||"").split(/[;,]/).forEach(p=>{const n=this.norm(p);if(n)vs.push(n);}));});
+    return vs.some(v=>v===t||(t.length>=4&&v.includes(t))||(v.length>=4&&t.includes(v)));},
+  tr(w){const M=(w.meanings||[]).filter(x=>x&&(x.ru||x.uz));return M.length>1?M.map(x=>x.ru||x.uz).join("; "):(w.ru||w.uz||"");},
+  pool(w){return (Lr58.words||[]).filter(x=>x.status==="ok"&&!x.clientId&&x.kind===w.kind&&x.id!==w.id).concat(this.words.filter(x=>x.id!==w.id));},
+  opts(w,dir){const used=new Set([dir==="zh"?w.zh:this.tr(w)]);const P=this.pool(w).sort(()=>Math.random()-.5);const o=[{w,ok:true}];
+    for(const x of P){const v=dir==="zh"?x.zh:this.tr(x);if(!v||used.has(v))continue;used.add(v);o.push({w:x,ok:false});if(o.length>=4)break;}return o.sort(()=>Math.random()-.5);},
+  /* ── экран выбора ── */
+  setupHtml(){const s=this.st;const topics=[...new Set((Lr58.words||[]).filter(w=>w.status==="ok"&&!w.clientId&&w.topic).map(w=>w.topic))].sort();
+    const days=[];const t0=new Date(((Lr58.today||{}).day||new Date().toISOString().slice(0,10))+"T12:00:00");for(let k=0;k<21;k++){const d=new Date(t0.getTime()-k*864e5);days.push(d.toISOString().slice(0,10));}
+    const mm=(typeof MMall==="function"?MMall():Object.values(S.matters||{})).filter(m=>m&&m.id&&m.status!=="closed"&&(typeof matterView!=="function"||matterView(m))).slice(0,80);
+    const chip=(k,v,l,on)=>`<button type="button" class="dc63chip${on?" on":""}" data-tg66${k}="${esc(v)}">${esc(l)}</button>`;
+    return `<div class="tg66setup"><div class="tg66blk"><h4>${T1(UI.tg66What)}</h4><div class="dc63chips">${Object.keys(UI.tg66S).map(k=>chip("sel",k,T1(UI.tg66S[k]),s.sel===k)).join("")}</div>
+      ${s.sel==="day"?`<select class="inp sm" data-tg66f="day"><option value="">${T1(UI.tg66Day)}…</option>${days.map(d=>`<option value="${d}"${d===s.day?" selected":""}>${Dc63.dm(d)}</option>`).join("")}</select>`:""}
+      ${s.sel==="topic"?`<select class="inp sm" data-tg66f="topic"><option value="">${T1(UI.tg66Topic)}…</option>${topics.map(t=>`<option${t===s.topic?" selected":""}>${esc(t)}</option>`).join("")}</select>`:""}
+      ${s.sel==="matter"?`<select class="inp sm" data-tg66f="matter"><option value="">${T1(UI.tg66Matter)}…</option>${mm.map(m=>`<option value="${esc(m.id)}"${m.id===s.matter?" selected":""}>${esc((m.no||"")+" · "+(typeof mT18==="function"?mT18(m):m.title||""))}</option>`).join("")}</select>`:""}</div>
+      <div class="tg66blk"><h4>${T1(UI.tg66Mode)}</h4><div class="dc63chips">${Object.keys(UI.tg66M).map(k=>chip("mode",k,T1(UI.tg66M[k]),s.mode===k)).join("")}</div></div>
+      <div class="tg66blk tg66row"><div><h4>${T1(UI.tg66Order)}</h4><div class="dc63seg"><button type="button" class="${s.order==="no"?"on":""}" data-tg66order="no">${T1(UI.tg66ByNo)}</button><button type="button" class="${s.order==="mix"?"on":""}" data-tg66order="mix">${T1(UI.tg66Mix)}</button></div></div>
+        <div><h4>${T1(UI.tg66Count)}</h4><div class="dc63seg">${[10,20,50].map(n=>`<button type="button" class="${s.limit===n?"on":""}" data-tg66limit="${n}">${n}</button>`).join("")}</div></div></div>
+      <button type="button" class="btn pri" data-tg66go="1">${T1(UI.tg66Start)}</button><div class="fhint">${T1(UI.tg66Swipe)} · ${T1(UI.tg66Keys)}</div></div>`;},
+  async start(){const s=this.st;try{const r=await Lr58.rpc("tr_train",{sel:s.sel,opt:{day:s.day,topic:s.topic,matter:s.matter,order:s.order,limit:s.limit}});let W=(r&&r.words)||[];
+      if(s.mode==="tone"){W=W.filter(w=>this.toneQ(w));if(!W.length&&(r.words||[]).length){toast(T1(UI.tg66NoTone));return;}}
+      if(!W.length){toast(T1(UI.tg66None));return;}this.run(W);}catch(e){toast(String((e&&e.message)||e));}},
+  run(W){this.words=W;this.i=0;this.res=[];this.cur=null;this.st.view="run";Lr58.paint();},
+  item(){const w=this.words[this.i];if(!w)return null;if(!this.cur||this.cur.id!==w.id){const m=this.st.mode;this.cur={id:w.id,open:false,done:null,typed:"",pick:null,
+      opts:m==="choice"||m==="listen"?this.opts(w,"tr"):m==="ruzh"?this.opts(w,"zh"):null,tq:m==="tone"?this.toneQ(w):null};if(m==="listen")setTimeout(()=>Dc63.say(w.zh),250);}return w;},
+  /* ── экран занятия ── */
+  runHtml(){const w=this.item();if(!w){this.st.view="done";return this.doneHtml();}const c=this.cur,m=this.st.mode,n=this.words.length;
+    const top=`<div class="tg66top"><span>${this.i+1} / ${n} · ${T1(UI.tg66M[m])}</span><div class="dc63prog"><i style="width:${Math.round(this.i/n*100)}%"></i></div><button type="button" class="btn sm ghost" data-tg66fin="1">${T1(UI.tg66Finish)}</button></div>`;
+    const zhBox=(hl)=>`<div class="tg66zh">${hl!=null?Array.from(w.zh).map((ch,i)=>i===hl?`<b>${esc(ch)}</b>`:esc(ch)).join(""):esc(w.zh)}${Dc63.spk(w.zh)}</div>`;
+    const after=c.done!==null?`<div class="tg66fb ${c.done?"ok":"bad"}">${T1(c.done?UI.tg66Right:UI.tg66Wrong)}${c.done?"":` · ${esc(T1(UI.tg66Correct).replace("{w}",m==="ruzh"?w.zh+" "+(w.pinyin||""):m==="tone"?["","ˉ 1","ˊ 2","ˇ 3","ˋ 4"][c.tq.tone]:this.tr(w)))}`}</div>
+      <div class="tg66meta">${esc(w.zh)} · ${esc(w.pinyin||"")} · ${esc(this.tr(w))}${w.exZh?`<small>${esc(w.exZh)} — ${esc(w.exRu||w.exUz||"")}</small>`:""}</div>
+      <div class="tg66btns">${m==="write"&&!c.done?`<button type="button" class="btn sm ghost" data-tg66over="1">${T1(UI.tg66Override)}</button>`:""}<button type="button" class="btn pri" data-tg66next="1">${T1(UI.tg66Next)} →</button></div>`:"";
+    let body="";
+    if(m==="card")body=`<div class="tg66card" data-tg66swipe="1">${zhBox()}<div class="tg66py">${esc(w.pinyin||"")}</div>${c.open?`<div class="tg66tr">${esc(this.tr(w))}</div>${w.exZh?`<div class="tg66ex">${esc(w.exZh)}${Dc63.spk(w.exZh)}<small>${esc(w.exRu||w.exUz||"")}</small></div>`:""}
+        <div class="tg66btns"><button type="button" class="btn" data-tg66ans="0">← ${T1(UI.tg66Dont)}</button><button type="button" class="btn pri" data-tg66ans="1">${T1(UI.tg66Know)} →</button></div>`:`<div class="tg66btns"><button type="button" class="btn pri" data-tg66open="1">${T1(UI.tg66Show)}</button></div>`}</div>`;
+    else if(m==="choice"||m==="listen"||m==="ruzh"){body=`<div class="tg66card">${m==="listen"?(c.done!==null?zhBox():`<div class="tg66zh">🔊</div>`)+`<div class="tg66btns"><button type="button" class="btn sm" data-tg66say="1">${T1(UI.tg66Listen)}</button></div>`:m==="ruzh"?`<div class="tg66q">${esc(this.tr(w))}</div>`:zhBox()+`<div class="tg66py">${esc(w.pinyin||"")}</div>`}
+        <div class="tg66opts${m==="ruzh"?" zh":""}">${c.opts.map((o,k)=>`<button type="button" class="tg66opt${c.done!==null?(o.ok?" ok":c.pick===k?" bad":""):""}" data-tg66pick="${k}"${c.done!==null?" disabled":""}><i>${k+1}</i>${esc(m==="ruzh"?o.w.zh:this.tr(o.w))}</button>`).join("")}</div>${after}</div>`;}
+    else if(m==="write")body=`<div class="tg66card">${zhBox()}<div class="tg66py">${esc(w.pinyin||"")}</div><div class="tg66wr"><input class="inp" data-tg66typed placeholder="${esc(T1(UI.tg66Typed))}" value="${esc(c.typed)}"${c.done!==null?" disabled":""}>${c.done===null?`<button type="button" class="btn pri" data-tg66chk="1">${T1(UI.tg66Check)}</button>`:""}</div>${after}</div>`;
+    else if(m==="tone"){const q=c.tq;body=`<div class="tg66card">${zhBox(q.k)}<div class="tg66py">${esc(q.shown)}</div><div class="tg66q sm">${T1(UI.tg66ToneQ)}</div><div class="tg66btns"><button type="button" class="btn sm" data-tg66sayc="${esc(q.ch)}">▶ ${esc(q.ch)}</button></div>
+        <div class="tg66opts tone">${[1,2,3,4].map(t=>`<button type="button" class="tg66opt${c.done!==null?(t===q.tone?" ok":c.pick===t?" bad":""):""}" data-tg66tone="${t}"${c.done!==null?" disabled":""}><i>${t}</i>${["","ˉ","ˊ","ˇ","ˋ"][t]}</button>`).join("")}</div>${after}</div>`;}
+    return `<div class="tg66run">${top}${body}</div>`;},
+  doneHtml(){const R=this.res,okN=R.filter(x=>x.ok).length,bad=R.filter(x=>!x.ok);
+    return `<div class="tg66done"><h3>✓ ${T1(UI.tg66Done)}</h3><div class="tg66big">${esc(T1(UI.tg66Res).replace("{a}",okN).replace("{b}",R.length))}</div>
+      ${bad.length?`<div class="dc63list">${bad.map(x=>`<div class="tg66bad"><b>${esc(x.w.zh)}</b><span>${esc(x.w.pinyin||"")}</span><span>${esc(this.tr(x.w))}</span><span class="dc63st bad">${T1(UI.tg66E[x.err]||UI.tg66Wrong)}</span></div>`).join("")}</div>`:""}
+      <div class="tg66btns">${bad.length?`<button type="button" class="btn pri" data-tg66again="1">${T1(UI.tg66Again)} · ${bad.length}</button>`:""}<button type="button" class="btn" data-tg66newt="1">${T1(UI.tg66New)}</button></div></div>`;},
+  async answer(ok,err){const w=this.words[this.i];if(!w||this.cur.sent)return;this.cur.sent=true;this.res.push({w,ok,err:ok?null:err});
+    try{await Lr58.rpc("tr_answer",{wid:w.id,is_ok:ok,mode:this.st.mode,err:ok?null:err});}catch(e){toast(String((e&&e.message)||e));}},
+  next(){this.i++;this.cur=null;if(this.i>=this.words.length)this.st.view="done";Lr58.paint();},
+  /* ── прогресс ── */
+  async progLoad(e){if(this.progBusy)return;this.progBusy=true;try{this.prog=await Lr58.rpc("tr_progress",{e:e||null});}catch(er){this.prog={err:String((er&&er.message)||er)};}this.progBusy=false;Lr58.paint();},
+  progHtml(p,mp){if(!p)return `<div class="fhint">${T1(UI.loading||"Загрузка…||加载中…")}</div>`;if(p.err)return `<div class="fhint" style="color:var(--red)">${esc(p.err)}</div>`;
+    const D=p.days||[],first=D[0]?new Date(D[0].d+"T12:00:00").getDay():1,pad=(first+6)%7,goal=p.goal||20;const E=p.errors||{},du=p.due||{};const eSum=(E.meaning||0)+(E.tone||0)+(E.similar||0);
+    const firstAct=(D.find(d=>d.n>0)||{}).d||p.today;/* пропуск — рабочий день без занятий после первого занятия */
+    const cells=Array(pad).fill(`<i class="e"></i>`).concat(D.map(d=>`<i class="${d.d>p.today?"f":d.n>=goal?"g":d.n>0?"y":d.w&&d.d>=firstAct?"m":"w"}" title="${esc(Dc63.dm(d.d))}: ${d.n}">${+d.d.slice(8)}</i>`)).join("");
+    return `<div class="tg66prog">
+      <div class="dc63tiles"><div class="dc63tile"><i class="ic">🔥</i><div><span>${T1(UI.tg66Streak)}</span><b>${p.streak} <small>${T1(UI.tg66Days)}</small></b></div></div>
+        <div class="dc63tile"${mp?"":` data-tg66quick="due"`}><i class="ic">🔁</i><div><span>${T1(UI.tg66DueT)}</span><b>${du.today||0} <small>${T1(UI.tg66DueToday)}</small></b><small>${T1(UI.tg66DueTom)} ${du.tomorrow||0} · ${T1(UI.tg66DueWeek)} ${du.week||0} · ${T1(UI.tg66DueLater)} ${du.later||0}</small></div>${mp?"":"<em>›</em>"}</div>
+        <div class="dc63tile"><i class="ic">⚠️</i><div><span>${T1(mp?UI.tg66ErrsMp:UI.tg66Errs)}</span><b>${eSum}</b><small>${esc(T1(UI.tg66ErrH).replace("{n}",E.answers||0))}</small></div></div></div>
+      <div class="tg66grid"><div class="tg66blk"><h4>${esc(T1(UI.tg66Cal).replace("{m}",Dc63.mon(p.month,true)))}</h4><div class="tg66cal">${["пн","вт","ср","чт","пт","сб","вс"].map(x=>`<b>${x}</b>`).join("")}${cells}</div></div>
+        <div class="tg66blk"><h4>${T1(mp?UI.tg66ErrsMp:UI.tg66Errs)}</h4><div class="tg66et">${["meaning","tone","similar"].map(k=>`<div><span>${T1(UI.tg66E[k])}</span><b>${E[k]||0}</b></div>`).join("")}</div>
+          ${(p.errWords||[]).length?`<div class="tg66ew">${p.errWords.map(w=>{const x=w.errs||{};return `<div><b>${esc(w.zh)}</b><span>${esc(w.ru||w.uz||"")}</span><small>${["meaning","tone","similar"].filter(k=>x[k]).map(k=>T1(UI.tg66E[k])+" "+x[k]).join(" · ")}</small></div>`;}).join("")}</div>`:""}
+          ${mp?"":`<button type="button" class="btn sm" data-tg66quick="weak">${T1(UI.tg66Weak)}</button>`}</div></div>
+      <div class="tg66blk"><h4>${T1(UI.tg66Topics)}</h4><div class="tg66tp">${(p.topics||[]).map(t=>`<div${mp?"":` data-tg66qtopic="${esc(t.topic)}"`}><span>${esc(t.topic)}</span><div class="dc63prog"><i style="width:${Math.round(t.learned/Math.max(1,t.total)*100)}%"></i></div><small>${t.learned} / ${t.total} ${T1(UI.tg66Learned)}</small></div>`).join("")}</div></div></div>`;},
+  quick(sel,topic){Object.assign(this.st,{sel,topic:topic||"",mode:"card",view:"setup"});Lr58.tab="train";this.start();},
+  body(tab){if(tab==="train")return this.st.view==="run"?this.runHtml():this.st.view==="done"?this.doneHtml():this.setupHtml();
+    if(tab==="prog"){if(!this.prog&&!this.progBusy)this.progLoad();return this.progHtml(this.prog,false);}return null;}
+};
+Lr58.extraTabs=function(){return [["train",UI.tg66Train],["prog",UI.tg66Prog]];};
+Lr58.extraBody=function(tab){return Tg66.body(tab);};
+{const _ld66=Lr58.load;Lr58.load=async function(){Tg66.prog=null;return _ld66.apply(this,arguments);};}
+/* ── клики, ввод, клавиши, свайп ── */
+document.addEventListener("click",e=>{const T=Tg66,t=e.target;const g=k=>t.closest("[data-tg66"+k+"]");let b;
+  if((b=g("prog"))&&Router.cur==="trdept"){e.preventDefault();T.mpOpen(b.dataset.tg66prog);return;}
+  if(Router.cur!=="learn")return;
+  if((b=g("sel"))){T.st.sel=b.dataset.tg66sel;Lr58.paint();}
+  else if((b=g("mode"))){T.st.mode=b.dataset.tg66mode;Lr58.paint();}
+  else if((b=g("order"))){T.st.order=b.dataset.tg66order;Lr58.paint();}
+  else if((b=g("limit"))){T.st.limit=+b.dataset.tg66limit;Lr58.paint();}
+  else if(g("go"))T.start();
+  else if(g("fin")){T.st.view="done";Lr58.paint();}
+  else if(g("open")){T.cur.open=true;Lr58.paint();}
+  else if((b=g("ans"))){const ok=b.dataset.tg66ans==="1";T.answer(ok,"meaning").then(()=>T.next());}
+  else if((b=g("pick"))){const c=T.cur,w=T.words[T.i],k=+b.dataset.tg66pick,o=c.opts[k];if(c.done!==null)return;c.pick=k;c.done=o.ok;
+    const similar=!o.ok&&T.st.mode==="ruzh"&&Array.from(o.w.zh).some(ch=>T.han(ch)&&w.zh.includes(ch));T.answer(o.ok,similar?"similar":"meaning");Lr58.paint();}
+  else if((b=g("tone"))){const c=T.cur,v=+b.dataset.tg66tone;if(c.done!==null)return;c.pick=v;c.done=v===c.tq.tone;T.answer(c.done,"tone");Lr58.paint();}
+  else if(g("chk")){const c=T.cur,w=T.words[T.i];const inp=document.querySelector("[data-tg66typed]");c.typed=inp?inp.value:"";c.done=T.okWrite(w,c.typed);T.answer(c.done,"meaning");Lr58.paint();}
+  else if(g("over")){const c=T.cur,w=T.words[T.i];c.done=true;const r=T.res[T.res.length-1];if(r&&r.w.id===w.id){r.ok=true;r.err=null;}Lr58.rpc("tr_answer",{wid:w.id,is_ok:true,mode:"write",err:null}).catch(()=>{});Lr58.paint();}
+  else if(g("next"))T.next();
+  else if(g("say")){const w=T.words[T.i];if(w)Dc63.say(w.zh);}
+  else if((b=g("sayc")))Dc63.say(b.dataset.tg66sayc);
+  else if(g("again")){const W=T.res.filter(x=>!x.ok).map(x=>x.w);if(W.length)T.run(W);}
+  else if(g("newt")){T.st.view="setup";Lr58.paint();}
+  else if((b=g("quick")))T.quick(b.dataset.tg66quick);
+  else if((b=g("qtopic")))T.quick("topic",b.dataset.tg66qtopic);
+  else return;e.preventDefault();});
+document.addEventListener("change",e=>{const s=e.target.closest&&e.target.closest("[data-tg66f]");if(!s)return;Tg66.st[s.dataset.tg66f]=s.value;});
+document.addEventListener("keydown",e=>{if(Router.cur!=="learn"||Lr58.tab!=="train"||Tg66.st.view!=="run"||e.ctrlKey||e.metaKey||e.altKey)return;const T=Tg66,c=T.cur,m=T.st.mode;if(!c)return;
+  const inInput=e.target&&e.target.closest&&e.target.closest("input,textarea");
+  if(inInput){if(e.key==="Enter"&&m==="write"){e.preventDefault();document.querySelector(c.done===null?"[data-tg66chk]":"[data-tg66next]")?.click();}return;}
+  if(c.done!==null&&(e.key==="Enter"||e.key==="ArrowRight")){e.preventDefault();T.next();return;}
+  if(m==="card"){if(e.key===" "&&!c.open){e.preventDefault();c.open=true;Lr58.paint();}else if(c.open&&(e.key==="ArrowRight"||e.key==="ArrowLeft")){e.preventDefault();T.answer(e.key==="ArrowRight","meaning").then(()=>T.next());}}
+  else if(/^[1-4]$/.test(e.key)){const sel=m==="tone"?`[data-tg66tone="${e.key}"]`:`[data-tg66pick="${+e.key-1}"]`;const b=document.querySelector(sel);if(b){e.preventDefault();b.click();}}});
+let tg66x=null;document.addEventListener("touchstart",e=>{const c=e.target.closest&&e.target.closest("[data-tg66swipe]");tg66x=c&&e.touches.length===1?e.touches[0].clientX:null;},{passive:true});
+document.addEventListener("touchend",e=>{if(tg66x==null)return;const dx=(e.changedTouches[0]||{}).clientX-tg66x;tg66x=null;const T=Tg66;if(!T.cur||T.st.mode!=="card"||Math.abs(dx)<60)return;
+  if(!T.cur.open){T.cur.open=true;}T.answer(dx>0,"meaning").then(()=>T.next());},{passive:true});
+/* УП: прогресс сотрудника — окно */
+Tg66.mpOpen=async function(emp){let p;try{p=await Lr58.rpc("tr_progress",{e:emp});}catch(e){toast(String((e&&e.message)||e));return;}
+  await Dlg.ask({title:T1(UI.tg66ProgOf).replace("{n}",p.name||emp),wide:true,fields:[{k:"h",type:"html",html:`<div id="lr58" class="tg66dlg">${this.progHtml(p,true)}</div>`}],okText:"OK||确定"});};
+(function(){const st=document.createElement("style");st.textContent=`
+#lr58 .tg66setup{display:grid;gap:14px}#lr58 .tg66blk h4{margin:0 0 8px}#lr58 .tg66blk select{margin-top:8px;width:auto}#lr58 .tg66row{display:flex;gap:24px;flex-wrap:wrap}
+#lr58 .tg66run{max-width:640px;margin:0 auto;display:grid;gap:12px}#lr58 .tg66top{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-size:12.5px;color:var(--ink-3)}
+#lr58 .tg66card{border:1px solid var(--line);border-radius:16px;padding:22px 20px;text-align:center;display:grid;gap:10px;background:var(--card,var(--bg-2,#fff));touch-action:pan-y}
+#lr58 .tg66zh{font-size:46px;font-weight:600;line-height:1.15;display:flex;justify-content:center;align-items:center;gap:6px}#lr58 .tg66zh b{color:var(--blue,#2F64B0);text-decoration:underline}
+#lr58 .tg66py{color:var(--ink-3);font-size:16px}#lr58 .tg66tr{font-size:19px;font-weight:600}#lr58 .tg66ex{font-size:14px}#lr58 .tg66ex small,#lr58 .tg66meta small{display:block;color:var(--ink-3)}
+#lr58 .tg66q{font-size:22px;font-weight:600}#lr58 .tg66q.sm{font-size:14px;font-weight:500;color:var(--ink-2)}
+#lr58 .tg66btns{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}#lr58 .tg66opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}#lr58 .tg66opts.tone{grid-template-columns:repeat(4,1fr)}
+#lr58 .tg66opt{border:1px solid var(--line);background:transparent;border-radius:12px;padding:12px 10px;font:500 15px var(--font);cursor:pointer;text-align:left;display:flex;gap:8px;align-items:center;color:var(--ink)}
+#lr58 .tg66opts.zh .tg66opt{font-size:22px;justify-content:center}#lr58 .tg66opts.tone .tg66opt{font-size:24px;justify-content:center}#lr58 .tg66opt i{font:600 11px var(--font);color:var(--ink-3);font-style:normal}
+#lr58 .tg66opt.ok{border-color:#3F8768;background:color-mix(in srgb,#3F8768 14%,transparent)}#lr58 .tg66opt.bad{border-color:var(--red);background:color-mix(in srgb,#D6362B 10%,transparent)}
+#lr58 .tg66fb{font-weight:700}#lr58 .tg66fb.ok{color:#2D6B51}#lr58 .tg66fb.bad{color:var(--red)}#lr58 .tg66meta{font-size:13.5px;color:var(--ink-2)}
+#lr58 .tg66wr{display:flex;gap:8px}#lr58 .tg66wr .inp{flex:1}#lr58 .tg66done{text-align:center;display:grid;gap:12px;max-width:640px;margin:0 auto}#lr58 .tg66big{font-size:24px;font-weight:700}
+#lr58 .tg66bad{display:grid;grid-template-columns:70px 100px 1fr auto;gap:10px;padding:7px 4px;border-bottom:1px solid var(--line);text-align:left;align-items:center}#lr58 .tg66bad b{font-size:18px}
+#lr58 .tg66grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-bottom:14px}#lr58 .tg66prog .tg66blk{border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+#lr58 .tg66cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:11px;text-align:center}#lr58 .tg66cal b{color:var(--ink-3);font-weight:600}
+#lr58 .tg66cal i{font-style:normal;padding:6px 0;border-radius:7px;background:var(--line-2,#eef2f8);color:var(--ink-2)}#lr58 .tg66cal i.e{background:transparent}#lr58 .tg66cal i.g{background:#3F8768;color:#fff}#lr58 .tg66cal i.y{background:#E8B10C;color:#fff}
+#lr58 .tg66cal i.m{background:color-mix(in srgb,#D6362B 14%,transparent)}#lr58 .tg66cal i.w,#lr58 .tg66cal i.f{opacity:.45}
+#lr58 .tg66et{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}#lr58 .tg66et div{border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}#lr58 .tg66et b{display:block;font-size:20px}#lr58 .tg66et span{font-size:12px;color:var(--ink-3)}
+#lr58 .tg66ew{display:grid;gap:4px;margin-bottom:8px;max-height:220px;overflow:auto}#lr58 .tg66ew div{display:grid;grid-template-columns:70px 1fr auto;gap:8px;font-size:13px;align-items:center}#lr58 .tg66ew b{font-size:16px}#lr58 .tg66ew small{color:var(--red)}
+#lr58 .tg66tp{display:grid;gap:8px}#lr58 .tg66tp>div{display:grid;grid-template-columns:160px 1fr 110px;gap:10px;align-items:center;font-size:13px;cursor:pointer}#lr58 .tg66tp small{color:var(--ink-3)}
+.tg66dlg .dc63tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px}.tg66dlg .dc63tile{display:flex;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.tg66dlg .dc63tile>div{display:grid;gap:2px}.tg66dlg .dc63tile span{font-size:12px;color:var(--ink-3)}.tg66dlg .dc63tile b{font-size:20px}.tg66dlg .dc63tile .ic{font-style:normal}.tg66dlg .dc63prog{height:6px;border-radius:4px;background:#e7ebf2;overflow:hidden}.tg66dlg .dc63prog i{display:block;height:100%;background:#2F64B0}
+@media(max-width:760px){#lr58 .tg66grid{grid-template-columns:1fr}#lr58 .tg66zh{font-size:38px}#lr58 .tg66tp>div{grid-template-columns:110px 1fr 80px}}`;document.head.appendChild(st);})();
 
 /* ═══════════════════════════ версия 3.3 · ОТДЕЛ ПЕРЕВОДА, ЭТАП 3 — ТЕСТЫ (решения владельца 06.11.2026) ═══════════════════════════
    Правила — sections/translate/ПРАВИЛА.md (ОП-13 … ОП-22), сервер — миграция 20261106000300_tr_tests.sql (tr_tests, tr_texts, tr_plan;
