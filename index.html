@@ -7225,7 +7225,8 @@ const CMsg={
   }
 };
 /* ── жалобы ── */
-const mgmtLogins10=()=>Object.values(S.accounts).filter(a=>a.active!==false&&a.pos!=="founderOnly"?((a.funcs||[]).includes("founder")||(a.funcs||[]).includes("managing")||a.role==="founder"):((a.funcs||[]).includes("founder")||a.role==="founder")).map(a=>a.login);
+/* только управляющие, как zc.mp_logins на сервере: учредитель без управления по этим уведомлениям действовать не может (решение владельца 08.11.2026, УЧ-11) */
+const mgmtLogins10=()=>Object.values(S.accounts).filter(a=>a.active!==false&&(a.funcs||[]).includes("managing")).map(a=>a.login);
 const CM_TOPICS=()=>[["quality",T1(UI.cmQuality)],["terms",T1(UI.cmTerms)],["comm",T1(UI.cmComm)],["pay",T1(UI.cmPay)],["other",T1(UI.cmOther)]];
 const cmStatusL=s=>T1(s==="received"?UI.cmReceived:s==="review"?UI.cmReview:s==="answered"?UI.cmAnswered:UI.cmClosed);
 const cmTopicL=t=>(CM_TOPICS().find(x=>x[0]===t)||["",t])[1];
@@ -8217,7 +8218,7 @@ const _hr12=Pages.hr;Pages.hr=function(){if(this._ht!=="calendar"){const h=_hr12
 /* ── после этапа 8: передача, ЭСФ, приёмка ── */
 const esfDays12=()=>+(workSettings().esfDays||10);
 /* 16.10.2026: бухгалтера и руководителей нет — ЭСФ выставляет УП; участники дела — адвокаты по делу и УП */
-const mpEmps12=()=>Object.values(S.accounts||{}).filter(a=>a.active!==false&&a.emp&&(a.funcs||[]).some(f=>f==="founder"||f==="managing")).map(a=>a.emp);
+const mpEmps12=()=>Object.values(S.accounts||{}).filter(a=>a.active!==false&&a.emp&&(a.funcs||[]).includes("managing")).map(a=>a.emp);
 const accountantEmp=()=>{const e=mpEmps12().find(x=>isPerson(x));return e||"shahzod";};
 const participants12=m=>{const set=new Set([m.lead,...execsOf(m).map(x=>x.emp),m.translator,cnLawyerOf(m),...mpEmps12()].filter(e=>e&&isPerson(e)));return [...set];};
 const Close12={
@@ -8824,7 +8825,7 @@ const _attnW17=attnRows11;attnRows11=function(scope){const rows=_attnW17(scope);
 const Remind17={last:0,busy:false,
   accts(emps){return [...new Set(emps.filter(Boolean))].map(accByEmp).filter(Boolean);},
   /* 16.10.2026: бухгалтера нет — напоминание «счёт/ЭСФ не выставлен» получает УП (и ведущий дела) */
-  accountants(){return Object.values(S.accounts||{}).filter(a=>a.active!==false&&(a.funcs||[]).some(f=>f==="founder"||f==="managing"));},
+  accountants(){return Object.values(S.accounts||{}).filter(a=>a.active!==false&&(a.funcs||[]).includes("managing"));},
   async tick(force){if(!U()||isClient()||this.busy)return;if(!force&&Date.now()-this.last<10*60000)return;this.busy=true;this.last=Date.now();
     try{const saves=[];
       /* сроки дел — только разовые услуги и суды: дело сопровождения и его задания сюда не попадают */
@@ -10446,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="8b5e8684e710";
+const ZC_BUILD="a628d08a193d";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -14096,7 +14097,7 @@ const Pre24={
       if(r.err){toast(r.err);Router.render();return false;}
       if(r.d){StSrv23.apply(m,r.d);if(m.pipeline==="team_draft"&&!(m.contract||{}).no&&typeof SB19!=="undefined"&&SB19.docGet){try{const x=await SB19.docGet("matters",m.id);if(x&&x.exists)StSrv23.apply(m,x.data());const y=await SB19.docGet("clients",m.clientId);if(y&&y.exists)S.clients[m.clientId]=Object.assign({},y.data(),{id:m.clientId});}catch(e){}}Router.render();return true;}
       if(r.skip)this.noSrv=true;}
-    const me=this.me(),at=nowS();const mpEmp=(Object.values(S.accounts||{}).find(x=>x.active!==false&&x.emp&&(x.funcs||[]).some(f=>f==="founder"||f==="managing"))||{}).emp;
+    const me=this.me(),at=nowS();const mpEmp=(Object.values(S.accounts||{}).find(x=>x.active!==false&&x.emp&&(x.funcs||[]).includes("managing"))||{}).emp;
     const out=this.mut(m,act,a,{me,at,mpEmp});
     if(typeof this.ctNo==="function")await this.ctNo(m);
     try{await saveDoc("matters",m);}catch(e){toast(String(e&&e.message||e));Router.render();return false;}
