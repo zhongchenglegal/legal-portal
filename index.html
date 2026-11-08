@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="dd4239f47b85";
+const ZC_BUILD="ff5de94e404a";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -23805,6 +23805,61 @@ if(typeof Cli21!=="undefined"&&Cli21.fillMin){const _fmFo61=Cli21.fillMin.bind(C
 /* после создания заявки — сообщение (уведомление УП отправляет сервер) */
 {const _crFo61=Matter.create.bind(Matter);Matter.create=async function(){const before=Object.keys(S.matters||{}).length;const r=await _crFo61.apply(this,arguments);
   if(Fo61.on()&&Object.keys(S.matters||{}).length>before)toast(T1(UI.fo61IntakeOk));return r;};}
+
+/* ═══════════════════════════ версия 3.3 · РОЛЬ «УЧРЕДИТЕЛЬ», ЭТАП 3 — «СОВЕТ УЧРЕДИТЕЛЕЙ» НА СЕРВЕРЕ (решения владельца 08.11.2026) ═══════════════════════════
+   Правила — sections/founders/ПРАВИЛА.md (УЧ-21 … УЧ-26), сервер — миграция 20261108000300_council.sql (council_act, zc.council_settle, pg_cron zc-council).
+   Подключается после fo_ui.js. Здесь только вид:
+   • новая повестка, голос, подпись, комментарий — через сервер (council_act); итог считает сервер (status в записи повестки);
+   • уведомления членам Совета отправляет сервер (портал больше не пишет их сам);
+   • правило «решение принято, если «за» — большинство Совета» — подсказкой в карточке вопроса;
+   • «Перевести» у описания вопроса и у каждого комментария — на язык интерфейса (ИИ-переводчик translate), оригинал остаётся;
+   • учредитель без управления не даёт поручений по решению и не меняет «Цели фирмы» (это делает управляющий адвокат).
+   Без сервера (демо) — всё как раньше. */
+Object.assign(UI,{cn62Rule:"Решение принято, если «за» — большинство Совета: из {n} — не меньше {k}||决议需委员会多数赞成：{n} 人中至少 {k} 票",
+  cn62Tr:"Перевести||翻译",cn62TrBusy:"Перевожу…||翻译中…",cn62TrHide:"Скрыть перевод||隐藏译文"});
+window.UZ21=Object.assign(window.UZ21||{},{"Решение принято, если «за» — большинство Совета: из {n} — не меньше {k}":"Qaror qabul qilinadi, agar «yoqlab» — Kengash koʻpchiligi boʻlsa: {n} tadan kamida {k}",
+  "Перевести":"Tarjima qilish","Перевожу…":"Tarjima qilinmoqda…","Скрыть перевод":"Tarjimani yashirish"});
+const Cn62={
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T;},
+  async act(aid,act,a){const d=await SB19.T.rpc("council_act",{aid:aid||null,act,a:a||{}});if(d&&d.id){S.agendas[d.id]=d;}return d;},
+  err(e){toast(String((e&&e.message)||e).replace(/^.*?:\s*(?=[А-ЯЁA-Z])/,""));},
+  /* перевод: русский/узбекский → китайский, китайский → язык интерфейса (как в «Чатах»); узбекскому интерфейсу — на узбекский */
+  tr:{},
+  async translate(key,text){if(!text)return;if(this.tr[key]&&this.tr[key]!=="…"){delete this.tr[key];Council.rerender();return;}
+    const tg=lang==="zh"?"zh":lang==="uz"?"uz":"ru";const zh=/[一-鿿]/.test(text);
+    const src=tg==="uz"&&!zh?"Переведи на узбекский (латиница):\n"+text:tg==="ru"&&!zh?"Переведи на русский:\n"+text:text;
+    this.tr[key]="…";Council.rerender();
+    try{const r=await SB19.T.invoke("translate",{text:src,ui:tg,mode:"fast"});this.tr[key]=(r&&r.translation)||"";}catch(e){delete this.tr[key];this.err(e);}
+    Council.rerender();},
+  trBox(aid,k){const t=this.tr[aid+"|"+k];return `<div class="cn62tr"><button type="button" class="cn62b" data-cn62tr="${esc(k)}">${T1(t==="…"?UI.cn62TrBusy:t?UI.cn62TrHide:UI.cn62Tr)}</button>${t&&t!=="…"?`<div class="cn62t">${esc(t)}</div>`:""}</div>`;}
+};
+/* итог — с сервера */
+if(typeof agStatus==="function"){const _stCn62=agStatus;agStatus=function(ag){if(Cn62.srv()&&ag)return ag.status==="adopted"||ag.status==="rejected"?ag.status:"open";return _stCn62.apply(this,arguments);};}
+if(typeof settleAgenda==="function"){const _seCn62=settleAgenda;settleAgenda=async function(){if(Cn62.srv())return;return _seCn62.apply(this,arguments);};}
+if(typeof Council!=="undefined"){
+  /* действия — через сервер */
+  const _bCn62=Council.bind.bind(Council);Council.bind=function(b){_bCn62(b);if(!Cn62.srv())return;const self=this;
+    const on=(sel,fn)=>b.querySelectorAll(sel).forEach(el=>el.onclick=async e=>{e.stopPropagation();try{await fn(el);}catch(x){Cn62.err(x);}self.render();});
+    on("[data-vote]",el=>Cn62.act(self.detail,"vote",{v:el.dataset.vote}));
+    on('[data-act="agSign"]',()=>Cn62.act(self.detail,"sign"));
+    on('[data-act="agComment"]',async()=>{const inp=b.querySelector("#agCIn");const v=inp?inp.value.trim():"";if(!v)return;await Cn62.act(self.detail,"comment",{text:v});});
+    on('[data-act="agSave"]',async()=>{const t=b.querySelector("#agT").value.trim(),d=b.querySelector("#agD").value.trim(),dl=b.querySelector("#agDl").value;if(!t||!dl){toast(T1(UI.agTitle));return;}
+      const r=await Cn62.act(null,"create",{title:t,desc:d,deadline:dl,files:self._files||[]});self.form=false;if(r&&r.id)self.detail=r.id;});
+    b.querySelectorAll("[data-cn62tr]").forEach(el=>el.onclick=e=>{e.stopPropagation();const a=S.agendas[self.detail];if(!a)return;const k=el.dataset.cn62tr;
+      const text=k==="d"?[a.title,a.desc].filter(Boolean).join("\n\n"):((a.comments||[])[+k.slice(1)]||{}).text;Cn62.translate(a.id+"|"+k,text);});};
+  /* карточка вопроса: правило большинства и «Перевести» */
+  const _dCn62=Council.agendaDetail.bind(Council);Council.agendaDetail=function(a){let h=_dCn62(a);if(!Cn62.srv())return h;
+    const n=founders().length,k=Math.floor(n/2)+1;const rule=`<div class="cn62rule">${esc(T1(UI.cn62Rule).replace("{n}",n).replace("{k}",k))}</div>`;
+    h=h.replace(/(<div class="votes" style="margin-top:0">)/,rule+"$1");
+    h=h.replace(/(<p style="margin:12px 0 0;white-space:pre-wrap">[\s\S]*?<\/p>)/,m=>m+Cn62.trBox(a.id,"d"));
+    let i=0;h=h.replace(/(<div class="msg(?: me)?"><div class="mm">[\s\S]*?<\/div>)([\s\S]*?)(<\/div>)/g,(m0,a1,a2,a3)=>{const j=i++;return a1+a2+Cn62.trBox(a.id,"c"+j)+a3;});
+    return h;};
+}
+/* учредитель без управления: поручения по решению и «Цели фирмы» — у управляющего адвоката */
+(function(){const st=document.createElement("style");st.textContent=`body.fo60ro :is([data-act="asForm"],[data-act="asQuick"],[data-act="gAdd"],[data-gp],[data-gnote],[data-gkpi],[data-gdel]){display:none!important}
+#mdC2 .cn62rule{font-size:12px;color:var(--ink-3);margin:-2px 0 10px}#mdC2 .cn62tr{margin-top:6px}#mdC2 .cn62b{border:0;background:none;padding:0;color:var(--blue,#2F64B0);font-size:12px;cursor:pointer}
+#mdC2 .cn62t{margin-top:4px;padding:6px 10px;border-left:3px solid color-mix(in srgb,var(--blue,#2F64B0) 40%,transparent);background:color-mix(in srgb,var(--blue,#2F64B0) 6%,transparent);border-radius:6px;white-space:pre-wrap;font-size:13px}`;
+  document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
