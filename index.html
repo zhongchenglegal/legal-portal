@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="ff5de94e404a";
+const ZC_BUILD="1bb578804ee1";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -23860,6 +23860,105 @@ if(typeof Council!=="undefined"){
 #mdC2 .cn62rule{font-size:12px;color:var(--ink-3);margin:-2px 0 10px}#mdC2 .cn62tr{margin-top:6px}#mdC2 .cn62b{border:0;background:none;padding:0;color:var(--blue,#2F64B0);font-size:12px;cursor:pointer}
 #mdC2 .cn62t{margin-top:4px;padding:6px 10px;border-left:3px solid color-mix(in srgb,var(--blue,#2F64B0) 40%,transparent);background:color-mix(in srgb,var(--blue,#2F64B0) 6%,transparent);border-radius:6px;white-space:pre-wrap;font-size:13px}`;
   document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.3 · РОЛЬ «УЧРЕДИТЕЛЬ», ЭТАП 4 — ДОЛИ И ПРИБЫЛЬ (решения владельца 08.11.2026) ═══════════════════════════
+   Правила — sections/founders/ПРАВИЛА.md (УЧ-27 … УЧ-33), сервер — миграция 20261108000400_fo_profit.sql (fo_profit, fo_profit_months,
+   fo_cost_add/del, fo_payout_mark/unmark, fo_shares_set). Подключается после fo_council.js. Здесь только вид:
+   • «Финансы» → вкладка «Прибыль и доли» (управляющий адвокат и учредители): месяц, по каждой организации — поступления, зарплаты,
+     соцналог, налоги, расходы, прибыль и распределение по долям с отметкой «Выплачено»; сводка по месяцам; доли учредителей;
+   • налоги, расходы, доли и «Выплачено» — только у управляющего адвоката (сервер отвечает canEdit);
+   • «Совет учредителей»: доли — строкой в карточке вопроса. */
+Object.assign(UI,{fp63Tab:"Прибыль и доли||利润与股份",fp63Legal:"Адвокатская фирма||律师事务所",fp63Llc:"ООО||有限责任公司",fp63Month:"Месяц||月份",
+  fp63Rec:"Поступления||收入",fp63RecH:"подтверждённые, без транзита||已确认，不含代付",fp63RecHv:"подтверждённые, без транзита и НДС||已确认，不含代付和增值税",
+  fp63Sal:"Зарплаты||工资",fp63Soc:"Соцналог с зарплат||工资社会税",fp63NoPay:"зарплата за месяц ещё не утверждена||本月工资尚未批准",
+  fp63Tax:"Налоги||税费",fp63Exp:"Расходы||费用",fp63Profit:"Прибыль||利润",fp63Loss:"Убыток — распределять нечего||亏损——无可分配",
+  fp63Dist:"Распределение по долям||按股份分配",fp63Paid:"выплачено {d}||已支付 {d}",fp63NotPaid:"не выплачено||未支付",fp63Mark:"Выплачено||已支付",fp63Unmark:"Снять отметку||取消标记",
+  fp63AddTax:"+ Налог||+ 税费",fp63AddExp:"+ Расход||+ 费用",fp63Shares:"Доли учредителей||创始人股份",fp63SharesEdit:"Изменить доли||修改股份",
+  fp63SharesBad:"Сумма долей не 100 % — исправьте||股份合计不是 100%——请修改",fp63Months:"По месяцам||按月",fp63Title:"Название||名称",fp63Amount:"Сумма, сум||金额（苏姆）",
+  fp63Note:"Комментарий||备注",fp63PaidOn:"Дата выплаты||支付日期",fp63Del:"Удалить запись?||删除该记录？",fp63None:"нет||无",
+  fp63Hint:"Прибыль = поступления − зарплаты − соцналог − налоги − расходы. Налоги и расходы фирмы вносит управляющий адвокат.||利润 = 收入 − 工资 − 社会税 − 税费 − 费用。税费和费用由管理律师录入。",
+  fp63SharesLine:"Доли: {s}||股份：{s}",fp63Load:"Загрузка…||加载中…"});
+window.UZ21=Object.assign(window.UZ21||{},{"Прибыль и доли":"Foyda va ulushlar","Адвокатская фирма":"Advokatlik firmasi","ООО":"MChJ","Месяц":"Oy","Поступления":"Tushumlar",
+  "подтверждённые, без транзита":"tasdiqlangan, tranzitsiz","подтверждённые, без транзита и НДС":"tasdiqlangan, tranzit va QQSsiz","Зарплаты":"Ish haqi","Соцналог с зарплат":"Ish haqidan ijtimoiy soliq",
+  "зарплата за месяц ещё не утверждена":"oylik ish haqi hali tasdiqlanmagan","Налоги":"Soliqlar","Расходы":"Xarajatlar","Прибыль":"Foyda","Убыток — распределять нечего":"Zarar — taqsimlanadigan narsa yoʻq",
+  "Распределение по долям":"Ulushlar boʻyicha taqsimot","выплачено {d}":"toʻlangan {d}","не выплачено":"toʻlanmagan","Выплачено":"Toʻlandi","Снять отметку":"Belgini olib tashlash",
+  "+ Налог":"+ Soliq","+ Расход":"+ Xarajat","Доли учредителей":"Taʼsischilar ulushlari","Изменить доли":"Ulushlarni oʻzgartirish","Сумма долей не 100 % — исправьте":"Ulushlar yigʻindisi 100 % emas — tuzating",
+  "По месяцам":"Oylar boʻyicha","Название":"Nomi","Сумма, сум":"Summa, soʻm","Комментарий":"Izoh","Дата выплаты":"Toʻlov sanasi","Удалить запись?":"Yozuv oʻchirilsinmi?","нет":"yoʻq",
+  "Прибыль = поступления − зарплаты − соцналог − налоги − расходы. Налоги и расходы фирмы вносит управляющий адвокат.":"Foyda = tushumlar − ish haqi − ijtimoiy soliq − soliqlar − xarajatlar. Firma soliqlari va xarajatlarini boshqaruvchi advokat kiritadi.",
+  "Доли: {s}":"Ulushlar: {s}","Загрузка…":"Yuklanmoqda…"});
+const Fp63={mon:null,data:null,months:null,busy:false,
+  can(){return typeof U==="function"&&!!U()&&!isClient()&&(isFounder()||hasF("managing"));},
+  srv(){return typeof SB19!=="undefined"&&SB19.on&&!!SB19.T;},
+  m(){if(!this.mon)this.mon=prevMonth11(monthOf11(todayS()));return this.mon;},
+  sum(x){return fmtN(Math.round(+x||0))+" "+T1(UI.sum);},
+  err(e){toast(String((e&&e.message)||e).replace(/^.*?:\s*(?=[А-ЯЁA-Z])/,""));},
+  async load(){if(!this.srv()||this.busy)return;this.busy=true;
+    try{const [d,ms]=await Promise.all([SB19.T.rpc("fo_profit",{mon:this.m()}),SB19.T.rpc("fo_profit_months",{n:12,upto:this.m()})]);this.data=d;this.months=ms;}catch(e){this.err(e);}
+    this.busy=false;if(Router.cur==="fin"&&Pages._ft==="profit")Router.render();},
+  /* одна организация */
+  ent(k){const d=this.data,e=d&&d[k];if(!e)return "";const ed=d.canEdit;
+    const row=(l,v,h,cls)=>`<div class="fp63r${cls?" "+cls:""}"><span>${T1(l)}${h?`<small>${esc(h)}</small>`:""}</span><b>${v}</b></div>`;
+    const items=(list,kind)=>list.map(x=>`<div class="fp63i"><span>${esc(x.title)}${x.note?` <small>${esc(x.note)}</small>`:""}</span><b>${this.sum(x.amount)}</b>${ed?`<button class="fp63x" data-fp63del="${x.id}" title="×">×</button>`:""}</div>`).join("")||`<div class="fp63i none">${T1(UI.fp63None)}</div>`;
+    const loss=+e.profit<=0;
+    return `<div class="card fp63e"><h4>${T1(k==="llc"?UI.fp63Llc:UI.fp63Legal)}</h4>
+      ${row(UI.fp63Rec,this.sum(e.receipts),T1(k==="llc"?UI.fp63RecHv:UI.fp63RecH)+` · ${e.receiptsN}`)}
+      ${row(UI.fp63Sal,"− "+this.sum(e.salaries),e.payroll==="approved"?"":T1(UI.fp63NoPay),e.payroll==="approved"?"":"warn")}
+      ${row(UI.fp63Soc,"− "+this.sum(e.social))}
+      <div class="fp63g"><div class="fp63gh">${T1(UI.fp63Tax)} <b>− ${this.sum(e.taxSum)}</b>${ed?`<button class="btn sm" data-fp63add="tax" data-e="${k}">${T1(UI.fp63AddTax)}</button>`:""}</div>${items(e.taxes,"tax")}</div>
+      <div class="fp63g"><div class="fp63gh">${T1(UI.fp63Exp)} <b>− ${this.sum(e.expSum)}</b>${ed?`<button class="btn sm" data-fp63add="expense" data-e="${k}">${T1(UI.fp63AddExp)}</button>`:""}</div>${items(e.expenses,"expense")}</div>
+      ${row(UI.fp63Profit,this.sum(e.profit),"",loss?"neg big":"pos big")}
+      <h4 class="fp63dh">${T1(UI.fp63Dist)}</h4>${loss?`<div class="fp63i none">${T1(UI.fp63Loss)}</div>`:""}
+      ${e.dist.map(x=>`<div class="fp63d"><span>${esc(x.name)} <small>${String(x.pct).replace(".",",")} %</small></span><b>${this.sum(x.amount)}</b>
+        ${x.paid?`<span class="dc63st ok">${esc(T1(UI.fp63Paid).replace("{d}",fmtD(x.paid.on)+" · "+this.sum(x.paid.amount)))}</span>${ed?`<button class="btn sm ghost" data-fp63un="${esc(x.login)}" data-e="${k}">${T1(UI.fp63Unmark)}</button>`:""}`
+          :`<span class="dc63st">${T1(UI.fp63NotPaid)}</span>${ed&&+x.amount>0?`<button class="btn sm" data-fp63pay="${esc(x.login)}" data-e="${k}" data-a="${x.amount}">${T1(UI.fp63Mark)}</button>`:""}`}</div>`).join("")}
+    </div>`;},
+  html(){if(!this.srv())return `<div class="card">${T1(UI.fp63Load)}</div>`;if(!this.data){this.load();return `<div class="card">${T1(UI.fp63Load)}</div>`;}const d=this.data;
+    const shares=`<div class="card fp63s"><h4>${T1(UI.fp63Shares)}${d.canEdit?` <button class="btn sm" data-fp63shares="1">${T1(UI.fp63SharesEdit)}</button>`:""}</h4>
+      ${d.sharesOk?"":`<div class="fp63warn">${T1(UI.fp63SharesBad)}</div>`}<div class="fp63sl">${d.shares.map(s=>`<span><b>${String(s.pct).replace(".",",")} %</b> ${esc(s.name)}</span>`).join("")}</div></div>`;
+    const ms=(this.months||[]).map(x=>`<tr${x.month===this.m()?' class="on"':""} data-fp63m="${x.month}"><td>${esc(x.month)}</td><td class="${+x.legal.profit<0?"neg":""}">${this.sum(x.legal.profit)}</td><td class="${+x.llc.profit<0?"neg":""}">${this.sum(x.llc.profit)}</td></tr>`).join("");
+    return `<div id="fp63"><div class="fp63top"><label>${T1(UI.fp63Month)} <input type="month" class="inp sm" data-fp63mon value="${esc(this.m())}"></label><small>${T1(UI.fp63Hint)}</small></div>
+      <div class="fp63grid">${this.ent("legal")}${this.ent("llc")}</div>${shares}
+      <div class="card"><h4>${T1(UI.fp63Months)}</h4><table class="fp63t"><thead><tr><th>${T1(UI.fp63Month)}</th><th>${T1(UI.fp63Legal)}</th><th>${T1(UI.fp63Llc)}</th></tr></thead><tbody>${ms}</tbody></table></div></div>`;},
+  bind(vp){const r=vp.querySelector("#fp63");if(!r)return;const self=this;const run=async fn=>{try{await fn();}catch(e){self.err(e);}self.data=null;self.load();};
+    const mi=r.querySelector("[data-fp63mon]");if(mi)mi.onchange=()=>{if(/^\d{4}-\d{2}$/.test(mi.value)){self.mon=mi.value;self.data=null;self.load();Router.render();}};
+    r.querySelectorAll("[data-fp63m]").forEach(tr=>tr.onclick=()=>{self.mon=tr.dataset.fp63m;self.data=null;self.load();Router.render();});
+    r.querySelectorAll("[data-fp63add]").forEach(b=>b.onclick=async()=>{const k=b.dataset.fp63add,e=b.dataset.e;
+      const v=await Dlg.ask({title:T1(k==="tax"?UI.fp63AddTax:UI.fp63AddExp).replace("+ ","")+" · "+T1(e==="llc"?UI.fp63Llc:UI.fp63Legal)+" · "+self.m(),fields:[{k:"title",label:T1(UI.fp63Title),required:true},
+        {k:"amount",label:T1(UI.fp63Amount),type:"number",required:true,check:x=>(+x.amount||0)>0?"":T1(UI.fp63Amount)},{k:"note",label:T1(UI.fp63Note)}]});
+      if(!v)return;run(()=>SB19.T.rpc("fo_cost_add",{mon:self.m(),e,k,title:v.title,amount:+v.amount,note:v.note||""}));});
+    r.querySelectorAll("[data-fp63del]").forEach(b=>b.onclick=async()=>{if(!await Dlg.confirm(T1(UI.fp63Del),"",true))return;run(()=>SB19.T.rpc("fo_cost_del",{cid:+b.dataset.fp63del}));});
+    r.querySelectorAll("[data-fp63pay]").forEach(b=>b.onclick=async()=>{const v=await Dlg.ask({title:T1(UI.fp63Mark)+" · "+dispName((accByEmp(b.dataset.fp63pay)||{}).emp||b.dataset.fp63pay),
+        fields:[{k:"amount",label:T1(UI.fp63Amount),type:"number",value:b.dataset.a,required:true},{k:"on",label:T1(UI.fp63PaidOn),type:"date",value:todayS(),required:true},{k:"note",label:T1(UI.fp63Note)}]});
+      if(!v)return;run(()=>SB19.T.rpc("fo_payout_mark",{mon:self.m(),e:b.dataset.e,who:b.dataset.fp63pay,amount:+v.amount,paid_on:v.on,note:v.note||""}));});
+    r.querySelectorAll("[data-fp63un]").forEach(b=>b.onclick=()=>run(()=>SB19.T.rpc("fo_payout_unmark",{mon:self.m(),e:b.dataset.e,who:b.dataset.fp63un})));
+    const sb=r.querySelector("[data-fp63shares]");if(sb)sb.onclick=async()=>{const sh=self.data.shares;const v=await Dlg.ask({title:T1(UI.fp63SharesEdit),
+        fields:sh.map(s=>({k:"s_"+s.login,label:s.name+", %",type:"number",value:s.pct,required:true})),check:null});if(!v)return;
+      const o={};sh.forEach(s=>{o[s.login]=+v["s_"+s.login]||0;});run(()=>SB19.T.rpc("fo_shares_set",{sh:o}));};}
+};
+/* «Финансы» → «Прибыль и доли» */
+{const _fFp63=Pages.fin;Pages.fin=function(){if(!Fp63.can()||(typeof Adv21!=="undefined"&&Adv21.on()))return _fFp63.apply(this,arguments);
+  const want=this._ft==="profit";if(want)this._ft="fin";let h=_fFp63.apply(this,arguments);
+  const i=h.indexOf('<div class="ptabs">');if(i<0)return h;const j=h.indexOf("</div>",i);
+  const btn=`<button class="${want?"on":""}" data-ft="profit">${T1(UI.fp63Tab)}</button>`;
+  if(!want)return h.slice(0,j)+btn+h.slice(j);
+  this._ft="profit";const tabs=h.slice(i,j).replace(/ class="on"/g,' class=""');return h.slice(0,i)+tabs+btn+"</div>"+Fp63.html();};}
+{const _pbFp63=Pages.bind;Pages.bind=function(vp){_pbFp63.apply(this,arguments);try{if(vp)Fp63.bind(vp);}catch(e){}};}
+/* «Совет учредителей»: доли — строкой в карточке вопроса */
+if(typeof Council!=="undefined"&&Council.agendaDetail){const _adFp63=Council.agendaDetail.bind(Council);Council.agendaDetail=function(a){let h=_adFp63(a);
+  if(!Fp63.srv())return h;if(!Fp63._sh){Fp63._sh=[];SB19.T.select("fo_shares").then(r=>{Fp63._sh=r||[];Council.rerender();}).catch(()=>{});}
+  const s=(Fp63._sh||[]).slice().sort((x,y)=>y.pct-x.pct).map(x=>`${(S.accounts[x.login]||{}).name||x.login} ${String(x.pct).replace(".",",")} %`).join(" · ");
+  return s?h.replace(/(<div class="cn62rule">[^<]*<\/div>)/,m=>m+`<div class="cn62rule">${esc(T1(UI.fp63SharesLine).replace("{s}",s))}</div>`):h;};}
+(function(){const st=document.createElement("style");st.textContent=`
+#fp63 .fp63top{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px}#fp63 .fp63top small{color:var(--ink-3)}
+#fp63 .fp63grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-bottom:14px}
+#fp63 .fp63r,#fp63 .fp63i,#fp63 .fp63d{display:flex;align-items:baseline;gap:10px;padding:6px 0;border-bottom:1px solid var(--line-2,#eef1f6)}
+#fp63 .fp63r span,#fp63 .fp63i span,#fp63 .fp63d span:first-child{flex:1;min-width:0}#fp63 small{display:block;font-size:11.5px;color:var(--ink-3)}#fp63 .fp63i small,#fp63 .fp63d small{display:inline}
+#fp63 .fp63r.warn small{color:var(--red)}#fp63 .fp63r.big b{font-size:18px}#fp63 .pos b{color:var(--ok-d,#1d7a46)}#fp63 .neg,#fp63 .neg b{color:var(--red)}
+#fp63 .fp63g{padding:6px 0}#fp63 .fp63gh{display:flex;gap:10px;align-items:center}#fp63 .fp63gh b{margin-left:auto}#fp63 .fp63i{padding-left:12px;font-size:13px}#fp63 .fp63i.none{color:var(--ink-3)}
+#fp63 .fp63x{border:0;background:none;color:var(--ink-3);cursor:pointer;font-size:16px}#fp63 .fp63dh{margin-top:12px}
+#fp63 .fp63sl{display:flex;gap:18px;flex-wrap:wrap}#fp63 .fp63warn{color:var(--red);margin-bottom:6px}
+#fp63 .fp63t{width:100%;border-collapse:collapse}#fp63 .fp63t td,#fp63 .fp63t th{padding:6px 8px;border-bottom:1px solid var(--line-2,#eef1f6);text-align:right}#fp63 .fp63t td:first-child,#fp63 .fp63t th:first-child{text-align:left}
+#fp63 .fp63t tr[data-fp63m]{cursor:pointer}#fp63 .fp63t tr.on{background:color-mix(in srgb,var(--blue,#2F64B0) 7%,transparent)}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
