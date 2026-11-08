@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="1bb578804ee1";
+const ZC_BUILD="8b5e8684e710";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -16269,7 +16269,9 @@ const D=BY.dir,data=AGXW.data={loaded:false,err:'',me:{},list:[],chat:[],orders:
 let pendingQ=[],busy=false,localEv=[],timer=null,lastLoad=0,dmWait=0;
 D.lvl=2;D.log=[];D.runs=0;D.cost=0;D.limit=62;D.budget=25;D.q=null;
 const KINDL={task:'Задача сотруднику',assign:'Назначить ведущего',remind:'Напоминание сотруднику',msg:'Сообщение сотруднику',call:'Звонок сотруднику',mp:'Функция УП'};
-const pendingActs=()=>{const out=[];for(const o of data.orders||[])for(const a of o.actions||[])if(a.status==='pending'&&o.status!=='cancelled')out.push({o,a});return out;};
+/* поручения учредителя (этап 5, 08.11.2026): своё сообщение подтверждает он сам, остальное решает УП */
+const mineAct=(o,a)=>{const s=!!(a.args&&a.args.fo_self);return data.me&&data.me.fo?(s&&o.by===data.me.login):!s;};
+const pendingActs=()=>{const out=[];for(const o of data.orders||[])for(const a of o.actions||[])if(a.status==='pending'&&o.status!=='cancelled'&&mineAct(o,a))out.push({o,a});return out;};
 AGXW.pendingCount=()=>pendingActs().length;AGXW.pendingActs=pendingActs;   /* для «Работы» и значка «Ждёт вас» в офисе (parts/ui2.part.js) */
 WORK_CONTEXT.dir=['Данные портала · дела, сроки, суды, задачи, оплаты','Отчёт УП в 09:00 и 18:00, ответы в чате'];
 const tzd=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tashkent',year:'numeric',month:'2-digit',day:'2-digit'});
@@ -16330,7 +16332,7 @@ cancelOrder=async function(id){const o=orders.find(x=>x.id===id);if(!o||o.kind!=
 renderQueue=function(){const P=pendingActs();$('#queue').innerHTML=P.length?P.map(({o,a})=>{const M=a.args.matter?API.matter(a.args.matter):null;
   return`<article class="qcard"><div class="qhead">${avatar(D)}<div><h3>${esc(a.kind==='mp'?(a.args.title||KINDL.mp):KINDL[a.kind])}${a.to?' — '+esc(a.to):''}</h3><small>${esc(D.person)} · поручение №${o.id} · ${esc(tOf(Date.parse(a.at)))}${a.as_mp?' · от вашего имени':''}</small></div><span class="pill wait" style="margin-left:auto">Ваше решение</span></div>
   <p>${a.args.title&&a.kind!=='mp'?`<b>${esc(a.args.title)}</b><br>`:''}${esc(a.args.text||'')}${a.kind==='mp'?`<br><small>Функция: ${esc(a.args.fn||'')}</small><details style='margin-top:4px'><summary style='cursor:pointer;font-size:12px'>Данные действия</summary><pre style='white-space:pre-wrap;font-size:12px;margin:4px 0 0'>${esc(JSON.stringify(a.args.params||{},null,1))}</pre></details>`:''}${M?`<br><small>Дело №${esc(M.no)} · ${esc(M.title)}${M.client?' · '+esc(M.client):''}</small>`:''}${a.args.due?`<br><small>Срок: ${esc(a.args.due)}</small>`:''}${a.due_at?`<br><small><b>Когда:</b> ${esc(new Date(a.due_at).toLocaleString('ru-RU',{timeZone:'Asia/Tashkent',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}))}</small>`:''}${a.cond?`<br><small><b>Если:</b> ${esc(String(a.cond).replace(/^\s*если\s+/i,''))}</small>`:''}</p>
-  <p style="font-size:12px;color:#737C8A;margin-top:-4px">Ваше поручение: «${esc(o.text.slice(0,200))}»</p>
+  <p style="font-size:12px;color:#737C8A;margin-top:-4px">${o.fo&&!(data.me&&data.me.fo)?'Поручение учредителя '+esc(o.by_name||'')+': ':'Ваше поручение: '}«${esc(o.text.slice(0,200))}»</p>
   <div class="qactions"><button class="btn primary" data-xdec="approve" data-aid="${a.id}">Разрешить</button><button class="btn" data-xdec="return" data-aid="${a.id}">Вернуть с комментарием</button><button class="btn ghost" data-xdec="reject" data-aid="${a.id}">Отклонить</button></div></article>`;}).join('')
  :'<div class="empty">Решений, которые ждут вас, нет. Каждое действие руководителя отдела — задачи, напоминания, сообщения, звонки и ваши функции в портале — появляется здесь и выполняется только после «Разрешить».</div>';};
 const _rs=renderStats;renderStats=function(){_rs();const n=AGXW.pendingCount(),st=$$('#stats .stat')[1];if(st){st.querySelector('b').textContent=n;const em=st.querySelector('em');if(em)em.textContent=n?'Действия ждут подтверждения':'Всё согласовано';}$('#queueCount').textContent=n;};
@@ -16347,7 +16349,7 @@ AGXW.order=async function(t,allow,asMp){t=String(t||'').trim().slice(0,2000);if(
 async function load(quiet){if(API.demo){data.loaded=true;data.err='Демо-режим: ИИ-агенты работают только с сервером портала';derive();paintAll();return;}
  try{const [me,list,chat]=await Promise.all([API.rpc('ai_me',{}),API.rpc('ai_dir_list',{days:90}),API.rpc('ai_chat_list',{})]);
   data.me=me||{};data.list=Array.isArray(list)?list:[];data.chat=Array.isArray(chat)?chat:[];data.err='';
-  if(data.me.mp===false)data.err='ИИ-агенты — только для управляющего партнёра';}
+  if(data.me.mp===false&&!data.me.fo)data.err='ИИ-агенты — только для управляющего партнёра';}
  catch(e){data.err=errText(e);}
  if(!data.err){try{const o=await API.rpc('ai_orders_list',{days:90});const all=Array.isArray(o)?o:[];data.orders=all.filter(x=>(x.agent||'dir')==='dir');AGXW.itOrders=all.filter(x=>x.agent==='it');}
   catch(e){data.orders=[];if(/ai_orders_list|does not exist|PGRST202/i.test(String(e&&(e.message||e.code))))data.err='Поручения ещё не подключены к серверу: нужна миграция 20261026000200_ai_agents';}}
@@ -23712,7 +23714,7 @@ if(typeof HELP21!=="undefined"){
      «Регистрации договора»; дело уходит без ведущего на «Приём заявки», ведущего назначает управляющий адвокат;
    • «+ Наличные» в карточке дела — наличные, которые учредитель получил сам;
    • режим «только просмотр»: кнопки, которые меняют данные, учредителю не показываются;
-   • узбекские надписи экранов учредителя (раздел «ИИ-агенты» — на этапе 5). */
+   • узбекские надписи экранов учредителя (раздел «ИИ-агенты» — fo_agents.js). */
 Object.assign(UI,{fo61Cash:"+ Наличные||+ 现金",fo61CashT:"Наличные, которые вы получили||您收取的现金",
   fo61CashH:"Учредитель вносит только наличные, которые получил сам. Исправить или удалить поступление может управляющий адвокат.||创始人只能录入本人收取的现金。修改或删除收款由管理律师处理。",
   fo61CashOk:"Наличные внесены — управляющий адвокат получил уведомление||现金已录入——管理律师已收到通知",fo61NoLead:"Ведущего назначит управляющий адвокат||负责人由管理律师指定",
@@ -23959,6 +23961,75 @@ if(typeof Council!=="undefined"&&Council.agendaDetail){const _adFp63=Council.age
 #fp63 .fp63sl{display:flex;gap:18px;flex-wrap:wrap}#fp63 .fp63warn{color:var(--red);margin-bottom:6px}
 #fp63 .fp63t{width:100%;border-collapse:collapse}#fp63 .fp63t td,#fp63 .fp63t th{padding:6px 8px;border-bottom:1px solid var(--line-2,#eef1f6);text-align:right}#fp63 .fp63t td:first-child,#fp63 .fp63t th:first-child{text-align:left}
 #fp63 .fp63t tr[data-fp63m]{cursor:pointer}#fp63 .fp63t tr.on{background:color-mix(in srgb,var(--blue,#2F64B0) 7%,transparent)}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.3 · РОЛЬ «УЧРЕДИТЕЛЬ», ЭТАП 5 — ИИ-АГЕНТЫ (решения владельца 08.11.2026) ═══════════════════════════
+   Правила — sections/founders/ПРАВИЛА.md (УЧ-34 … УЧ-40), сервер — миграция 20261108000500_fo_agents, инструкции агента — функция ai-director.
+   Подключается после fo_profit.js. Здесь только экран: что учредителю скрыто в разделе «ИИ-агенты» и надписи раздела на его языке.
+   • Раздел виден, поручение Александру даётся в профиле агента; кнопки управления отделом (выключить, правила, отчёт заново и т. п.) скрыты — их отклоняет и сервер.
+   • Надписи раздела написаны только по-русски, поэтому у учредителя их переводит словарь ниже (китайский, узбекский). Содержимое отчётов и поручений и длинные пояснения вкладки «Настройки» — как есть. */
+const Fa64={
+  on(){try{return typeof Fo61!=="undefined"&&Fo61.on();}catch(e){return false;}},
+  /* русская надпись: [китайский, узбекский, русский для учредителя — если отличается] */
+  D:{
+    "Живой офис":["实时办公室","Jonli ofis"],"Работа":["工作","Ish"],"Сотрудники":["员工","Xodimlar"],"Журнал":["日志","Jurnal"],"Журнал действий":["操作日志","Amallar jurnali"],"Журнал офиса":["办公室日志","Ofis jurnali"],
+    "Офис ИИ-агентов":["AI 助理办公室","SI-agentlar ofisi"],"ИИ-агенты":["AI 助理","SI-agentlar"],"Разделы офиса":["办公室栏目","Ofis boʻlimlari"],"Администрирование · раздел":["管理 · 栏目","Maʼmuriyat · boʻlim"],
+    "Тихий режим":["安静模式","Jim rejim"],"Ⅱ Пауза":["Ⅱ 暂停","Ⅱ Pauza"],"Офис на весь экран":["全屏显示办公室","Ofisni toʻliq ekranda"],"Офис работает":["办公室运行中","Ofis ishlamoqda"],"Рабочий день":["工作日","Ish kuni"],
+    "У каждого сотрудника — своё занятие":["每位员工各司其职","Har bir xodimning oʻz ishi bor"],"Ваша команда":["您的团队","Sizning jamoangiz"],"Ташкент · UTC+5":["塔什干 · UTC+5","Toshkent · UTC+5"],"Цвета состояний":["状态颜色","Holat ranglari"],
+    "Ждёт меня":["等待我处理","Meni kutmoqda"],"Ждёт вас":["等待您处理","Sizni kutmoqda"],"В работе":["进行中","Jarayonda"],"Сделано":["已完成","Bajarildi"],"Все":["全部","Hammasi"],"На проверке":["审核中","Tekshiruvda"],"Выполненные":["已执行","Bajarilganlar"],
+    "Поручения":["任务","Topshiriqlar"],"Поручение":["任务","Topshiriq"],"Дать поручение":["下达任务","Topshiriq berish"],"Поручить ↗":["下达 ↗","Topshirish ↗"],"От моего имени":["以我的名义","Mening nomimdan"],
+    "Поручения и контроль выполнения":["任务与执行监督","Topshiriqlar va ijro nazorati"],"Поручения и решения в одном месте":["任务与决定集中显示","Topshiriqlar va qarorlar bir joyda"],"Поручения, передачи результатов и ваши решения":["任务、结果交付与您的决定","Topshiriqlar, natijalar va qarorlaringiz"],
+    "Решения, которые ждут вас":["等待您决定的事项","Sizni kutayotgan qarorlar"],"ждут вашего решения":["等待您决定","qaroringizni kutmoqda"],"ждёт вашего решения":["等待您决定","qaroringizni kutmoqda"],"Ваше решение":["由您决定","Sizning qaroringiz"],"Ваш стол — решения на подтверждение":["您的办公桌 — 待确认的决定","Sizning stolingiz — tasdiqlanadigan qarorlar"],
+    "Разрешить":["允许","Ruxsat berish"],"Вернуть с комментарием":["附评论退回","Izoh bilan qaytarish"],"Отклонить":["拒绝","Rad etish"],"Отменить":["取消","Bekor qilish"],"Отправить":["发送","Yuborish"],"Изменить":["修改","Oʻzgartirish"],
+    "Ход":["进度","Jarayon"],"Ход ›":["进度 ›","Jarayon ›"],"Ход поручения":["任务进度","Topshiriq jarayoni"],"Ход работы":["工作进度","Ish jarayoni"],"Результат":["结果","Natija"],"Статус":["状态","Holat"],"Срок":["期限","Muddat"],"Задача":["任务","Vazifa"],"Роль":["角色","Rol"],"Сотрудник":["员工","Xodim"],"Функция":["职能","Funksiya"],"Функция и задача":["职能与任务","Funksiya va vazifa"],
+    "Обзор":["概览","Umumiy"],"Отчёты":["报告","Hisobotlar"],"Чат":["聊天","Chat"],"Настройки":["设置","Sozlamalar"],"Написать":["写消息","Yozish"],"Позвонить":["通话","Qoʻngʻiroq qilish"],"Позвонить через портал":["通过门户通话","Portal orqali qoʻngʻiroq"],"Показать в офисе":["在办公室中显示","Ofisda koʻrsatish"],"Написать в «Чатах»":["在“聊天”中写消息","«Chatlar»da yozish"],"Открыть в «Чатах»":["在“聊天”中打开","«Chatlar»da ochish"],
+    "← К сотрудникам":["← 返回员工","← Xodimlarga"],"‹ Предыдущий":["‹ 上一位","‹ Oldingi"],"Следующий ›":["下一位 ›","Keyingi ›"],"Доступ":["权限","Kirish huquqi"],"Полномочия":["权限范围","Vakolatlar"],"Может":["可以","Mumkin"],"Не может":["不可以","Mumkin emas"],"Может сама":["可自行完成","Oʻzi qila oladi"],"Только с вашего утверждения":["仅经您批准","Faqat sizning tasdiqingiz bilan"],
+    "Работает":["工作中","Ishlamoqda"],"Перерыв":["休息","Tanaffus"],"На связи":["在线","Aloqada"],"Короткий перерыв · на связи":["短暂休息 · 在线","Qisqa tanaffus · aloqada"],"Сейчас делает":["正在进行","Hozir bajarmoqda"],"Когда работает":["工作时间","Qachon ishlaydi"],"Время работы":["工作时间","Ish vaqti"],"Рабочие часы":["工作时段","Ish soatlari"],"Расписание":["日程","Jadval"],
+    "Руководитель отдела":["部门负责人","Boʻlim rahbari"],"руководитель отдела ИИ-агентов":["AI 助理部门负责人","SI-agentlar boʻlimi rahbari"],"ИТ-специалист":["IT 专员","IT mutaxassisi"],"Контролёр отдела перевода":["翻译部主管","Tarjima boʻlimi nazoratchisi"],"контролёр отдела перевода":["翻译部主管","tarjima boʻlimi nazoratchisi"],"Отдел перевода":["翻译部","Tarjima boʻlimi"],"Переводчики":["翻译员","Tarjimonlar"],
+    "Утренний · 09:00":["早报 · 09:00","Ertalabki · 09:00"],"Вечерний · 18:00":["晚报 · 18:00","Kechki · 18:00"],"Утренние":["早报","Ertalabki"],"Вечерние":["晚报","Kechki"],"Сегодня":["今天","Bugun"],"Вчера":["昨天","Kecha"],"7 дней":["7 天","7 kun"],"30 дней":["30 天","30 kun"],"Печать / PDF":["打印 / PDF","Chop etish / PDF"],"Найти отчёт":["查找报告","Hisobotni topish"],"Поиск по тексту: номер дела, оплата…":["按文本搜索：案件编号、付款…","Matn boʻyicha qidiruv: ish raqami, toʻlov…"],"Последний отчёт":["最新报告","Soʻnggi hisobot"],"В этом месяце отчётов ещё не было.":["本月尚无报告。","Bu oyda hali hisobot boʻlmagan."],"Отчёты руководителя отдела ИИ-агентов":["AI 助理部门负责人的报告","SI-agentlar boʻlimi rahbari hisobotlari"],
+    "Идеи для фирмы":["事务所建议","Firma uchun gʻoyalar"],"Инструкция и правила":["指示与规则","Yoʻriqnoma va qoidalar"],"Правила":["规则","Qoidalar"],"Ваша инструкция":["您的指示","Sizning yoʻriqnomangiz"],"Базовая инструкция (системная)":["基础指示（系统）","Asosiy yoʻriqnoma (tizim)"],"Самостоятельность":["自主程度","Mustaqillik"],"Лимиты":["限额","Limitlar"],"Качество работы":["工作质量","Ish sifati"],"Активность за неделю":["本周活动","Haftalik faollik"],"Расход за месяц":["本月支出","Oylik xarajat"],"расход за месяц":["本月支出","oylik xarajat"],"расход за 30 дней":["30 天支出","30 kunlik xarajat"],"Польза за 30 дней":["30 天成效","30 kunlik foyda"],"Запусков за месяц":["本月运行次数","Oylik ishga tushirishlar"],"запусков за месяц":["本月运行次数","oylik ishga tushirishlar"],"Связанные дела":["相关案件","Bogʻliq ishlar"],"История проверок":["检查记录","Tekshiruvlar tarixi"],"Последняя проверка":["最近检查","Soʻnggi tekshiruv"],"Выгрузить CSV":["导出 CSV","CSV yuklab olish"],
+    "Пн":["一","Du"],"Вт":["二","Se"],"Ср":["三","Ch"],"Чт":["四","Pa"],"Пт":["五","Ju"],"Сб":["六","Sh"],"Вс":["日","Ya"],"Новые":["新的","Yangilari"],"Исправленные":["已修复","Tuzatilganlar"],"Сообщения об ошибках":["错误报告","Xato haqida xabarlar"],"Реестр исправлений":["修复登记","Tuzatishlar reyestri"],"Подобрать слова на месяц":["挑选本月词汇","Oy uchun soʻzlar tanlash"],
+    "Пока нет.":["暂无。","Hozircha yoʻq."],"Пока ничего нет.":["暂无内容。","Hozircha hech narsa yoʻq."],"Ещё не было":["尚未有过","Hali boʻlmagan"],"Проверок ещё не было.":["尚无检查。","Hali tekshiruv boʻlmagan."],"Голосовое сообщение":["语音消息","Ovozli xabar"],"Голосовое сообщение: нажмите, говорите, нажмите ещё раз":["语音消息：点击后说话，再点击结束","Ovozli xabar: bosing, gapiring, yana bosing"],"Напишите Александр…":["给 Александр 写消息…","Aleksandrga yozing…"],"Что нужно сделать Александр?":["需要 Александр 做什么？","Aleksandr nima qilishi kerak?"],"Чат с Александр":["与 Александр 聊天","Aleksandr bilan chat"],"та же переписка, что в «Чатах»":["与“聊天”中的对话相同","«Chatlar»dagi yozishma bilan bir xil"],
+    "Напомни адвокатам о сроках на завтра":["提醒律师明天的期限","Advokatlarga ertangi muddatlarni eslat"],"Предложи ведущих для заявок без ведущего":["为无负责人的申请建议负责人","Masʼuli yoʻq arizalarga masʼul taklif qil"],"Проследи, чтобы по просроченным делам был ответ сегодня":["确保逾期案件今天得到答复","Muddati oʻtgan ishlar boʻyicha bugun javob boʻlishini nazorat qil"],
+    "поручений в работе":["项进行中的任务","ta topshiriq jarayonda"],"поручений выполнено":["项任务已完成","ta topshiriq bajarildi"],"действий предложил":["项建议的操作","ta amal taklif qildi"],"вы разрешили":["您已允许","siz ruxsat berdingiz"],"отклонили":["已拒绝","rad etildi"],"вернули с замечанием":["附意见退回","izoh bilan qaytarildi"],"не получилось (ошибка)":["未成功（错误）","boʻlmadi (xato)"],"не выполнено (ошибка)":["未执行（错误）","bajarilmadi (xato)"],"ответов в чатах":["聊天回复","chatlardagi javoblar"],"отчётов":["份报告","hisobot"],"звонков":["次通话","qoʻngʻiroq"],"за месяц":["本月","oy davomida"],"ваши оценки":["您的评分","sizning baholaringiz"],"по данным сервера":["根据服务器数据","server maʼlumotlariga koʻra"],"из последнего отчёта":["来自最新报告","soʻnggi hisobotdan"],"скоро":["即将推出","tez orada"],"настройка — скоро":["设置 — 即将推出","sozlash — tez orada"],
+    "Сотрудники увидят задачи и сообщения от вас, без упоминания ИИ":["消息将以您的名义发送。给员工的任务须经管理合伙人批准。","Xabarlar sizning nomingizdan yuboriladi. Xodimlarga vazifalar faqat boshqaruvchi advokat tasdiqidan keyin.","Сообщения уйдут от вашего имени. Задачи сотрудникам — только после одобрения управляющего адвоката."],
+    "Решений, которые ждут вас, нет. Каждое действие руководителя отдела — задачи, напоминания, сообщения, звонки и ваши функции в портале — появляется здесь и выполняется только после «Разрешить».":["暂无等待您决定的事项。这里显示按您的任务发给员工的消息，只有经您确认后才会发送。","Sizni kutayotgan qarorlar yoʻq. Bu yerda topshiriqlaringiz boʻyicha xodimlarga xabarlar koʻrinadi — ular faqat tasdiqlaganingizdan keyin yuboriladi.","Решений, которые ждут вас, нет. Здесь появляются сообщения сотрудникам по вашим поручениям — они уходят только после вашего подтверждения."],
+    "Руководитель отдела ИИ-агентов · подчиняется только УП":["AI 助理部门负责人 · 仅向管理合伙人汇报","SI-agentlar boʻlimi rahbari · faqat boshqaruvchi advokatga boʻysunadi"],
+    "Выполняет действие только после вашего подтверждения.":["消息由您确认后发送；其他操作由管理合伙人批准。","Xabarlar sizning tasdiqingizdan keyin yuboriladi; boshqa amallarni boshqaruvchi advokat tasdiqlaydi.","Сообщения — после вашего подтверждения, остальное одобряет управляющий адвокат."]
+  },
+  /* надписи с числами и текстом поручения */
+  R:[
+    [/^(·\s*)?Получил поручение №(\d+): (.*)$/,"$1收到任务 №$2：$3","$1№$2 topshiriq olindi: $3"],
+    [/^Поручение №(\d+): (.*)$/,"任务 №$1：$2","№$1 topshiriq: $2"],
+    [/^Поручение №(\d+) передано руководителю отдела$/,"任务 №$1 已交给部门负责人","№$1 topshiriq boʻlim rahbariga topshirildi"],
+    [/^(\d+) всего$/,"共 $1","jami $1"],
+    [/^поручений · выполнено (\d+)$/,"项任务 · 已完成 $1","ta topshiriq · bajarildi $1"],
+    [/^(\d+) из (\d+)$/,"$1 / $2","$1 / $2"],
+    [/^(.+) \$ из (\d+) \$$/,"$1 $ / $2 $","$1 $ / $2 $"],
+    [/^На связи · следующий отчёт (.*)$/,"在线 · 下一份报告 $1","Aloqada · keyingi hisobot $1"],
+    [/^Ждёт вашего решения: (\d+)(.*)$/,"等待您决定：$1","Qaroringiz kutilmoqda: $1"]
+  ],
+  tr(t){const e=this.D[t],L=typeof lang==="string"?lang:"ru";
+    if(e)return L==="zh"?e[0]:L==="uz"?e[1]:e[2]||t;
+    if(L!=="zh"&&L!=="uz")return t;
+    for(const r of this.R)if(r[0].test(t))return t.replace(r[0],L==="zh"?r[1]:r[2]);
+    return t;},
+  run(root){if(!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){const p=n.parentElement;if(p&&(p.tagName==="STYLE"||p.tagName==="SCRIPT"))continue;
+      const raw=n.nodeValue;if(!raw||!/[А-Яа-яЁё]/.test(raw))continue;const t=raw.replace(/\s+/g," ").trim(),x=this.tr(t);if(x!==t)n.nodeValue=x;}
+    root.querySelectorAll("[placeholder],[title],[aria-label]").forEach(e=>{for(const a of ["placeholder","title","aria-label"]){const v=e.getAttribute(a);if(!v||!/[А-Яа-яЁё]/.test(v))continue;const x=this.tr(v.trim());if(x!==v.trim())e.setAttribute(a,x);}});},
+  obs:null,busy:false,
+  watch(root){if(this.obs||!root)return;const go=()=>{this.busy=false;this.run(root);};this.run(root);
+    this.obs=new MutationObserver(()=>{if(this.busy)return;this.busy=true;requestAnimationFrame(go);});
+    this.obs.observe(root,{childList:true,subtree:true,characterData:true});},
+  stop(){if(this.obs)this.obs.disconnect();this.obs=null;}
+};
+Object.assign(window.UZ21=window.UZ21||{},{"ИИ-агенты":"SI-agentlar","Разрешить":"Ruxsat berish","Вернуть":"Qaytarish","Отклонить":"Rad etish","Вернуть с комментарием":"Izoh bilan qaytarish","Что изменить?":"Nimani oʻzgartirish kerak?","Напишите, что изменить":"Nimani oʻzgartirish kerakligini yozing","Когда":"Qachon","если":"agar","Выполнено":"Bajarildi","Отклонено":"Rad etildi","Возвращено на доработку":"Qayta ishlashga qaytarildi","Не получилось: ":"Boʻlmadi: ","Уже решено":"Allaqachon hal qilingan","Решение — только при подключении к серверу":"Qaror — faqat serverga ulanganda","Разрешить всё":"Hammasiga ruxsat berish","Разрешено":"Ruxsat berildi","не получилось":"boʻlmadi","Открыть поручение №":"Topshiriqni ochish №"});
+{const _mountFa64=Agx37.mount;Agx37.mount=function(slot){_mountFa64.call(this,slot);if(Fa64.on())Fa64.watch(this.root);else Fa64.stop();};
+ const _resetFa64=Agx37.reset;Agx37.reset=function(){Fa64.stop();return _resetFa64.apply(this,arguments);};
+ const st=document.createElement("style");
+ /* управление отделом — только у УП; сервер отклонит и без этого */
+ st.textContent=`body.fo60ro #agx :is(#stopAll,#agToggle,#rpRebuild,[data-cancel],[data-agc],[data-it-check],[data-tr-words],[data-ideas-run],[data-ideado],[data-ideano],[data-ideasend],[data-propsend],[data-propans],[data-ag="instr"],[data-rule-add],[data-rule-tog],[data-rule-edit],[data-ordrv],[data-ordctl],[data-ordck],[data-ordx],[data-x2],.zc-cmp){display:none!important}
+body.fo60ro #agx :is(#agAuto,#agNight,#agTrial,#agHours,[data-agl]){pointer-events:none;opacity:.6}`;
+ document.head.appendChild(st);}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
