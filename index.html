@@ -6778,7 +6778,7 @@ const chartMembers9=u=>mode==="now"?u.members.filter(m=>!m.vac&&!isDemoM(m)):u.m
 /* «Сейчас» (16.10.2026): реальные сотрудники без «Позиции в Структуре» тоже показываются — в своей организации;
    подпись под именем — роль («Адвокат» / «Управляющий адвокат»), а не позиция плана. «Этап 1» и «Цель» не меняются. */
 const unplacedNow9=key=>{if(mode!=="now"||(key!=="legal"&&key!=="llc")||typeof Staff21==="undefined")return [];
-  return [...new Set(Staff21.added||[])].map(id=>ALL[id]).filter(m=>m&&!m.vac&&!m.members&&!isDemoM(m)&&!UNITS.some(u=>u.members.includes(m))&&(key==="llc"?m.ent==="ooo":m.ent!=="ooo"));};
+  return [...new Set(Staff21.added||[])].map(id=>ALL[id]).filter(m=>m&&!m.vac&&!m.members&&!isDemoM(m)&&!UNITS.some(u=>u.members.includes(m))&&(key==="llc"?m.ent==="ooo":m.ent!=="ooo")&&!(typeof Fo60!=="undefined"&&Fo60.isFoAcc(accByEmp(m.id))));};/* учредитель без управления — только в Совете, не среди сотрудников (УЧ-4) */
 const roleNow9=m=>{if(mode!=="now")return m.role;const a=typeof accByEmp==="function"?accByEmp(m.id):null;if(!a)return m.role;
   return typeof Adv21!=="undefined"&&Adv21.kind(a)==="founder"?"Учредитель||创始人":typeof Adv21!=="undefined"&&Adv21.kind(a)==="mp"?"Управляющий адвокат||管理律师":typeof Adv21!=="undefined"&&Adv21.kind(a)==="lawyer"?"Юрист||法务":typeof Adv21!=="undefined"&&Adv21.kind(a)==="translator"?"Переводчик||翻译":"Адвокат||律师";};   /* 07.11.2026: переводчик (версия 3.3); 08.11.2026: учредитель */
 const isAs9=m=>m.type==="jur"&&/помощник|assistant|助理/i.test(T1(m.name)+" "+T1(m.role));
@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="a628d08a193d";
+const ZC_BUILD="1f842d6a52a8";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
