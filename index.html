@@ -6780,7 +6780,7 @@ const chartMembers9=u=>mode==="now"?u.members.filter(m=>!m.vac&&!isDemoM(m)):u.m
 const unplacedNow9=key=>{if(mode!=="now"||(key!=="legal"&&key!=="llc")||typeof Staff21==="undefined")return [];
   return [...new Set(Staff21.added||[])].map(id=>ALL[id]).filter(m=>m&&!m.vac&&!m.members&&!isDemoM(m)&&!UNITS.some(u=>u.members.includes(m))&&(key==="llc"?m.ent==="ooo":m.ent!=="ooo"));};
 const roleNow9=m=>{if(mode!=="now")return m.role;const a=typeof accByEmp==="function"?accByEmp(m.id):null;if(!a)return m.role;
-  return typeof Adv21!=="undefined"&&Adv21.kind(a)==="mp"?"Управляющий адвокат||管理律师":typeof Adv21!=="undefined"&&Adv21.kind(a)==="lawyer"?"Юрист||法务":typeof Adv21!=="undefined"&&Adv21.kind(a)==="translator"?"Переводчик||翻译":"Адвокат||律师";};   /* 07.11.2026: переводчик (версия 3.3) */
+  return typeof Adv21!=="undefined"&&Adv21.kind(a)==="founder"?"Учредитель||创始人":typeof Adv21!=="undefined"&&Adv21.kind(a)==="mp"?"Управляющий адвокат||管理律师":typeof Adv21!=="undefined"&&Adv21.kind(a)==="lawyer"?"Юрист||法务":typeof Adv21!=="undefined"&&Adv21.kind(a)==="translator"?"Переводчик||翻译":"Адвокат||律师";};   /* 07.11.2026: переводчик (версия 3.3); 08.11.2026: учредитель */
 const isAs9=m=>m.type==="jur"&&/помощник|assistant|助理/i.test(T1(m.name)+" "+T1(m.role));
 const plRu=(n,f)=>{const a=Math.abs(n)%100,b=a%10;return f[a>10&&a<20?2:b===1?0:b>1&&b<5?1:2];};
 const cntLbl=(n,kind)=>lang==="zh"?(kind==="pos"?`${n} 个岗位`:`${n} 人`):lang==="uz"?`${n} ${kind==="pos"?"lavozim":"kishi"}`:`${n} ${kind==="pos"?plRu(n,["позиция","позиции","позиций"]):"чел."}`;
@@ -10446,7 +10446,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="89f3a72bd351";
+const ZC_BUILD="dd4239f47b85";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -23626,6 +23626,185 @@ if(typeof Pre17!=="undefined"){
   const _nav59=navFor;navFor=function(){const g=_nav59.apply(this,arguments);if(!tr59())return g;
     return g.map(([t,items])=>{if(items.some(it=>it&&it[0]==="tasks"))return [t,items];const i=items.findIndex(it=>it&&it[0]==="cal");const it2=items.slice();it2.splice(i>=0?i+1:it2.length,0,["tasks",UI.nTasks,"tasks"]);return [t,it2];});};
 }
+
+/* ═══════════════════════════ версия 3.3 · РОЛЬ «УЧРЕДИТЕЛЬ», ЭТАП 1 — СЛОЙ ПОРТАЛА (решения владельца 08.11.2026) ═══════════════════════════
+   Правила — sections/founders/ПРАВИЛА.md (УЧ-1 … УЧ-12), сервер — миграция 20261108000100_founder_role.sql (барьер записи zc.fo_guard,
+   zc.is_fo, роль в учётке). Файл подключается последним (build.js, tail): роль учётки Adv21.kind переопределяют модули хвоста.
+   Здесь только вид:
+   • роль учётки «Учредитель» (функция founder без managing): подпись под именем, «Создать учётку», «Изменить доступ», «Матрица прав»;
+   • «Структура» → «Совет учредителей»: учредители по учёткам сервера (Шахзод, Жахонгир, Жонг); демо-учредителя 贾宏声 больше нет;
+   • фоновая работа УП (Close12.tick, Remind17.tick) у учредителя не запускается;
+   • «Помощь» и «Что нового».
+   Экраны учредителя (меню, кнопки «только просмотр», заявка, файлы, наличные) — этап 2. */
+Object.assign(UI,{acc21Fo:"Учредитель||创始人",fo60RoleHint:"Учредитель — видит всё, как управляющий адвокат; сам только регистрирует заявку и клиента, добавляет файлы и наличные, которые получил; пишет в чаты и голосует в Совете||创始人——与管理律师一样可查看全部；本人仅可登记申请和客户、添加文件和本人收取的现金；可在聊天中发言并在创始人委员会表决",
+  fo60Council:"Высший орган фирмы. Учредители: {n}. Голосуют по ключевым вопросам — бюджет, крупные сделки, вход новых партнёров, открытие офисов, распределение прибыли. В текущей работе фирмы не участвуют, кроме управляющего партнёра.||事务所最高机构。创始人：{n}。就预算、重大交易、新合伙人加入、开设办公室、利润分配等关键事项表决。除管理合伙人外，不参与日常经营。",
+  fo60Pos:"Учредитель с долей в капитале. В операционной деятельности не участвует — видит работу фирмы и голосует в Совете учредителей.||持有股权的创始人。不参与日常经营——可查看事务所工作并在创始人委员会表决。"});
+window.UZ21=Object.assign(window.UZ21||{},{"Учредитель":"Taʼsischi",
+  "Учредитель — видит всё, как управляющий адвокат; сам только регистрирует заявку и клиента, добавляет файлы и наличные, которые получил; пишет в чаты и голосует в Совете":"Taʼsischi — boshqaruvchi advokat kabi hammasini koʻradi; oʻzi faqat ariza va mijozni roʻyxatdan oʻtkazadi, fayllar va oʻzi olgan naqd pulni qoʻshadi; chatlarda yozadi va Kengashda ovoz beradi",
+  "Учредитель с долей в капитале. В операционной деятельности не участвует — видит работу фирмы и голосует в Совете учредителей.":"Kapitalda ulushi bor taʼsischi. Kundalik ishda qatnashmaydi — firma ishini koʻradi va Taʼsischilar kengashida ovoz beradi."});
+const Fo60={
+  /* учредитель — функция founder без managing (как zc.is_fo на сервере); Шахзод — УП и учредитель */
+  isFoAcc(a){a=a||{};const f=a.funcs||[];return f.includes("founder")&&!f.includes("managing");},
+  on(){const u=typeof U==="function"?U():null;return !!u&&!(typeof isClient==="function"&&isClient())&&this.isFoAcc((S.accounts||{})[u.login]||u);},
+  /* члены Совета — активные учётки сотрудников с функцией founder */
+  council(){return Object.values(S.accounts||{}).filter(a=>a&&a.active!==false&&a.emp&&a.emp!=="jia"&&a.kind!=="client"&&(a.funcs||[]).includes("founder"));},
+  /* «Структура»: учредители — по учёткам; демо-учредитель 贾宏声 убран (решение владельца 08.11.2026) */
+  sync(){if(typeof FOUNDERS==="undefined")return;
+    for(let i=FOUNDERS.length-1;i>=0;i--)if(FOUNDERS[i]&&FOUNDERS[i].id==="jia")FOUNDERS.splice(i,1);
+    const acc=this.council();if(!acc.length)return;
+    acc.forEach(a=>{if(FOUNDERS.some(f=>f.id===a.emp))return;
+      const f={id:a.emp,name:a.name||a.emp,role:UI.fRole,short:UI.fRole,ent:"both",pos:UI.fo60Pos,goals:[],funcs:["Голосование в совете учредителей||在创始人委员会表决"],chip:UI.founder9||UI.fRole};
+      FOUNDERS.push(f);if(typeof ALL!=="undefined")ALL[f.id]=Object.assign({},ALL[f.id]||{},f);});
+    if(typeof COUNCIL!=="undefined"){const nm=FOUNDERS.map(f=>T1(f.name).replace(/\s*\(.*\)$/,""));
+      const ru=nm.length>1?nm.slice(0,-1).join(", ")+" и "+nm[nm.length-1]:nm.join("");const zh=nm.join("、");
+      COUNCIL.pos=UI.fo60Council.split("||")[0].replace("{n}",ru)+"||"+UI.fo60Council.split("||")[1].replace("{n}",zh);
+      if(typeof COUNCIL.flag==="string")COUNCIL.flag=COUNCIL.flag.replace("钟 и 贾宏声","钟").replace("钟与贾宏声","钟");}}
+};
+/* ── роль учётки ── */
+{const _kFo60=Adv21.kind;Adv21.kind=function(a){return Fo60.isFoAcc(a)?"founder":_kFo60.apply(this,arguments);};
+ const _lFo60=Adv21.label;Adv21.label=function(k){return k==="founder"?T1(UI.acc21Fo):_lFo60.apply(this,arguments);};}
+/* ── «Создать учётку»: роль «Учредитель» (сервер ставит функцию founder) ── */
+if(typeof Acc20!=="undefined"){
+  const _nsFo60=Acc20.newStaff.bind(Acc20);Acc20.newStaff=async function(){const _ask=Dlg.ask;
+    Dlg.ask=async function(o){try{((o&&o.fields)||[]).forEach(f=>{if(f&&f.k==="access"&&Array.isArray(f.options)&&!f.options.some(x=>x[0]==="founder")){f.options.push(["founder",T1(UI.acc21Fo)]);f.hint=(f.hint?f.hint+". ":"")+T1(UI.fo60RoleHint);}});}catch(e){}
+      return _ask.apply(this,arguments);};
+    try{return await _nsFo60();}finally{Dlg.ask=_ask;}};
+  /* «Изменить доступ»: учредитель — только функция founder; УП остаётся в Совете, если был учредителем */
+  Acc20.setAccess=async function(login){const a=S.accounts[login];if(!a)return;const cur=Adv21.kind(a),self=login===U().login&&cur==="mp";
+    const v=await Dlg.ask({title:T1(UI.acc21Change)+" · "+login,text:esc(a.name||"")+(self?" · "+T1(UI.acc21Self):""),fields:[
+      ...(self?[]:[{k:"access",label:T1(UI.acc21Access),type:"select",value:cur,options:[["advocate",T1(UI.acc21Adv)],["lawyer",T1(UI.acc21Law)],["translator",T1(UI.acc21Tr)],["mp",T1(UI.acc21Mp)],["founder",T1(UI.acc21Fo)]],hint:T1(UI.tr57RoleHint)+". "+T1(UI.fo60RoleHint)}])]});if(!v)return;
+    const acc=self?cur:v.access;if(acc===cur)return;
+    const patch={data:{access:acc==="mp"?"advocate":acc}};
+    patch.funcs=acc==="mp"?[...new Set([...(a.funcs||[]),"managing"])]:acc==="founder"?["founder"]:(a.funcs||[]).filter(f=>f!=="managing"&&f!=="founder");
+    try{await this.rpc("admin_update_account",{target:login,patch});}catch(e){toast(this.msg(e));return;}
+    audit(`Доступ ${login}: ${Adv21.label(acc)}`);await this.reload();toast(T1(UI.saved));Cabinet.render&&Cabinet.render();};
+}
+/* ── «Матрица прав»: строка «Учредитель» — всё видит (👁); сам регистрирует заявку и клиента, пишет в чаты (◐) ── */
+{const _rightsFo60=Cabinet.rights.bind(Cabinet);Cabinet.rights=function(){const h=_rightsFo60.apply(this,arguments);if(typeof MX21_COLS==="undefined")return h;
+  const f=k=>["oneoff","court","support","clients","chat","chats"].includes(k)?2:3;
+  const row=`<tr data-fo60mx><td><b>${T1(UI.acc21Fo)}</b></td>${MX21_COLS.map(([k])=>{const x=f(k);return `<td class="${x===2||x===3?"p":"n"}">${x===2?"◐":"👁"}</td>`;}).join("")}</tr>`;
+  const i=h.lastIndexOf("</tbody>");return i>=0?h.slice(0,i)+row+h.slice(i):h;};}
+/* ── работа УП «в фоне» (закрытие месяца, ЭСФ, напоминания) у учредителя не запускается — её делает управляющий адвокат ── */
+if(typeof Close12!=="undefined"&&Close12.tick){const _cFo60=Close12.tick.bind(Close12);Close12.tick=async function(){if(Fo60.on())return;return _cFo60.apply(this,arguments);};}
+if(typeof Remind17!=="undefined"&&Remind17.tick){const _rmFo60=Remind17.tick.bind(Remind17);Remind17.tick=async function(){if(Fo60.on())return;return _rmFo60.apply(this,arguments);};}
+/* ── «Структура»: учредители по учёткам — перед каждой отрисовкой ── */
+if(typeof Router!=="undefined"&&Router.render){const _rFo60=Router.render.bind(Router);Router.render=function(){try{Fo60.sync();}catch(e){}return _rFo60.apply(this,arguments);};}
+try{Fo60.sync();}catch(e){}
+/* ── «Помощь» и «Что нового» ── */
+if(typeof HELP21!=="undefined"){
+  const TXT="«Учредитель» — видит всё, как управляющий адвокат: дела, клиентов, переписку, файлы, оплаты, финансы. Сам только регистрирует заявку (ведущего назначает управляющий адвокат) и нового клиента, добавляет файлы в дело и наличные, которые получил сам; пишет в чаты, голосует в Совете учредителей. Ничего не удаляет и людей не назначает.";
+  const walk=o=>{if(!o||typeof o!=="object")return;if(Array.isArray(o)){o.forEach(walk);return;}if(o.id==="acc"&&Array.isArray(o.b)&&!o.b.some(s=>/Учредитель»/.test(String(s))))o.b.push(TXT);Object.values(o).forEach(walk);};
+  walk(HELP21);
+  if(Array.isArray(HELP21.news)&&!HELP21.news.some(x=>x.id==="v33fo"))HELP21.news.unshift({id:"v33fo",d:"2026-11-08",t:"Версия 3.3: роль «Учредитель»||3.3版：“创始人”角色",b:[
+    "Новая роль «Учредитель»: видит всё, как управляющий адвокат, но сам почти ничего не меняет — это делает сервер.||新角色“创始人”：与管理律师一样可查看全部，但本人几乎不能修改——由服务器把关。",
+    "Учредитель регистрирует заявку и клиента, добавляет файлы и наличные, которые получил сам; ведущего назначает управляющий адвокат.||创始人可登记申请和客户、添加文件和本人收取的现金；负责人由管理律师指定。",
+    "Демо-учредитель 贾宏声 убран из «Структуры»; в Совете — Шахзод, Жахонгир и Жонг.||演示创始人贾宏声已从“架构”中移除；委员会成员为沙赫佐德、贾洪吉尔和钟。"]});
+  window.UZ21=Object.assign(window.UZ21||{},{"Версия 3.3: роль «Учредитель»":"3.3-versiya: «Taʼsischi» roli",[TXT]:"«Taʼsischi» — boshqaruvchi advokat kabi hammasini koʻradi: ishlar, mijozlar, yozishmalar, fayllar, toʻlovlar, moliya. Oʻzi faqat ariza (yetakchini boshqaruvchi advokat tayinlaydi) va yangi mijozni roʻyxatdan oʻtkazadi, ishga fayllar va oʻzi olgan naqd pulni qoʻshadi; chatlarda yozadi, Taʼsischilar kengashida ovoz beradi. Hech narsani oʻchirmaydi va odamlarni tayinlamaydi.",
+    "Новая роль «Учредитель»: видит всё, как управляющий адвокат, но сам почти ничего не меняет — это делает сервер.":"Yangi «Taʼsischi» roli: boshqaruvchi advokat kabi hammasini koʻradi, lekin oʻzi deyarli hech narsani oʻzgartirmaydi — buni server nazorat qiladi.",
+    "Учредитель регистрирует заявку и клиента, добавляет файлы и наличные, которые получил сам; ведущего назначает управляющий адвокат.":"Taʼsischi ariza va mijozni roʻyxatdan oʻtkazadi, fayllar va oʻzi olgan naqd pulni qoʻshadi; yetakchini boshqaruvchi advokat tayinlaydi.",
+    "Демо-учредитель 贾宏声 убран из «Структуры»; в Совете — Шахзод, Жахонгир и Жонг.":"Demo-taʼsischi 贾宏声 «Tuzilma»dan olib tashlandi; Kengashda — Shahzod, Jahongir va Jong."});
+}
+
+/* ═══════════════════════════ версия 3.3 · РОЛЬ «УЧРЕДИТЕЛЬ», ЭТАП 2 — ЭКРАНЫ УЧРЕДИТЕЛЯ (решения владельца 08.11.2026) ═══════════════════════════
+   Правила — sections/founders/ПРАВИЛА.md (УЧ-13 … УЧ-20). Сервер — барьер записи zc.fo_guard (этап 1) и миграция 20261108000200_founder_ui
+   (язык учёток учредителей, уведомление УП «Учредитель внёс наличные»). Подключается после fo_role.js. Здесь только вид:
+   • заявка учредителя — кнопкой «Создать заявку» в «Разовых услугах», «Судебных делах», «Сопровождении»: без поля «Ведущий» и без
+     «Регистрации договора»; дело уходит без ведущего на «Приём заявки», ведущего назначает управляющий адвокат;
+   • «+ Наличные» в карточке дела — наличные, которые учредитель получил сам;
+   • режим «только просмотр»: кнопки, которые меняют данные, учредителю не показываются;
+   • узбекские надписи экранов учредителя (раздел «ИИ-агенты» — на этапе 5). */
+Object.assign(UI,{fo61Cash:"+ Наличные||+ 现金",fo61CashT:"Наличные, которые вы получили||您收取的现金",
+  fo61CashH:"Учредитель вносит только наличные, которые получил сам. Исправить или удалить поступление может управляющий адвокат.||创始人只能录入本人收取的现金。修改或删除收款由管理律师处理。",
+  fo61CashOk:"Наличные внесены — управляющий адвокат получил уведомление||现金已录入——管理律师已收到通知",fo61NoLead:"Ведущего назначит управляющий адвокат||负责人由管理律师指定",
+  fo61IntakeOk:"Заявка зарегистрирована — управляющий адвокат назначит ведущего||申请已登记——管理律师将指定负责人"});
+window.UZ21=Object.assign(window.UZ21||{},{"+ Наличные":"+ Naqd pul","Наличные, которые вы получили":"Siz olgan naqd pul",
+  "Учредитель вносит только наличные, которые получил сам. Исправить или удалить поступление может управляющий адвокат.":"Taʼsischi faqat oʻzi olgan naqd pulni kiritadi. Tushumni tuzatish yoki oʻchirishni boshqaruvchi advokat bajaradi.",
+  "Наличные внесены — управляющий адвокат получил уведомление":"Naqd pul kiritildi — boshqaruvchi advokatga bildirishnoma yuborildi","Ведущего назначит управляющий адвокат":"Yetakchini boshqaruvchi advokat tayinlaydi",
+  "Заявка зарегистрирована — управляющий адвокат назначит ведущего":"Ariza roʻyxatdan oʻtkazildi — yetakchini boshqaruvchi advokat tayinlaydi",
+  /* экраны, которые видит учредитель (проверка sections/founders/tests/uzscan.js) */
+  "Заседания и сроки":"Majlislar va muddatlar","Ход дела по инстанциям":"Ishning instansiyalar boʻyicha borishi","Открыть 1-ю инстанцию":"1-instansiyani ochish",
+  "Заседания":"Majlislar","Процессуальные сроки":"Protsessual muddatlar","Процессуальные документы":"Protsessual hujjatlar","Фильтр качества":"Sifat filtri",
+  "Обратиться к ИИ-агенту: «@ИИ …» — он ответит внутренним сообщением (клиент не видит)":"SI-agentga murojaat: «@ИИ …» — u ichki xabar bilan javob beradi (mijoz koʻrmaydi)",
+  "Пока ничего не назначено":"Hozircha hech narsa belgilanmagan","Справочник процессуальных сроков":"Protsessual muddatlar maʼlumotnomasi",
+  "клиентов и потенциальных":"mijozlar va potentsial mijozlar","новых и в работе":"yangi va ishda","Документ суда":"Sud hujjati",
+  "⚠ запас на {d}: утверждено {h} из {n}":"⚠ {d} uchun zaxira: {n} dan {h} tasi tasdiqlangan","20 слов в рабочий день (Пн–Пт) · {d} рабочих дней = {n}":"Ish kunida 20 soʻz (Du–Ju) · {d} ish kuni = {n}",
+  "Кто добавил: все":"Kim qoʻshgan: hammasi","Показано {a} из {b} · по номеру":"{b} dan {a} tasi koʻrsatilgan · raqam boʻyicha",
+  "Неделя {a}–{b}":"Hafta {a}–{b}","собирает Амина Ли · обновлено {d}":"Amina Li yigʻadi · yangilangan {d}","выдано переводчикам с понедельника":"dushanbadan beri tarjimonlarga berilgan",
+  "вручную {m} · сами через 24 ч — {a}":"qoʻlda {m} · 24 soatdan keyin oʻzi — {a}","все {n} утверждённых слов":"barcha {n} ta tasdiqlangan soʻz","слова недели, до {n}":"hafta soʻzlari, {n} tagacha",
+  "ошибок нет":"xatolar yoʻq","ещё нет решений по её словам":"uning soʻzlari boʻyicha hali qaror yoʻq","{p} % ошибок у переводчиков за 7 дней":"tarjimonlarda 7 kunda {p} % xato",
+  "из {n} слов: исправлено {e}, отклонено {r}":"{n} ta soʻzdan: tuzatilgan {e}, rad etilgan {r}"});
+const Fo61={
+  on(){return typeof Fo60!=="undefined"&&Fo60.on();},
+  /* наличные учредителя: сервер ставит cash, receivedBy и by, засчитывает сразу и сообщает УП */
+  async cash(id){const m=matter(id);if(!m||!this.on())return;const st=paySettings();const cur=m.currency||"UZS";
+    const v=await Dlg.ask({title:T1(UI.fo61CashT)+" · "+m.no,text:T1(UI.fo61CashH),fields:[{k:"date",label:T1(UI.eDate),type:"date",value:todayS(),required:true},
+      {k:"amount",label:T1(UI.pAmount||"Сумма||金额"),type:"number",value:"",required:true,check:x=>(+x.amount||0)>0?"":T1(UI.po21ErrFirst)},
+      {k:"currency",label:T1(UI.ctCur),type:"select",value:cur,options:CURS},{k:"note",label:T1(UI.crqComment)}]});
+    if(!v)return;const amount=+v.amount||0;if(amount<=0)return;
+    const p={id:uid("p"),by:U().emp,at:nowS(),matterId:m.id,clientId:m.clientId||"",date:v.date,kind:"legal",amount,currency:v.currency,rate:payRateOf(v.currency),usdRate:+st.usdRate,
+      transit:0,transitNote:"",viaFirm:true,withVat:false,translator:"",note:v.note||"",entity:m.entity,unitId:m.unitId,cash:true,receivedBy:U().emp};
+    try{await SB19.docSet("payments",p.id,p);S.payments=S.payments||{};S.payments[p.id]=p;}catch(e){toast(String((e&&e.message)||e));return;}
+    audit(`${m.no}: наличные ${fmtN(amount)} ${p.currency} — внёс учредитель`);toast(T1(UI.fo61CashOk));Router.render();}
+};
+/* ── заявка учредителя: без «Ведущего» и без «Регистрации договора» ── */
+{const _mfFo61=Matter.fields;Matter.fields=function(m){const f=_mfFo61.apply(this,arguments);if(!Fo61.on()||(m&&m.id))return f;
+  return (f||[]).map(x=>{if(!x||x.k!=="lead")return x;const y=Object.assign({},x,{value:"",_hide24:true,hint:T1(UI.fo61NoLead)});delete y.required;delete y.check;return y;});};
+ /* суд требует ведущего с лицензией при создании дела — у заявки учредителя ведущего ещё нет (назначит УП) */
+ const _licFo61=licensedOf;licensedOf=function(e){if(Fo61._intake&&!e)return true;const a=e&&typeof accByEmp==="function"?accByEmp(e):null;if(a&&Fo60.isFoAcc(a))return false;return _licFo61.apply(this,arguments);};
+ const _maFo61=Matter.apply;Matter.apply=function(m,v){const isNew=!m.no&&!(S.matters||{})[m.id];if(Fo61.on()&&isNew&&v)v.lead="";
+  let r;Fo61._intake=Fo61.on()&&isNew;try{r=_maFo61.apply(this,arguments);}finally{Fo61._intake=false;}
+  if(!Fo61.on()||!isNew)return r;
+  m.lead="";m.executors=[];m.team=[];["reviewer","cnLawyer","translator"].forEach(k=>{if(m[k])m[k]="";});m.assignments=Array.isArray(m.assignments)?[]:m.assignments;
+  if(m.intake23){delete m.intake23.assign;delete m.intake23.accepted;m.intake23.src="fo";m.intake23.by=U().emp;}
+  v.pipeline="lead";m.pipeline="lead";if(m.svc==="support")m.entity="llc";return r;};}
+/* ══ режим «только просмотр» ══
+   1) проверки прав разделов — «нельзя» (этапы, КП, папки, задачи, поручения, данные суда, перевод для клиента, объединение клиентов);
+   2) ключи правки в can() — «нельзя» (как у переводчика в v57_translator.js), кроме mattersEdit — от него зависит «Загрузить файл»; просмотр (финансы, зарплаты, кадры, команда) — как у УП;
+   3) остальные кнопки, которые проверяют «УП ли это» прямо в разметке, — скрыты стилем body.fo60ro.
+   Остаются: «Создать заявку», «+ Клиент», «Загрузить файл» / ссылка на файл, «+ Наличные», переписка с клиентом и командой в карточке дела
+   (решение владельца 08.11.2026), чаты, Совет, свои заметки и «Учить китайский». */
+{const NO=["editPersonal","editWork","editSalary","remark","assign","editTask","deleteTask","eventsEdit","corrEdit","reqManage","paySettings","payApprove","payCheck",
+    "ugoalsEdit","ugoalsProgress","examsEdit","careEdit","clientAccessIssue","clientAccessClose","complaintsDecide","accounts"];
+ const _canFo61=can;can=function(k){if(Fo61.on()&&NO.includes(k))return false;return _canFo61.apply(this,arguments);};}
+{const off=(o,f,v)=>{if(o&&typeof o[f]==="function"){const _o=o[f];o[f]=function(){return Fo61.on()?(typeof v==="function"?v():v):_o.apply(this,arguments);};}};
+ if(typeof Pipe!=="undefined")off(Pipe,"can",false);if(typeof Stage!=="undefined")off(Stage,"next",()=>[]);
+ if(typeof Pre24!=="undefined")off(Pre24,"can",false);if(typeof KP!=="undefined")off(KP,"canStep",false);
+ if(typeof Card22!=="undefined"){off(Card22,"folderEd",false);off(Card22,"corrCan",false);off(Card22,"boardCan",false);}
+ if(typeof CF3!=="undefined")off(CF3,"can",false);if(typeof Tr18!=="undefined")off(Tr18,"can",false);if(typeof CReq!=="undefined")off(CReq,"canHandle",false);
+ if(typeof Task33!=="undefined"){off(Task33,"may",false);off(Task33,"mayAssign",false);}if(typeof Org21!=="undefined")off(Org21,"canGive",false);
+ if(typeof Ev55!=="undefined")off(Ev55,"can",false);if(typeof Ie33!=="undefined")off(Ie33,"can",false);
+ if(typeof Kp33!=="undefined"){off(Kp33,"canDel",false);off(Kp33,"canEdit",false);}if(typeof Ct27!=="undefined")off(Ct27,"can",false);
+ if(typeof Dup40!=="undefined")off(Dup40,"mp",false);if(typeof Doc42!=="undefined")off(Doc42,"canEd",false);}
+/* кнопки, которые проверяют «УП ли это» прямо в разметке */
+(function(){const A=k=>`[data-act="${k}"]`;
+  const SEL=[...["editMatter","closeMatter","toCourt","restore11","paySet","payUnblock","unsign21","askCost21","stages21","psPause","psResume","ctEdit","ctFile21","newPayM","newPay","payAdd21",
+      "ccInv","ccAsk","instAdd","dvMark","dsClose","dsPlan","cnFill","cnClose","newTaskM","asgAdd","asgOneoff17","kpExtend17","kpedit33","newMatter","newMatter11","newMatterC","editClient",
+      "visitAdd","blToggle","scanUp","docUp","docLink","caIssue","newCorr","newReq","newTask","newEvent","newEventM","newEventC","payRecalc","paySave","payCheck","payReopen","payApprove",
+      "editSet","editSet13","newVac","newExam","priceEdit","calAdd","newPartner","aiDossier","kpPropose","kpOk2","kpOk3","kpRet2","kpRet3","kpFile","kpSend"].map(A),
+    ...["data-pipe","data-stage","data-pedit","data-pdel","data-pay21ok","data-sc41ed","data-sc41","data-sc41x","data-sc41add","data-sc41reset","data-ccinvpaid","data-ccinvattach","data-ccdone",
+      "data-esfissue","data-esfcancel","data-mcheck","data-mclose","data-paymonth","data-instedit","data-instup","data-saadd","data-sasign","data-ltclient","data-ltpen","data-ltprop","data-ltexp",
+      "data-ltdec","data-c22fnew","data-c22fdel","data-c22mv","data-c50del","data-mv33","data-dc42","data-asgedit","data-st3a","data-st3up","data-st3send","data-st3req","data-p24a","data-p24got",
+      "data-pr24","data-c22kprem","data-c22kpup","data-ie33","data-kp33d","data-ct27","data-s6pk","data-s6rn","data-s6rp","data-s5req","data-s5done","data-f3","data-f3r","data-f3c","data-f3d",
+      "data-c5","data-c5del","data-r3e","data-r3x","data-r3a","data-pa","data-cli21fill","data-mg40","data-careset","data-cablock","data-cadel","data-fwnew17","data-fwedit17","data-fwtog17",
+      "data-c22corr","data-tadd","data-po21new","data-po21slot","data-ev21new","data-exdel","data-pknew17","data-pkedit17","data-pkarch17","data-caldel","data-ugadd","data-ugdel","data-lr58a",
+      "data-tt59a","data-pb61approve","data-pb61pay","data-pb61cancel","data-c22col","data-c22ai","data-c22target","data-pw","data-tg","data-acc21","data-h36goal"].map(a=>`[${a}]`),
+    '[data-p24new="reg"]','[data-c2new="reg"]','[data-s2new="reg"]','[data-act40="merge"]'];
+  const st=document.createElement("style");st.textContent=`body.fo60ro :is(${SEL.join(",")}){display:none!important}
+body.fo60ro :is(input[data-ind],input[data-hind],input[data-goal],[data-cfield],[data-fvis],[data-ffin],[data-flang],select[data-ccontact],[data-kvis],[data-p24notes]){pointer-events:none;opacity:.7}`;
+  document.head.appendChild(st);})();
+{const mark=()=>{try{document.body.classList.toggle("fo60ro",Fo61.on());}catch(e){}};
+ if(typeof Router!=="undefined"&&Router.render){const _rFo61=Router.render.bind(Router);Router.render=function(){mark();return _rFo61.apply(this,arguments);};}
+ mark();}
+/* «+ Наличные» — в карточке дела, в блоке «Финансы» (или в шапке карточки) */
+if(typeof Card22!=="undefined"&&Card22.bind){const _bFo61=Card22.bind.bind(Card22);Card22.bind=function(vp,m){const r=_bFo61.apply(this,arguments);
+  try{if(Fo61.on()&&m&&m.status!=="closed"&&!vp.querySelector("[data-fo61cash]")){const b=document.createElement("button");b.type="button";b.className="btn sm";b.dataset.fo61cash=m.id;b.textContent=T1(UI.fo61Cash);
+    b.onclick=e=>{e.stopPropagation();Fo61.cash(m.id);};const h=vp.querySelector(".c22fin h4")||vp.querySelector(".c22acts");if(h)h.appendChild(b);}}catch(e){}
+  return r;};}
+/* «Минимальные данные клиента» при создании дела — у учредителя не спрашиваются: карточку клиента он не меняет, данные внесёт УП */
+if(typeof Cli21!=="undefined"&&Cli21.fillMin){const _fmFo61=Cli21.fillMin.bind(Cli21);Cli21.fillMin=async function(){if(Fo61.on())return true;return _fmFo61.apply(this,arguments);};}
+/* после создания заявки — сообщение (уведомление УП отправляет сервер) */
+{const _crFo61=Matter.create.bind(Matter);Matter.create=async function(){const before=Object.keys(S.matters||{}).length;const r=await _crFo61.apply(this,arguments);
+  if(Fo61.on()&&Object.keys(S.matters||{}).length>before)toast(T1(UI.fo61IntakeOk));return r;};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
