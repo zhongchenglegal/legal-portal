@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="5b03f5689458";
+const ZC_BUILD="d23bc6eb4d52";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10948,7 +10948,7 @@ const _navAdv21=navFor;navFor=function(){const g=_navAdv21();if(!Adv21.on())retu
   return [[UI.gWork,["home","oneoff","court","support","creq","archive"].map(pick)],[UI.nAdmin,["corr","fin","req","price"].map(pick)]];};
 const ADV21_DENY=["cal","chart","team","matters","clients","manage","goals","hr","kpstats","overdues","complaints","myincome","ugoals","exams","tpl","intern","pay"];
 if(typeof Route17!=="undefined"){const _nkAdv21=Route17.navKeys.bind(Route17);Route17.navKeys=function(){const s=_nkAdv21();if(!Adv21.on())return s;ADV21_DENY.forEach(k=>s.delete(k));s.add("client");s.add("tasks");return s;};}
-const _goAdv21=Router.go.bind(Router);Router.go=function(r,arg){if(Adv21.on()){if(r==="pay")r="fin";if(ADV21_DENY.includes(r)){r="home";arg=null;}if(r==="client"&&arg&&!S.clients[arg]){r="home";arg=null;}}return _goAdv21(r,arg);};
+const _goAdv21=Router.go.bind(Router);Router.go=function(r,arg){if(Adv21.on()){if(r==="pay")r="fin";if(ADV21_DENY.includes(r)&&!(typeof Tr57!=="undefined"&&Tr57.on()&&(r==="cal"||r==="matters"))){r="home";arg=null;}if(r==="client"&&arg&&!S.clients[arg]){r="home";arg=null;}}return _goAdv21(r,arg);};
 /* ── права действий ── */
 const _canAdv21=can;can=function(action,emp){if(Adv21.on()){if(action==="corrEdit")return true;
     if(["team","hr","finance","payroll","payments","paySettings","reqManage","cabinet","complaintsAll","deleteTask"].includes(action))return false;}
@@ -11270,10 +11270,12 @@ if(typeof Dash!=="undefined"&&Dash.planner){const _plan21=Dash.planner.bind(Dash
    сотрудников календарь — «План на день» на главной; на главной управляющего партнёра «План на день» — только его планы.
    Действует в режиме сервера (рабочая система); демо-режим — как раньше. */
 const Cal21Role={on(){return typeof Staff21!=="undefined"&&Staff21.on()&&!!U()&&!isClient();},mp(){return isFounder()||hasF("managing");},
+  /* переводчику календарь оставлен (решения владельца 05–06.11.2026): его меню — v57_translator.js */
+  open(){return this.mp()||(typeof Tr57!=="undefined"&&Tr57.on());},
   mine(){const me=(U()||{}).emp;return x=>x.emp===me||(x.matterId&&mine(matter(x.matterId)||{}));}};
-const _navCal21=navFor;navFor=function(){const g=_navCal21();if(!Cal21Role.on()||Cal21Role.mp())return g;return g.map(([t,items])=>[t,(items||[]).filter(it=>it[0]!=="cal")]);};
-if(typeof Route17!=="undefined"){const _nkCal21=Route17.navKeys.bind(Route17);Route17.navKeys=function(){const s=_nkCal21();if(Cal21Role.on()&&!Cal21Role.mp())s.delete("cal");return s;};}
-const _goCal21=Router.go.bind(Router);Router.go=function(r,arg){if(r==="cal"&&Cal21Role.on()&&!Cal21Role.mp()){r="home";arg=null;}return _goCal21(r,arg);};
+const _navCal21=navFor;navFor=function(){const g=_navCal21();if(!Cal21Role.on()||Cal21Role.open())return g;return g.map(([t,items])=>[t,(items||[]).filter(it=>it[0]!=="cal")]);};
+if(typeof Route17!=="undefined"){const _nkCal21=Route17.navKeys.bind(Route17);Route17.navKeys=function(){const s=_nkCal21();if(Cal21Role.on()&&!Cal21Role.open())s.delete("cal");return s;};}
+const _goCal21=Router.go.bind(Router);Router.go=function(r,arg){if(r==="cal"&&Cal21Role.on()&&!Cal21Role.open()){r="home";arg=null;}return _goCal21(r,arg);};
 /* главная: у сотрудников — «План на день» (свои планы) первым в левой колонке; у УП в «Плане на день» — только его планы */
 const _plRole21=Dash.planner.bind(Dash);Dash.planner=function(scope){if(!scope&&Cal21Role.on()&&Cal21Role.mp()&&Router.cur==="home")scope=Cal21Role.mine();return _plRole21(scope);};
 const _homeHtml21=Home.html.bind(Home);Home.html=function(){let html=_homeHtml21.apply(this,arguments);if(!Cal21Role.on()||Cal21Role.mp())return html;
@@ -23493,7 +23495,7 @@ if(typeof Route17!=="undefined"){const _nkTr57=Route17.navKeys.bind(Route17);Rou
 Tr57.first=function(){const mm=MM();return ["oneoff","court","support"].find(k=>mm.some(m=>m.svc===k))||"oneoff";};
 const _goTr57=Router.go.bind(Router);Router.go=function(r,arg){if(Tr57.on()&&!TR57_ALLOW.has(r)){r="home";arg=null;}else if(Tr57.on()&&r==="matters"&&!arg){r=Tr57.first();}return _goTr57(r,arg);};
 /* разделы дел у переводчика — без денег: плашки об оплате, сортировка по стоимости, отметки оплаты месяцев; суммы суда — ниже */
-(function(){const st=document.createElement("style");st.textContent=`body.tr57ro :is([data-q17="qPay"],[data-s1q="qSpPay"],.mo1,select option[value="cost"]){display:none!important}`;document.head.appendChild(st);})();
+(function(){const st=document.createElement("style");st.textContent=`body.tr57ro :is([data-q17="qPay"],[data-s1q="qSpPay"],[data-csv17],[data-an17],[data-sa17],.mo1,select option[value="cost"]){display:none!important}`;document.head.appendChild(st);})();
 if(typeof Info5!=="undefined"){const _cI=Info5.card.bind(Info5);Info5.card=function(m){if(Tr57.on()&&!this.crim(m))return "";return _cI(m);};}
 if(typeof Pay5!=="undefined"){const _cP=Pay5.card.bind(Pay5);Pay5.card=function(m){return Tr57.on()?"":_cP(m);};}
 /* ── права: ничего, кроме перевода ── */
