@@ -4966,7 +4966,7 @@ const Pages={
     <div class="ph" style="margin-top:10px"><div><div class="mtype">${esc(m.no)} · ${mtLabel(m.type)} · ${ALL[m.practice]?T1(ALL[m.practice].num)+" · "+T1(ALL[m.practice].name):""}</div><h2>${esc(mT18(m))}</h2><div class="sub">${c?`<span data-client="${c.id}" style="cursor:pointer;font-weight:600;color:var(--ink)">${esc(c.name)}</span>${c.nameZh?` <span class="zh2">${esc(c.nameZh)}</span>`:""}`:"—"}</div></div>
       <div class="acts"><span class="ms ${m.status}" style="align-self:center"><i></i>${msLabel(m.status)}</span>${ed?`<button class="btn" data-act="editMatter">${T1(UI.mEdit)}</button>`:""}${can("assign",m.lead)||mine(m)?`<button class="btn" data-act="newTaskM">${T1(UI.addTask)}</button>`:""}${can("eventsEdit")?`<button class="btn" data-act="newEventM">${T1(UI.addEvent)}</button>`:""}${ed&&m.status!=="closed"?`<button class="btn ghost" data-act="closeMatter" style="color:var(--red)">${T1(UI.mClose)}</button>`:""}</div></div>
     <div class="cols"><div style="display:grid;gap:14px">
-      <div class="card"><h4>${T1(UI.hWhat)}</h4><dl class="kvl"><dt>${T1(UI.mLead)}</dt><dd>${dispName(m.lead)}</dd><dt>${T1(UI.mTeam)}</dt><dd>${(m.team||[]).map(dispName).join(", ")||"—"}</dd><dt>${T1(UI.mOpened)}</dt><dd>${fmtD(m.opened)}</dd><dt>${T1(UI.mDeadline)}</dt><dd>${m.deadline?fmtD(m.deadline)+(m.status!=="closed"&&!DONE11.includes(m.stage)?" · "+dl17(m.deadline,true):""):"—"}</dd>${m.court?`<dt>${T1(UI.mCourt)}</dt><dd>${esc(m.court)}</dd>`:""}${m.caseNo?`<dt>${T1(UI.mCase)}</dt><dd>${esc(m.caseNo)}</dd>`:""}<dt>${T1(UI.mBilling)}</dt><dd>${T1(UI["b"+(m.billing||"fixed").charAt(0).toUpperCase()+(m.billing||"fixed").slice(1)])}</dd>${can("finance")||mine(m)||ed?`<dt>${T1(UI.mFee)}</dt><dd><span class="money">${fmtN(m.fee)}</span> ${T1(UI.sum)} · ${T1(UI.mPaid)} <span class="money">${fmtN(m.paid)}</span><div class="bar2" style="margin-top:6px;max-width:260px"><i style="width:${pct}%"></i></div></dd>`:""}</dl>${m.notes?`<p style="margin:12px 0 0;white-space:pre-wrap;color:var(--ink-2)">${esc(m.notes)}</p>`:""}</div>
+      <div class="card"><h4>${T1(UI.hWhat)}</h4><dl class="kvl"><dt>${T1(UI.mLead)}</dt><dd>${dispName(m.lead)}</dd><dt>${T1(UI.mTeam)}</dt><dd>${(m.team||[]).map(dispName).join(", ")||"—"}</dd><dt>${T1(UI.mOpened)}</dt><dd>${fmtD(m.opened)}</dd><dt>${T1(UI.mDeadline)}</dt><dd>${m.deadline?fmtD(m.deadline)+(m.status!=="closed"&&!DONE11.includes(m.stage)?" · "+dl17(m.deadline,true):""):"—"}</dd>${m.court?`<dt>${T1(UI.mCourt)}</dt><dd>${esc(m.court)}</dd>`:""}${m.caseNo?`<dt>${T1(UI.mCase)}</dt><dd>${esc(m.caseNo)}</dd>`:""}${typeof Tr57!=="undefined"&&Tr57.on()?"":`<dt>${T1(UI.mBilling)}</dt><dd>${T1(UI["b"+(m.billing||"fixed").charAt(0).toUpperCase()+(m.billing||"fixed").slice(1)])}</dd>`}${can("finance")||mine(m)||ed?`<dt>${T1(UI.mFee)}</dt><dd><span class="money">${fmtN(m.fee)}</span> ${T1(UI.sum)} · ${T1(UI.mPaid)} <span class="money">${fmtN(m.paid)}</span><div class="bar2" style="margin-top:6px;max-width:260px"><i style="width:${pct}%"></i></div></dd>`:""}</dl>${m.notes?`<p style="margin:12px 0 0;white-space:pre-wrap;color:var(--ink-2)">${esc(m.notes)}</p>`:""}</div>
       <div class="card"><h4>${T1(UI.matterTasks)} · ${ts.length}</h4><div class="kb2">${this.board(ts,ed||mine(m))}</div></div>
       <div class="card"><h4>${T1(UI.mDocs)}</h4>${(m.files||[]).length?`<div class="chips">${m.files.map((f,i)=>`<span class="chipf" data-act="mFile" data-i="${i}">${esc(f.name)}${f.url?" ↗":""}</span>`).join("")}</div>`:`<div class="empty2">${T1(UI.noData)}</div>`}${ed||mine(m)?`<div class="addrow"><button class="btn sm" data-act="mUp">${T1(UI.upload)}</button><button class="btn sm" data-act="mLink">+ ${T1(UI.kLink)}</button></div>`:""}</div>
     </div><div style="display:grid;gap:14px">
@@ -7690,10 +7690,10 @@ const Contract11={
     if(v.mode==="new"&&k.no&&c){migrateClient11(c);let rec=(c.contracts||[]).find(x=>x.no===k.no);if(!rec){rec={id:uid("ct"),no:k.no,date:k.date,subject:k.subject,until:k.term,party:k.party,status:"active",svc:m.svc,matterId:m.id,paymentStatus:m.paymentStatus};c.contracts.push(rec);}else Object.assign(rec,{date:k.date,subject:k.subject,until:k.term,party:k.party,matterId:m.id});k.existingId=rec.id;await saveDoc("clients",c);}
     m.history.push({at:nowS(),by:U().emp,what:`${T1(UI.ctEdit)}: ${k.no||"—"} · ${fmtN(m.cost)} ${m.currency}`});await saveDoc("matters",m);audit(`${m.no}: договор/стоимость обновлены`);Router.render();},
   async file(id){const m=matter(id);if(!m||!Pipe.can(m))return;Files.upload(async f=>{m.contract=m.contract||{};m.contract.file=f;await saveDoc("matters",m);Router.render();});},
-  html(m){const k=m.contract||{};const vis=costVisible(m);const cur=c=>c==="USD"?"$":c==="CNY"?"¥":T1(UI.sum);const has=k.no||k.date||k.subject;
-    return `<dl class="kvl"><dt>${T1(UI.ctTitle)}</dt><dd>${has?`<b>${esc(k.no||"—")}</b>${k.date?" · "+fmtD(k.date):""} · <span class="entbadge ${k.party||m.entity}">${T1(ENTITY_S[k.party||m.entity])}</span>${k.framework?" · "+T1(UI.ctFramework):""}${k.subject?`<br><small>${esc(k.subject)}</small>`:""}${k.term?`<br><small>${T1(UI.ctTerm)}: ${esc(k.term)}</small>`:""}${k.penaltyRate!==""&&k.penaltyRate!==undefined?` · <small>${T1(UI.ctPenalty)}: ${esc(k.penaltyRate)}</small>`:""}${k.didoxId?` · <small>Didox: ${esc(k.didoxId)}</small>`:""}${k.file?` · <span class="chipf" data-ctfile="1">${esc(k.file.name)}</span>`:""}`:`<span style="color:var(--warn-d)">${T1(m.pipeline==="contract"||m.contractSigned?"Договор подписан, реквизиты не внесены — заполните «Договор и стоимость»||合同已签署，但未填写合同信息——请填写“合同与费用”":UI.ctNone)}</span>`}</dd>
-      <dt>${T1(UI.ctCost)}</dt><dd>${vis?`<span class="money">${fmtN(m.cost)}</span> ${cur(m.currency)}${m.svc==="support"?" · "+T1(UI.payMonthly):""}${m.noVat?" · "+T1(UI.ctNoVat):""}${m.payOrder?` · <small>${esc(m.payOrder)}</small>`:""}`:"—"}</dd>
-      <dt>${T1(UI.payStatus)}</dt><dd><span class="pay11 ${m.paymentStatus}">${payLabel(m.paymentStatus)}</span>${m.payUnblock?` · <small>${T1(UI.payUnblocked)}: ${esc(m.payUnblock.reason)}</small>`:""}${vis&&m.currency==="UZS"&&((m.paymentStatus==="paid"&&(m.paid||0)<(m.cost||0))||(m.paymentStatus==="unpaid"&&(m.paid||0)>0))?` · <small style="color:var(--warn-d)">${T1(UI.payDiff)}</small>`:""}</dd>
+  html(m){const k=m.contract||{};const vis=costVisible(m);const noM=typeof Tr57!=="undefined"&&Tr57.on();const cur=c=>c==="USD"?"$":c==="CNY"?"¥":T1(UI.sum);const has=k.no||k.date||k.subject;
+    return `<dl class="kvl"><dt>${T1(UI.ctTitle)}</dt><dd>${has?`<b>${esc(k.no||"—")}</b>${k.date?" · "+fmtD(k.date):""} · <span class="entbadge ${k.party||m.entity}">${T1(ENTITY_S[k.party||m.entity])}</span>${k.framework?" · "+T1(UI.ctFramework):""}${k.subject?`<br><small>${esc(k.subject)}</small>`:""}${k.term?`<br><small>${T1(UI.ctTerm)}: ${esc(k.term)}</small>`:""}${!noM&&k.penaltyRate!==""&&k.penaltyRate!==undefined?` · <small>${T1(UI.ctPenalty)}: ${esc(k.penaltyRate)}</small>`:""}${k.didoxId?` · <small>Didox: ${esc(k.didoxId)}</small>`:""}${k.file?` · <span class="chipf" data-ctfile="1">${esc(k.file.name)}</span>`:""}`:noM?"—":`<span style="color:var(--warn-d)">${T1(m.pipeline==="contract"||m.contractSigned?"Договор подписан, реквизиты не внесены — заполните «Договор и стоимость»||合同已签署，但未填写合同信息——请填写“合同与费用”":UI.ctNone)}</span>`}</dd>
+      ${noM?"":`<dt>${T1(UI.ctCost)}</dt><dd>${vis?`<span class="money">${fmtN(m.cost)}</span> ${cur(m.currency)}${m.svc==="support"?" · "+T1(UI.payMonthly):""}${m.noVat?" · "+T1(UI.ctNoVat):""}${m.payOrder?` · <small>${esc(m.payOrder)}</small>`:""}`:"—"}</dd>
+      <dt>${T1(UI.payStatus)}</dt><dd><span class="pay11 ${m.paymentStatus}">${payLabel(m.paymentStatus)}</span>${m.payUnblock?` · <small>${T1(UI.payUnblocked)}: ${esc(m.payUnblock.reason)}</small>`:""}${vis&&m.currency==="UZS"&&((m.paymentStatus==="paid"&&(m.paid||0)<(m.cost||0))||(m.paymentStatus==="unpaid"&&(m.paid||0)>0))?` · <small style="color:var(--warn-d)">${T1(UI.payDiff)}</small>`:""}</dd>`}
       <dt>${T1(UI.rgGroup)}</dt><dd>${accsForMatter(m).length?T1(UI.ccWho)+": "+accsForMatter(m).map(a=>esc(a.name)).join(", "):(m.resultGroup?esc(m.resultGroup):`<span style="color:var(--warn-d)">${T1(UI.rgNeed)}</span>`)}</dd></dl>`;}
 };
 /* ── суд: инстанции ── */
@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="1f842d6a52a8";
+const ZC_BUILD="5b03f5689458";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -13377,7 +13377,7 @@ const Card22={
     kv(UI.c22CtNo,k.no);kv(UI.c22CtDate,k.date?fmtD(k.date):"");if(k.subject)kv(UI.c22CtSubj,k.subject);if(k.term)kv(UI.c22CtTerm,k.term);
     const ph=(m.pipelineHistory||[]).filter(x=>x.step==="contract").slice(-1)[0];if(m.pipeline==="contract")kv(UI.c22CtSigned,(ph?fmtD(String(ph.at).slice(0,10))+(ph.by?" · "+dispName(ph.by):""):"✓"));
     if(Money17.cost(m)>0&&(typeof costVisible!=="function"||costVisible(m)))kv(UI.c22FinCost,this.fmtM(m,Money17.cost(m)));
-    const po=typeof payOrderLabel21==="function"?payOrderLabel21(m):"";kv(UI.c22FinOrder,po||T1(UI.c22PoNone),!po);
+    const po=typeof payOrderLabel21==="function"?payOrderLabel21(m):"";if(!(typeof Tr57!=="undefined"&&Tr57.on()))kv(UI.c22FinOrder,po||T1(UI.c22PoNone),!po);
     kv(UI.c22CtFile,k.file?k.file.name:T1(UI.c22CtNoFile),!k.file);card.appendChild(dl);return card;},
   /* ── финансы: стоимость, оплачено, осталось, порядок и статус оплаты ── */
   finCard(m,payAdd){const card=this.el("div","card c22fin");const h=this.el("h4","",T1(UI.c22Fin));
@@ -14276,8 +14276,8 @@ Object.assign(Pre24,{
     const po=typeof payOrderLabel21==="function"?payOrderLabel21(m):m.payOrder;
     const ct=`<div class="bx24 span"><h4>${T1(UI.p24Ct)}</h4><dl class="kv24"><dt>${T1(UI.ctNo)}</dt><dd>${esc(k.no||"—")}</dd><dt>${T1(UI.ctDate)}</dt><dd>${k.date?esc(fmtD(k.date)):"—"}</dd>
       <dt>${T1(UI.ctSubject)}</dt><dd>${esc(k.subject||"—")}${pre(t&&k.subject&&k.subject===t.scope)}</dd><dt>${T1(UI.ctTerm)}</dt><dd>${esc(k.term||"—")}${pre(t&&k.term&&k.term===t.term)}</dd>
-      <dt>${T1(UI.ctCost)}</dt><dd>${(typeof costVisible!=="function"||costVisible(m))?esc(fmtN(m.cost||0)+" "+(m.currency||"UZS")):"—"}${pre(t&&+t.cost===+m.cost)}</dd><dt>${T1(UI.ctPayOrder)}</dt><dd>${esc(po||"—")}${pre(t&&t.payOrder===m.payOrder)}</dd>
-      <dt>${T1(UI.ctPenalty)}</dt><dd>${k.penaltyRate!==""&&k.penaltyRate!=null?esc(k.penaltyRate):"—"}</dd></dl>${act&&(MP||L)?`<div class="ac24" style="border:0;margin-top:6px;padding-top:0">${this.btn("ctedit",UI.p24CtFill,"pri")}</div>`:""}</div>`;
+      ${typeof Tr57!=="undefined"&&Tr57.on()?"":`<dt>${T1(UI.ctCost)}</dt><dd>${(typeof costVisible!=="function"||costVisible(m))?esc(fmtN(m.cost||0)+" "+(m.currency||"UZS")):"—"}${pre(t&&+t.cost===+m.cost)}</dd><dt>${T1(UI.ctPayOrder)}</dt><dd>${esc(po||"—")}${pre(t&&t.payOrder===m.payOrder)}</dd>
+      <dt>${T1(UI.ctPenalty)}</dt><dd>${k.penaltyRate!==""&&k.penaltyRate!=null?esc(k.penaltyRate):"—"}</dd>`}</dl>${act&&(MP||L)?`<div class="ac24" style="border:0;margin-top:6px;padding-top:0">${this.btn("ctedit",UI.p24CtFill,"pri")}</div>`:""}</div>`;
     const file=`<div class="bx24"><h4>${T1(UI.p24CtFile)} <span style="color:var(--red)">*</span></h4>${k.file?`<span class="chipf" data-p24file="${esc(k.file.id)}">📄 ${esc(k.file.name)}</span>`:`<div style="font-size:12.5px;color:var(--ink-3)">${T1(UI.p24CtFileH)}</div>`}${act&&(MP||L)?`<div style="margin-top:8px">${this.btn("ctfile",UI.p24CtFileUp)}</div>`:""}</div>`;
     const rd=done?"":`<div class="bx24"><h4>${T1(UI.p24Ready)}</h4><ul class="ck24">${miss.length?miss.map(x=>`<li class="no">${esc(T1(x.l))}</li>`).join(""):`<li>${T1(UI.p24Sign)}</li>`}</ul></div>`;
     const af=`<div class="bx24${done?"":""}"><h4>${T1(UI.p24After)}</h4><div style="font-size:13px">${T1(UI.p24AfterH)}</div></div>`;
@@ -23427,7 +23427,7 @@ window.UZ21=Object.assign(window.UZ21||{},{"Разговор откроется 
    (таблица matters закрыта, читается public.matters_tr); дело, клиента, переписку и этапы он не меняет; переводит поля дела
    (public.matter_tr_set) и документы (doc25_act «translate»). Здесь — только вид:
    • роль в списках учёток и в «Кадрах», строка «Переводчик» в «Матрице прав», выбор роли в «Создать учётку» / «Изменить доступ»;
-   • меню переводчика: Главная, Мои дела, Календарь, Переписка, Помощь (чаты и «План на день» — значки наверху); остальное — на главную;
+   • меню переводчика: Главная, Разовые услуги, Судебные дела, Юридическое сопровождение (решение владельца 11.11.2026, вместо «Мои дела»), Календарь, Переписка, Помощь (чаты и «План на день» — значки наверху); остальное — на главную;
    • главная переводчика: «Мне на перевод» (дела, где не хватает перевода для клиента), события, мои дела, задачи;
    • карточка дела: без сумм и оплаты, без кнопок этапов и правки дела; кнопка «Перевести» и загрузка переводов документов;
    • поле «Переводчик» в форме дела — только учётки с ролью «Переводчик»; назначает УП или ведущий (сервер проверяет);
@@ -23480,16 +23480,22 @@ if(typeof SB19!=="undefined"){
 }
 /* роль приходит с сервера после входа — меню и страница перерисовываются, когда стало известно, что вошёл переводчик */
 Tr57._st=null;Tr57.sync=function(){const now=this.on();if(now===this._st)return;this._st=now;try{renderSide();Router.render();}catch(e){}};
-{const _rsideTr57=renderSide;renderSide=function(){Tr57._st=Tr57.on();return _rsideTr57.apply(this,arguments);};}
+{const _rsideTr57=renderSide;renderSide=function(){Tr57._st=Tr57.on();document.body.classList.toggle("tr57ro",Tr57._st);return _rsideTr57.apply(this,arguments);};}
 /* ── меню и переходы ── */
-const TR57_ALLOW=new Set(["home","matters","matter","client","cal","corr","chats","help","tasks","notif","task","learn","trtest"]);
+const TR57_ALLOW=new Set(["home","matters","oneoff","court","support","matter","client","cal","corr","chats","help","tasks","notif","task","learn","trtest"]);
 const _navTr57=navFor;navFor=function(){const g=_navTr57.apply(this,arguments);if(!Tr57.on())return g;
   let help=null;g.forEach(x=>(x[1]||[]).forEach(it=>{if(it&&it[0]==="help")help=it;}));
-  const items=[["home",UI.nHome,"home"],["matters",UI.tMyMatters,"matters"],["cal",UI.nCal,"cal"],...(UI.nLearn58?[["learn",UI.nLearn58,"intern"]]:[]),["corr",UI.nCorr,"corr"]];if(help)items.push(help);
+  const items=[["home",UI.nHome,"home"],["oneoff",UI.nOneoff,"tasks"],["court",UI.nCourt11,"matters"],["support",UI.nSupport11,"cab"],["cal",UI.nCal,"cal"],...(UI.nLearn58?[["learn",UI.nLearn58,"intern"]]:[]),["corr",UI.nCorr,"corr"]];if(help)items.push(help);
   return [[UI.gWork,items]];};
 if(typeof Route17!=="undefined"){const _nkTr57=Route17.navKeys.bind(Route17);Route17.navKeys=function(){const s=_nkTr57();if(!Tr57.on())return s;
-  ["team","chart","pay"].forEach(k=>s.delete(k));["matters","cal","corr","client","chats","tasks","learn","trtest"].forEach(k=>s.add(k));return s;};}
-const _goTr57=Router.go.bind(Router);Router.go=function(r,arg){if(Tr57.on()&&!TR57_ALLOW.has(r)){r="home";arg=null;}return _goTr57(r,arg);};
+  ["team","chart","pay"].forEach(k=>s.delete(k));["matters","oneoff","court","support","cal","corr","client","chats","tasks","learn","trtest"].forEach(k=>s.add(k));return s;};}
+/* «Мои дела» в меню нет (решение владельца 11.11.2026): общий список без фильтра ведёт в раздел, где есть дела переводчика */
+Tr57.first=function(){const mm=MM();return ["oneoff","court","support"].find(k=>mm.some(m=>m.svc===k))||"oneoff";};
+const _goTr57=Router.go.bind(Router);Router.go=function(r,arg){if(Tr57.on()&&!TR57_ALLOW.has(r)){r="home";arg=null;}else if(Tr57.on()&&r==="matters"&&!arg){r=Tr57.first();}return _goTr57(r,arg);};
+/* разделы дел у переводчика — без денег: плашки об оплате, сортировка по стоимости, отметки оплаты месяцев; суммы суда — ниже */
+(function(){const st=document.createElement("style");st.textContent=`body.tr57ro :is([data-q17="qPay"],[data-s1q="qSpPay"],.mo1,select option[value="cost"]){display:none!important}`;document.head.appendChild(st);})();
+if(typeof Info5!=="undefined"){const _cI=Info5.card.bind(Info5);Info5.card=function(m){if(Tr57.on()&&!this.crim(m))return "";return _cI(m);};}
+if(typeof Pay5!=="undefined"){const _cP=Pay5.card.bind(Pay5);Pay5.card=function(m){return Tr57.on()?"":_cP(m);};}
 /* ── права: ничего, кроме перевода ── */
 const _canTr57=can;can=function(action,emp){if(Tr57.on()&&["mattersCreate","mattersEdit","corrEdit","clientsEdit","clientsCreate","payments","finance","cabinet"].includes(action))return false;return _canTr57.apply(this,arguments);};
 const _cvTr57=costVisible;costVisible=function(m){if(Tr57.on())return false;return _cvTr57.apply(this,arguments);};
