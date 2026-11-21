@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="b6ba8cec3f1d";
+const ZC_BUILD="c2e52fcee5bb";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -19795,10 +19795,11 @@ const PT65={
       <div class="kpi3 pt65k"><div class="k"><b>${L.length}</b><span>${T1(UI.pt65Total)}</span></div><div class="k ok"><b>${n("active")}</b><span>${T1(UI.pt65Active)}</span></div><div class="k"><b>${n("check")}</b><span>${T1(UI.pt65Check)}</span></div><div class="k"><b>${n("stop")}</b><span>${T1(UI.pt65Stop)}</span></div></div>
       <div class="pt65bar"><input data-pt65q type="search" autocomplete="off" value="${esc(this.q)}" placeholder="${esc(T1(UI.pt65Search))}" aria-label="${esc(T1(UI.pt65Search))}">
         <select data-pt65st aria-label="${esc(T1(UI.pt65StatusF))}"><option value="">${T1(UI.pt65All)}</option>${["active","check","stop"].map(s=>`<option value="${s}"${this.st===s?" selected":""}>${this.stName(s)}</option>`).join("")}</select>
+        ${this.dirFilter()}
         ${w?`<button class="btn pri" data-pt65="new">${T1(UI.pt65Add)}</button>`:""}</div>
       ${L.length?`<div class="pt65grid">${L.map(p=>`<button type="button" class="pt65c" data-pt65="open:${esc(p.id)}" data-pt65row="${esc(p.id)}"${this.hit(p)?"":' style="display:none"'}>
           <span class="pt65h"><span class="pt65av">${esc(this.ini(p.name))}</span><span class="pt65nm"><b>${esc(p.name||"")}</b><small>${esc([p.city,p.org].filter(Boolean).join(" · "))}</small></span>${this.stTag(p.status)}</span>
-          ${p.spec?`<span class="pt65sp">${esc(p.spec)}</span>`:""}
+          ${this.top3(p)||(p.spec?`<span class="pt65sp">${esc(p.spec)}</span>`:"")}
           ${p.rec&&p.rec.who?`<span class="pt65rc">${T1(UI.pt65Rec)}: <b>${esc(p.rec.who)}</b></span>`:""}${this.dealLine(p)}${this.moneyLine(p)}</button>`).join("")}</div>
         <div class="card pt65nohit"${shown?' style="display:none"':""}><div class="empty2">${T1(UI.pt65NoHit)}</div></div>`
       :`<div class="card"><div class="empty2">${T1(w?UI.pt65None:UI.pt65NoneRo)}</div></div>`}`;},
@@ -19826,12 +19827,14 @@ const PT65={
       </div><div class="pt65col">
         ${this.blk(T1(UI.pt65RecT),this.kv([[T1(UI.pt65Who),rec.who],[T1(UI.pt65Kind),rec.who?kind:""],[T1(UI.pt65When),rec.date?fmtD(rec.date):""],[T1(UI.pt65RecNote),rec.note]]),more("rec",UI.pt65Edit))}
         ${this.money(p)}
-        ${this.blk(T1(UI.pt65Spec),p.spec?`<div class="pt65txt">${esc(p.spec)}</div>`:`<div class="pt65em">${T1(UI.pt65Empty)}</div>`,more("edit",UI.pt65Edit))}
+        ${this.dirsBlk(p)||this.blk(T1(UI.pt65Spec),p.spec?`<div class="pt65txt">${esc(p.spec)}</div>`:`<div class="pt65em">${T1(UI.pt65Empty)}</div>`,more("edit",UI.pt65Edit))}
         ${this.blk(T1(UI.pt65Cm),(cms||`<div class="pt65em">${T1(UI.pt65CmNone)}</div>`)+(w?`<div class="pt65ci"><input data-pt65cm="${esc(p.id)}" maxlength="2000" autocomplete="off" placeholder="${esc(T1(UI.pt65CmPh))}" aria-label="${esc(T1(UI.pt65CmPh))}"><button type="button" class="btn pri sm" data-pt65="cmAdd:${esc(p.id)}">${T1(UI.pt65CmAdd)}</button></div>`:""))}
       </div></div>`;},
   /* ── дела партнёра (этап 2): из дел портала, где он указан в поле «Адвокат-партнёр» ── */
   /* расчёты (этап 3) дописывает sections/partners/late/pt_fee.js */
   money(p){return "";},dealTerms(m){return "";},moneyLine(p){return "";},
+  /* направления и оценки (этап 4) дописывает sections/partners/late/pt_rate.js */
+  dirsBlk(p){return "";},top3(p){return "";},dirFilter(){return "";},
   dealsOf(id){return Object.values(S.matters||{}).filter(m=>m&&m.partnerId===id).sort((a,b)=>String(b.opened||"").localeCompare(String(a.opened||""))||String(b.no||"").localeCompare(String(a.no||"")));},
   dealOpen(m){return m.status!=="closed"&&m.status!=="archived";},
   dealChips(p){const L=this.dealsOf(p.id);return L.length?`<span>${T1(UI.pt66Given).replace("{n}",L.length)}</span><span>${T1(UI.pt66Now).replace("{n}",L.filter(m=>this.dealOpen(m)).length)}</span>`:"";},
@@ -25469,6 +25472,166 @@ if(typeof Card22!=="undefined"&&Card22.teamCard&&typeof PT65!=="undefined"){
 .pt67calc div{display:flex;justify-content:space-between;gap:12px}.pt67calc div.t{border-top:1px solid var(--line);padding-top:6px;font-weight:700}
 .pt67prog{height:8px;border-radius:99px;background:var(--surface2,#F7F8FA);overflow:hidden;margin:10px 0 6px}.pt67prog i{display:block;height:100%;background:var(--ok-d,#3F8768);border-radius:99px}
 .pt67hint{color:var(--ink-3);font-size:12.5px}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.5 · НАПРАВЛЕНИЯ И ОЦЕНКИ АДВОКАТОВ, этап 4 (решения владельца 21.11.2026) ═══════════════════════════
+   Макет — design-partners.html (экран «Направления и оценки»). Правила — sections/partners/ПРАВИЛА.md (АП-36 …), сервер — миграция 20261122000100_practice.sql.
+   • «Кадры» → вкладка «Направления»: слева общий справочник направлений, справа — свои адвокаты и партнёры по выбранному направлению,
+     от лучшей оценки к худшей. Клик по партнёру открывает его карточку, по своему — обычную карточку сотрудника.
+   • Оценка 0–100, одна общая, с историей и комментарием. Оценивают управляющий адвокат и учредители; справочник ведёт управляющий адвокат.
+   • Карточка партнёра: блок «Направления и оценки» (вместо свободного текста); в списке партнёров — до трёх лучших направлений и фильтр.
+   • Карточка сотрудника: тот же блок — его видят только управляющий адвокат и учредители.
+   Всё меняется только через public.practice_act на сервере. Подключается после pt_fee.js. */
+Object.assign(UI,{
+  pr68Tab:"Направления||业务方向",pr68Note:"Один общий справочник направлений для своих адвокатов и партнёров. Выберите направление — справа все, кто по нему работает, от лучшей оценки к худшей. Оценки видят и ставят только управляющий адвокат и учредители; на зарплату и права они не влияют.||本所律师与合作律师共用一个业务方向目录。选择方向——右侧按评分从高到低显示相关律师。评分仅管理律师和创始人可见、可评；不影响工资和权限。",
+  pr68Dirs:"Направления||业务方向",pr68New:"Новое направление||新方向",pr68Add:"Добавить||添加",pr68None:"Направлений пока нет. Добавьте первое — например, «Налоговые споры».||暂无方向。请添加第一个——例如「税务争议」。",
+  pr68NoneRo:"Направлений пока нет.||暂无方向。",pr68Empty:"По этому направлению пока никого нет.||该方向暂无律师。",pr68Arch:"В архиве||已归档",pr68ShowArch:"показать архив||显示归档",
+  pr68Rename:"Переименовать||重命名",pr68Merge:"Объединить||合并",pr68ToArch:"В архив||归档",pr68FromArch:"Вернуть из архива||恢复",pr68AddPerson:"+ Адвокат||+ 律师",
+  pr68Own:"свой||本所",pr68Partner:"партнёр||合作",pr68Unrated:"не оценён||未评分",pr68Rate:"Оценить||评分",pr68Change:"Изменить||修改",
+  pr68RatedAt:"оценка от {d}||评分于 {d}",pr68NoScore:"оценки пока нет||暂无评分",pr68Stale:"давно не обновлялась||长期未更新",pr68Changed:"менялась: {n}||修改次数：{n}",
+  pr68RateT:"Оценка: {a} — {d}||评分：{a} — {d}",pr68Score:"Оценка от 0 до 100||评分 0–100",pr68ScoreBad:"Оценка — целое число от 0 до 100||评分为 0–100 的整数",pr68Cm:"Комментарий к оценке||评分备注",
+  pr68CmPh:"Почему такая оценка — по желанию||评分理由（可选）",pr68Hist:"Как менялась оценка||评分记录",pr68HistNone:"Оценок ещё не было.||尚无评分。",pr68NoCm:"без комментария||无备注",
+  pr68Blk:"Направления и оценки||业务方向与评分",pr68AddDir:"+ Направление||+ 方向",pr68BlkNone:"Направлений пока нет. Добавить можно в любое время, оценка не обязательна.||暂无方向。可随时添加，评分非必填。",
+  pr68BlkHint:"Оценки видят только управляющий адвокат и учредители.||评分仅管理律师和创始人可见。",pr68Old:"Запись до справочника: {t}||目录前的记录：{t}",
+  pr68Pick:"Из справочника||从目录选择",pr68PickNone:"— выберите —||— 请选择 —",pr68OrNew:"или новое направление||或新方向",pr68OrNewPh:"Например: таможенные споры||例如：海关争议",
+  pr68DirFor:"Направление для: {a}||为 {a} 添加方向",pr68PickNeed:"Выберите направление или впишите новое||请选择方向或填写新方向",pr68Who:"Адвокат||律师",pr68WhoFor:"Адвокат для направления «{d}»||为方向「{d}」添加律师",
+  pr68MergeT:"Объединить «{d}» с другим направлением||将「{d}」合并到其他方向",pr68MergeTo:"Оставить направление||保留方向",pr68MergeHint:"Все оценки и история перейдут в выбранное направление, а «{d}» уйдёт в архив. Отменить это нельзя.||所有评分和记录将转入所选方向，「{d}」将归档。此操作不可撤销。",
+  pr68ArchQ:"Отправить направление в архив?||将此方向归档？",pr68ArchHint:"Оценки и история сохранятся; в выборе направление больше не появится.||评分和记录将保留；该方向不再出现在选择中。",
+  pr68AllDirs:"Все направления||全部方向",pr68Remove:"Убрать направление||移除方向",pr68RemoveQ:"Убрать направление у адвоката?||移除该律师的此方向？",pr68Count:"адвокатов: {n}||律师：{n}"});
+S.practiceDirs=S.practiceDirs||{};S.practiceMarks=S.practiceMarks||{};
+const PR68={
+  ready:null,dir:null,arch:false,fdir:"",
+  canDir(){return PT65.write();},
+  dirs(all){return Object.values(S.practiceDirs||{}).filter(d=>d&&d.id&&!d.mergedTo&&(all||!d.arch)).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ru"));},
+  dname(id){return ((S.practiceDirs||{})[id]||{}).name||"";},
+  live(id){const d=(S.practiceDirs||{})[id];return !!d&&!d.mergedTo&&!d.arch;},
+  has(m){return !!m&&typeof m.score==="number";},
+  sort(a){return a.sort((x,y)=>(this.has(y)?y.score:-1)-(this.has(x)?x.score:-1)||String(this.person(x.who).name).localeCompare(String(this.person(y.who).name),"ru"));},
+  marksOf(who,all){return this.sort(Object.values(S.practiceMarks||{}).filter(m=>m&&m.who===who&&(all?!!(S.practiceDirs[m.dir]&&!S.practiceDirs[m.dir].mergedTo):this.live(m.dir))));},
+  marksIn(dir){return this.sort(Object.values(S.practiceMarks||{}).filter(m=>m&&m.dir===dir));},
+  stale(m){if(!this.has(m)||!m.ratedAt)return false;const t=new Date(String(m.ratedAt).slice(0,10)+"T12:00").getTime();return isFinite(t)&&Date.now()-t>365*864e5;},
+  chip(m){if(!this.has(m))return `<span class="pt65tag n">${T1(UI.pr68Unrated)}</span>`;const v=m.score;return `<span class="pr68sc ${v>=80?"g":v>=60?"":v>=40?"w":"r"}">${v}</span>`;},
+  staff(){const out=[];Object.values(S.accounts||{}).forEach(a=>{if(!a||a.active===false||!a.emp||a.kind==="client")return;const f=a.funcs||[];
+      if(f.includes("founder")&&!f.includes("managing"))return;try{if(typeof Adv21!=="undefined"&&Adv21.kind(a)==="translator")return;}catch(e){}
+      if(!out.includes(a.emp))out.push(a.emp);});return out;},
+  person(who){who=String(who||"");const x=who.slice(2);
+    if(who[0]==="p"){const p=(S.partnerAdvocates||{})[x]||{};return {name:p.name||x,own:false,role:""};}
+    let nm=x,role="";try{nm=dispName(x);}catch(e){}try{role=typeof roleOf25==="function"?String(roleOf25(x)||"").replace(/<[^>]*>/g,""):"";}catch(e){}return {name:nm,own:true,role};},
+  rerender(){try{if(typeof Router!=="undefined"&&Router.cur==="hr"&&(Pages._ht==="dirs"||Pages._ht==="partners"))Router.render();}catch(e){}
+    try{if(typeof Profile!=="undefined"&&Profile.id)Profile.rerender();}catch(e){}},
+  put(d){if(!d||!d.id)return;if(d.removed){delete S.practiceMarks[d.id];return;}if(d.who)S.practiceMarks[d.id]=d;else if(d.name!==undefined)S.practiceDirs[d.id]=d;},
+  async act(act,args,quiet){
+    if(!PT65.srv())return null;
+    try{const d=await SB19.T.rpc("practice_act",{act,args:args||{}});this.ready=true;this.put(d);return d;}
+    catch(e){if(PT65.noFn(e)||/practice_act/i.test(String(e&&e.message)))this.ready=false;if(!quiet)toast(this.ready===false?T1(UI.pt65Need):String((e&&e.message)||e));return null;}},
+  async fetch(){try{const a=await SB19.rows("practiceDirs"),b=await SB19.rows("practiceMarks");S.practiceDirs={};S.practiceMarks={};
+      a.forEach(x=>{if(x&&x.id&&x.data)S.practiceDirs[x.id]=x.data;});b.forEach(x=>{if(x&&x.id&&x.data)S.practiceMarks[x.id]=x.data;});}catch(e){}},
+  async load(){if(!PT65.srv()||!PT65.mp())return;
+    try{await SB19.T.rpc("practice_act",{act:"ping",args:{}});this.ready=true;}catch(e){this.ready=false;return;}
+    await this.fetch();this.rerender();},
+  /* ── строка «адвокат — направление»: ctx = "dir" (страница направления) или "who" (карточка адвоката) ── */
+  row(m,ctx){const p=this.person(m.who),h=(m.history||[])[0],canDel=this.canDir()&&!(m.history||[]).length;
+    const meta=this.has(m)?esc(T1(UI.pr68RatedAt).replace("{d}",fmtD(String(m.ratedAt).slice(0,10))))+((m.history||[]).length>1?" · "+esc(T1(UI.pr68Changed).replace("{n}",m.history.length-1)):"")+(this.stale(m)?` · <b class="pr68st">${T1(UI.pr68Stale)}</b>`:""):T1(UI.pr68NoScore);
+    const title=ctx==="dir"?`<button type="button" class="pr68nm" data-pr68="who~${esc(m.who)}">${esc(p.name)}</button> <span class="pt65tag ${p.own?"n":"w"}">${p.own?T1(UI.pr68Own)+(p.role?" · "+esc(p.role.toLowerCase()):""):T1(UI.pr68Partner)}</span>`:`<b>${esc(this.dname(m.dir))}</b>${this.live(m.dir)?"":` <span class="pt65tag n">${T1(UI.pr68Arch)}</span>`}`;
+    return `<div class="pt65row pr68row">${ctx==="dir"?`<span class="pt65av">${esc(PT65.ini(p.name))}</span>`:""}<div><div class="pr68t">${title}</div><small>${meta}</small>${h&&h.note?`<small>«${esc(h.note)}»</small>`:""}${this.has(m)?`<div class="pr68bar"><i style="width:${m.score}%"></i></div>`:""}</div>
+      <span class="pt65r">${this.chip(m)}${this.live(m.dir)?`<button type="button" class="btn sm" data-pr68="rate~${esc(m.who)}~${esc(m.dir)}">${T1(this.has(m)?UI.pr68Change:UI.pr68Rate)}</button>`:""}${canDel?`<button type="button" class="btn sm ghost pt65x" data-pr68="unmark~${esc(m.who)}~${esc(m.dir)}" title="${esc(T1(UI.pr68Remove))}" aria-label="${esc(T1(UI.pr68Remove))}">✕</button>`:""}</span></div>`;},
+  blk(who,oldText){const L=this.marksOf(who,true),w=this.canDir();
+    return `<div class="card pt65b pr68blk"><h4>${T1(UI.pr68Blk)}${w?`<span class="pt65sp35"></span><button type="button" class="btn sm" data-pr68="assign~${esc(who)}">${T1(UI.pr68AddDir)}</button>`:""}</h4>
+      ${L.length?L.map(m=>this.row(m,"who")).join(""):`<div class="pt65em">${T1(UI.pr68BlkNone)}</div>`}
+      ${oldText?`<small class="pt67hint" style="display:block;margin-top:8px">${esc(T1(UI.pr68Old).replace("{t}",oldText))}</small>`:""}<small class="pt67hint" style="display:block;margin-top:8px">${T1(UI.pr68BlkHint)}</small></div>`;},
+  /* ── вкладка «Направления» ── */
+  page(){
+    if(!PT65.srv()||this.ready===false||PT65.ready===false)return `<div class="card"><div class="empty2">${T1(UI.pt65Need)}</div></div>`;
+    if(this.ready===null){PT65.load();return `<div class="card"><div class="empty2">${T1(UI.pt65Load)}</div></div>`;}
+    const w=this.canDir(),L=this.dirs(false),A=this.dirs(true).filter(d=>d.arch);const pool=this.arch?[...L,...A]:L;
+    let d=pool.find(x=>x.id===this.dir)||pool[0]||null;this.dir=d?d.id:null;const ppl=d?this.marksIn(d.id):[];
+    const cnt=id=>Object.values(S.practiceMarks||{}).filter(m=>m&&m.dir===id).length;
+    const left=`<div class="card pt65b"><h4>${T1(UI.pr68Dirs)}</h4>
+      ${w?`<div class="pt65ci" style="margin:0 0 10px"><input data-pr68new maxlength="80" autocomplete="off" placeholder="${esc(T1(UI.pr68New))}" aria-label="${esc(T1(UI.pr68New))}"><button type="button" class="btn pri sm" data-pr68="dirAdd">${T1(UI.pr68Add)}</button></div>`:""}
+      ${pool.length?pool.map(x=>`<button type="button" class="pr68dl${d&&x.id===d.id?" on":""}" data-pr68="sel~${esc(x.id)}"><span>${esc(x.name)}</span>${x.arch?`<i>${T1(UI.pr68Arch)}</i>`:""}<em>${cnt(x.id)}</em></button>`).join(""):`<div class="pt65em">${T1(w?UI.pr68None:UI.pr68NoneRo)}</div>`}
+      ${A.length?`<label class="pr68sw"><input type="checkbox" data-pr68arch${this.arch?" checked":""}> ${T1(UI.pr68ShowArch)} (${A.length})</label>`:""}</div>`;
+    const tools=d&&w?(d.arch?`<button type="button" class="btn sm" data-pr68="unarch~${esc(d.id)}">${T1(UI.pr68FromArch)}</button>`
+      :`<button type="button" class="btn sm" data-pr68="assignTo~${esc(d.id)}">${T1(UI.pr68AddPerson)}</button><button type="button" class="btn sm" data-pr68="rename~${esc(d.id)}">${T1(UI.pr68Rename)}</button><button type="button" class="btn sm" data-pr68="merge~${esc(d.id)}">${T1(UI.pr68Merge)}</button><button type="button" class="btn sm" data-pr68="arch~${esc(d.id)}">${T1(UI.pr68ToArch)}</button>`):"";
+    const right=d?`<div class="card pt65b"><h4>${esc(d.name)}${tools?`<span class="pt65sp35"></span><span class="pr68tools">${tools}</span>`:""}</h4>${ppl.length?ppl.map(m=>this.row(m,"dir")).join(""):`<div class="pt65em">${T1(UI.pr68Empty)}</div>`}</div>`:"";
+    return `<p class="pt65note">${T1(UI.pr68Note)}</p><div class="pr68grid">${left}${right}</div>`;},
+  /* ── окна ── */
+  histHtml(m){const H=(m&&m.history)||[];return `<label>${T1(UI.pr68Hist)}</label>`+(H.length?H.map(h=>`<div class="pt65row pr68row"><div><span class="pr68hn">${h.note?esc(h.note):`<i>${T1(UI.pr68NoCm)}</i>`}</span><small>${esc(PT65.at(h.at))} · ${esc(PT65.who(h.by))}</small></div><span class="pt65r">${this.chip(h)}</span></div>`).join(""):`<div class="pt65em">${T1(UI.pr68HistNone)}</div>`);},
+  async rate(who,dir){if(!PT65.mp())return;const m=S.practiceMarks[who+"|"+dir];const p=this.person(who);
+    const v=await Dlg.ask({title:T1(UI.pr68RateT).replace("{a}",p.name).replace("{d}",this.dname(dir)),fields:[
+      {k:"score",label:T1(UI.pr68Score)+" *",type:"number",min:0,max:100,span:true,value:this.has(m)?String(m.score):"",required:true,check:x=>/^\d{1,3}$/.test(x.score)&&+x.score<=100?"":T1(UI.pr68ScoreBad)},
+      {k:"note",label:T1(UI.pr68Cm),type:"textarea",span:true,value:"",placeholder:T1(UI.pr68CmPh)},{k:"hist",type:"html",html:this.histHtml(m)}]});
+    if(!v)return;if(await this.act("rate",{who,dir,score:v.score,note:v.note}))this.rerender();},
+  async dirAdd(){const el=document.querySelector("[data-pr68new]");const nm=el?el.value.trim():"";if(!nm||!this.canDir())return;const d=await this.act("dir_add",{name:nm});if(d){this.dir=d.id;this.rerender();}},
+  async rename(id){const d=S.practiceDirs[id];if(!d||!this.canDir())return;const v=await Dlg.ask({title:T1(UI.pr68Rename),fields:[{k:"name",label:T1(UI.pr68New),span:true,value:d.name||"",required:true}]});
+    if(v&&await this.act("dir_rename",{id,name:v.name}))this.rerender();},
+  async setArch(id,on){if(!this.canDir())return;if(on&&!await Dlg.confirm(T1(UI.pr68ArchQ),T1(UI.pr68ArchHint),false))return;if(await this.act("dir_arch",{id,arch:!!on})){if(on&&!this.arch)this.dir=null;this.rerender();}},
+  async merge(id){const d=S.practiceDirs[id];if(!d||!this.canDir())return;const opts=this.dirs(false).filter(x=>x.id!==id).map(x=>[x.id,x.name]);if(!opts.length)return;
+    const v=await Dlg.ask({title:T1(UI.pr68MergeT).replace("{d}",d.name),text:T1(UI.pr68MergeHint).replace("{d}",d.name),okText:UI.pr68Merge,fields:[{k:"to",label:T1(UI.pr68MergeTo),type:"select",span:true,value:opts[0][0],options:opts}]});
+    if(!v)return;const r=await this.act("dir_merge",{from:id,to:v.to});if(r){await this.fetch();this.dir=v.to;this.rerender();}},
+  /* направление адвокату: из справочника или новое (новое — сначала в справочник) */
+  async assign(who){if(!this.canDir())return;const p=this.person(who);const has=Object.values(S.practiceMarks||{}).filter(m=>m&&m.who===who).map(m=>m.dir);const free=this.dirs(false).filter(d=>!has.includes(d.id));
+    const v=await Dlg.ask({title:T1(UI.pr68DirFor).replace("{a}",p.name),fields:[{k:"dir",label:T1(UI.pr68Pick),type:"select",span:true,value:"",options:[["",T1(UI.pr68PickNone)],...free.map(d=>[d.id,d.name])]},
+      {k:"name",label:T1(UI.pr68OrNew),span:true,value:"",placeholder:T1(UI.pr68OrNewPh),check:x=>x.dir||x.name?"":T1(UI.pr68PickNeed)}]});
+    if(!v)return;let dir=v.dir;if(v.name){const d=await this.act("dir_add",{name:v.name});if(!d)return;dir=d.id;}
+    if(await this.act("mark_add",{who,dir}))this.rerender();},
+  async assignTo(dir){if(!this.canDir())return;const has=this.marksIn(dir).map(m=>m.who);
+    const own=this.staff().map(e=>"e:"+e).filter(w=>!has.includes(w)).map(w=>[w,this.person(w).name+" — "+T1(UI.pr68Own)]);
+    const par=PT65.list().filter(p=>(p.status||"active")!=="stop").map(p=>"p:"+p.id).filter(w=>!has.includes(w)).map(w=>[w,this.person(w).name+" — "+T1(UI.pr68Partner)]);
+    const opts=[...own,...par].sort((a,b)=>a[1].localeCompare(b[1],"ru"));if(!opts.length)return;
+    const v=await Dlg.ask({title:T1(UI.pr68WhoFor).replace("{d}",this.dname(dir)),fields:[{k:"who",label:T1(UI.pr68Who),type:"select",span:true,value:opts[0][0],options:opts}]});
+    if(v&&await this.act("mark_add",{who:v.who,dir}))this.rerender();},
+  async unmark(who,dir){if(!this.canDir())return;if(!await Dlg.confirm(T1(UI.pr68RemoveQ),this.person(who).name+" — "+this.dname(dir),true))return;if(await this.act("mark_del",{who,dir}))this.rerender();},
+  openWho(who){if(String(who)[0]==="p")return PT65.click("goto:"+String(who).slice(2));try{Profile.open(String(who).slice(2),"pers");}catch(e){}},
+  click(a){const [k,x,y]=String(a).split("~");
+    if(k==="sel"){this.dir=x;return this.rerender();}if(k==="dirAdd")return this.dirAdd();if(k==="rate")return this.rate(x,y);if(k==="who")return this.openWho(x);
+    if(k==="rename")return this.rename(x);if(k==="merge")return this.merge(x);if(k==="arch")return this.setArch(x,true);if(k==="unarch")return this.setArch(x,false);
+    if(k==="assign")return this.assign(x);if(k==="assignTo")return this.assignTo(x);if(k==="unmark")return this.unmark(x,y);}
+};
+if(typeof PT65!=="undefined"){
+  const _ld68=PT65.load;PT65.load=async function(){const r=await _ld68.apply(this,arguments);if(this.ready===true)await PR68.load();return r;};
+  const _sb68=PT65.subscribe;PT65.subscribe=function(){_sb68.apply(this,arguments);
+    [["practiceDirs","practiceDirs"],["practiceMarks","practiceMarks"]].forEach(([col,key])=>{try{S.unsub.push(S.db.collection(col).onSnapshot(s=>{s.docChanges().forEach(c=>{if(c.type==="removed")delete S[key][c.doc.id];else S[key][c.doc.id]=clone(c.doc.data());});
+      if(!document.querySelector(".ov.open"))PR68.rerender();},()=>{}));}catch(e){}});};
+  if(typeof SB19!=="undefined"&&SB19.reset){const _rs68=SB19.reset.bind(SB19);SB19.reset=function(){const r=_rs68.apply(this,arguments);S.practiceDirs={};S.practiceMarks={};PR68.ready=null;PR68.dir=null;PR68.fdir="";PR68.arch=false;return r;};}
+  if(typeof SPEED20!=="undefined"&&Array.isArray(SPEED20.COLS))["practiceDirs","practiceMarks"].forEach(c=>{if(!SPEED20.COLS.includes(c))SPEED20.COLS.push(c);});
+  /* карточка и список партнёров */
+  PT65.dirsBlk=function(p){return PR68.ready===true?PR68.blk("p:"+p.id,p.spec||""):"";};
+  PT65.top3=function(p){if(PR68.ready!==true)return "";const L=PR68.marksOf("p:"+p.id),T=L.filter(m=>PR68.has(m)).slice(0,3);if(!L.length)return "";
+    return `<span class="pr68top">${(T.length?T:L.slice(0,3)).map(m=>`<span class="pt65tag n">${esc(PR68.dname(m.dir))}${PR68.has(m)?` <b>${m.score}</b>`:""}</span>`).join("")}</span>`;};
+  PT65.dirFilter=function(){if(PR68.ready!==true||!PR68.dirs(false).length)return "";
+    return `<select data-pr68fdir aria-label="${esc(T1(UI.pr68Tab))}"><option value="">${T1(UI.pr68AllDirs)}</option>${PR68.dirs(false).map(d=>`<option value="${esc(d.id)}"${PR68.fdir===d.id?" selected":""}>${esc(d.name)}</option>`).join("")}</select>`;};
+  const _hit68=PT65.hit;PT65.hit=function(p){return _hit68.apply(this,arguments)&&(!PR68.fdir||!!(S.practiceMarks||{})["p:"+p.id+"|"+PR68.fdir]);};
+}
+/* ── «Кадры»: вкладка «Направления» — после «Адвокатов-партнёров» ── */
+if(typeof Pages!=="undefined"&&Pages.hr&&typeof PT65!=="undefined"){const _hr68=Pages.hr;Pages.hr=function(){
+  if(!PT65.mp()){if(this._ht==="dirs")this._ht="staff";return _hr68.call(this);}
+  const cut=h=>{const i=h.indexOf('<div class="filters">');return i<0?null:[i,h.indexOf("</div>",i)];};
+  if(this._ht!=="dirs"){const h=_hr68.call(this),c=cut(h);if(!c)return h;return h.slice(0,c[1])+`<button class="fc" data-ht="dirs">${T1(UI.pr68Tab)}</button>`+h.slice(c[1]);}
+  let h="";this._ht="staff";try{h=_hr68.call(this);}finally{this._ht="dirs";}
+  const c=cut(h);const tabs=c?h.slice(c[0],c[1]).replace(/class="fc on"/g,'class="fc"'):'<div class="filters">';
+  return F.hdr(T1(UI.nHr),T1(UI.pr68Tab))+tabs+`<button class="fc on" data-ht="dirs">${T1(UI.pr68Tab)}</button></div><div class="pt65 pr68">${PR68.page()}</div>`;};}
+/* ── карточка сотрудника: блок оценок — только управляющему адвокату и учредителям ── */
+if(typeof Profile!=="undefined"&&Profile.render&&typeof PT65!=="undefined"){const _pr68=Profile.render;Profile.render=function(){const r=_pr68.apply(this,arguments);
+  try{const id=this.id,b=document.getElementById("pBody");if(id&&b&&PT65.mp()&&PR68.ready===true&&PR68.staff().includes(id)&&!b.querySelector(".pr68blk")){const d=document.createElement("div");d.className="pr68prof";d.innerHTML=PR68.blk("e:"+id,"");b.appendChild(d);}}catch(e){console.warn("pr68",e);}
+  return r;};}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-pr68]");if(!t||typeof PT65==="undefined"||!PT65.mp())return;e.preventDefault();e.stopPropagation();PR68.click(t.dataset.pr68);});
+document.addEventListener("change",e=>{const t=e.target;if(!t||!t.matches)return;if(t.matches("[data-pr68arch]")){PR68.arch=t.checked;PR68.rerender();}if(t.matches("[data-pr68fdir]")){PR68.fdir=t.value;PT65.filter();}});
+document.addEventListener("keydown",e=>{const t=e.target;if(e.key==="Enter"&&t&&t.matches&&t.matches("[data-pr68new]")){e.preventDefault();PR68.dirAdd();}});
+(function(){const st=document.createElement("style");st.textContent=`
+.pr68grid{display:grid;gap:16px;grid-template-columns:minmax(0,320px) minmax(0,1fr);align-items:start}
+.pr68dl{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border-radius:10px;font-weight:600}
+.pr68dl:hover{background:var(--surface2,#F7F8FA)}.pr68dl.on{background:var(--pri-soft,#E8EDF4);color:var(--pri)}.pr68dl:focus-visible{outline:2px solid var(--pri)}
+.pr68dl span{flex:1;min-width:0;overflow-wrap:anywhere}.pr68dl em{font-style:normal;color:var(--ink-3);font-weight:500;font-size:12.5px}.pr68dl i{font-style:normal;font-size:11px;color:var(--ink-3);font-weight:500}
+.pr68sw{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12.5px;color:var(--ink-3);cursor:pointer}
+.pr68tools{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.pr68sc{display:inline-flex;align-items:center;justify-content:center;min-width:42px;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;border-radius:10px;padding:4px 8px;background:var(--pri-soft,#E8EDF4);color:var(--pri)}
+.pr68sc.g{background:var(--ok-soft,#E5F2EC);color:var(--ok-d,#3F8768)}.pr68sc.w{background:var(--warn-soft,#FBF1E0);color:var(--warn,#B7791F)}.pr68sc.r{background:var(--red-soft,#F8E6E4);color:var(--red,#B4443A)}
+.pr68nm{all:unset;cursor:pointer;font-weight:600}.pr68nm:hover{color:var(--pri)}.pr68nm:focus-visible{outline:2px solid var(--pri);border-radius:4px}
+.pr68t{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.pr68row small b.pr68st{display:inline;color:var(--warn,#B7791F);font-weight:600}
+.pr68bar{height:6px;border-radius:99px;background:var(--surface2,#F7F8FA);overflow:hidden;margin-top:6px;max-width:360px}.pr68bar i{display:block;height:100%;background:var(--ok-d,#3F8768);border-radius:99px}
+.pr68top{display:flex;flex-wrap:wrap;gap:6px}.pr68top b{margin-left:5px;color:var(--ink)}
+.pr68hn{white-space:pre-wrap;overflow-wrap:anywhere}.pr68hn i{color:var(--ink-3);font-style:normal}
+.pr68prof{margin-top:16px}
+@media (max-width:860px){.pr68grid{grid-template-columns:minmax(0,1fr)}}`;document.head.appendChild(st);})();
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
