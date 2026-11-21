@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="e31742d8caaa";
+const ZC_BUILD="229b02e8da73";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -19054,7 +19054,7 @@ const Nb64={
     return `<div class="nbtop">${h}<div class="nbt3">${S3.map(n=>`<button type="button" class="${n.done?"d":""}" data-nb64open="${esc(n.id)}"><i class="s-${this.st(n)}"></i><span>${esc(n.text||"")}</span></button>`).join("")}${Array.from({length:Math.max(0,3-S3.length)},()=>`<div class="slot">${T1(UI.nb64TopSlot)}</div>`).join("")}</div><small>${T1(UI.nb64TopHome)}</small></div>`;},
   html(sel){const td=todayS(),a=this.of(sel),V=this.vis(a),view=this.view(),F=this.F;
     const x=new Date(sel+"T12:00");const nm=x.toLocaleDateString(lang==="zh"?"zh-CN":"ru-RU",{weekday:"short",day:"numeric",month:"long"});
-    const hint={new:UI.nb64NewH,go:UI.nb64GoH,done:sel===td?UI.nb64DoneH:""};const cnt=k=>a.filter(n=>this.kind(n)===k).length;
+    const hint={new:UI.nb64NewH,go:UI.nb64GoH,done:sel===td?UI.nb64DoneH:""};const open=a.filter(n=>!n.done),cnt=k=>open.filter(n=>this.kind(n)===k).length;
     const pk=(attr,v,cur,t)=>`<button type="button" ${attr}="${v}" class="${String(cur)===String(v)?"on":""}">${t}</button>`;
     const add=sel>=td?`<div class="nbadd"><label class="nbin">${NB64_ICO.plus}<input data-nb64add="${esc(sel)}" maxlength="2000" autocomplete="off" placeholder="${esc(T1(sel===td?UI.nt30Add:UI.nt30AddDay))}"></label>
         <div class="nbpick" title="${esc(T1(UI.nb64Kind))}">${pk("data-nb64nk","w",this.nk,T1(UI.nb64KW))}${pk("data-nb64nk","a",this.nk,T1(UI.nb64KA))}</div>
@@ -19062,7 +19062,7 @@ const Nb64={
         <button type="button" class="nbib" data-nb64clip="${esc(sel)}" title="${esc(T1(UI.nt30Clip))}">${NT30_ICO.clip}</button><button type="button" class="nbib" data-nb64mic="${esc(sel)}" title="${esc(T1(UI.nt30Mic))}">${NT30_ICO.mic}</button></div>`
       :`<div class="nbpast">${T1(UI.nt30Past)}</div>`;
     const old=sel===td?this.all().filter(n=>this.old(n)).length:0,ar=sel===td?this.arch().length:0;
-    const tools=`<div class="nbtools">${[["",UI.nb64All,a.length],["w",UI.nb64KW,cnt("w")],["a",UI.nb64KAs,cnt("a")]].map(([k,l,c])=>`<button type="button" class="nbchip${F.kind===k?" on":""}" data-nb64f="${k}">${T1(l)} <small>${c}</small></button>`).join("")}
+    const tools=`<div class="nbtools">${[["",UI.nb64All,open.length],["w",UI.nb64KW,cnt("w")],["a",UI.nb64KAs,cnt("a")]].map(([k,l,c])=>`<button type="button" class="nbchip${F.kind===k?" on":""}" data-nb64f="${k}">${T1(l)} <small>${c}</small></button>`).join("")}
         <button type="button" class="nbchip${F.hi?" on":""}" data-nb64hi>!!! ${T1(UI.nb64OnlyHi)}</button>${old?`<button type="button" class="nbchip old" data-nb64old>${this.f(UI.nb64Old,{n:old})}</button>`:""}
         <span class="sp"></span><label class="nbsrch">${NB64_ICO.find}<input data-nb64q placeholder="${esc(T1(UI.nb64Search))}" value="${esc(F.q)}" autocomplete="off"></label>
         <div class="nbvt"><button type="button" data-nb64v="board" class="${view==="board"?"on":""}">${T1(UI.nb64Board)}</button><button type="button" data-nb64v="list" class="${view==="list"?"on":""}">${T1(UI.nb64List)}</button></div></div>`;
@@ -19148,7 +19148,7 @@ Nb64.pop=function(){const n=S.dayNotes[Pop30.id],b=document.querySelector("#nt30
   if(ft)ft.insertAdjacentHTML("afterbegin",`<span class="nbcv"><button type="button" class="btn ghost sm" data-nb64cvb>${T1(UI.nb64Cv)} ${NB64_ICO.up}</button><span class="nbmenu" id="nb64cv">${[["ev",UI.nb64CvEv,UI.nb64CvEvH],["task",UI.nb64CvTask,UI.nb64CvTaskH],["dir",UI.nb64CvDir,UI.nb64CvDirH],["req",UI.nb64CvReq,UI.nb64CvReqH]].map(([v,t,h])=>`<button type="button" data-nb64cv="${v}">${T1(t)}<small>${T1(h)}</small></button>`).join("")}</span></span>`);};
 /* подключение: окно «Плана», окно заметки, голосовые, закрытие */
 if(typeof Plan36!=="undefined"){
-  {const _pp64=Plan36.paint.bind(Plan36);Plan36.paint=function(){const k=Nb64.keep();_pp64();try{Nb64.mount(k);if(Old64.open)Old64.paint();}catch(e){console.warn("nb64",e);}};}
+  {const _pp64=Plan36.paint.bind(Plan36);Plan36.paint=function(){const k=Nb64.keep();_pp64();try{Nb64.mount(k);document.body.classList.toggle("nb64on",!!Plan36.open&&Nb64.on());if(Old64.open)Old64.paint();}catch(e){console.warn("nb64",e);}};}
   {const _pt64=Plan36.toggle.bind(Plan36);Plan36.toggle=function(o){const was=this.open;const r=_pt64(o);document.body.classList.toggle("nb64on",!!this.open&&Nb64.on());
     if(!was&&this.open&&Nb64.on())setTimeout(()=>{const i=document.querySelector("#pl36 [data-nb64add]");if(i&&this.open&&!Pop30.id)i.focus();},280);
     if(was&&!this.open){Old64.close();if(Router.cur==="home"&&Nb64.on())setTimeout(()=>{try{Router.render();}catch(e){}},0);}return r;};}
