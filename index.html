@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="820291e19265";
+const ZC_BUILD="b6ba8cec3f1d";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -18718,6 +18718,13 @@ const Mob70={
       this._mo2=new MutationObserver(()=>{clearTimeout(this._t2);this._t2=setTimeout(()=>{try{this.dup();}catch(e){}},60);});
       this._mo2.observe(vp,{subtree:true,childList:true});}},
 
+  /* Тф-6: кнопки с текстом — высотой от 44. Сначала меряем все новые кнопки, потом ставим отметки (чтобы страница не пересчитывалась на каждой).
+     Узкие (уже 40) запоминаем и больше не трогаем; чаты, схема структуры и ссылки-слова — исключения */
+  TAPS:"#viewPage button,#viewPage select,.md button,.md select,#pl36 button",
+  taps(){if(!this.on())return;const chat=document.body.classList.contains("ch22pg"),wide=[],narrow=[];
+    document.querySelectorAll(this.TAPS).forEach(b=>{if(b.classList.contains("mb70b")||b.dataset.mb70n||b.matches(".lnk,.member,.zc-role")||(chat&&b.closest("#viewPage")))return;
+      const w=b.offsetWidth;if(!w)return;(w>=40?wide:narrow).push(b);});
+    wide.forEach(b=>b.classList.add("mb70b"));narrow.forEach(b=>{b.dataset.mb70n="1";});},
   /* «a, b:is(c,d), e» → ["a","b:is(c,d)","e"]: запятые внутри скобок не разделяют */
   parts(s){const o=[];let d=0,cur="";for(const ch of s){if(ch==="("||ch==="[")d++;else if(ch===")"||ch==="]")d--;if(ch===","&&d===0){o.push(cur.trim());cur="";}else cur+=ch;}if(cur.trim())o.push(cur.trim());return o;},
   /* исходный текст листа оформления: «место без пробелов» → [размер из последней записи font или font-size, есть ли !important] */
@@ -18804,9 +18811,11 @@ const Mob70={
   .btn.sm{min-height:44px;font-size:14px}
   .fc,.qfs17 .qf17,.ptabs button,.tabs button{min-height:44px;font-size:14px}
   .close,.md .mx{width:44px;height:44px}
-  /* остальные кнопки и списки выбора на страницах, в окнах и в «Плане на день» (кроме чатов, схемы структуры и ссылок-слов) */
-  body:not(.ch22pg) #viewPage button:not(.lnk):not(.member):not(.zc-role),.md button:not(.lnk),#pl36 button,
-  body:not(.ch22pg) #viewPage select,.md select{min-height:44px}
+  /* остальные кнопки с текстом и списки выбора на страницах, в окнах и в «Плане на день»: отметку mb70b ставит taps() — только тем, что шире 40;
+     узкие значки (кружок заметки, камера на фото) высоту не меняют, иначе круглая кнопка становится овалом (ошибка владельца 22.11.2026) */
+  .mb70b{min-height:44px}
+  /* окно-«шторка»: шапка и ряд вкладок не сжимаются, когда содержимое длиннее экрана (в профиле вкладки обрезались по высоте) */
+  .md>.mh,.md>.tabs{flex:none}
 
   /* Тф-5: «мелкая» подпись без своего размера (браузер делает её меньше соседнего текста) и размер, записанный прямо в разметке */
   small{font-size:13px}
@@ -18819,7 +18828,10 @@ const Mob70={
     const _b=Mob20.bar.bind(Mob20);Mob20.bar=function(){const r=_b.apply(this,arguments);safe(Mob70.sync)();return r;};
     const _o=Mob20.open.bind(Mob20);Mob20.open=function(){const r=_o.apply(this,arguments);safe(Mob70.sheet)();return r;};}
   Mob70.lock();
-  const onMq=()=>{Mob70.lock();safe(Mob70.sync)();};
+  const onMq=()=>{Mob70.lock();safe(Mob70.sync)();safe(Mob70.taps)();};
+  /* кнопки появляются на страницах, в окнах и в «Плане на день» в любой момент — следим за всей страницей, но отвечаем не чаще раза в 0,1 с */
+  const tapRun=safe(Mob70.taps);
+  if(document.body)new MutationObserver(()=>{clearTimeout(Mob70._t4);Mob70._t4=setTimeout(tapRun,100);}).observe(document.body,{subtree:true,childList:true});
   if(Mob70.mq.addEventListener)Mob70.mq.addEventListener("change",onMq);else if(Mob70.mq.addListener)Mob70.mq.addListener(onMq);
   /* жест «щипок» в Safari: запрет масштаба в браузере iPhone не действует, поэтому гасим сам жест */
   ["gesturestart","gesturechange"].forEach(ev=>document.addEventListener(ev,e=>{if(Mob70.on())e.preventDefault();},{passive:false}));
@@ -19231,9 +19243,10 @@ const Nb64={
       <div class="nbr2" data-nb64open="${esc(n.id)}">${this.tags(n)}${mv}</div></div>`;},
   top(){const S3=this.all().filter(n=>this.starred(n));const h=`<h4>${NB64_ICO.star}${T1(UI.nb64Top)}</h4>`;
     if(!S3.length&&this.ls("sug")!==todayS()){const g=this.sug();if(!g.length)return "";
-      return `<div class="nbtop">${h}<div class="nbsug"><b>${T1(UI.nb64Sug)}:</b> ${g.map(n=>`<span>${esc(String(n.text||"").slice(0,34))}${String(n.text||"").length>34?"…":""}</span>`).join(" · ")} <small>(${T1(UI.nb64SugHint)})</small></div><button type="button" class="btn pri sm" data-nb64sok>${T1(UI.nb64Accept)}</button><button type="button" class="btn ghost sm" data-nb64sno>${T1(UI.nb64Self)}</button></div>`;}
+      return `<div class="nbtop nbtop0">${h}<div class="nbsug"><b>${T1(UI.nb64Sug)}:</b> ${g.map(n=>`<span>${esc(String(n.text||"").slice(0,34))}${String(n.text||"").length>34?"…":""}</span>`).join(" · ")} <small>(${T1(UI.nb64SugHint)})</small></div><button type="button" class="btn pri sm" data-nb64sok>${T1(UI.nb64Accept)}</button><button type="button" class="btn ghost sm" data-nb64sno>${T1(UI.nb64Self)}</button></div>`;}
     if(!S3.length&&!this.all().some(n=>!n.done&&n.day===todayS()))return "";
-    return `<div class="nbtop">${h}<div class="nbt3">${S3.map(n=>`<button type="button" class="${n.done?"d":""}" data-nb64open="${esc(n.id)}"><i class="s-${this.st(n)}"></i><span>${esc(n.text||"")}</span></button>`).join("")}${Array.from({length:Math.max(0,3-S3.length)},()=>`<div class="slot">${T1(UI.nb64TopSlot)}</div>`).join("")}</div><small>${T1(UI.nb64TopHome)}</small></div>`;},
+    /* Зм-27: пока главных нет, на узком экране полоса не показывается (отметка nbtop0) */
+    return `<div class="nbtop${S3.length?"":" nbtop0"}">${h}<div class="nbt3">${S3.map(n=>`<button type="button" class="${n.done?"d":""}" data-nb64open="${esc(n.id)}"><i class="s-${this.st(n)}"></i><span>${esc(n.text||"")}</span></button>`).join("")}${Array.from({length:Math.max(0,3-S3.length)},()=>`<div class="slot">${T1(UI.nb64TopSlot)}</div>`).join("")}</div><small>${T1(UI.nb64TopHome)}</small></div>`;},
   html(sel){const td=todayS(),a=this.of(sel),V=this.vis(a),view=this.view(),F=this.F;
     const x=new Date(sel+"T12:00");const nm=x.toLocaleDateString(lang==="zh"?"zh-CN":"ru-RU",{weekday:"short",day:"numeric",month:"long"});
     const hint={new:UI.nb64NewH,go:UI.nb64GoH,done:sel===td?UI.nb64DoneH:""};const open=a.filter(n=>!n.done),cnt=k=>open.filter(n=>this.kind(n)===k).length;
@@ -19484,7 +19497,14 @@ body.nb64on .ov{z-index:650}
 @media (max-width:900px){.pl36.nb64w{top:0;left:0;width:100vw;height:100vh;height:100dvh;border-radius:0;transform:translateY(4%);overflow:auto}.pl36.nb64w.open{transform:none}
   .pl36.nb64w .pl36b{display:flex;flex-direction:column;height:auto}.pl36.nb64w .nb64l{order:2;border-right:0;border-top:1px solid var(--line);overflow:visible}.nb64{order:1;height:auto}
   .nbboard{grid-template-columns:repeat(3,84vw);scroll-snap-type:x mandatory;min-height:60vh}.nbcol{scroll-snap-align:center}.nbcards{max-height:70vh}.nbsrch{width:100%}
-  .nt30pb.nb64p{grid-template-columns:1fr}.nblist .nbc{flex-direction:column;align-items:stretch}}`;document.head.appendChild(st);})();
+  .nt30pb.nb64p{grid-template-columns:1fr}.nblist .nbc{flex-direction:column;align-items:stretch}
+  /* Зм-27 (владелец, 22.11.2026): на узком экране полоса «Главное на сегодня» видна, только когда главные выбраны */
+  .nbtop.nbtop0{display:none}
+  /* когда главные выбраны — заголовок строкой, заметки одна под другой во всю ширину; пустые места и подпись не показываются */
+  .nbtop{flex-direction:column;align-items:stretch;gap:8px}.nbtop .nbt3{flex:none;flex-direction:column;flex-wrap:nowrap}.nbtop .nbt3 button{flex:none;min-height:44px}
+  .nbtop .nbt3 .slot,.nbtop>small{display:none}
+  /* кружок заметки остаётся круглым и маленьким, а нажать можно в зоне 44×44 вокруг него */
+  .nbck{position:relative}.nbck::after{content:"";position:absolute;inset:-12px}}`;document.head.appendChild(st);})();
 
 /* ══ Раздел «Разовые услуги» · КП-PDF текстом (В4, решение владельца 18.10.2026: «вариант Б — настоящий текстовый PDF со встроенным
    свободным шрифтом») ══
