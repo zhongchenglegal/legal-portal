@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="3cc0bf0f1124";
+const ZC_BUILD="4d5ebd48b1a4";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -25507,7 +25507,7 @@ const PR68={
   person(who){who=String(who||"");const x=who.slice(2);
     if(who[0]==="p"){const p=(S.partnerAdvocates||{})[x]||{};return {name:p.name||x,own:false,role:""};}
     let nm=x,role="";try{nm=dispName(x);}catch(e){}try{role=typeof roleOf25==="function"?String(roleOf25(x)||"").replace(/<[^>]*>/g,""):"";}catch(e){}return {name:nm,own:true,role};},
-  rerender(){try{if(typeof Router!=="undefined"&&Router.cur==="hr"&&(Pages._ht==="dirs"||Pages._ht==="partners"))Router.render();}catch(e){}
+  rerender(){try{if(typeof Router!=="undefined"&&(Router.cur==="matter"||(Router.cur==="hr"&&(Pages._ht==="dirs"||Pages._ht==="partners"))))Router.render();}catch(e){}
     try{if(typeof Profile!=="undefined"&&Profile.id)Profile.rerender();}catch(e){}},
   put(d){if(!d||!d.id)return;if(d.removed){delete S.practiceMarks[d.id];return;}if(d.who)S.practiceMarks[d.id]=d;else if(d.name!==undefined)S.practiceDirs[d.id]=d;},
   async act(act,args,quiet){
@@ -25523,7 +25523,7 @@ const PR68={
   row(m,ctx){const p=this.person(m.who),h=(m.history||[])[0],canDel=this.canDir()&&!(m.history||[]).length;
     const meta=this.has(m)?esc(T1(UI.pr68RatedAt).replace("{d}",fmtD(String(m.ratedAt).slice(0,10))))+((m.history||[]).length>1?" · "+esc(T1(UI.pr68Changed).replace("{n}",m.history.length-1)):"")+(this.stale(m)?` · <b class="pr68st">${T1(UI.pr68Stale)}</b>`:""):T1(UI.pr68NoScore);
     const title=ctx==="dir"?`<button type="button" class="pr68nm" data-pr68="who~${esc(m.who)}">${esc(p.name)}</button> <span class="pt65tag ${p.own?"n":"w"}">${p.own?T1(UI.pr68Own)+(p.role?" · "+esc(p.role.toLowerCase()):""):T1(UI.pr68Partner)}</span>`:`<b>${esc(this.dname(m.dir))}</b>${this.live(m.dir)?"":` <span class="pt65tag n">${T1(UI.pr68Arch)}</span>`}`;
-    return `<div class="pt65row pr68row">${ctx==="dir"?`<span class="pt65av">${esc(PT65.ini(p.name))}</span>`:""}<div><div class="pr68t">${title}</div><small>${meta}</small>${h&&h.note?`<small>«${esc(h.note)}»</small>`:""}${this.has(m)?`<div class="pr68bar"><i style="width:${m.score}%"></i></div>`:""}</div>
+    return `<div class="pt65row pr68row">${ctx==="dir"?`<span class="pt65av">${esc(PT65.ini(p.name))}</span>`:""}<div><div class="pr68t">${title}</div><small>${meta}${typeof this.facts==="function"?this.facts(m):""}</small>${h&&h.note?`<small>«${esc(h.note)}»</small>`:""}${this.has(m)?`<div class="pr68bar"><i style="width:${m.score}%"></i></div>`:""}</div>
       <span class="pt65r">${this.chip(m)}${this.live(m.dir)?`<button type="button" class="btn sm" data-pr68="rate~${esc(m.who)}~${esc(m.dir)}">${T1(this.has(m)?UI.pr68Change:UI.pr68Rate)}</button>`:""}${canDel?`<button type="button" class="btn sm ghost pt65x" data-pr68="unmark~${esc(m.who)}~${esc(m.dir)}" title="${esc(T1(UI.pr68Remove))}" aria-label="${esc(T1(UI.pr68Remove))}">✕</button>`:""}</span></div>`;},
   blk(who,oldText){const L=this.marksOf(who,true),w=this.canDir();
     return `<div class="card pt65b pr68blk"><h4>${T1(UI.pr68Blk)}${w?`<span class="pt65sp35"></span><button type="button" class="btn sm" data-pr68="assign~${esc(who)}">${T1(UI.pr68AddDir)}</button>`:""}</h4>
@@ -25623,6 +25623,62 @@ document.addEventListener("keydown",e=>{const t=e.target;if(e.key==="Enter"&&t&&
 .pr68hn{white-space:pre-wrap;overflow-wrap:anywhere}.pr68hn i{color:var(--ink-3);font-style:normal}
 .pr68prof{margin-top:16px}
 @media (max-width:860px){.pr68grid{grid-template-columns:minmax(0,1fr)}}`;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.5 · НАПРАВЛЕНИЕ В ДЕЛЕ, этап 5 (решения владельца 21.11.2026) ═══════════════════════════
+   Правила — sections/partners/ПРАВИЛА.md (АП-53 …), сервер — миграция 20261122000200_practice_matter.sql.
+   • окно дела (только управляющий адвокат): необязательное поле «Направление» перед «Адвокатом-партнёром». «Тип» и «Направление суда»
+     не меняются. Если направление выбрано — в «Ведущем адвокате» и «Адвокате-партнёре» выше стоят те, у кого оценка лучше, оценка рядом;
+   • карточка дела, «Команда» (управляющий адвокат и учредители): строка «Направление» и кнопки «Оценить ведущего» / «Оценить партнёра»;
+   • «Направления» и блоки оценок: рядом с оценкой — сколько дел по направлению человек вёл у нас и сколько судебных выиграл;
+   • дело с направлением закрыто — управляющему адвокату приходит напоминание обновить оценку (сервер).
+   Подключается после pt_rate.js. */
+Object.assign(UI,{
+  pr69F:"Направление||业务方向",pr69None:"— не указано —||— 未指定 —",pr69Arch:"в архиве||已归档",
+  pr69Hint:"Необязательно. Если указано, в «Ведущем адвокате» и «Адвокате-партнёре» выше стоят те, у кого по этому направлению оценка лучше. Оценки в списках видите только вы.||可选。若填写，「主办律师」和「合作律师」中该方向评分高者排在前面。列表中的评分仅您可见。",
+  pr69Sc:"оценка {v}||评分 {v}",pr69NoSc:"не оценён||未评分",pr69Facts:"дел по направлению у нас: {n}||本所该方向案件：{n}",pr69Won:"выиграно: {k}||胜诉：{k}",
+  pr69RateLead:"Оценить ведущего||评价主办律师",pr69RatePartner:"Оценить партнёра||评价合作律师"});
+if(typeof NTPL18!=="undefined")Object.assign(NTPL18,{pr69rate:"Дело № {no} закрыто — обновите оценку адвоката по направлению «{d}»||案件 № {no} 已结案——请更新律师在「{d}」方向的评分"});
+const PR69={
+  /* объединённое направление ведёт к тому, с которым его объединили */
+  res(id){let x=id||"",n=0;while(x&&(S.practiceDirs||{})[x]&&S.practiceDirs[x].mergedTo&&n++<8)x=S.practiceDirs[x].mergedTo;return x;},
+  dirOf(m){return this.res((m&&m.practiceDir)||"");},
+  /* дела человека по направлению: свой — ведущий или исполнитель, партнёр — указан в деле */
+  matters(who,dir){const x=String(who).slice(2),own=String(who)[0]==="e";return Object.values(S.matters||{}).filter(m=>m&&this.dirOf(m)===dir&&(own?(m.lead===x||(m.executors||[]).some(e=>e&&e.emp===x)):m.partnerId===x));},
+  /* судебное дело выиграно, если итог последней инстанции с итогом — «выиграно» */
+  won(m){const L=((m&&m.instances)||[]).filter(i=>i&&i.outcome&&i.outcome.k);return !!L.length&&L[L.length-1].outcome.k==="won";},
+  facts(mk){const L=this.matters(mk.who,mk.dir);if(!L.length)return "";const k=L.filter(m=>this.won(m)).length;
+    return " · "+esc(T1(UI.pr69Facts).replace("{n}",L.length))+(L.some(m=>(m.instances||[]).some(i=>i&&i.outcome))?", "+esc(T1(UI.pr69Won).replace("{k}",k)):"");},
+  score(who,dir){const m=(S.practiceMarks||{})[who+"|"+dir];return PR68.has(m)?m.score:null;},
+  /* окно дела: по выбранному направлению — лучшие сверху, оценка рядом с именем */
+  order(el,pre,dir){if(!el)return;const cur=el.value,O=[...el.options];O.forEach((o,i)=>{if(o.dataset.pr69i===undefined){o.dataset.pr69i=String(i);o.dataset.pr69t=o.textContent;}});
+    const fix=O.filter(o=>!o.value||o.value==="-"),rest=O.filter(o=>o.value&&o.value!=="-");const sc=o=>{const v=this.score(pre+o.value,dir);return v==null?-1:v;};
+    rest.sort((a,b)=>dir?(sc(b)-sc(a))||(+a.dataset.pr69i-+b.dataset.pr69i):(+a.dataset.pr69i-+b.dataset.pr69i));
+    rest.forEach(o=>{const v=dir?this.score(pre+o.value,dir):null;o.textContent=o.dataset.pr69t+(dir?" · "+(v==null?T1(UI.pr69NoSc):T1(UI.pr69Sc).replace("{v}",v)):"");});
+    [...fix.sort((a,b)=>+a.dataset.pr69i-+b.dataset.pr69i),...rest].forEach(o=>el.appendChild(o));el.value=cur;},
+  bind(){const sd=document.getElementById("dlg_practiceDir");if(!sd||sd._pr69)return;sd._pr69=true;
+    const upd=()=>{const dir=sd.value;this.order(document.getElementById("dlg_lead"),"e:",dir);this.order(document.getElementById("dlg_partnerId"),"p:",dir);};
+    sd.addEventListener("change",upd);upd();},
+  bindSoon(){[0,150,450].forEach(t=>setTimeout(()=>{try{this.bind();}catch(e){}},t));}
+};
+if(typeof PR68!=="undefined")PR68.facts=function(mk){try{return PR69.facts(mk);}catch(e){return "";}};
+if(typeof Matter!=="undefined"&&Matter.fields&&typeof PT65!=="undefined"&&typeof PR68!=="undefined"){
+  const _mf69=Matter.fields;Matter.fields=function(m){const f=_mf69.apply(this,arguments);
+    try{if(!PT65.write()||PR68.ready!==true||(f||[]).some(x=>x&&x.k==="practiceDir"))return f;
+      let i=f.findIndex(x=>x&&x.k==="partnerId");if(i<0){i=f.findIndex(x=>x&&x.k==="translator");if(i<0)return f;i++;}
+      const cur=(m&&m.practiceDir)||"";const opts=PR68.dirs(false).map(d=>[d.id,d.name]);
+      if(cur&&!opts.some(o=>o[0]===cur))opts.unshift([cur,(PR68.dname(PR69.res(cur))||cur)+" · "+T1(UI.pr69Arch)]);
+      f.splice(i,0,{k:"practiceDir",label:T1(UI.pr69F),type:"select",span:true,value:cur,options:[["",T1(UI.pr69None)],...opts],hint:T1(UI.pr69Hint)});}catch(e){console.warn("pr69",e);}
+    return f;};
+  const _ma69=Matter.apply;Matter.apply=function(m,v){const r=_ma69.apply(this,arguments);
+    if(m&&v&&v.practiceDir!==undefined&&PT65.write())m.practiceDir=v.practiceDir||"";return r;};
+  ["create","edit"].forEach(fn=>{const orig=Matter[fn];if(typeof orig!=="function")return;Matter[fn]=function(){const p=orig.apply(this,arguments);PR69.bindSoon();return p;};});}
+if(typeof Card22!=="undefined"&&Card22.teamCard&&typeof PT65!=="undefined"&&typeof PR68!=="undefined"){
+  const _tc69=Card22.teamCard;Card22.teamCard=function(m,MP,q){const card=_tc69.apply(this,arguments);
+    try{const dir=PR69.dirOf(m);if(dir&&PT65.mp()&&PR68.ready===true&&S.practiceDirs[dir]){const dl=card.querySelector("dl.c22kv");if(dl){
+      const live=PR68.live(dir),btn=(who,l)=>live?` <button type="button" class="btn sm pt67b" data-pr68="rate~${esc(who)}~${esc(dir)}">${T1(l)}</button>`:"";
+      dl.appendChild(this.el("dt","",T1(UI.pr69F)));
+      dl.appendChild(this.hx("dd","",esc(PR68.dname(dir))+(live?"":` <small style="color:var(--ink-3)">${T1(UI.pr69Arch)}</small>`)+(m.lead&&PR68.staff().includes(m.lead)?btn("e:"+m.lead,UI.pr69RateLead):"")+(m.partnerId?btn("p:"+m.partnerId,UI.pr69RatePartner):"")));}}}catch(e){console.warn("pr69",e);}
+    return card;};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
