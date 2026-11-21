@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="c2e52fcee5bb";
+const ZC_BUILD="3cc0bf0f1124";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -19147,7 +19147,7 @@ document.addEventListener("click",e=>{const g=e.target&&e.target.closest&&e.targ
    • «План на день» открывается большим окном по центру: слева календарь и события дня, справа — заметки выбранного дня доской.
    • Три колонки: «Новые» (синий), «В работе» (зелёный), «Сделано» (красный). Карточку перетаскивают, двигают стрелками или отмечают кружком.
    • Важность (высокая / средняя / низкая), вид («по работе» / «административная»), срок по желанию, подпункты, повтор.
-   • «Главное на сегодня» — до трёх заметок со звёздочкой (видны и на главной); утром портал предлагает три: просроченные, затем самые важные и давние.
+   • «Главное на сегодня» — до трёх заметок со звёздочкой (видны и на главной); пока главных нет, полоса не показывается (Зм-27).
    • «Разобрать старые» — заметки старше 7 дней по одной: сделано / отложить / оставить / удалить. «Сделано» — за 7 дней, остальное — «Архив».
    • В окне заметки: статус, важность, вид, срок, повтор, подпункты; «Превратить в…» — событие, задачу, поручение, заявку.
    Только показ и вызовы: всё меняет public.note_act на сервере. Файл подключается после notes.js (по имени) и после раздела home (Plan36). */
@@ -19162,7 +19162,7 @@ Object.assign(UI,{
   nb64OldHint:"Заметки старше 7 дней показываются по одной. «Отложить» переносит заметку на выбранный день, «Оставить» — больше не предлагать её здесь.||超过7天的备忘逐条显示。“推迟”将备忘移到所选日期，“保留”则不再在此提示。",
   nb64OldEnd:"Разбор закончен: старых заметок не осталось||整理完毕：没有旧备忘了",nb64Tom:"Отложить до завтра||推迟到明天",nb64Week:"Отложить на неделю||推迟一周",nb64Keep:"Оставить||保留",
   nb64Top:"Главное на сегодня||今日要事",nb64TopSlot:"☆ отметьте звёздочкой на карточке||☆ 在卡片上标星",nb64TopHome:"видно и на главной||首页也会显示",
-  nb64Sug:"Предлагаем||建议",nb64SugHint:"просроченные, затем самые важные и давние||先逾期，再按重要性和时间",nb64Accept:"Принять||采纳",nb64Self:"Выберу сам||我自己选",
+  
   nb64Star:"Главное на сегодня||今日要事",nb64Max3:"Главных на сегодня — не больше трёх||今日要事最多三项",
   nb64Arch:"Архив · {n}||归档 · {n}",nb64ArchT:"Архив сделанного||已完成归档",nb64ArchNone:"В архиве пока пусто||归档为空",nb64ArchHint:"Сделано раньше, чем 7 дней назад||7天前完成的备忘",
   nb64Subs:"Подпункты||子项",nb64SubsN:"Подпункты · {k} из {n}||子项 · {k}/{n}",nb64SubPh:"Добавить подпункт… Enter||添加子项… 回车",nb64SubNone:"Разбейте заметку на шаги — на карточке будет видно «2 из 5»||把备忘拆成步骤——卡片上显示“2/5”",
@@ -19220,8 +19220,6 @@ const Nb64={
   arch(){const w=this.weekAgo();return this.all().filter(n=>n.done&&String(n.doneAt||n.day).slice(0,10)<w).sort((a,b)=>String(b.doneAt||"").localeCompare(String(a.doneAt||"")));},
   vis(a){const F=this.F,q=F.q.trim().toLowerCase();return a.filter(n=>(!F.kind||this.kind(n)===F.kind)&&(!F.hi||this.pr(n)===3)&&(!q||String(n.text||"").toLowerCase().includes(q)));},
   sort(a){return a.sort((x,y)=>(this.starred(y)?1:0)-(this.starred(x)?1:0)||(this.late(y)?1:0)-(this.late(x)?1:0)||this.pr(y)-this.pr(x)||String(x.from||x.day).localeCompare(String(y.from||y.day))||String(x.tm||"99").localeCompare(String(y.tm||"99"))||String(x.createdAt||"").localeCompare(String(y.createdAt||"")));},
-  /* что предложить главным: просроченные, затем важные и давние */
-  sug(){return this.sort(this.all().filter(n=>!n.done&&n.day===todayS())).slice(0,3);},
   /* ── вёрстка ── */
   tags(n){const me=this.me(),td=todayS(),p=this.pr(n),k=this.kind(n),out=[];
     out.push(`<span class="nbt p${p}">${"!".repeat(p)} ${T1(UI["nb64P"+p])}</span><span class="nbt k${k}">${T1(k==="a"?UI.nb64KA:UI.nb64KW)}</span>`);
@@ -19242,11 +19240,9 @@ const Nb64={
       <div class="nbtx" data-nb64open="${esc(n.id)}">${n.tm?`<b class="tm">${esc(n.tm)}</b>`:""}${esc(n.text||"")}</div>${n.day===td&&!n.done?`<button type="button" class="nbst${star?" on":""}" data-nb64star="${esc(n.id)}" title="${esc(T1(UI.nb64Star))}">${NB64_ICO.star}</button>`:""}</div>
       <div class="nbr2" data-nb64open="${esc(n.id)}">${this.tags(n)}${mv}</div></div>`;},
   top(){const S3=this.all().filter(n=>this.starred(n));const h=`<h4>${NB64_ICO.star}${T1(UI.nb64Top)}</h4>`;
-    if(!S3.length&&this.ls("sug")!==todayS()){const g=this.sug();if(!g.length)return "";
-      return `<div class="nbtop nbtop0">${h}<div class="nbsug"><b>${T1(UI.nb64Sug)}:</b> ${g.map(n=>`<span>${esc(String(n.text||"").slice(0,34))}${String(n.text||"").length>34?"…":""}</span>`).join(" · ")} <small>(${T1(UI.nb64SugHint)})</small></div><button type="button" class="btn pri sm" data-nb64sok>${T1(UI.nb64Accept)}</button><button type="button" class="btn ghost sm" data-nb64sno>${T1(UI.nb64Self)}</button></div>`;}
-    if(!S3.length&&!this.all().some(n=>!n.done&&n.day===todayS()))return "";
-    /* Зм-27: пока главных нет, на узком экране полоса не показывается (отметка nbtop0) */
-    return `<div class="nbtop${S3.length?"":" nbtop0"}">${h}<div class="nbt3">${S3.map(n=>`<button type="button" class="${n.done?"d":""}" data-nb64open="${esc(n.id)}"><i class="s-${this.st(n)}"></i><span>${esc(n.text||"")}</span></button>`).join("")}${Array.from({length:Math.max(0,3-S3.length)},()=>`<div class="slot">${T1(UI.nb64TopSlot)}</div>`).join("")}</div><small>${T1(UI.nb64TopHome)}</small></div>`;},
+    /* Зм-27 (владелец, 22.11.2026): пока главных нет, полосы нет вовсе — ни на телефоне, ни на компьютере; главные выбирают звёздочкой на карточке */
+    if(!S3.length)return "";
+    return `<div class="nbtop">${h}<div class="nbt3">${S3.map(n=>`<button type="button" class="${n.done?"d":""}" data-nb64open="${esc(n.id)}"><i class="s-${this.st(n)}"></i><span>${esc(n.text||"")}</span></button>`).join("")}${Array.from({length:Math.max(0,3-S3.length)},()=>`<div class="slot">${T1(UI.nb64TopSlot)}</div>`).join("")}</div><small>${T1(UI.nb64TopHome)}</small></div>`;},
   html(sel){const td=todayS(),a=this.of(sel),V=this.vis(a),view=this.view(),F=this.F;
     const x=new Date(sel+"T12:00");const nm=x.toLocaleDateString(lang==="zh"?"zh-CN":"ru-RU",{weekday:"short",day:"numeric",month:"long"});
     const hint={new:UI.nb64NewH,go:UI.nb64GoH,done:sel===td?UI.nb64DoneH:""};const open=a.filter(n=>!n.done),cnt=k=>open.filter(n=>this.kind(n)===k).length;
@@ -19289,7 +19285,6 @@ const Nb64={
     const a={text:v};if(tm)a.tm=tm;this.create(inp.dataset.nb64add,a,inp);},
   async status(id,st){const n=S.dayNotes[id];if(!n||this.st(n)===st)return;const d=await this.run(id,"status",{st});if(d&&d.repNext){try{(await SB19.rows("dayNotes")).forEach(x=>{if(x&&x.id&&x.data)S.dayNotes[x.id]=x.data;});}catch(e){}}},
   async star(id){const n=S.dayNotes[id];if(!n)return;await this.run(id,"star",{on:!this.starred(n)});},
-  async accept(){for(const n of this.sug()){const d=await NT30.act(n.id,"star",{on:true});if(d)NT30.put(d);}NT30.rerender();},
   clip(day){Files.upload(async f=>{if(!f||!f.id)return;const inp=document.querySelector("[data-nb64add]");this.create(day,{text:(inp&&inp.value.trim())||f.name,files:[{id:f.id}]},inp);});},
   /* ── «Превратить в…»: открыть готовое окно портала с текстом заметки ── */
   convert(id,kind){const n=S.dayNotes[id];if(!n)return;const t=String(n.text||""),day=n.dl&&n.dl>=todayS()?n.dl:(n.day>=todayS()?n.day:todayS());
@@ -19381,8 +19376,6 @@ document.addEventListener("click",e=>{const t=e.target;if(!t||!t.closest)return;
   if((x=t.closest("[data-nb64v]"))){Nb64.ls("view",x.dataset.nb64v);Nb64.repaint();return;}
   if(t.closest("[data-nb64old]")){Old64.show("old");return;}
   if(t.closest("[data-nb64arch]")){Old64.show("arch");return;}
-  if(t.closest("[data-nb64sok]")){Nb64.accept();return;}
-  if(t.closest("[data-nb64sno]")){Nb64.ls("sug",todayS());Nb64.repaint();return;}
   if((x=t.closest("[data-nb64clip]"))){Nb64.clip(x.dataset.nb64clip);return;}
   if((x=t.closest("[data-nb64mic]"))){Rec30.start({day:x.dataset.nb64mic,nb:true});return;}
   if(t.closest("[data-nb64x]")){Plan36.toggle(false);return;}});
@@ -19440,7 +19433,7 @@ body.nb64on .ov{z-index:650}
 .nbvt{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}.nbvt button{border:0;background:var(--surface);padding:6px 11px;font:600 12.5px var(--font);color:var(--ink-3);cursor:pointer}.nbvt button.on{background:var(--pri-soft);color:var(--pri)}
 .nbtop{margin:0 18px 8px;border:1px solid color-mix(in srgb,var(--nb-gold) 45%,var(--line));background:color-mix(in srgb,var(--nb-gold) 9%,var(--surface));border-radius:14px;padding:9px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .nbtop h4{font:700 12.5px var(--font-h,var(--font));display:flex;align-items:center;gap:6px;white-space:nowrap;margin:0}.nbtop h4 svg,.nb64home>svg{width:16px;height:16px;fill:var(--nb-gold);stroke:var(--nb-gold);stroke-width:1.6;stroke-linejoin:round;flex:none}
-.nbtop>small{font-size:11.5px;color:var(--ink-3)}.nbsug{flex:1;min-width:0;font-size:12.5px;color:var(--ink-2)}.nbsug b,.nbsug span{color:var(--ink);font-weight:600}.nbsug small{color:var(--ink-3)}
+.nbtop>small{font-size:11.5px;color:var(--ink-3)}
 .nbt3{display:flex;gap:8px;flex:1;min-width:0;flex-wrap:wrap}.nbt3 button,.nb64home button{flex:1 1 180px;min-width:0;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 10px;font:600 12.5px var(--font);color:var(--ink);cursor:pointer;text-align:left}
 .nbt3 button span,.nb64home button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nbt3 button.d span,.nb64home button.d span{text-decoration:line-through;color:var(--ink-3)}
 .nbt3 i,.nb64home button i,.nbstat .dot i{width:8px;height:8px;border-radius:50%;flex:none;background:var(--nb-new)}i.s-go{background:var(--nb-go)!important}i.s-done{background:var(--nb-done)!important}i.s-new{background:var(--nb-new)!important}
@@ -19498,8 +19491,6 @@ body.nb64on .ov{z-index:650}
   .pl36.nb64w .pl36b{display:flex;flex-direction:column;height:auto}.pl36.nb64w .nb64l{order:2;border-right:0;border-top:1px solid var(--line);overflow:visible}.nb64{order:1;height:auto}
   .nbboard{grid-template-columns:repeat(3,84vw);scroll-snap-type:x mandatory;min-height:60vh}.nbcol{scroll-snap-align:center}.nbcards{max-height:70vh}.nbsrch{width:100%}
   .nt30pb.nb64p{grid-template-columns:1fr}.nblist .nbc{flex-direction:column;align-items:stretch}
-  /* Зм-27 (владелец, 22.11.2026): на узком экране полоса «Главное на сегодня» видна, только когда главные выбраны */
-  .nbtop.nbtop0{display:none}
   /* когда главные выбраны — заголовок строкой, заметки одна под другой во всю ширину; пустые места и подпись не показываются */
   .nbtop{flex-direction:column;align-items:stretch;gap:8px}.nbtop .nbt3{flex:none;flex-direction:column;flex-wrap:nowrap}.nbtop .nbt3 button{flex:none;min-height:44px}
   .nbtop .nbt3 .slot,.nbtop>small{display:none}
