@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="229b02e8da73";
+const ZC_BUILD="dbbaa1826f5f";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -10530,7 +10530,7 @@ const _side21=renderSide;renderSide=function(){const r=_side21.apply(this,argume
 const SET21_ICO={gear:"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
   bell:"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",key:"M15.5 7.5a3.5 3.5 0 1 1-4.9 4.9L4 19v2h2l.5-.5V19h2v-2h2l1.6-1.6a3.5 3.5 0 0 1 3.4-7.9z",
   out:"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"};
-const APP_VERSION21="3.4";   // версия системы для пользователей — показывается в нижнем левом углу
+const APP_VERSION21="3.5";   // версия системы для пользователей — показывается в нижнем левом углу
 const Set21={
   svg(d){return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;},
   ensure(){
@@ -19520,6 +19520,201 @@ if(typeof UZ21!=="undefined")Object.assign(UZ21,{
 @media(max-width:1100px){.ov36g{grid-template-columns:1fr}}
 @media(max-width:600px){.ov36r{grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 14px}.ov36x{grid-column:1/-1;grid-row:2}.ov36d{grid-row:1;grid-column:2}}
 `;document.head.appendChild(st);})();
+
+/* ═══════════════════════════ версия 3.5 · АДВОКАТЫ-ПАРТНЁРЫ, этап 1: справочник (решения владельца 21.11.2026) ═══════════════════════════
+   Макет — design-partners.html (экраны 1 и 2). Правила — sections/partners/ПРАВИЛА.md (АП-1 …), сервер — миграция 20261121000100_partners.sql.
+   • «Кадры» → вкладка «Адвокаты-партнёры»: адвокаты не из нашей адвокатуры, с которыми фирма сотрудничает. Входа в портал у них нет.
+   • Список: поиск, фильтр по статусу, «+ Добавить партнёра». Карточка: основное, по каким делам работает, кто рекомендовал,
+     где работал раньше, выигранные дела, комментарии.
+   • Видят управляющий адвокат и учредители; меняет только управляющий адвокат. Остальным вкладка не показывается, сервер данные не отдаёт.
+   Всё меняется только через public.partner_act на сервере; портал показывает и вызывает. Таблица — partner_advocates (S.partnerAdvocates). */
+Object.assign(UI,{
+  pt65Tab:"Адвокаты-партнёры||合作律师",pt65Note:"Адвокаты, которые не входят в нашу адвокатуру, но с которыми мы сотрудничаем. Раздел видят управляющий адвокат и учредители. Входа в портал у партнёров нет.||不属于本所、但与本所合作的律师。仅管理律师和创始人可见。合作律师无门户账号。",
+  pt65Add:"+ Добавить партнёра||+ 添加合作律师",pt65Search:"Поиск: имя, город, бюро||搜索：姓名、城市、律所",pt65All:"Все статусы||全部状态",
+  pt65Active:"Работаем||合作中",pt65Check:"На проверке||考察中",pt65Stop:"Не сотрудничаем||不再合作",
+  pt65Total:"Партнёров||合作律师",pt65None:"Партнёров пока нет. Добавьте первого кнопкой «+ Добавить партнёра».||暂无合作律师。请点击「+ 添加合作律师」。",
+  pt65NoneRo:"Партнёров пока нет.||暂无合作律师。",pt65NoHit:"Никого не найдено. Измените поиск или статус.||未找到。请修改搜索或状态。",
+  pt65Rec:"Рекомендовал||推荐人",pt65Back:"← Адвокаты-партнёры||← 合作律师",pt65Sub:"Адвокат-партнёр||合作律师",
+  pt65Main:"Основное||基本信息",pt65Spec:"По каким делам работает||擅长案件",pt65RecT:"Кто рекомендовал||推荐人",pt65Jobs:"Где работал раньше||工作经历",
+  pt65Wins:"Выигранные дела||胜诉案件",pt65Cm:"Комментарии||备注",pt65Edit:"Изменить||修改",pt65AddRow:"+ Добавить||+ 添加",pt65Status:"Сменить статус||更改状态",
+  pt65Name:"ФИО||姓名",pt65NameZh:"Имя по-китайски||中文姓名",pt65Phone:"Телефон||电话",pt65Tg:"Telegram||Telegram",pt65City:"Город||城市",pt65Langs:"Языки||语言",
+  pt65Lic:"Номер лицензии||执业证号",pt65Org:"Адвокатское формирование||所属律所",pt65OrgPh:"Бюро, коллегия или индивидуальная практика||律所、律师协会或个人执业",
+  pt65SpecPh:"Например: экономические споры, налоговые||例如：经济纠纷、税务",pt65Who:"Кто||推荐人",pt65Kind:"Кем приходится||关系",pt65When:"Когда||时间",pt65RecNote:"Заметка||备注",
+  pt65KClient:"клиент фирмы||本所客户",pt65KStaff:"сотрудник фирмы||本所员工",pt65KAdv:"другой адвокат||其他律师",pt65KOther:"другое||其他",
+  pt65StatusF:"Статус||状态",pt65Reason:"Причина||原因",pt65ReasonNeed:"Напишите причину, почему больше не сотрудничаем||请填写不再合作的原因",pt65FirstCm:"Комментарий||备注",
+  pt65New:"Новый адвокат-партнёр||新合作律师",pt65NewHint:"Прежние места работы и выигранные дела добавляются потом в карточке — по одной записи.||工作经历和胜诉案件稍后在卡片中逐条添加。",
+  pt65Place:"Место работы||工作单位",pt65Role:"Должность||职务",pt65Years:"Годы||年份",pt65YearsPh:"2019 — сейчас||2019 — 至今",
+  pt65Year:"Год||年份",pt65Court:"Суд||法院",pt65About:"О чём было дело||案由",pt65Result:"Результат||结果",pt65JobNew:"Место работы||工作经历",pt65WinNew:"Выигранное дело||胜诉案件",
+  pt65Empty:"Не заполнено||未填写",pt65CmNone:"Комментариев пока нет||暂无备注",pt65CmPh:"Новый комментарий… Enter||新备注… 回车",pt65CmAdd:"Добавить||添加",
+  pt65DelQ:"Удалить запись?||删除此记录？",pt65Del:"Удалить||删除",pt65Load:"Загружаю…||加载中…",pt65Ro:"только просмотр||仅查看",
+  pt65StopWhy:"Причина: {t}||原因：{t}",pt65Need:"Раздел «Адвокаты-партнёры» заработает после обновления сервера (миграция 20261121000100)||服务器更新后「合作律师」可用（迁移 20261121000100）"});
+S.partnerAdvocates=S.partnerAdvocates||{};
+const PT65={
+  ready:null,loading:false,id:null,q:"",st:"",
+  funcs(){const u=typeof U==="function"?U():null;if(!u||(typeof isClient==="function"&&isClient()))return [];return ((S.accounts||{})[u.login]||u).funcs||[];},
+  /* как zc.is_mp на сервере: управляющий адвокат и учредители видят; меняет только управляющий адвокат */
+  mp(){const f=this.funcs();return f.includes("managing")||f.includes("founder");},
+  write(){return this.funcs().includes("managing");},
+  srv(){return typeof SB19!=="undefined"&&!!S.db&&!!SB19.T;},
+  noFn(e){return /partner_act|PGRST202|does not exist|Could not find/i.test(String((e&&(e.message||e.code))||e));},
+  list(){return Object.values(S.partnerAdvocates).filter(p=>p&&p.id).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ru"));},
+  stName(s){return T1(s==="stop"?UI.pt65Stop:s==="check"?UI.pt65Check:UI.pt65Active);},
+  stTag(s){return `<span class="pt65tag ${s==="stop"?"r":s==="check"?"w":"g"}">${this.stName(s)}</span>`;},
+  ini(n){try{return initials(n||"?");}catch(e){return "?";}},
+  who(l){const a=(S.accounts||{})[l];return (a&&a.name)||l||"";},
+  at(t){t=String(t||"");return t.length>=16?fmtD(t.slice(0,10))+" "+t.slice(11,16):t;},
+  kinds(){return [["client",T1(UI.pt65KClient)],["staff",T1(UI.pt65KStaff)],["advocate",T1(UI.pt65KAdv)],["other",T1(UI.pt65KOther)]];},
+  rerender(){if(typeof Router!=="undefined"&&Router.cur==="hr"&&Pages._ht==="partners")Router.render();},
+  async act(pid,act,args){
+    if(!this.srv()){toast(T1(UI.pt65Need));return null;}
+    try{const d=await SB19.T.rpc("partner_act",{pid:pid||"",act,args:args||{}});this.ready=true;if(d&&d.id)S.partnerAdvocates[d.id]=d;return d;}
+    catch(e){if(this.noFn(e)){this.ready=false;toast(T1(UI.pt65Need));}else toast(String((e&&e.message)||e));return null;}},
+  async load(){
+    if(this.loading||!this.srv()||!this.mp())return;this.loading=true;
+    try{await SB19.T.rpc("partner_act",{pid:"",act:"ping",args:{}});this.ready=true;}catch(e){this.ready=false;if(!this.noFn(e))console.warn("pt65",e);}
+    if(this.ready){try{(await SB19.rows("partnerAdvocates")).forEach(x=>{if(x&&x.id&&x.data)S.partnerAdvocates[x.id]=x.data;});}catch(e){}}
+    this.loading=false;this.rerender();},
+  hit(p){const q=this.q.trim().toLowerCase();return (!this.st||(p.status||"active")===this.st)&&(!q||[p.name,p.nameZh,p.city,p.org,p.spec].join(" ").toLowerCase().includes(q));},
+  /* ── страница вкладки ── */
+  page(){
+    if(!this.srv()||this.ready===false)return `<div class="card"><div class="empty2">${T1(UI.pt65Need)}</div></div>`;
+    if(this.ready===null){this.load();return `<div class="card"><div class="empty2">${T1(UI.pt65Load)}</div></div>`;}
+    const p=this.id&&S.partnerAdvocates[this.id];if(this.id&&!p)this.id=null;
+    return p?this.card(p):this.listPage();},
+  listPage(){
+    const L=this.list(),w=this.write(),n=s=>L.filter(p=>(p.status||"active")===s).length,shown=L.filter(p=>this.hit(p)).length;
+    return `<p class="pt65note">${T1(UI.pt65Note)}${w?"":` <b>${T1(UI.pt65Ro)}</b>`}</p>
+      <div class="kpi3 pt65k"><div class="k"><b>${L.length}</b><span>${T1(UI.pt65Total)}</span></div><div class="k ok"><b>${n("active")}</b><span>${T1(UI.pt65Active)}</span></div><div class="k"><b>${n("check")}</b><span>${T1(UI.pt65Check)}</span></div><div class="k"><b>${n("stop")}</b><span>${T1(UI.pt65Stop)}</span></div></div>
+      <div class="pt65bar"><input data-pt65q type="search" autocomplete="off" value="${esc(this.q)}" placeholder="${esc(T1(UI.pt65Search))}" aria-label="${esc(T1(UI.pt65Search))}">
+        <select data-pt65st aria-label="${esc(T1(UI.pt65StatusF))}"><option value="">${T1(UI.pt65All)}</option>${["active","check","stop"].map(s=>`<option value="${s}"${this.st===s?" selected":""}>${this.stName(s)}</option>`).join("")}</select>
+        ${w?`<button class="btn pri" data-pt65="new">${T1(UI.pt65Add)}</button>`:""}</div>
+      ${L.length?`<div class="pt65grid">${L.map(p=>`<button type="button" class="pt65c" data-pt65="open:${esc(p.id)}" data-pt65row="${esc(p.id)}"${this.hit(p)?"":' style="display:none"'}>
+          <span class="pt65h"><span class="pt65av">${esc(this.ini(p.name))}</span><span class="pt65nm"><b>${esc(p.name||"")}</b><small>${esc([p.city,p.org].filter(Boolean).join(" · "))}</small></span>${this.stTag(p.status)}</span>
+          ${p.spec?`<span class="pt65sp">${esc(p.spec)}</span>`:""}
+          ${p.rec&&p.rec.who?`<span class="pt65rc">${T1(UI.pt65Rec)}: <b>${esc(p.rec.who)}</b></span>`:""}</button>`).join("")}</div>
+        <div class="card pt65nohit"${shown?' style="display:none"':""}><div class="empty2">${T1(UI.pt65NoHit)}</div></div>`
+      :`<div class="card"><div class="empty2">${T1(w?UI.pt65None:UI.pt65NoneRo)}</div></div>`}`;},
+  filter(){let k=0;document.querySelectorAll("[data-pt65row]").forEach(el=>{const p=S.partnerAdvocates[el.dataset.pt65row];const on=!!p&&this.hit(p);el.style.display=on?"":"none";if(on)k++;});
+    const e=document.querySelector(".pt65nohit");if(e)e.style.display=k?"none":"";},
+  kv(rows){const r=rows.filter(x=>x[1]);return r.length?`<dl class="c22kv pt65kv">${r.map(x=>`<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl>`:`<div class="pt65em">${T1(UI.pt65Empty)}</div>`;},
+  blk(title,body,btn){return `<div class="card pt65b"><h4>${esc(title)}${btn?`<span class="pt65sp35"></span>${btn}`:""}</h4>${body}</div>`;},
+  card(p){
+    const w=this.write(),rec=p.rec||{},kind=(this.kinds().find(k=>k[0]===rec.kind)||[])[1]||"";
+    const more=(a,l)=>w?`<button type="button" class="btn sm" data-pt65="${a}:${esc(p.id)}">${T1(l)}</button>`:"";
+    const del=(a,id)=>w?`<button type="button" class="btn sm ghost pt65x" data-pt65="${a}:${esc(p.id)}:${esc(id)}" title="${esc(T1(UI.pt65Del))}" aria-label="${esc(T1(UI.pt65Del))}">✕</button>`:"";
+    const jobs=(p.jobs||[]).map(j=>`<div class="pt65row"><div><b>${esc(j.place||"")}</b>${j.role?`<small>${esc(j.role)}</small>`:""}</div><span class="pt65r">${esc(j.years||"")}${del("jobDel",j.id)}</span></div>`).join("");
+    const wins=(p.wins||[]).map(x=>`<div class="pt65row"><div><b>${esc(x.about||"")}</b><small>${esc([x.year,x.court].filter(Boolean).join(" · "))}</small></div><span class="pt65r">${x.result?`<span class="pt65tag g">${esc(x.result)}</span>`:""}${del("winDel",x.id)}</span></div>`).join("");
+    const cms=(p.comments||[]).map(c=>`<div class="pt65cm"><small>${esc(this.at(c.at))} · ${esc(this.who(c.by))}</small><span>${esc(c.text||"")}</span>${del("cmDel",c.id)}</div>`).join("");
+    return `<button type="button" class="pt65back" data-pt65="back">${T1(UI.pt65Back)}</button>
+      <div class="pt65cover"><span class="pt65av lg">${esc(this.ini(p.name))}</span>
+        <div class="pt65ct"><h3>${esc(p.name||"")}${p.nameZh?` <span>${esc(p.nameZh)}</span>`:""}</h3><p>${esc([T1(UI.pt65Sub),p.city,p.org].filter(Boolean).join(" · "))}</p>
+          <div class="pt65chips"><span>${this.stName(p.status)}</span>${p.status==="stop"&&p.stopReason?`<span>${esc(T1(UI.pt65StopWhy).replace("{t}",p.stopReason))}</span>`:""}</div></div>
+        ${w?`<div class="pt65cb"><button type="button" class="btn" data-pt65="status:${esc(p.id)}">${T1(UI.pt65Status)}</button></div>`:""}</div>
+      <div class="pt65cols"><div class="pt65col">
+        ${this.blk(T1(UI.pt65Main),this.kv([[T1(UI.pt65Phone),p.phone],[T1(UI.pt65Tg),p.tg],[T1(UI.pt65City),p.city],[T1(UI.pt65Langs),p.langs],[T1(UI.pt65Lic),p.lic],[T1(UI.pt65Org),p.org]]),more("edit",UI.pt65Edit))}
+        ${this.blk(T1(UI.pt65Wins),wins||`<div class="pt65em">${T1(UI.pt65Empty)}</div>`,more("winAdd",UI.pt65AddRow))}
+        ${this.blk(T1(UI.pt65Jobs),jobs||`<div class="pt65em">${T1(UI.pt65Empty)}</div>`,more("jobAdd",UI.pt65AddRow))}
+      </div><div class="pt65col">
+        ${this.blk(T1(UI.pt65RecT),this.kv([[T1(UI.pt65Who),rec.who],[T1(UI.pt65Kind),rec.who?kind:""],[T1(UI.pt65When),rec.date?fmtD(rec.date):""],[T1(UI.pt65RecNote),rec.note]]),more("rec",UI.pt65Edit))}
+        ${this.blk(T1(UI.pt65Spec),p.spec?`<div class="pt65txt">${esc(p.spec)}</div>`:`<div class="pt65em">${T1(UI.pt65Empty)}</div>`,more("edit",UI.pt65Edit))}
+        ${this.blk(T1(UI.pt65Cm),(cms||`<div class="pt65em">${T1(UI.pt65CmNone)}</div>`)+(w?`<div class="pt65ci"><input data-pt65cm="${esc(p.id)}" maxlength="2000" autocomplete="off" placeholder="${esc(T1(UI.pt65CmPh))}" aria-label="${esc(T1(UI.pt65CmPh))}"><button type="button" class="btn pri sm" data-pt65="cmAdd:${esc(p.id)}">${T1(UI.pt65CmAdd)}</button></div>`:""))}
+      </div></div>`;},
+  /* ── окна ── */
+  mainFields(p){p=p||{};return [
+    {k:"name",label:T1(UI.pt65Name)+" *",value:p.name||"",required:true},{k:"phone",label:T1(UI.pt65Phone),value:p.phone||"",placeholder:"+998"},
+    {k:"nameZh",label:T1(UI.pt65NameZh),value:p.nameZh||""},{k:"tg",label:T1(UI.pt65Tg),value:p.tg||"",placeholder:"@"},
+    {k:"city",label:T1(UI.pt65City),value:p.city||""},{k:"langs",label:T1(UI.pt65Langs),value:p.langs||""},
+    {k:"lic",label:T1(UI.pt65Lic),value:p.lic||""},{k:"org",label:T1(UI.pt65Org),value:p.org||"",placeholder:T1(UI.pt65OrgPh)},
+    {k:"spec",label:T1(UI.pt65Spec),type:"textarea",span:true,value:p.spec||"",placeholder:T1(UI.pt65SpecPh)}];},
+  recFields(r){r=r||{};return [{k:"who",label:T1(UI.pt65RecT),value:r.who||""},{k:"kind",label:T1(UI.pt65Kind),type:"select",value:r.kind||"client",options:this.kinds()},
+    {k:"date",label:T1(UI.pt65When),type:"date",value:r.date||""},{k:"note",label:T1(UI.pt65RecNote),value:r.note||""}];},
+  pick(v,keys){const o={};keys.forEach(k=>o[k]=v[k]||"");return o;},
+  MAIN:["name","nameZh","phone","tg","city","langs","lic","org","spec"],
+  async create(){if(!this.write())return;
+    const v=await Dlg.ask({title:T1(UI.pt65New),wide:true,fields:[...this.mainFields(),...this.recFields(),
+      {k:"status",label:T1(UI.pt65StatusF),type:"select",value:"active",options:[["active",T1(UI.pt65Active)],["check",T1(UI.pt65Check)]]},
+      {k:"comment",label:T1(UI.pt65FirstCm),type:"textarea",span:true,value:"",hint:T1(UI.pt65NewHint)}]});
+    if(!v)return;const a=this.pick(v,this.MAIN);a.rec=this.pick(v,["who","kind","date","note"]);a.status=v.status;if(v.comment)a.comment=v.comment;
+    const d=await this.act("","create",a);if(d){this.id=d.id;this.rerender();}},
+  async edit(id){const p=S.partnerAdvocates[id];if(!p||!this.write())return;
+    const v=await Dlg.ask({title:p.name||T1(UI.pt65Sub),wide:true,fields:this.mainFields(p)});if(!v)return;
+    if(await this.act(id,"edit",this.pick(v,this.MAIN)))this.rerender();},
+  async rec(id){const p=S.partnerAdvocates[id];if(!p||!this.write())return;
+    const v=await Dlg.ask({title:T1(UI.pt65RecT),fields:this.recFields(p.rec)});if(!v)return;
+    if(await this.act(id,"edit",{rec:this.pick(v,["who","kind","date","note"])}))this.rerender();},
+  async status(id){const p=S.partnerAdvocates[id];if(!p||!this.write())return;
+    const v=await Dlg.ask({title:T1(UI.pt65Status)+" · "+(p.name||""),fields:[
+      {k:"status",label:T1(UI.pt65StatusF),type:"select",span:true,value:p.status||"active",options:["active","check","stop"].map(s=>[s,this.stName(s)])},
+      {k:"reason",label:T1(UI.pt65Reason),type:"textarea",span:true,value:p.stopReason||"",check:x=>x.status==="stop"&&!x.reason?T1(UI.pt65ReasonNeed):""}]});
+    if(!v)return;if(await this.act(id,"status",{status:v.status,reason:v.status==="stop"?v.reason:""}))this.rerender();},
+  async jobAdd(id){if(!this.write())return;const v=await Dlg.ask({title:T1(UI.pt65JobNew),fields:[{k:"place",label:T1(UI.pt65Place)+" *",span:true,required:true,value:""},
+      {k:"role",label:T1(UI.pt65Role),value:""},{k:"years",label:T1(UI.pt65Years),value:"",placeholder:T1(UI.pt65YearsPh)}]});
+    if(v&&await this.act(id,"job_add",v))this.rerender();},
+  async winAdd(id){if(!this.write())return;const v=await Dlg.ask({title:T1(UI.pt65WinNew),fields:[{k:"about",label:T1(UI.pt65About)+" *",span:true,required:true,value:""},
+      {k:"year",label:T1(UI.pt65Year),value:""},{k:"court",label:T1(UI.pt65Court),value:""},{k:"result",label:T1(UI.pt65Result),span:true,value:""}]});
+    if(v&&await this.act(id,"win_add",v))this.rerender();},
+  async del(act,id,iid){if(!this.write())return;if(!await Dlg.confirm(T1(UI.pt65DelQ),"",true))return;if(await this.act(id,act,{id:iid}))this.rerender();},
+  async cmAdd(id){if(!this.write())return;const el=document.querySelector("[data-pt65cm]");const t=el?el.value.trim():"";if(!t)return;
+    if(await this.act(id,"comment_add",{text:t})){this.rerender();const n=document.querySelector("[data-pt65cm]");if(n)n.focus();}},
+  click(a){const [k,id,iid]=a.split(":");
+    if(k==="new")return this.create();if(k==="back"){this.id=null;return this.rerender();}
+    if(k==="open"){this.id=id;this.rerender();try{window.scrollTo(0,0);const v=document.querySelector(".content,main");if(v)v.scrollTop=0;}catch(e){}return;}
+    if(k==="edit")return this.edit(id);if(k==="rec")return this.rec(id);if(k==="status")return this.status(id);
+    if(k==="jobAdd")return this.jobAdd(id);if(k==="winAdd")return this.winAdd(id);if(k==="cmAdd")return this.cmAdd(id);
+    if(k==="jobDel")return this.del("job_del",id,iid);if(k==="winDel")return this.del("win_del",id,iid);if(k==="cmDel")return this.del("comment_del",id,iid);}
+};
+/* ── «Кадры»: вкладка «Адвокаты-партнёры» — только управляющему адвокату и учредителям ── */
+if(typeof Pages!=="undefined"&&Pages.hr){const _hr65=Pages.hr;Pages.hr=function(){
+  if(!PT65.mp()){if(this._ht==="partners")this._ht="staff";return _hr65.call(this);}
+  const cut=h=>{const i=h.indexOf('<div class="filters">');return i<0?null:[i,h.indexOf("</div>",i)];};
+  if(this._ht!=="partners"){const h=_hr65.call(this),c=cut(h);if(!c)return h;
+    return h.slice(0,c[1])+`<button class="fc" data-ht="partners">${T1(UI.pt65Tab)}</button>`+h.slice(c[1]);}
+  let h="";this._ht="staff";try{h=_hr65.call(this);}finally{this._ht="partners";}
+  const c=cut(h);const tabs=c?h.slice(c[0],c[1]).replace(/class="fc on"/g,'class="fc"'):'<div class="filters">';
+  return F.hdr(T1(UI.nHr),T1(UI.pt65Tab))+tabs+`<button class="fc on" data-ht="partners">${T1(UI.pt65Tab)}</button></div><div class="pt65">${PT65.page()}</div>`;};}
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-pt65]");if(!t||!PT65.mp())return;e.preventDefault();PT65.click(t.dataset.pt65);});
+document.addEventListener("input",e=>{const t=e.target;if(t&&t.matches&&t.matches("[data-pt65q]")){PT65.q=t.value;PT65.filter();}});
+document.addEventListener("change",e=>{const t=e.target;if(t&&t.matches&&t.matches("[data-pt65st]")){PT65.st=t.value;PT65.filter();}});
+document.addEventListener("keydown",e=>{const t=e.target;if(e.key==="Enter"&&t&&t.matches&&t.matches("[data-pt65cm]")){e.preventDefault();PT65.cmAdd(t.dataset.pt65cm);}});
+/* ── данные: загрузка после входа и живые обновления таблицы partner_advocates ── */
+if(typeof SPEED20!=="undefined"&&Array.isArray(SPEED20.COLS)&&!SPEED20.COLS.includes("partnerAdvocates"))SPEED20.COLS.push("partnerAdvocates");
+if(typeof SB19!=="undefined"&&SB19.start){const _st65=SB19.start.bind(SB19);SB19.start=async function(login){const r=await _st65.apply(this,arguments);S.partnerAdvocates=S.partnerAdvocates||{};
+  if(this.kind!=="client"&&S.db&&PT65.mp()){PT65.ready=null;PT65.load();
+    try{S.unsub=S.unsub||[];S.unsub.push(S.db.collection("partnerAdvocates").onSnapshot(s=>{s.docChanges().forEach(c=>{if(c.type==="removed")delete S.partnerAdvocates[c.doc.id];else S.partnerAdvocates[c.doc.id]=clone(c.doc.data());});
+      if(!document.querySelector(".ov.open"))PT65.rerender();},()=>{}));}catch(e){}}return r;};}
+if(typeof SB19!=="undefined"&&SB19.reset){const _rs65=SB19.reset.bind(SB19);SB19.reset=function(){const r=_rs65.apply(this,arguments);S.partnerAdvocates={};PT65.ready=null;PT65.id=null;PT65.q="";PT65.st="";return r;};}
+(function(){const st=document.createElement("style");st.textContent=`
+.pt65note{color:var(--ink-2);font-size:13px;margin:0 0 14px;max-width:900px}
+.pt65k{margin-bottom:14px}
+.pt65bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.pt65bar input,.pt65bar select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 11px;font:inherit}
+.pt65bar input{flex:1;min-width:180px}.pt65bar .btn{margin-left:auto}
+.pt65grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.pt65c{all:unset;box-sizing:border-box;cursor:pointer;display:grid;gap:9px;align-content:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 0 0 1px rgba(28,42,68,.05),0 0 12px rgba(28,42,68,.11),0 5px 14px -5px rgba(28,42,68,.18)}
+.pt65c:hover{border-color:var(--pri)}.pt65c:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.pt65h{display:flex;gap:12px;align-items:center;min-width:0}.pt65nm{min-width:0;flex:1}.pt65nm b{display:block;font-size:15px}.pt65nm small{display:block;color:var(--ink-3);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pt65av{width:36px;height:36px;border-radius:50%;background:#2F64B0;color:#fff;display:flex;align-items:center;justify-content:center;line-height:1;text-align:center;font-weight:700;font-size:13px;flex:none}
+.pt65cover .pt65av.lg{width:64px;height:64px;font-size:22px;color:#fff;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.5)}
+.pt65tag{display:inline-flex;align-items:center;border-radius:99px;padding:2px 9px;font-size:11.5px;font-weight:600;white-space:nowrap;flex:none}
+.pt65tag.g{background:var(--ok-soft,#E5F2EC);color:var(--ok-d,#3F8768)}.pt65tag.w{background:var(--warn-soft,#FBF1E0);color:var(--warn,#B7791F)}.pt65tag.r{background:var(--red-soft,#F8E6E4);color:var(--red,#B4443A)}
+.pt65sp{color:var(--ink-2);font-size:13px}.pt65rc{color:var(--ink-3);font-size:12.5px}.pt65rc b{color:var(--ink-2)}
+.pt65back{all:unset;cursor:pointer;color:var(--pri);font-weight:600;font-size:13px;margin-bottom:10px;display:inline-block}.pt65back:focus-visible{outline:2px solid var(--pri);border-radius:4px}
+.pt65cover{background:linear-gradient(135deg,#2F64B0,#24508F);color:#fff;border-radius:16px;padding:20px 22px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:16px}
+.pt65ct{min-width:0;flex:1}.pt65ct h3{font-size:21px;font-weight:700;margin:0;color:#fff}.pt65ct h3 span{font-weight:500;opacity:.85}.pt65ct p{opacity:.85;font-size:13px;margin:2px 0 0}
+.pt65chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pt65chips span{background:rgba(255,255,255,.18);border-radius:99px;padding:2px 10px;font-size:11.5px;font-weight:600}
+.pt65cb .btn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.35);color:#fff}
+.pt65cols{display:grid;gap:16px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:start}.pt65col{display:grid;gap:16px;min-width:0}
+.pt65b h4{display:flex;align-items:center;gap:10px}.pt65sp35{flex:1 1 0;min-width:0}
+.pt65kv{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;margin:0}.pt65kv dt{color:var(--ink-3)}.pt65kv dd{margin:0;font-weight:500;min-width:0;overflow-wrap:anywhere}
+.pt65em{color:var(--ink-3);padding:4px 0}.pt65txt{white-space:pre-wrap;overflow-wrap:anywhere}
+.pt65row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.pt65row:last-child{border-bottom:0}
+.pt65row>div{min-width:0;flex:1}.pt65row b{display:block;font-weight:600;overflow-wrap:anywhere}.pt65row small{display:block;color:var(--ink-3);font-size:12.5px}
+.pt65r{display:flex;align-items:center;gap:8px;flex:none;color:var(--ink-3);font-size:12.5px}
+.pt65x{color:var(--red)!important;padding:2px 7px!important}
+.pt65cm{position:relative;padding:10px 38px 10px 12px;border-radius:12px;background:var(--surface2,#F7F8FA);margin-bottom:8px}.pt65cm small{display:block;color:var(--ink-3);font-size:11.5px;margin-bottom:2px}
+.pt65cm span{white-space:pre-wrap;overflow-wrap:anywhere}.pt65cm .pt65x{position:absolute;top:6px;right:6px}
+.pt65ci{display:flex;gap:8px;margin-top:10px}.pt65ci input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 11px;font:inherit}
+@media (max-width:860px){.pt65cols,.pt65grid{grid-template-columns:minmax(0,1fr)}.pt65row{flex-wrap:wrap}}`;document.head.appendChild(st);})();
 
 /* ══ Раздел «Юридическое сопровождение» · этап 1 — главный экран списка (макет design-support.html, решение владельца 19.10.2026) ══
    Как списки разовых услуг и судов (L25, v25_list.js): шапка с ⋯, плитки-фильтры, одна строка управления, таблица или карточки.
