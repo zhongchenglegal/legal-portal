@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="5894b6ff9588";
+const ZC_BUILD="820291e19265";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -18646,6 +18646,188 @@ if(typeof UZ21!=="undefined")Object.assign(UZ21,{"Версия 2.3: понятн
   "Журнал действий по делу":"Ish boʻyicha amallar jurnali","Весь журнал по делу":"Ish boʻyicha butun jurnal","Открыть журнал":"Jurnalni ochish","ИИ-агент":"AI-agent","ИИ · ИТ-специалист":"AI · IT-mutaxassis",
   "Журнал доступен при работе с сервером":"Jurnal server bilan ishlaganda mavjud",
   "Журнал с фильтрами (дело, сотрудник, период, вид действия) и выгрузкой CSV — в разделе «Журнал».":"Filtrli (ish, xodim, davr, amal turi) va CSV eksportli jurnal — «Jurnal» boʻlimida."});
+
+
+/* ═══════════════════════════ sections/mobile · ТЕЛЕФОН, этап 1 «Основа» (решения владельца 21.11.2026) ═══════════════════════════
+   Макет — design-mobile.html в корне проекта. Правила раздела — sections/mobile/ПРАВИЛА.md (Тф-1 … Тф-8).
+   Всё действует только на ширине до 700 px (как v20_mobile); компьютер и планшет не меняются. Сервер не участвует: здесь только вид.
+   1. Экран стоит на месте: страницу нельзя сжать или увеличить пальцами, она не «резинит» по краям, кнопка переводчика не торчит за край.
+   2. Шапка сотрудника: «Назад» · название раздела · «План на день» · «Сообщения» · значок пользователя. Значки — те же кнопки, что на компьютере.
+   3. «Требует внимания», «Поручения», «События» и «Настройки» — первыми строками меню «Ещё», со своими счётчиками; нажатие нажимает
+      прежнюю кнопку шапки (она спрятана, но остаётся в странице), поэтому поведение и права те же.
+   4. На кнопке «Ещё» — красная отметка, когда у спрятанных кнопок есть счётчик.
+   5. Текст не меньше 13: для каждого правила оформления с размером от 8 до 13 строится такое же правило с размером 13 (только телефон).
+   6. Кнопки не меньше 44. */
+const Mob70={
+  mq:window.matchMedia("(max-width:700px)"),
+  MIN:13,
+  /* спрятанные кнопки шапки: [кнопка, её счётчик] — порядок строк в меню «Ещё» */
+  SRC:[["at36Btn","at36Bd"],["po21Btn","po21Bd"],["bellBtn","bellBadge"],["set21",""]],
+  /* где размер текста не поднимается: счётчики в кружках, сетка месяца в календаре, буквы в значках пользователей, нижняя панель, схема офиса агентов */
+  KEEP:/\.nb\b|\.bd\b|\.cal\b|\.ce\b|\.dn\b|\.av\b|#bnav|\.mb70|\.ag\d|\.of\d/,
+  on(){return this.mq.matches;},
+  staff(){try{return !!U()&&!isClient();}catch(e){return false;}},
+
+  /* Тф-1: масштаб страницы закреплён, пока экран узкий */
+  lock(){const m=document.querySelector('meta[name="viewport"]');if(!m)return;const base="width=device-width,initial-scale=1";
+    const want=this.on()?base+",maximum-scale=1,user-scalable=no":base;if(m.getAttribute("content")!==want)m.setAttribute("content",want);},
+
+  count(id){const e=id&&document.getElementById(id);if(!e||e.hidden||e.style.display==="none")return "";const t=e.textContent.trim();return t&&t!=="0"?t:"";},
+  name(b){return (b.title||b.getAttribute("aria-label")||"").split(" — ")[0].replace(/\s*\([^)]*\)\s*$/,"").trim();},
+  src(id){const b=document.getElementById(id);return b&&!b.hidden&&b.style.display!=="none"?b:null;},
+
+  /* после каждой перерисовки меню: название раздела в шапке, отметка на «Ещё», повтор заголовка на странице */
+  sync(){const more=this.staff()&&!!document.getElementById("bnavMore");
+    document.body.classList.toggle("mb70more",more);document.body.classList.toggle("mb70st",this.staff());
+    this.title();this.mark();this.dup();this.watch();},
+
+  /* Тф-2: название раздела вместо эмблемы; если раздела в меню нет — остаётся эмблема */
+  title(){const top=document.querySelector(".app>.top");if(!top)return;let t=top.querySelector(".mb70t");
+    if(!t){t=document.createElement("div");t.className="mb70t";const mk=top.querySelector(".mark");if(mk)mk.after(t);else top.prepend(t);}
+    const cur=document.querySelector("#side [data-r].on"),tx=cur?Mob20.label(cur):"";if(t.textContent!==tx)t.textContent=tx;
+    document.body.classList.toggle("mb70nt",!tx);},
+
+  /* заголовок страницы, который слово в слово повторяет название в шапке, на телефоне не показывается (счётчик рядом с ним остаётся) */
+  dup(){const t=document.querySelector(".app>.top .mb70t"),tx=t?t.textContent.trim():"",use=!!tx&&document.body.classList.contains("mb70more");
+    document.querySelectorAll("#viewPage .ph h2").forEach(h=>{const own=[...h.childNodes].filter(n=>n.nodeType===3).map(n=>n.nodeValue).join("").trim();
+      const d=use&&own===tx;if(h.classList.contains("mb70dup")!==d)h.classList.toggle("mb70dup",d);});},
+
+  /* Тф-4: красная отметка на «Ещё», когда у спрятанных кнопок есть счётчик (если на «Ещё» уже стоит число разделов — оно и есть отметка) */
+  mark(){const m=document.getElementById("bnavMore");if(!m)return;
+    const has=this.on()&&this.staff()&&this.SRC.some(([id,bd])=>bd&&this.src(id)&&this.count(bd));
+    let d=m.querySelector(".mb70dot");
+    if(has&&!m.querySelector(".nb")){if(!d){d=document.createElement("span");d.className="mb70dot";d.setAttribute("role","img");d.setAttribute("aria-label",T1("Есть новое||有新内容"));m.appendChild(d);}}
+    else if(d)d.remove();},
+
+  /* Тф-3: строки спрятанных кнопок — в начале меню «Ещё» */
+  sheet(){if(!this.on()||!document.body.classList.contains("mb70more"))return;const list=document.querySelector("#msheet .list20");if(!list||list.querySelector(".mb70top"))return;
+    const box=document.createElement("div");box.className="mb70top";
+    this.SRC.forEach(([id,bd])=>{const s=this.src(id);if(!s)return;const r=document.createElement("button");r.type="button";r.className="row20";r.dataset.mb70=id;
+      const sv=s.querySelector("svg");if(sv)r.appendChild(sv.cloneNode(true));
+      const l=document.createElement("span");l.textContent=this.name(s);r.appendChild(l);
+      const n=this.count(bd);if(n){const b=document.createElement("span");b.className="nb";b.textContent=n;r.appendChild(b);}
+      r.onclick=()=>{Mob20.close();setTimeout(()=>{try{s.click();}catch(e){console.warn("mob70",e);}},40);};box.appendChild(r);});
+    if(box.children.length)list.prepend(box);},
+
+  /* счётчики в шапке меняются без перерисовки меню, заголовок страницы появляется после меню — следим за обоими местами */
+  watch(){const top=document.querySelector(".app>.top"),vp=document.getElementById("viewPage");
+    if(top&&this._top!==top){this._top=top;if(this._mo1)this._mo1.disconnect();
+      this._mo1=new MutationObserver(()=>{clearTimeout(this._t1);this._t1=setTimeout(()=>{try{this.mark();}catch(e){}},120);});
+      this._mo1.observe(top,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["style","hidden"]});}
+    if(vp&&this._vp!==vp){this._vp=vp;if(this._mo2)this._mo2.disconnect();
+      this._mo2=new MutationObserver(()=>{clearTimeout(this._t2);this._t2=setTimeout(()=>{try{this.dup();}catch(e){}},60);});
+      this._mo2.observe(vp,{subtree:true,childList:true});}},
+
+  /* «a, b:is(c,d), e» → ["a","b:is(c,d)","e"]: запятые внутри скобок не разделяют */
+  parts(s){const o=[];let d=0,cur="";for(const ch of s){if(ch==="("||ch==="[")d++;else if(ch===")"||ch==="]")d--;if(ch===","&&d===0){o.push(cur.trim());cur="";}else cur+=ch;}if(cur.trim())o.push(cur.trim());return o;},
+  /* исходный текст листа оформления: «место без пробелов» → [размер из последней записи font или font-size, есть ли !important] */
+  raw(node){if(!this._raw)this._raw=new WeakMap();let m=this._raw.get(node);if(m)return m;m=new Map();
+    const t=(node.textContent||"").replace(/\/\*[\s\S]*?\*\//g,""),re=/([^{}]+)\{([^{}]*)\}/g;let x;
+    while((x=re.exec(t))){let size=0,imp=false;for(const d of x[2].matchAll(/(?:^|[;\s])font(?:-size)?\s*:\s*([^;]*)/g)){const px=/(\d*\.?\d+)px/.exec(d[1]);if(px){size=+px[1];imp=/!important/.test(d[1]);}}
+      if(size)m.set(x[1].replace(/\s+/g,""),[size,imp]);}
+    this._raw.set(node,m);return m;},
+  /* Тф-5: текст не меньше 13. Проходим по всем правилам оформления страницы один раз (и по тем, что добавятся позже) */
+  fonts(){if(!this._fs){this._fs=document.createElement("style");this._fs.id="mb70fonts";this._seen=new WeakSet();}
+    let css="";const MIN=this.MIN;
+    const walk=(rules,conds)=>{for(const r of rules){
+      if(typeof CSSMediaRule!=="undefined"&&r instanceof CSSMediaRule){const c=r.conditionText||(r.media&&r.media.mediaText)||"";
+        const mw=/min-width:\s*(\d+)px/.exec(c);if((mw&&+mw[1]>700)||/print/.test(c))continue;walk(r.cssRules,conds.concat("@media "+c));continue;}
+      if(!(r instanceof CSSStyleRule))continue;
+      /* правило, вложенное в другое правило: обходим и его, сохраняя вложенность */
+      if(r.cssRules&&r.cssRules.length)walk(r.cssRules,conds.concat(r.selectorText));
+      /* размер задан отдельно или внутри общей записи font (если в ней есть переменная, браузер отдельного размера не отдаёт — читаем запись целиком) */
+      let fs=r.style.fontSize,imp=r.style.getPropertyPriority("font-size");
+      if(!fs){const sh=r.style.getPropertyValue("font"),m=sh&&/(\d*\.?\d+)px/.exec(sh);
+        if(m){fs=m[1]+"px";imp=r.style.getPropertyPriority("font");}
+        else{/* запись font с переменной, после которой задано ещё одно свойство шрифта: браузер не отдаёт ни запись, ни размер — берём размер из исходного текста листа */
+          if(![...r.style].includes("font-size"))continue;const node=r.parentStyleSheet&&r.parentStyleSheet.ownerNode,k=node&&this.raw(node).get(r.selectorText.replace(/\s+/g,""));
+          if(!k)continue;fs=k[0]+"px";imp=k[1]?"important":"";}}
+      if(conds.some(c=>c.charAt(0)!=="@"&&this.KEEP.test(c)))continue;
+      if(fs.slice(-2)!=="px")continue;const v=parseFloat(fs);
+      if(!(v>=8&&v<MIN))continue;
+      /* в правиле на несколько мест исключения убираются по одному, остальные места получают размер 13 */
+      const sel=this.parts(r.selectorText).filter(s=>!this.KEEP.test(s)).join(",");if(!sel)continue;
+      let rule=sel+"{font-size:"+MIN+"px"+(imp?"!important":"")+"}";
+      for(let i=conds.length-1;i>=0;i--)rule=conds[i]+"{"+rule+"}";css+=rule+"\n";}};
+    for(const sh of document.styleSheets){const n=sh.ownerNode;if(this._seen.has(sh)||(n&&(n.id==="mb70fonts"||n.id==="mb70css")))continue;this._seen.add(sh);
+      let rules;try{rules=sh.cssRules;}catch(e){continue;}try{walk(rules,[]);}catch(e){console.warn("mob70",e);}}
+    if(css)this._fs.appendChild(document.createTextNode("@media (max-width:700px){\n"+css+"}\n"));
+    this.tail();},
+  /* оба наших листа оформления должны идти последними на странице (часть оформления портала лежит в <body>): при равном весе правил побеждает последнее */
+  tail(){const own=document.getElementById("mb70css"),bd=document.body;if(!own||!bd||!this._fs)return;
+    if(bd.lastElementChild!==own||own.previousElementSibling!==this._fs){bd.appendChild(this._fs);bd.appendChild(own);}}
+};
+(function(){const st=document.createElement("style");st.id="mb70css";st.textContent=`
+.mb70t{display:none}
+@media (max-width:700px){
+  /* Тф-1: экран стоит на месте */
+  html,body{touch-action:pan-x pan-y;overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:clip}
+  .tr21btn.dock21{right:0!important;width:30px;overflow:hidden}
+  .tr21btn.dock21.out,.tr21btn.dock21:focus-visible{width:58px}
+  #login input{font-size:16px!important}
+
+  /* Тф-2: шапка сотрудника */
+  body.mb70st:not(.client-ui) .top{padding:6px 8px 6px 10px;gap:2px}
+  body.mb70st:not(.client-ui) .top .mark{display:none}
+  body.mb70st.mb70more.mb70nt:not(.client-ui) .top .mark{display:flex}
+  body.mb70st.mb70more:not(.mb70nt):not(.client-ui) .top .mb70t{display:block;flex:1 1 auto;min-width:0;padding-left:4px;font:700 18px/1.2 var(--font-h,var(--font-display,inherit));color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.mb70st:not(.client-ui) .top #whoBox{margin-left:auto;gap:2px!important}
+  body.mb70st:not(.client-ui) .top .hb21,body.mb70st:not(.client-ui) .top #whoBox .bell.hb21{width:44px!important;height:44px!important;margin-left:0!important;flex:none}
+  body.mb70st:not(.client-ui) .top .hb21 svg,body.mb70st:not(.client-ui) .top #whoBox .bell.hb21 svg{width:22px;height:22px}
+  body.mb70st:not(.client-ui) .top #whoBox .who{width:44px;height:44px;justify-content:center}
+  body.mb70more:not(.client-ui) .top #at36Btn,body.mb70more:not(.client-ui) .top #po21Btn,body.mb70more:not(.client-ui) .top #bellBtn,body.mb70more:not(.client-ui) .top #set21{display:none!important}
+  body.mb70more:not(.client-ui) .top #setBox21{position:static;width:0;height:0;margin:0;padding:0}
+  body.mb70more:not(.client-ui) #viewPage .ph h2.mb70dup{font-size:0!important;line-height:0;margin:0;padding:0;min-height:0}
+
+  /* Тф-3: «Настройки» открываются снизу, строки меню «Ещё» — под палец */
+  body.mb70more:not(.client-ui) #setPop21{position:fixed!important;left:10px!important;right:10px!important;top:auto!important;bottom:calc(74px + env(safe-area-inset-bottom,0px))!important;width:auto!important;max-height:70vh;max-height:70dvh;overflow:auto}
+  body.mb70more:not(.client-ui) #setPop21::before{display:none}
+  #setPop21 .sp21i{min-height:48px;font-size:15px!important}
+  #msheet .mb70top{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:2px}
+  #msheet .row20{min-height:52px;font-size:16px}
+  #msheet .gt{font-size:12.5px;letter-spacing:.08em}
+  #msheet .who20 small{font-size:13.5px}
+  #msheet .who20 b{font-size:17px}
+  #msheet .xs{width:44px;height:44px}
+
+  /* Тф-4: отметка на «Ещё» */
+  #bnav .mb70dot{position:absolute;top:7px;left:calc(50% + 9px);width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 0 2px var(--side-bg,var(--surface))}
+
+  /* Тф-6: кнопки не меньше 44 */
+  #bnav button{min-height:56px;font-size:11px}
+  #bnav button .l.sm{font-size:10.5px}
+  /* счётчики над списком дел: по два в ряд, чтобы подписи не обрезались */
+  .ks25{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .k25{min-height:60px;padding:10px 12px}
+  .k25 small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .btn{min-height:44px;font-size:15px}
+  .btn.sm{min-height:44px;font-size:14px}
+  .fc,.qfs17 .qf17,.ptabs button,.tabs button{min-height:44px;font-size:14px}
+  .close,.md .mx{width:44px;height:44px}
+  /* остальные кнопки и списки выбора на страницах, в окнах и в «Плане на день» (кроме чатов, схемы структуры и ссылок-слов) */
+  body:not(.ch22pg) #viewPage button:not(.lnk):not(.member):not(.zc-role),.md button:not(.lnk),#pl36 button,
+  body:not(.ch22pg) #viewPage select,.md select{min-height:44px}
+
+  /* Тф-5: «мелкая» подпись без своего размера (браузер делает её меньше соседнего текста) и размер, записанный прямо в разметке */
+  small{font-size:13px}
+  [style*="font-size:9px"],[style*="font-size:9.5px"],[style*="font-size:10px"],[style*="font-size:10.5px"],[style*="font-size:11px"],[style*="font-size:11.5px"],[style*="font-size:12px"],[style*="font-size:12.5px"],
+  [style*="font-size: 9px"],[style*="font-size: 9.5px"],[style*="font-size: 10px"],[style*="font-size: 10.5px"],[style*="font-size: 11px"],[style*="font-size: 11.5px"],[style*="font-size: 12px"],[style*="font-size: 12.5px"]{font-size:13px!important}
+}`;document.head.appendChild(st);
+  const safe=f=>function(){try{return f.apply(Mob70,arguments);}catch(e){console.warn("mob70",e);}};
+  /* меню и нижняя панель строит v20_mobile.js — дополняем её после каждой перерисовки */
+  if(typeof Mob20!=="undefined"){
+    const _b=Mob20.bar.bind(Mob20);Mob20.bar=function(){const r=_b.apply(this,arguments);safe(Mob70.sync)();return r;};
+    const _o=Mob20.open.bind(Mob20);Mob20.open=function(){const r=_o.apply(this,arguments);safe(Mob70.sheet)();return r;};}
+  Mob70.lock();
+  const onMq=()=>{Mob70.lock();safe(Mob70.sync)();};
+  if(Mob70.mq.addEventListener)Mob70.mq.addEventListener("change",onMq);else if(Mob70.mq.addListener)Mob70.mq.addListener(onMq);
+  /* жест «щипок» в Safari: запрет масштаба в браузере iPhone не действует, поэтому гасим сам жест */
+  ["gesturestart","gesturechange"].forEach(ev=>document.addEventListener(ev,e=>{if(Mob70.on())e.preventDefault();},{passive:false}));
+  const run=safe(Mob70.fonts);
+  if(document.readyState==="complete")setTimeout(run,0);else window.addEventListener("load",()=>setTimeout(run,0));
+  const mo=new MutationObserver(m=>{if(m.some(x=>[...x.addedNodes].some(n=>(n.nodeName==="STYLE"||n.nodeName==="LINK")&&n.id!=="mb70css"&&n.id!=="mb70fonts"))){clearTimeout(Mob70._t3);Mob70._t3=setTimeout(run,150);}});
+  mo.observe(document.head,{childList:true});if(document.body)mo.observe(document.body,{childList:true});
+})();
 
 /* ═══════════════════════════ версия 1.5 · ЗАМЕТКИ В «ПЛАНЕ НА ДЕНЬ» (решения владельца 21.10.2026) ═══════════════════════════
    Макет — design-calnotes.html (версия 5). Правила — sections/notes/ПРАВИЛА.md (Зм-1 …), сервер — миграция 20261021000100_day_notes.sql.
