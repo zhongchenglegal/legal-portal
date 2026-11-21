@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="dbbaa1826f5f";
+const ZC_BUILD="c107b61e53b4";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -19521,7 +19521,7 @@ if(typeof UZ21!=="undefined")Object.assign(UZ21,{
 @media(max-width:600px){.ov36r{grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:10px 14px}.ov36x{grid-column:1/-1;grid-row:2}.ov36d{grid-row:1;grid-column:2}}
 `;document.head.appendChild(st);})();
 
-/* ═══════════════════════════ версия 3.5 · АДВОКАТЫ-ПАРТНЁРЫ, этап 1: справочник (решения владельца 21.11.2026) ═══════════════════════════
+/* ═══════════════════════════ версия 3.5 · АДВОКАТЫ-ПАРТНЁРЫ, этапы 1–2: справочник и дела партнёра (решения владельца 21.11.2026) ═══════════════════════════
    Макет — design-partners.html (экраны 1 и 2). Правила — sections/partners/ПРАВИЛА.md (АП-1 …), сервер — миграция 20261121000100_partners.sql.
    • «Кадры» → вкладка «Адвокаты-партнёры»: адвокаты не из нашей адвокатуры, с которыми фирма сотрудничает. Входа в портал у них нет.
    • Список: поиск, фильтр по статусу, «+ Добавить партнёра». Карточка: основное, по каким делам работает, кто рекомендовал,
@@ -19591,7 +19591,7 @@ const PT65={
       ${L.length?`<div class="pt65grid">${L.map(p=>`<button type="button" class="pt65c" data-pt65="open:${esc(p.id)}" data-pt65row="${esc(p.id)}"${this.hit(p)?"":' style="display:none"'}>
           <span class="pt65h"><span class="pt65av">${esc(this.ini(p.name))}</span><span class="pt65nm"><b>${esc(p.name||"")}</b><small>${esc([p.city,p.org].filter(Boolean).join(" · "))}</small></span>${this.stTag(p.status)}</span>
           ${p.spec?`<span class="pt65sp">${esc(p.spec)}</span>`:""}
-          ${p.rec&&p.rec.who?`<span class="pt65rc">${T1(UI.pt65Rec)}: <b>${esc(p.rec.who)}</b></span>`:""}</button>`).join("")}</div>
+          ${p.rec&&p.rec.who?`<span class="pt65rc">${T1(UI.pt65Rec)}: <b>${esc(p.rec.who)}</b></span>`:""}${this.dealLine(p)}</button>`).join("")}</div>
         <div class="card pt65nohit"${shown?' style="display:none"':""}><div class="empty2">${T1(UI.pt65NoHit)}</div></div>`
       :`<div class="card"><div class="empty2">${T1(w?UI.pt65None:UI.pt65NoneRo)}</div></div>`}`;},
   filter(){let k=0;document.querySelectorAll("[data-pt65row]").forEach(el=>{const p=S.partnerAdvocates[el.dataset.pt65row];const on=!!p&&this.hit(p);el.style.display=on?"":"none";if(on)k++;});
@@ -19608,10 +19608,11 @@ const PT65={
     return `<button type="button" class="pt65back" data-pt65="back">${T1(UI.pt65Back)}</button>
       <div class="pt65cover"><span class="pt65av lg">${esc(this.ini(p.name))}</span>
         <div class="pt65ct"><h3>${esc(p.name||"")}${p.nameZh?` <span>${esc(p.nameZh)}</span>`:""}</h3><p>${esc([T1(UI.pt65Sub),p.city,p.org].filter(Boolean).join(" · "))}</p>
-          <div class="pt65chips"><span>${this.stName(p.status)}</span>${p.status==="stop"&&p.stopReason?`<span>${esc(T1(UI.pt65StopWhy).replace("{t}",p.stopReason))}</span>`:""}</div></div>
+          <div class="pt65chips"><span>${this.stName(p.status)}</span>${this.dealChips(p)}${p.status==="stop"&&p.stopReason?`<span>${esc(T1(UI.pt65StopWhy).replace("{t}",p.stopReason))}</span>`:""}</div></div>
         ${w?`<div class="pt65cb"><button type="button" class="btn" data-pt65="status:${esc(p.id)}">${T1(UI.pt65Status)}</button></div>`:""}</div>
       <div class="pt65cols"><div class="pt65col">
         ${this.blk(T1(UI.pt65Main),this.kv([[T1(UI.pt65Phone),p.phone],[T1(UI.pt65Tg),p.tg],[T1(UI.pt65City),p.city],[T1(UI.pt65Langs),p.langs],[T1(UI.pt65Lic),p.lic],[T1(UI.pt65Org),p.org]]),more("edit",UI.pt65Edit))}
+        ${this.deals(p)}
         ${this.blk(T1(UI.pt65Wins),wins||`<div class="pt65em">${T1(UI.pt65Empty)}</div>`,more("winAdd",UI.pt65AddRow))}
         ${this.blk(T1(UI.pt65Jobs),jobs||`<div class="pt65em">${T1(UI.pt65Empty)}</div>`,more("jobAdd",UI.pt65AddRow))}
       </div><div class="pt65col">
@@ -19619,6 +19620,16 @@ const PT65={
         ${this.blk(T1(UI.pt65Spec),p.spec?`<div class="pt65txt">${esc(p.spec)}</div>`:`<div class="pt65em">${T1(UI.pt65Empty)}</div>`,more("edit",UI.pt65Edit))}
         ${this.blk(T1(UI.pt65Cm),(cms||`<div class="pt65em">${T1(UI.pt65CmNone)}</div>`)+(w?`<div class="pt65ci"><input data-pt65cm="${esc(p.id)}" maxlength="2000" autocomplete="off" placeholder="${esc(T1(UI.pt65CmPh))}" aria-label="${esc(T1(UI.pt65CmPh))}"><button type="button" class="btn pri sm" data-pt65="cmAdd:${esc(p.id)}">${T1(UI.pt65CmAdd)}</button></div>`:""))}
       </div></div>`;},
+  /* ── дела партнёра (этап 2): из дел портала, где он указан в поле «Адвокат-партнёр» ── */
+  dealsOf(id){return Object.values(S.matters||{}).filter(m=>m&&m.partnerId===id).sort((a,b)=>String(b.opened||"").localeCompare(String(a.opened||""))||String(b.no||"").localeCompare(String(a.no||"")));},
+  dealOpen(m){return m.status!=="closed"&&m.status!=="archived";},
+  dealChips(p){const L=this.dealsOf(p.id);return L.length?`<span>${T1(UI.pt66Given).replace("{n}",L.length)}</span><span>${T1(UI.pt66Now).replace("{n}",L.filter(m=>this.dealOpen(m)).length)}</span>`:"";},
+  dealLine(p){const L=this.dealsOf(p.id);return L.length?`<span class="pt65rc">${T1(UI.pt66Given).replace("{n}",L.length)} · ${T1(UI.pt66Now).replace("{n}",L.filter(m=>this.dealOpen(m)).length)}</span>`:"";},
+  deals(p){const L=this.dealsOf(p.id);const svc=m=>T1(m.svc==="court"?UI.pt66Court:m.svc==="support"?UI.pt66Sup:m.svc==="oneoff"?UI.pt66One:"");
+    const cl=m=>{try{const c=typeof client==="function"?client(m.clientId):null;return c?clientName(c):"";}catch(e){return "";}};
+    const nm=e=>{try{return e?dispName(e):"";}catch(x){return e||"";}};
+    const rows=L.map(m=>`<button type="button" class="pt65row pt65deal" data-pt65="matter:${esc(m.id)}"><div><b>${esc(m.title||m.no||"")}</b><small>${esc([m.no,svc(m),cl(m),m.lead?T1(UI.pt66Watch)+": "+nm(m.lead):""].filter(Boolean).join(" · "))}</small></div><span class="pt65r"><span class="pt65tag ${this.dealOpen(m)?"g":"n"}">${T1(this.dealOpen(m)?UI.pt66Open:UI.pt66Closed)}</span></span></button>`).join("");
+    return this.blk(T1(UI.pt66Deals),rows||`<div class="pt65em">${T1(UI.pt66NoDeals)}</div>`);},
   /* ── окна ── */
   mainFields(p){p=p||{};return [
     {k:"name",label:T1(UI.pt65Name)+" *",value:p.name||"",required:true},{k:"phone",label:T1(UI.pt65Phone),value:p.phone||"",placeholder:"+998"},
@@ -19659,6 +19670,8 @@ const PT65={
   click(a){const [k,id,iid]=a.split(":");
     if(k==="new")return this.create();if(k==="back"){this.id=null;return this.rerender();}
     if(k==="open"){this.id=id;this.rerender();try{window.scrollTo(0,0);const v=document.querySelector(".content,main");if(v)v.scrollTop=0;}catch(e){}return;}
+    if(k==="matter"){if(typeof Router!=="undefined")Router.go("matter",id);return;}
+    if(k==="goto"){this.id=id;Pages._ht="partners";if(typeof Router!=="undefined"){if(Router.cur==="hr")Router.render();else Router.go("hr");}return;}
     if(k==="edit")return this.edit(id);if(k==="rec")return this.rec(id);if(k==="status")return this.status(id);
     if(k==="jobAdd")return this.jobAdd(id);if(k==="winAdd")return this.winAdd(id);if(k==="cmAdd")return this.cmAdd(id);
     if(k==="jobDel")return this.del("job_del",id,iid);if(k==="winDel")return this.del("win_del",id,iid);if(k==="cmDel")return this.del("comment_del",id,iid);}
@@ -19711,6 +19724,9 @@ if(typeof SB19!=="undefined"&&SB19.reset){const _rs65=SB19.reset.bind(SB19);SB19
 .pt65row>div{min-width:0;flex:1}.pt65row b{display:block;font-weight:600;overflow-wrap:anywhere}.pt65row small{display:block;color:var(--ink-3);font-size:12.5px}
 .pt65r{display:flex;align-items:center;gap:8px;flex:none;color:var(--ink-3);font-size:12.5px}
 .pt65x{color:var(--red)!important;padding:2px 7px!important}
+.pt65deal{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;width:100%;padding:10px 0;border-bottom:1px solid var(--line)}.pt65deal:last-child{border-bottom:0}
+.pt65deal:hover b{color:var(--pri)}.pt65deal:focus-visible{outline:2px solid var(--pri);border-radius:6px}
+.pt65tag.n{background:var(--surface2,#F7F8FA);color:var(--ink-2)}
 .pt65cm{position:relative;padding:10px 38px 10px 12px;border-radius:12px;background:var(--surface2,#F7F8FA);margin-bottom:8px}.pt65cm small{display:block;color:var(--ink-3);font-size:11.5px;margin-bottom:2px}
 .pt65cm span{white-space:pre-wrap;overflow-wrap:anywhere}.pt65cm .pt65x{position:absolute;top:6px;right:6px}
 .pt65ci{display:flex;gap:8px;margin-top:10px}.pt65ci input{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 11px;font:inherit}
@@ -25082,6 +25098,41 @@ document.addEventListener("click",ev=>{if(!ev.target.closest)return;const b=ev.t
 {const _mf=Matter.fields;Matter.fields=function(m){const f=_mf.apply(this,arguments);(f||[]).forEach(x=>{if(!x||x.k!=="cnLawyer")return;const c=m&&m.clientId?client(m.clientId):null;if(c&&!x.value&&isChineseClient(c))x.hint=(x.hint?x.hint+" ":"")+"⚠ "+T1(UI.cn4Warn);});return f;};}
 if(typeof Ov36!=="undefined"){if(!Ov36.BL.some(x=>x[0]==="cn"))Ov36.BL.splice(1,0,["cn",UI.cn4Ov,"oneoff"]);Ov36.ICO.cn=Ov36.ICO.oneoff;
   const _c=Ov36.calc.bind(Ov36);Ov36.calc=function(){const d=_c();if(d&&!d.cn)d.cn=[];return d;};}
+
+/* ═══════════════════════════ версия 3.5 · АДВОКАТЫ-ПАРТНЁРЫ, этап 2: партнёр в деле (решения владельца 21.11.2026) ═══════════════════════════
+   Макет — design-partners.html (экран «Что добавится в дело»). Правила — sections/partners/ПРАВИЛА.md (АП-13 …), сервер — миграция 20261121000200_partner_matter.sql.
+   Регистрация и карточка дела не перерисовываются — в них только добавляется:
+   • окно дела (регистрация, заявка, «Изменить»): поле «Адвокат-партнёр» сразу после «Переводчика» — только у управляющего адвоката;
+     по умолчанию «нет, дело ведём сами», и тогда всё работает как раньше. «Ведущий адвокат» остаётся тем, кто следит за делом у нас;
+   • карточка дела, блок «Команда»: строка «Адвокат-партнёр» — её видят все, кто видит дело (имя вписывает сервер);
+   • карточка партнёра: блок «Дела, которые мы ему дали» (sections/partners/partners.js).
+   Подключается последним в build.js: поле добавляется после всех правил, которые меняют окно дела. */
+Object.assign(UI,{
+  pt66F:"Адвокат-партнёр||合作律师",pt66None:"— нет, дело ведём сами —||— 无，本所自办 —",pt66Opt:"партнёр||合作律师",
+  pt66Hint:"Заполняется, только если дело ведёт адвокат-партнёр из «Кадров». «Ведущий адвокат» остаётся: это тот, кто следит за делом у нас. Клиент партнёра не видит.||仅当案件由「人事」中的合作律师承办时填写。「主办律师」不变：即本所负责跟进案件的人。客户看不到合作律师。",
+  pt66Tag:"партнёр · не сотрудник||合作律师 · 非员工",pt66Deals:"Дела, которые мы ему дали||交办案件",
+  pt66NoDeals:"Дел пока нет. Партнёра можно выбрать при регистрации или изменении любого дела.||暂无案件。可在登记或修改任何案件时选择合作律师。",
+  pt66Watch:"следит||跟进",pt66Open:"В работе||进行中",pt66Closed:"Завершено||已结案",pt66Given:"дел дано: {n}||交办：{n}",pt66Now:"в работе: {n}||进行中：{n}",
+  pt66One:"Разовая услуга||单项服务",pt66Sup:"Сопровождение||常年服务",pt66Court:"Судебное дело||诉讼案件"});
+if(typeof Matter!=="undefined"&&Matter.fields&&typeof PT65!=="undefined"){
+  const _mf66=Matter.fields;Matter.fields=function(m){const f=_mf66.apply(this,arguments);
+    try{if(!PT65.write()||!PT65.srv()||PT65.ready!==true)return f;
+      const i=(f||[]).findIndex(x=>x&&x.k==="translator");if(i<0||f.some(x=>x&&x.k==="partnerId"))return f;
+      const cur=(m&&m.partnerId)||"";
+      const opts=PT65.list().filter(p=>(p.status||"active")==="active"||p.id===cur).map(p=>[p.id,p.name+" — "+T1(UI.pt66Opt)+(p.spec?" · "+p.spec:"")]);
+      if(cur&&!opts.some(o=>o[0]===cur))opts.unshift([cur,(m.partnerName||cur)+" — "+T1(UI.pt66Opt)]);
+      f.splice(i+1,0,{k:"partnerId",label:T1(UI.pt66F),type:"select",span:true,value:cur,options:[["",T1(UI.pt66None)],...opts],hint:T1(UI.pt66Hint)});}catch(e){console.warn("pt66",e);}
+    return f;};
+  const _ma66=Matter.apply;Matter.apply=function(m,v){const r=_ma66.apply(this,arguments);
+    /* поле есть только у управляющего адвоката; пустое значение сервер убирает из дела вместе с именем */
+    if(m&&v&&v.partnerId!==undefined&&PT65.write()){m.partnerId=v.partnerId||"";if(!m.partnerId)delete m.partnerName;}
+    return r;};}
+if(typeof Card22!=="undefined"&&Card22.teamCard&&typeof PT65!=="undefined"){
+  const _tc66=Card22.teamCard;Card22.teamCard=function(m,MP,q){const card=_tc66.apply(this,arguments);
+    try{if(m&&m.partnerId){const dl=card.querySelector("dl.c22kv");const p=(S.partnerAdvocates||{})[m.partnerId];const nm=(p&&p.name)||m.partnerName||"";
+      if(dl&&nm){dl.appendChild(this.el("dt","",T1(UI.pt66F)));
+        dl.appendChild(this.hx("dd","",(PT65.mp()&&p?`<a href="#" data-pt65="goto:${esc(m.partnerId)}" style="color:var(--pri);font-weight:600;text-decoration:none">${esc(nm)}</a>`:esc(nm))+` <small style="color:var(--ink-3)">${T1(UI.pt66Tag)}</small>`));}}}catch(e){console.warn("pt66",e);}
+    return card;};}
 
 
 /* ═══════════════════════════ v6/v17: ОФОРМЛЕНИЕ (две темы) ═══════════════════════════
