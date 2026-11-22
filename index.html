@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="3a27896cad3c";
+const ZC_BUILD="24060b233c1b";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -18817,6 +18817,13 @@ const Mob70={
   /* окно-«шторка»: шапка и ряд вкладок не сжимаются, когда содержимое длиннее экрана (в профиле вкладки обрезались по высоте) */
   .md>.mh,.md>.tabs{flex:none}
 
+  /* Тф-14: чаты. Список чатов не шире экрана (раньше длинная строка последнего сообщения растягивала его до 590), кнопки — под палец */
+  body.ch22pg #ch22,body.ch22pg #ch22.info{grid-template-columns:minmax(0,1fr)}
+  body.ch22pg #ch22 .lst22,body.ch22pg #ch22 .lh22,body.ch22pg #ch22 .convs22,body.ch22pg #ch22 .cv22{min-width:0;max-width:100%}
+  body.ch22pg #ch22 .flt22 button{min-height:40px;padding-left:14px;padding-right:14px}
+  body.ch22pg #ch22 .th22 .ib22{width:44px;height:44px}
+  body.ch22pg #ch22 .cv22{min-height:60px}
+
   /* Тф-5: «мелкая» подпись без своего размера (браузер делает её меньше соседнего текста) и размер, записанный прямо в разметке */
   small{font-size:13px}
   [style*="font-size:9px"],[style*="font-size:9.5px"],[style*="font-size:10px"],[style*="font-size:10.5px"],[style*="font-size:11px"],[style*="font-size:11.5px"],[style*="font-size:12px"],[style*="font-size:12.5px"],
@@ -18839,6 +18846,158 @@ const Mob70={
   if(document.readyState==="complete")setTimeout(run,0);else window.addEventListener("load",()=>setTimeout(run,0));
   const mo=new MutationObserver(m=>{if(m.some(x=>[...x.addedNodes].some(n=>(n.nodeName==="STYLE"||n.nodeName==="LINK")&&n.id!=="mb70css"&&n.id!=="mb70fonts"))){clearTimeout(Mob70._t3);Mob70._t3=setTimeout(run,150);}});
   mo.observe(document.head,{childList:true});if(document.body)mo.observe(document.body,{childList:true});
+})();
+
+
+/* ═══════════════════════════ sections/mobile · ТЕЛЕФОН, этапы 2–3: таблицы карточками (решения владельца 21–22.11.2026) ═══════════════════════════
+   Макет — design-mobile.html, экраны 3–5. Правила — sections/mobile/ПРАВИЛА.md (Тф-10 … Тф-13). Только ширина до 700; сервер не участвует.
+   Тф-10. Таблица, которая не помещается по ширине, показывается карточками: строка — карточка. Разметка таблицы остаётся той же
+          (те же строки и ячейки), меняется только вид, поэтому кнопки, ссылки и поля в ячейках работают как на компьютере.
+          В карточке — заголовок (первая непустая ячейка) и главные столбцы; остальные — в полной записи.
+   Тф-11. Нажатие на карточку открывает снизу полную запись: все столбцы строки «название — значение». Если строка на компьютере
+          куда-то ведёт (дело, письмо), в записи есть кнопка «Открыть» — она нажимает саму строку.
+   Тф-12. Ряд фильтров, который не помещается по ширине, сворачивается в кнопку «Фильтры · N»; сам ряд выезжает снизу.
+   Тф-13. Главная кнопка страницы (первая цветная кнопка в заголовке страницы) закреплена внизу справа. */
+Object.assign(UI,{mb70More:"Все поля||全部字段",mb70Open:"Открыть||打开",mb70Flt:"Фильтры||筛选",mb70X:"Закрыть||关闭"});
+const Mob70T={
+  /* столбцы, которые берём в карточку в первую очередь (по названию столбца) */
+  PRI:[/№|номер/i,/дат|срок/i,/клиент|контрагент|отправител|получател|сотрудник|адвокат/i,/сумм|стоим|итог|гонорар|оплач|долг/i,/статус|состоян|этап/i],
+  ACT:"a,button,input,select,textarea,label,.btn,[contenteditable]",
+  on(){return Mob70.on();},
+  el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!==undefined&&x!==null)e.textContent=x;return e;},
+  txt(n){return (n.textContent||"").replace(/\s+/g," ").trim();},
+
+  scan(){if(!this.on())return;const root=document.getElementById("viewPage");
+    if(root){root.querySelectorAll("table").forEach(t=>{try{this.table(t);}catch(e){console.warn("mob70t",e);}});this.filters(root);this.fab(root);}
+    const d=document.getElementById("mb70dim");if(d&&!document.querySelector(".filters.mb70flo"))d.remove();},
+
+  /* ── Тф-10: таблица → карточки ── */
+  table(t){if(t.dataset.mb70t==="0")return;
+    if(!t._mb70h){if(!t.offsetWidth)return;   // ещё не видна — посмотрим при следующем изменении страницы
+      const hr=t.tHead&&t.tHead.rows.length===1?t.tHead.rows[0]:(!t.tHead&&t.rows[0]&&t.rows[0].querySelector("th")&&!t.rows[0].querySelector("td")?t.rows[0]:null);
+      /* не помещается: прокручивается сама либо шире своей обёртки (тогда прокручивается обёртка) */
+      const box=t.parentElement,fits=t.scrollWidth<=t.clientWidth+2&&(!box||t.offsetWidth<=box.clientWidth+2);
+      /* не трогаем: помещается; нет строки названий или в ней меньше трёх столбцов; названия в два ряда; таблица в таблице */
+      if(fits||!hr||hr.cells.length<3||(t.tHead&&t.tHead.rows.length>1)||t.querySelector("table")||t.closest("td")){t.dataset.mb70t="0";return;}
+      const H=[];[...hr.cells].forEach(c=>{const tx=this.txt(c);for(let i=0;i<(c.colSpan||1);i++)H.push(tx);});
+      /* в карточку: до двух столбцов-номеров и по одному столбцу остальных видов (дата, кто, сумма, состояние); если набралось меньше четырёх — добираем первыми по порядку */
+      const pick=new Set();this.PRI.forEach((r,k)=>{let left=k===0?2:1;H.forEach((h,i)=>{if(left&&!pick.has(i)&&r.test(h)){pick.add(i);left--;}});});for(let i=0;i<H.length&&pick.size<4;i++)pick.add(i);
+      t._mb70h=H;t._mb70p=pick;t._mb70hr=hr;t.dataset.mb70t="1";t.classList.add("mb70tb");hr.dataset.mb70r="h";hr.classList.add("mb70hr");}
+    t.querySelectorAll("tr:not([data-mb70r])").forEach(tr=>{if(tr.closest("table")===t)this.row(t,tr);});},
+  row(t,tr){tr.dataset.mb70r="1";const cells=[...tr.cells];
+    if(tr.parentElement.tagName==="THEAD"){tr.dataset.mb70r="h";return;}
+    if(tr.classList.contains("sec")||(cells.length===1&&(cells[0].colSpan||1)>1)||(cells.length&&cells.every(c=>c.tagName==="TH"))){tr.classList.add("mb70sec");return;}
+    const tot=tr.classList.contains("tot")||tr.parentElement.tagName==="TFOOT";if(tot)tr.classList.add("mb70tot");
+    let col=0,hidden=0,first=true;
+    cells.forEach(c=>{const i=col;col+=c.colSpan||1;const tx=this.txt(c),inner=c.querySelector("img,svg,"+this.ACT);
+      if((!tx||tx==="—"||tx==="-"||tx==="–")&&!inner){c.classList.add("mb70e");return;}
+      if(t._mb70h[i])c.dataset.th=t._mb70h[i];
+      if(first){first=false;c.classList.add("mb70t");return;}
+      /* в карточке: главные столбцы, итоговые строки целиком и ячейки с кнопками или полями ввода */
+      if(t._mb70p.has(i)||tot||c.querySelector("button,input,select,textarea,.btn"))return;
+      c.classList.add("mb70h");hidden++;});
+    if(hidden)tr.dataset.mb70m=T1(UI.mb70More)+" ›";},
+  nav(tr){return tr.hasAttribute("onclick")||getComputedStyle(tr).cursor==="pointer";},
+
+  /* ── Тф-11: полная запись снизу ── */
+  click(e){if(this._pass||!this.on())return;const tg=e.target;if(!tg||!tg.closest)return;
+    const tr=tg.closest("table.mb70tb tr[data-mb70r='1']");if(!tr||tr.classList.contains("mb70sec")||!tr.dataset.mb70m)return;   // всё уже в карточке — нажатие работает как на компьютере
+    if(tg.closest(this.ACT))return;   // кнопки, ссылки и поля в ячейках — сами по себе
+    e.preventDefault();e.stopPropagation();this.sheet(tr);},
+  go(orig){this.close();this._pass=true;try{orig.click();}catch(e){console.warn("mob70t",e);}finally{this._pass=false;}},
+  sheet(tr){this.close();const t=tr.closest("table"),H=t._mb70h||[];
+    const w=this.el("div");w.id="mb70sh";w.setAttribute("role","dialog");w.setAttribute("aria-modal","true");
+    const sh=this.el("div","sh");w.appendChild(sh);sh.appendChild(this.el("div","grab"));
+    const hd=this.el("div","hd"),tc=tr.querySelector(".mb70t");hd.appendChild(this.el("b","",tc?this.txt(tc).slice(0,90):""));
+    const x=this.el("button","x","✕");x.type="button";x.setAttribute("aria-label",T1(UI.mb70X));x.onclick=()=>this.close();hd.appendChild(x);sh.appendChild(hd);
+    const kv=this.el("div","kv");let col=0;
+    [...tr.cells].forEach(c=>{const i=col;col+=c.colSpan||1;if(c.classList.contains("mb70e")||c.querySelector("input,select,textarea"))return;   // поля ввода остаются в карточке
+      const r=this.el("div","r");r.appendChild(this.el("span","k",H[i]||""));const v=this.el("div","v");[...c.childNodes].forEach(n=>v.appendChild(n.cloneNode(true)));
+      /* кнопки и ссылки в записи — копии: нажатие передаётся настоящей кнопке в строке, чтобы сработало то же действие */
+      const O=[...c.querySelectorAll("a,button,.btn")],C=[...v.querySelectorAll("a,button,.btn")];
+      C.forEach((b,k)=>{b.addEventListener("click",ev=>{ev.preventDefault();ev.stopPropagation();if(O[k])this.go(O[k]);});});
+      r.appendChild(v);kv.appendChild(r);});
+    sh.appendChild(kv);
+    if(this.nav(tr)){const a=this.el("div","acts"),b=this.el("button","btn pri",T1(UI.mb70Open));b.type="button";b.onclick=()=>this.go(tr);a.appendChild(b);sh.appendChild(a);}
+    w.addEventListener("click",ev=>{if(ev.target===w)this.close();});document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add("open"));},
+  close(){const w=document.getElementById("mb70sh");if(w)w.remove();this.fclose();},
+
+  /* ── Тф-12: фильтры снизу ── */
+  active(f){let n=0;f.querySelectorAll("select").forEach(s=>{if(s.selectedIndex>0)n++;});
+    f.querySelectorAll(".fc.on,.fc[aria-pressed='true']").forEach(c=>{if(!/^(все|all|全部|barcha)/i.test(this.txt(c)))n++;});return n;},
+  filters(root){root.querySelectorAll(".filters:not([data-mb70f])").forEach(f=>{if(!f.offsetWidth)return;f.dataset.mb70f="1";
+      if(f.scrollWidth<=f.clientWidth+2)return;   // помещается — остаётся рядом
+      let b=f.previousElementSibling;if(!b||!b.classList.contains("mb70fb")){b=this.el("button","btn mb70fb");b.type="button";f.before(b);}
+      const n=this.active(f);b.textContent="";const NS="http://www.w3.org/2000/svg",sv=document.createElementNS(NS,"svg"),p=document.createElementNS(NS,"path");
+      sv.setAttribute("viewBox","0 0 24 24");sv.setAttribute("aria-hidden","true");p.setAttribute("d","M4 6h16M7 12h10M10 18h4");sv.appendChild(p);b.appendChild(sv);
+      b.appendChild(this.el("span","",T1(UI.mb70Flt)+(n?" · "+n:"")));b.onclick=()=>this.fopen(f);f.classList.add("mb70fl");});},
+  fopen(f){this.close();if(!f.isConnected)return;f.classList.add("mb70flo");const d=this.el("div");d.id="mb70dim";d.onclick=()=>this.fclose();document.body.appendChild(d);},
+  fclose(){document.querySelectorAll(".filters.mb70flo").forEach(f=>f.classList.remove("mb70flo"));const d=document.getElementById("mb70dim");if(d)d.remove();},
+
+  /* ── Тф-13: главная кнопка страницы ── */
+  fab(root){const ph=root.querySelector(".ph");if(!ph)return;const b=ph.querySelector(".acts .btn.pri");
+    /* длинная надпись («Изменить и утвердить новую версию») внизу закрыла бы пол-экрана — такая кнопка остаётся на месте */
+    if(b&&!b.classList.contains("mb70fab")&&this.txt(b).length<=22){root.querySelectorAll(".mb70fab").forEach(x=>x.classList.remove("mb70fab"));b.classList.add("mb70fab");}}
+};
+(function(){const st=document.createElement("style");st.id="mb70tcss";st.textContent=`
+.mb70fb{display:none}
+#mb70sh,#mb70dim{display:none}
+@media (max-width:700px){
+  /* Тф-10: карточки вместо таблицы */
+  table.mb70tb{display:block;width:100%;max-width:100%;min-width:0!important;overflow:visible;border:0;background:transparent;box-shadow:none}
+  table.mb70tb thead,table.mb70tb tr.mb70hr{display:none}
+  table.mb70tb tbody,table.mb70tb tfoot{display:block}
+  table.mb70tb tr{display:block;position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin:0 0 10px;box-shadow:var(--sh-1,none)}
+  table.mb70tb td,table.mb70tb tr>th{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;padding:3px 0!important;border:0!important;background:transparent;white-space:normal;text-align:right;font-size:15px;line-height:1.35;min-width:0;width:auto!important;height:auto!important;min-height:0}
+  table.mb70tb td::before,table.mb70tb tr>th::before{content:attr(data-th);flex:none;max-width:44%;margin-right:auto;padding-right:10px;text-align:left;color:var(--ink-3);font-size:13px;font-weight:500;white-space:normal}
+  table.mb70tb td:not([data-th])::before,table.mb70tb tr>th:not([data-th])::before{display:none}
+  table.mb70tb td.mb70t,table.mb70tb tr>th.mb70t{display:block;text-align:left;font-size:16px;font-weight:700;color:var(--ink);padding-bottom:6px!important;overflow-wrap:anywhere}
+  table.mb70tb .mb70t small,table.mb70tb .mb70t .small{display:block;font-weight:500;margin-top:2px}
+  table.mb70tb .mb70t::before{display:none}
+  table.mb70tb td.mb70h,table.mb70tb td.mb70e,table.mb70tb tr>th.mb70h,table.mb70tb tr>th.mb70e{display:none}
+  table.mb70tb td small,table.mb70tb td .small{white-space:normal}
+  table.mb70tb tr[data-mb70m]::after{content:attr(data-mb70m);display:block;margin-top:6px;padding-top:8px;border-top:1px dashed var(--line);font:600 13.5px var(--font,inherit);color:var(--pri)}
+  table.mb70tb tr.mb70sec{background:transparent;border:0;box-shadow:none;padding:8px 2px 2px;margin-bottom:4px}
+  table.mb70tb tr.mb70sec td,table.mb70tb tr.mb70sec th{display:block;text-align:left;font-weight:700;font-size:14px;color:var(--ink-2)}
+  table.mb70tb tr.mb70tot{background:var(--surface2);font-weight:700}
+  table.mb70tb td input:not([type=checkbox]):not([type=radio]),table.mb70tb td select,table.mb70tb td textarea{max-width:58%;min-height:44px}
+
+  /* Тф-11: полная запись */
+  #mb70sh{display:flex;position:fixed;inset:0;z-index:150;align-items:flex-end;background:rgba(10,12,16,0);transition:background .18s}
+  #mb70sh.open{background:rgba(10,12,16,.55)}
+  #mb70sh .sh{width:100%;max-height:86vh;max-height:86dvh;display:flex;flex-direction:column;background:var(--surface);color:var(--ink);border-radius:20px 20px 0 0;padding:8px 16px calc(16px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.35);transform:translateY(24px);opacity:.6;transition:transform .18s,opacity .18s}
+  #mb70sh.open .sh{transform:none;opacity:1}
+  #mb70sh .grab{width:42px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 8px;flex:none}
+  #mb70sh .hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none;padding-bottom:6px}
+  #mb70sh .hd b{font:700 18px/1.25 var(--font-h,inherit);min-width:0;overflow:hidden;text-overflow:ellipsis}
+  #mb70sh .x{width:44px;height:44px;flex:none;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--ink-2);font-size:17px;line-height:1}
+  #mb70sh .kv{overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto;min-height:0}
+  #mb70sh .r{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:11px 0;border-top:1px solid var(--line);font-size:15px}
+  #mb70sh .k{flex:none;max-width:42%;color:var(--ink-3);font-size:14px}
+  #mb70sh .v{text-align:right;font-weight:600;min-width:0;overflow-wrap:anywhere}
+  #mb70sh .acts{flex:none;display:flex;gap:10px;padding-top:12px}
+  #mb70sh .acts .btn{flex:1;justify-content:center;min-height:48px;font-size:16px}
+
+  /* Тф-12: фильтры */
+  .mb70fb{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:0 0 10px}
+  .mb70fb svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round}
+  .filters.mb70fl{display:none!important}
+  .filters.mb70fl.mb70flo{display:flex!important;position:fixed;left:0;right:0;bottom:0;z-index:151;margin:0!important;flex-wrap:wrap!important;align-content:flex-start;gap:8px;overflow:auto;max-height:76vh;max-height:76dvh;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px))!important;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.35)}
+  .filters.mb70flo .fc,.filters.mb70flo select,.filters.mb70flo .btn{min-height:44px;font-size:15px;flex:none}
+  .filters.mb70flo select{width:100%;max-width:100%}
+  #mb70dim{display:block;position:fixed;inset:0;z-index:150;background:rgba(10,12,16,.55)}
+
+  /* Тф-13: главная кнопка страницы — внизу справа, остальные кнопки заголовка переносятся на следующие строки */
+  body.mb70st:not(.client-ui):not(.ch22pg) #viewPage .ph .acts{flex-wrap:wrap;overflow:visible}
+  body.mb70st:not(.client-ui):not(.ch22pg) #viewPage .ph .acts .btn.mb70fab{position:fixed;right:14px;bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:110;width:auto;flex:none;min-height:54px;padding:0 20px;border-radius:27px;font-size:16px;box-shadow:0 10px 24px -8px rgba(0,0,0,.6)}
+}`;document.head.appendChild(st);
+  const run=()=>{try{Mob70T.scan();}catch(e){console.warn("mob70t",e);}};
+  /* таблицы перерисовываются вместе со страницей: отвечаем сразу, в том же такте, чтобы таблица не мелькала перед карточками */
+  if(document.body)new MutationObserver(run).observe(document.body,{subtree:true,childList:true});
+  document.addEventListener("click",e=>Mob70T.click(e),true);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&(document.getElementById("mb70sh")||document.getElementById("mb70dim"))){Mob70T.close();e.stopPropagation();}},true);
+  window.addEventListener("hashchange",()=>Mob70T.close());
+  const onMq=()=>{Mob70T.close();run();};if(Mob70.mq.addEventListener)Mob70.mq.addEventListener("change",onMq);else if(Mob70.mq.addListener)Mob70.mq.addListener(onMq);
 })();
 
 /* ═══════════════════════════ версия 1.5 · ЗАМЕТКИ В «ПЛАНЕ НА ДЕНЬ» (решения владельца 21.10.2026) ═══════════════════════════
