@@ -10447,7 +10447,7 @@ const Mob20={
    появляется плашка «Доступна новая версия» с кнопкой «Обновить». Сам страницу не перезагружает (чтобы не потерять
    набранный текст). Вход при обновлении сохраняется. Номер сборки вписывает build.js. Не работает с файла (file://). */
 Object.assign(UI,{upd20:"Доступна новая версия портала||门户有新版本",updBtn20:"Обновить||刷新",updLater20:"Позже||稍后"});
-const ZC_BUILD="4d5ebd48b1a4";
+const ZC_BUILD="3a27896cad3c";
 const Upd20={
   id:ZC_BUILD,shown:false,last:0,
   async check(){
@@ -19740,7 +19740,7 @@ Object.assign(UI,{
   pt65Year:"Год||年份",pt65Court:"Суд||法院",pt65About:"О чём было дело||案由",pt65Result:"Результат||结果",pt65JobNew:"Место работы||工作经历",pt65WinNew:"Выигранное дело||胜诉案件",
   pt65Empty:"Не заполнено||未填写",pt65CmNone:"Комментариев пока нет||暂无备注",pt65CmPh:"Новый комментарий… Enter||新备注… 回车",pt65CmAdd:"Добавить||添加",
   pt65DelQ:"Удалить запись?||删除此记录？",pt65Del:"Удалить||删除",pt65Load:"Загружаю…||加载中…",pt65Ro:"только просмотр||仅查看",
-  pt65StopWhy:"Причина: {t}||原因：{t}",pt65Need:"Раздел «Адвокаты-партнёры» заработает после обновления сервера (миграция 20261121000100)||服务器更新后「合作律师」可用（迁移 20261121000100）"});
+  pt65StopWhy:"Причина: {t}||原因：{t}",pt65Photo:"Загрузить фото||上传照片",pt65PhotoDel:"Убрать фото||删除照片",pt65PhotoDelQ:"Убрать фото партнёра?||删除合作律师照片？",pt65PhotoBad:"Не удалось открыть файл как изображение||无法将文件作为图片打开",pt65Need:"Раздел «Адвокаты-партнёры» заработает после обновления сервера (миграция 20261121000100)||服务器更新后「合作律师」可用（迁移 20261121000100）"});
 S.partnerAdvocates=S.partnerAdvocates||{};
 const PT65={
   ready:null,loading:false,id:null,q:"",st:"",_boot:0,
@@ -19754,6 +19754,20 @@ const PT65={
   stName(s){return T1(s==="stop"?UI.pt65Stop:s==="check"?UI.pt65Check:UI.pt65Active);},
   stTag(s){return `<span class="pt65tag ${s==="stop"?"r":s==="check"?"w":"g"}">${this.stName(s)}</span>`;},
   ini(n){try{return initials(n||"?");}catch(e){return "?";}},
+  /* аватар: фото партнёра (data.photo) или инициалы */
+  av(p,lg){p=p||{};const ph=typeof p.photo==="string"&&/^data:image\/(jpeg|png|webp);base64,/.test(p.photo)?p.photo:"";
+    return `<span class="pt65av${lg?" lg":""}${ph?" ph":""}">${ph?`<img src="${ph}" alt="">`:esc(this.ini(p.name))}</span>`;},
+  /* фото: как у сотрудников — квадрат 420×420, JPEG; записывает сервер (public.partner_photo) */
+  photoPick(id){if(!this.write()||!S.partnerAdvocates[id])return;const inp=document.getElementById("fileIn");if(!inp)return;inp.value="";inp.accept="image/*";
+    inp.onchange=()=>{const f=inp.files[0];inp.accept="";if(!f)return;const img=new Image();
+      img.onerror=()=>toast(T1(UI.pt65PhotoBad));
+      img.onload=async()=>{const s=Math.min(img.width,img.height),c=document.createElement("canvas");c.width=c.height=420;
+        c.getContext("2d").drawImage(img,(img.width-s)/2,(img.height-s)/2*0.7,s,s,0,0,420,420);await this.photoSave(id,c.toDataURL("image/jpeg",.85));};
+      img.src=URL.createObjectURL(f);};inp.click();},
+  async photoSave(id,data){if(!this.srv()){toast(T1(UI.pt65Need));return null;}
+    try{const d=await SB19.T.rpc("partner_photo",{pid:id,img:data||""});if(d&&d.id)S.partnerAdvocates[d.id]=d;this.rerender();return d;}
+    catch(e){toast(this.noFn(e)||/partner_photo/i.test(String(e&&e.message))?T1(UI.pt65Need):String((e&&e.message)||e));return null;}},
+  async photoDel(id){if(!this.write())return;if(!await Dlg.confirm(T1(UI.pt65PhotoDelQ),"",true))return;await this.photoSave(id,"");},
   who(l){const a=(S.accounts||{})[l];return (a&&a.name)||l||"";},
   at(t){t=String(t||"");return t.length>=16?fmtD(t.slice(0,10))+" "+t.slice(11,16):t;},
   kinds(){return [["client",T1(UI.pt65KClient)],["staff",T1(UI.pt65KStaff)],["advocate",T1(UI.pt65KAdv)],["other",T1(UI.pt65KOther)]];},
@@ -19789,7 +19803,7 @@ const PT65={
         ${this.dirFilter()}
         ${w?`<button class="btn pri" data-pt65="new">${T1(UI.pt65Add)}</button>`:""}</div>
       ${L.length?`<div class="pt65grid">${L.map(p=>`<button type="button" class="pt65c" data-pt65="open:${esc(p.id)}" data-pt65row="${esc(p.id)}"${this.hit(p)?"":' style="display:none"'}>
-          <span class="pt65h"><span class="pt65av">${esc(this.ini(p.name))}</span><span class="pt65nm"><b>${esc(p.name||"")}</b><small>${esc([p.city,p.org].filter(Boolean).join(" · "))}</small></span>${this.stTag(p.status)}</span>
+          <span class="pt65h">${this.av(p)}<span class="pt65nm"><b>${esc(p.name||"")}</b><small>${esc([p.city,p.org].filter(Boolean).join(" · "))}</small></span>${this.stTag(p.status)}</span>
           ${this.top3(p)||(p.spec?`<span class="pt65sp">${esc(p.spec)}</span>`:"")}
           ${p.rec&&p.rec.who?`<span class="pt65rc">${T1(UI.pt65Rec)}: <b>${esc(p.rec.who)}</b></span>`:""}${this.dealLine(p)}${this.moneyLine(p)}</button>`).join("")}</div>
         <div class="card pt65nohit"${shown?' style="display:none"':""}><div class="empty2">${T1(UI.pt65NoHit)}</div></div>`
@@ -19806,10 +19820,10 @@ const PT65={
     const wins=(p.wins||[]).map(x=>`<div class="pt65row"><div><b>${esc(x.about||"")}</b><small>${esc([x.year,x.court].filter(Boolean).join(" · "))}</small></div><span class="pt65r">${x.result?`<span class="pt65tag g">${esc(x.result)}</span>`:""}${del("winDel",x.id)}</span></div>`).join("");
     const cms=(p.comments||[]).map(c=>`<div class="pt65cm"><small>${esc(this.at(c.at))} · ${esc(this.who(c.by))}</small><span>${esc(c.text||"")}</span>${del("cmDel",c.id)}</div>`).join("");
     return `<button type="button" class="pt65back" data-pt65="back">${T1(UI.pt65Back)}</button>
-      <div class="pt65cover"><span class="pt65av lg">${esc(this.ini(p.name))}</span>
+      <div class="pt65cover"><span class="pt65avw">${this.av(p,true)}${w?`<button type="button" class="pt65phb" data-pt65="photo:${esc(p.id)}" title="${esc(T1(UI.pt65Photo))}" aria-label="${esc(T1(UI.pt65Photo))}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>`:""}</span>
         <div class="pt65ct"><h3>${esc(p.name||"")}${p.nameZh?` <span>${esc(p.nameZh)}</span>`:""}</h3><p>${esc([T1(UI.pt65Sub),p.city,p.org].filter(Boolean).join(" · "))}</p>
           <div class="pt65chips"><span>${this.stName(p.status)}</span>${this.dealChips(p)}${p.status==="stop"&&p.stopReason?`<span>${esc(T1(UI.pt65StopWhy).replace("{t}",p.stopReason))}</span>`:""}</div></div>
-        ${w?`<div class="pt65cb"><button type="button" class="btn" data-pt65="status:${esc(p.id)}">${T1(UI.pt65Status)}</button></div>`:""}</div>
+        ${w?`<div class="pt65cb">${p.photo?`<button type="button" class="btn" data-pt65="photoDel:${esc(p.id)}">${T1(UI.pt65PhotoDel)}</button>`:""}<button type="button" class="btn" data-pt65="status:${esc(p.id)}">${T1(UI.pt65Status)}</button></div>`:""}</div>
       <div class="pt65cols"><div class="pt65col">
         ${this.blk(T1(UI.pt65Main),this.kv([[T1(UI.pt65Phone),p.phone],[T1(UI.pt65Tg),p.tg],[T1(UI.pt65City),p.city],[T1(UI.pt65Langs),p.langs],[T1(UI.pt65Lic),p.lic],[T1(UI.pt65Org),p.org]]),more("edit",UI.pt65Edit))}
         ${this.deals(p)}
@@ -19877,6 +19891,7 @@ const PT65={
     if(k==="open"){this.id=id;this.rerender();try{window.scrollTo(0,0);const v=document.querySelector(".content,main");if(v)v.scrollTop=0;}catch(e){}return;}
     if(k==="matter"){if(typeof Router!=="undefined")Router.go("matter",id);return;}
     if(k==="goto"){this.id=id;Pages._ht="partners";if(typeof Router!=="undefined"){if(Router.cur==="hr")Router.render();else Router.go("hr");}return;}
+    if(k==="photo")return this.photoPick(id);if(k==="photoDel")return this.photoDel(id);
     if(k==="edit")return this.edit(id);if(k==="rec")return this.rec(id);if(k==="status")return this.status(id);
     if(k==="jobAdd")return this.jobAdd(id);if(k==="winAdd")return this.winAdd(id);if(k==="cmAdd")return this.cmAdd(id);
     if(k==="jobDel")return this.del("job_del",id,iid);if(k==="winDel")return this.del("win_del",id,iid);if(k==="cmDel")return this.del("comment_del",id,iid);}
@@ -19910,7 +19925,12 @@ if(typeof SB19!=="undefined"&&SB19.reset){const _rs65=SB19.reset.bind(SB19);SB19
 .pt65c:hover{border-color:var(--pri)}.pt65c:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
 .pt65h{display:flex;gap:12px;align-items:center;min-width:0}.pt65nm{min-width:0;flex:1}.pt65nm b{display:block;font-size:15px}.pt65nm small{display:block;color:var(--ink-3);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pt65av{width:36px;height:36px;border-radius:50%;background:#2F64B0;color:#fff;display:flex;align-items:center;justify-content:center;line-height:1;text-align:center;font-weight:700;font-size:13px;flex:none}
-.pt65cover .pt65av.lg{width:64px;height:64px;font-size:22px;color:#fff;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.5)}
+.pt65av.ph{background:var(--surface2,#F7F8FA);overflow:hidden}.pt65av img{width:100%;height:100%;object-fit:cover;display:block}
+.pt65avw{position:relative;flex:none;display:inline-flex}
+.pt65phb{position:absolute;right:-4px;bottom:-4px;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:#2F64B0;color:#fff;display:grid;place-items:center;cursor:pointer;padding:0}
+.pt65phb svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.pt65phb:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.pt65cb{display:flex;flex-wrap:wrap;gap:8px}
+.pt65cover .pt65av.lg{width:64px;height:64px;font-size:22px;color:#fff;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.5)}.pt65cover .pt65av.lg.ph{background:#fff}
 .pt65tag{display:inline-flex;align-items:center;border-radius:99px;padding:2px 9px;font-size:11.5px;font-weight:600;white-space:nowrap;flex:none}
 .pt65tag.g{background:var(--ok-soft,#E5F2EC);color:var(--ok-d,#3F8768)}.pt65tag.w{background:var(--warn-soft,#FBF1E0);color:var(--warn,#B7791F)}.pt65tag.r{background:var(--red-soft,#F8E6E4);color:var(--red,#B4443A)}
 .pt65sp{color:var(--ink-2);font-size:13px}.pt65rc{color:var(--ink-3);font-size:12.5px}.pt65rc b{color:var(--ink-2)}
@@ -25523,7 +25543,7 @@ const PR68={
   row(m,ctx){const p=this.person(m.who),h=(m.history||[])[0],canDel=this.canDir()&&!(m.history||[]).length;
     const meta=this.has(m)?esc(T1(UI.pr68RatedAt).replace("{d}",fmtD(String(m.ratedAt).slice(0,10))))+((m.history||[]).length>1?" · "+esc(T1(UI.pr68Changed).replace("{n}",m.history.length-1)):"")+(this.stale(m)?` · <b class="pr68st">${T1(UI.pr68Stale)}</b>`:""):T1(UI.pr68NoScore);
     const title=ctx==="dir"?`<button type="button" class="pr68nm" data-pr68="who~${esc(m.who)}">${esc(p.name)}</button> <span class="pt65tag ${p.own?"n":"w"}">${p.own?T1(UI.pr68Own)+(p.role?" · "+esc(p.role.toLowerCase()):""):T1(UI.pr68Partner)}</span>`:`<b>${esc(this.dname(m.dir))}</b>${this.live(m.dir)?"":` <span class="pt65tag n">${T1(UI.pr68Arch)}</span>`}`;
-    return `<div class="pt65row pr68row">${ctx==="dir"?`<span class="pt65av">${esc(PT65.ini(p.name))}</span>`:""}<div><div class="pr68t">${title}</div><small>${meta}${typeof this.facts==="function"?this.facts(m):""}</small>${h&&h.note?`<small>«${esc(h.note)}»</small>`:""}${this.has(m)?`<div class="pr68bar"><i style="width:${m.score}%"></i></div>`:""}</div>
+    return `<div class="pt65row pr68row">${ctx==="dir"?(String(m.who)[0]==="p"?PT65.av((S.partnerAdvocates||{})[String(m.who).slice(2)]||{name:p.name}):`<span class="pt65av">${esc(PT65.ini(p.name))}</span>`):""}<div><div class="pr68t">${title}</div><small>${meta}${typeof this.facts==="function"?this.facts(m):""}</small>${h&&h.note?`<small>«${esc(h.note)}»</small>`:""}${this.has(m)?`<div class="pr68bar"><i style="width:${m.score}%"></i></div>`:""}</div>
       <span class="pt65r">${this.chip(m)}${this.live(m.dir)?`<button type="button" class="btn sm" data-pr68="rate~${esc(m.who)}~${esc(m.dir)}">${T1(this.has(m)?UI.pr68Change:UI.pr68Rate)}</button>`:""}${canDel?`<button type="button" class="btn sm ghost pt65x" data-pr68="unmark~${esc(m.who)}~${esc(m.dir)}" title="${esc(T1(UI.pr68Remove))}" aria-label="${esc(T1(UI.pr68Remove))}">✕</button>`:""}</span></div>`;},
   blk(who,oldText){const L=this.marksOf(who,true),w=this.canDir();
     return `<div class="card pt65b pr68blk"><h4>${T1(UI.pr68Blk)}${w?`<span class="pt65sp35"></span><button type="button" class="btn sm" data-pr68="assign~${esc(who)}">${T1(UI.pr68AddDir)}</button>`:""}</h4>
